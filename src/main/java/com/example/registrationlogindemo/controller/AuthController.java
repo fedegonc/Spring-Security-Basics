@@ -7,6 +7,7 @@ import com.example.registrationlogindemo.repository.LivrosRepository;
 import com.example.registrationlogindemo.service.ServiceLivros;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -20,9 +21,8 @@ import java.util.List;
 @Controller
 public class AuthController {
 
-    private UserService userService;
+    private final UserService userService;
 
-    private ServiceLivros serviceLivros;
     public AuthController(UserService userService) {
         this.userService = userService;
     }
@@ -37,10 +37,7 @@ public class AuthController {
         return "redirect:/index";
     }
 
-    @GetMapping("/index")
-    public String home() {
-        return "index";
-    }
+
 
     @GetMapping("/login")
     public String loginForm() {
@@ -91,10 +88,4 @@ public class AuthController {
         return "users";
     }
 
-    @GetMapping(value = "/users/img")
-    public String getLivroUsers(Model model) {
-        List<Livros> livros = serviceLivros.findAll();
-        model.addAttribute("livros", livros);
-        return "livros";
-    }
 }
