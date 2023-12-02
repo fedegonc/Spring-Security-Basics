@@ -51,6 +51,41 @@
     </table>
 
 
+    <div class="row">
+        <h1> Registered Users </h1>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+        <tr>
+            <thead>
+            <th>ID</th>
+            <th>Titulo</th>
+            <th>Autor</th>
+            <th>Preço</th>
+            <th>Resumo</th>
+            <th>Genero</th>
+            <th>Ações</th>
+            </thead>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="livro: ${livros}">
+            <td th:text="${livro.id}"></td>
+            <td th:text="${livro.titulo}"></td>
+            <td th:text="${livro.autor}"></td>
+            <td th:text="${livro.preco}"></td>
+
+
+            <td><img th:src="@{/imagem/{imagem}(imagem=${livro.imagem})}"/></td>
+            <td th:text="${livro.resumo}"></td>
+            <td th:text="${livro.genero}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
+
+
+
 </body>
 </html>

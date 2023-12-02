@@ -35,7 +35,6 @@ public class Livros {
         @Lob
         private String resumo;
 
-        @Lob
-        private byte[] imagem;
+        private String imagem;
 
     }

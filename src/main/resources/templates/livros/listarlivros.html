@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Listar Livros</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/estilos.css}" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap">
 </head>
 
 <body>
@@ -38,15 +36,18 @@
         <td th:text="${livro.autor}"></td>
         <td th:text="${livro.preco}"></td>
 
-        <td><img th:src="@{/imagem/{imagem}(imagem=${livro.imagem})}"/></td>
+        <td><img th:src="@{/users/imagem/{imagem}(imagem=${livro.imagem})}"/></td>
+
+
+
 
         <td th:text="${livro.resumo}"></td>
 
         <td th:text="${livro.genero}"></td>
 
-        <td><a th:href="@{/editarlivro/{id}(id=${livro.id})}">Editar</a></td>
+        <td><a th:href="@{/users/editarlivro/{id}(id=${livro.id})}">Editar</a></td>
 
-        <td><a th:href="@{/deletarlivro/{id}(id=${livro.id})}">Excluir</a></td>
+        <td><a th:href="@{/users/deletarlivro/{id}(id=${livro.id})}">Excluir</a></td>
     </tr>
     </tbody>
 

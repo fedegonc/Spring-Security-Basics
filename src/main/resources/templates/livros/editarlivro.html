@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html xlms:th="http://thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:xlms="http://www.w3.org/1999/xhtml">
 <head>
-    <link rel="stylesheet" type="text/css" th:href="@{/estilos.css}" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap">
+
 </head>
 <body>
 
 <h1>Editar Livro</h1>
 
-<form method="post" enctype="multipart/form-data" th:action="@{'/editarlivro/' + ${livro.id}}">
+<form method="post" enctype="multipart/form-data" th:action="@{'/users/editarlivro/' + ${livro.id}}">
     Título<input type="text" name="titulo" th:value="${livro.titulo}"/><br/>
     Autor<input type="text" name="autor" th:value="${livro.autor}"/><br/>
     Género<input type="text" name="genero" th:value="${livro.genero}"/><br/>
     Precio<input type="text" name="preco" th:value="${livro.preco}"/><br/>
     Resumen<textarea name="resumo" th:text="${livro.resumo}"></textarea><br/>
 
-    Imagen actual: <img th:src="@{/imagem/{imagem}(imagem=${livro.imagem})}" width="100" height="150"/><br/>
+    Imagen actual: <img th:src="@{/users/imagem/{imagem}(imagem=${livro.imagem})}" width="100" height="150"/><br/>
 
     Nueva imagen: <input type="file" name="file"/><br/>
 
@@ -24,10 +23,10 @@
 
 
 
-<a th:href="@{/listarlivros}">Listar Libros</a><br/>
-<a th:href="@{/iniciolivros}">Inicio</a><br/>
+<a th:href="@{/users/listarlivros}">Listar Libros</a><br/>
+<a th:href="@{/users/iniciolivros}">Inicio</a><br/>
 
-<a th:href="@{/home}">Home</a><br/>
+<a th:href="@{/index}">Home</a><br/>
 
 </body>
 </html>

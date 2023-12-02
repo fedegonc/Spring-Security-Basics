@@ -20,35 +20,36 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/users")
 public class LivrosController {
     @Autowired
     LivrosRepository livrosRepository;
 
-    @RequestMapping(value = "/index/iniciolivros", method = RequestMethod.GET)
+    @RequestMapping(value = "/iniciolivros", method = RequestMethod.GET)
     public String inicioLivros() {
         return "livros/iniciolivros";
     }
 
-    @RequestMapping(value = "/users/novolivro", method = RequestMethod.GET)
+    @RequestMapping(value = "/novolivro", method = RequestMethod.GET)
     public String novoLivro() {
         return "livros/novolivro";
     }
 
-    @RequestMapping(value = "/users/novolivro", method = RequestMethod.POST)
+    @RequestMapping(value = "/novolivro", method = RequestMethod.POST)
     public String novolivroCadastrado(@Valid Livros livros,
                                       BindingResult result, RedirectAttributes msg,
                                       @RequestParam("file") MultipartFile imagem) {
         if (result.hasErrors()) {
             msg.addFlashAttribute("erro",
                     "Erro ao cadastrar. Por favor, preencha todos os campos");
-            return "redirect:/novolivro";
+            return "redirect:/users/novolivro";
         }
         try {
             if (!imagem.isEmpty()) {
                 byte[] bytes = imagem.getBytes();
                 Path caminho = Paths.get("./src/main/resources/static/img/" + imagem.getOriginalFilename());
                 Files.write(caminho, bytes);
-                livros.setImagem(imagem.getOriginalFilename().getBytes());
+                livros.setImagem(imagem.getOriginalFilename());
             }
         } catch (IOException e) {
             System.out.println("error de imagen");
@@ -58,10 +59,10 @@ public class LivrosController {
         msg.addFlashAttribute("sucesso",
                 "Livro cadastrado.");
 
-        return "redirect:/index/listarlivros";
+        return "redirect:/users/listarlivros";
     }
 
-    @RequestMapping(value = "/index/listarlivros", method = RequestMethod.GET)
+    @RequestMapping(value = "/listarlivros", method = RequestMethod.GET)
     public ModelAndView getLivro() {
         ModelAndView mv = new ModelAndView("/livros/listarlivros");
         List<Livros> livros = livrosRepository.findAll();
@@ -69,7 +70,9 @@ public class LivrosController {
         return mv;
     }
 
-    @RequestMapping(value = "/users/editarlivro/{id}", method = RequestMethod.GET)
+
+
+    @RequestMapping(value = "/editarlivro/{id}", method = RequestMethod.GET)
     public ModelAndView editarLivro(@PathVariable("id") int id) {
         ModelAndView mv = new ModelAndView("livros/editarlivro");
         Optional<Livros> livroOptional = livrosRepository.findById(id);
@@ -77,19 +80,19 @@ public class LivrosController {
             Livros livro = livroOptional.get();
             mv.addObject("livro", livro);
         } else {
-            mv.setViewName("redirect:/error"); // Redirigir a la página de error
+            mv.setViewName("redirect:/users/error"); // Redirigir a la página de error
         }
         return mv;
     }
 
-    @RequestMapping(value = "/users/editarlivro/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/editarlivro/{id}", method = RequestMethod.POST)
     public String editarLivroBanco(@ModelAttribute("livro") @Valid Livros livro,
                                    BindingResult result, RedirectAttributes msg,
                                    @RequestParam("file") MultipartFile imagem) {
         if (result.hasErrors()) {
-            msg.addFlashAttribute("erro", "Erro ao editar. " +
+            msg.addFlashAttribute("error", "Error ao editar. " +
                     "Por favor, preencha todos os campos");
-            return "redirect:/editar/" + livro.getId();
+            return "redirect:/users/editar/" + livro.getId();
         }
         Livros livroExistente = livrosRepository.findById(Math.toIntExact(livro.getId())).orElse(null);
         if (livroExistente != null) {
@@ -103,7 +106,7 @@ public class LivrosController {
                     byte[] bytes = imagem.getBytes();
                     Path caminho = Paths.get("./src/main/resources/static/img/" + imagem.getOriginalFilename());
                     Files.write(caminho, bytes);
-                    livroExistente.setImagem(imagem.getOriginalFilename().getBytes());
+                    livroExistente.setImagem(imagem.getOriginalFilename());
                 }
             } catch (IOException e) {
                 System.out.println("Error de imagen");
@@ -113,10 +116,14 @@ public class LivrosController {
             msg.addFlashAttribute("sucesso", "Livro editado com sucesso.");
         }
 
-        return "redirect:/listarlivros";
+        return "redirect:/users/listarlivros";
     }
 
-    @RequestMapping(value = "/index/imagem/{imagem}", method = RequestMethod.GET)
+
+
+
+
+    @RequestMapping(value = "/imagem/{imagem}", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
         File caminho = new File("./src/main/resources/static/img/" + imagem);
@@ -125,13 +132,13 @@ public class LivrosController {
         }
         return null;
     }
-    @RequestMapping(value = "/users/deletarlivro/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/deletarlivro/{id}", method = RequestMethod.GET)
     public String excluirLivro(@PathVariable("id") int id) {
         livrosRepository.deleteById(id);
-        return "redirect:/listarlivros";
+        return "redirect:/users/listarlivros";
     }
 
-    @RequestMapping(value = "/index/livros/preco/{preco}", method = RequestMethod.GET)
+    @RequestMapping(value = "/livros/preco/{preco}", method = RequestMethod.GET)
     public ModelAndView getLivroPreco(@PathVariable("preco") double preco) {
         ModelAndView mv = new ModelAndView("/livros/listarlivros");
         List<Livros> livros = livrosRepository.findLivrosByPreco(preco);
@@ -139,7 +146,7 @@ public class LivrosController {
         return mv;
     }
 
-    @RequestMapping(value = {"/index/pesquisar","/livros/preco/{preco}"}, method=RequestMethod.POST)
+    @RequestMapping(value = {"/pesquisar","/livros/preco/{preco}"}, method=RequestMethod.POST)
     public ModelAndView pesquisar(@RequestParam("texto") String pesquisar) {
         ModelAndView mv = new ModelAndView("/livros/listarlivros");
         List<Livros> livros = livrosRepository.findLivrosByTituloLike("%"+pesquisar+"%");
