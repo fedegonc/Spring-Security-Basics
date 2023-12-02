@@ -31,6 +31,8 @@ public class Empleos {
 
     private String imagen;
 
+    private Boolean activo;
+
     @Lob
     private String descripcion;
 

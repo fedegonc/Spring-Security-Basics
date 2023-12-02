@@ -1,33 +1,45 @@
 package com.example.registrationlogindemo.service.impl;
 
-import com.example.registrationlogindemo.entity.Livros;
-import com.example.registrationlogindemo.service.ServiceLivros;
+import com.example.registrationlogindemo.entity.Empleos;
+import com.example.registrationlogindemo.repository.EmpleosRepository;
+import com.example.registrationlogindemo.service.ServiceEmpleos;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class ServiceImplEmpleos implements ServiceLivros {
+public class ServiceImplEmpleos implements ServiceEmpleos {
+
+    @Autowired
+    EmpleosRepository empleosRepository;
     @Override
-    public List<Livros> findAll() {
-        return null;
+    public List<Empleos> findAll() {
+        return empleosRepository.findAll();
     }
 
     @Override
-    public Livros findById(int id) {
-        return null;
+    public Empleos findById(int id) {
+        return empleosRepository.findById(id).get();
     }
 
     @Override
-    public Livros save(Livros livros) {
-        return null;
+    public Empleos save(Empleos empleos) {
+        return empleosRepository.save(empleos);
     }
 
     @Override
-    public List<Livros> findLivrosByPreco(double preco) {
-        return null;
+    public List<Empleos> findEmpleosByDescripcion(String descripcion) {
+        return empleosRepository.findEmpleosByDescripcionLike(descripcion);
     }
 
     @Override
-    public List<Livros> findLivrosByTituloLike(String titulo) {
-        return null;
+    public List<Empleos> findEmpleosByEmpresaLike(String empresa) {
+        return empleosRepository.findEmpleosByEmpresaLike(empresa);
     }
+
+    @Override
+    public List<Empleos> findEmpleosByPuestoLike(String puesto) {
+        return empleosRepository.findEmpleosByPuestoLike(puesto);
+    }
+
+
 }

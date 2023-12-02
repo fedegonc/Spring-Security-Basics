@@ -1,7 +1,6 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Empleos;
-import com.example.registrationlogindemo.entity.Livros;
 import com.example.registrationlogindemo.repository.EmpleosRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

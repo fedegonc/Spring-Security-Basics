@@ -11,4 +11,6 @@ public interface ServiceEmpleos {
     Empleos save(Empleos empleos);
     List<Empleos> findEmpleosByDescripcion(String descripcion);
     List<Empleos> findEmpleosByEmpresaLike(String empresa);
+
+    List<Empleos> findEmpleosByPuestoLike(String puesto);
 }
