@@ -33,38 +33,55 @@
         </div>
     </div>
 </nav>
-<div class="container">
-    <div class="row">
-        <h1 class="text-center"> Welcome to @SpringJobs </h1>
+<div class="container mt-4">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div th:each="livro : ${livros}" class="col">
+            <div class="card">
+                <img th:src="@{/imagem/{imagem}(imagem=${livro.imagem})}"  width="100" height="100">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${livro.titulo}"></h5>
+                    <p class="card-text" th:text="${livro.resumo}"></p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Author: <span th:text="${livro.autor}"></span></li>
+                    <li class="list-group-item">Price: <span th:text="${livro.preco}"></span></li>
+                    <li class="list-group-item">Genre: <span th:text="${livro.genero}"></span></li>
+                </ul>
+                <div class="card-body">
+                    <a class="btn btn-primary" th:href="@{/users/editarlivro/{id}(id=${livro.id})}">Edit</a>
+                    <a class="btn btn-danger" th:href="@{/users/deletarlivro/{id}(id=${livro.id})}">Delete</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<table class="table table-striped table-bordered table-hover">
-    <thead class="table-dark">
+
+<table>
+    <thead>
     <th>ID</th>
-    <th>Title</th>
-    <th>Author</th>
-    <th>Price</th>
-    <th>Image</th>
-    <th>Summary</th>
-    <th>Genre</th>
-    <th>Actions</th>
+    <th>empresa</th>
+    <th>descripcion</th>
+    <th>imagen</th>
+    <th>Ações</th>
     </thead>
+
     <tbody>
-    <tr th:each="livro : ${livros}">
-        <td th:text="${livro.id}"></td>
-        <td th:text="${livro.titulo}"></td>
-        <td th:text="${livro.autor}"></td>
-        <td th:text="${livro.preco}"></td>
-        <td><img th:src="@{/imagem/{imagem}(imagem=${livro.imagem})}" width="100" height="100"/></td>
-        <td th:text="${livro.resumo}"></td>
-        <td th:text="${livro.genero}"></td>
-        <td>
-            <a class="btn btn-primary" th:href="@{/users/editarlivro/{id}(id=${livro.id})}">Edit</a>
-            <a class="btn btn-danger" th:href="@{/users/deletarlivro/{id}(id=${livro.id})}">Delete</a>
-        </td>
+    <tr th:each="empleo : ${empleos}">
+        <td th:text="${empleo.id}"></td>
+        <td th:text="${empleo.empresa}"></td>
+        <td th:text="${empleo.descripcion}"></td>
+
+
+        <td><img th:src="@{/imagem/{imagem}(imagem=${empleo.imagen})}"/></td>
+
+        <td><a th:href="@{/editarempleo/{id}(id=${empleo.id})}">Editar</a></td>
+
+        <td><a th:href="@{/deletarempleo/{id}(id=${empleo.id})}">Excluir</a></td>
     </tr>
     </tbody>
+
 </table>
+
 </body>
 </html>

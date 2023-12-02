@@ -1,6 +1,8 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Livros;
+import com.example.registrationlogindemo.entity.Empleos;
+import com.example.registrationlogindemo.repository.EmpleosRepository;
 import com.example.registrationlogindemo.repository.LivrosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,11 +22,17 @@ public class IndexController {
     @Autowired
     LivrosRepository livrosRepository;
 
+    @Autowired
+    EmpleosRepository empleosRepository;
+
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public ModelAndView getLivroUsers() {
         ModelAndView mv = new ModelAndView("/index");
         List<Livros> livros = livrosRepository.findAll();
         mv.addObject("livros", livros);
+
+        List<Empleos> empleos = empleosRepository.findAll();
+        mv.addObject("empleos", empleos);
         return mv;
     }
 
@@ -37,5 +45,7 @@ public class IndexController {
         }
         return null;
     }
+
+
 
 }

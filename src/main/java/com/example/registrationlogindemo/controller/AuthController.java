@@ -37,8 +37,6 @@ public class AuthController {
         return "redirect:/index";
     }
 
-
-
     @GetMapping("/login")
     public String loginForm() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

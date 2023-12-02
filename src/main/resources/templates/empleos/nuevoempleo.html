@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Nuevo Livro</title>
+</head>
+
+<body>
+<h1>Nuevo Livro</h1>
+<form method="post" enctype="multipart/form-data">
+    Empresa<input type="text" name="empresa"/><br/>
+    Cargo<input type="text" name="puesto"/><br/>
+    Descripcion<input type="text" name="descripcion"/><br/>
+
+    Imagem<input type="file" name="file"/><br/>
+
+    <button type="submit">Enviar</button>
+</form>
+
+<a th:href="@{/users/listarempleos}">Listar Empleos</a><br/>
+<a th:href="@{/users/inicioempleo}">Inicio</a>
+</body>
+</html>

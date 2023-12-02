@@ -4,7 +4,7 @@ import com.example.registrationlogindemo.entity.Livros;
 
 import java.util.List;
 
-public interface ServiceLivros {
+public interface  ServiceLivros {
     List<Livros> findAll();
     Livros findById(int id);
     Livros save(Livros livros);

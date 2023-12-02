@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xlms:th="http://thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:xlms="http://www.w3.org/1999/xhtml">
+<head>
+
+</head>
+<body>
+
+<h1>Editar Alimentos</h1>
+
+<form method="post" enctype="multipart/form-data" th:action="@{'/users/editarempleo/' + ${empleo.id}}">
+    empresa<input type="text" name="titulo" th:value="${empleo.empresa}"/><br/>
+    descripcion<input type="text" name="autor" th:value="${empleo.descripcion}"/><br/>
+
+
+    Imagen actual: <img th:src="@{/users/imagem/{imagem}(imagem=${empleo.imagen})}" width="100" height="100"/><br/>
+
+    Nueva imagen: <input type="file" name="file"/><br/>
+
+    <button type="submit">Guardar Cambios</button>
+</form>
+
+
+
+<a th:href="@{/users/listarlivros}">Listar Libros</a><br/>
+<a th:href="@{/users/iniciolivros}">Inicio</a><br/>
+
+<a th:href="@{/index}">Home</a><br/>
+
+</body>
+</html>
