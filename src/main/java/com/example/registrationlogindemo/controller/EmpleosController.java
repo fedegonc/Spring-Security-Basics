@@ -105,9 +105,15 @@ public class EmpleosController {
         }
         Empleos empleoExistente = empleosRepository.findById(Math.toIntExact(empleos.getId())).orElse(null);
         if (empleoExistente != null) {
+            empleoExistente.setId(empleos.getId());
             empleoExistente.setEmpresa(empleos.getEmpresa());
             empleoExistente.setDescripcion(empleos.getDescripcion());
-            empleoExistente.setId(empleos.getId());
+            empleoExistente.setCategoria(empleos.getCategoria());
+            empleoExistente.setActivo(empleos.getActivo());
+            empleoExistente.setContacto(empleos.getContacto());
+            empleoExistente.setPuesto(empleos.getPuesto());
+            empleoExistente.setUbicacion(empleos.getUbicacion());
+
             try {
                 if (!imagem.isEmpty()) {
                     byte[] bytes = imagem.getBytes();
@@ -120,7 +126,7 @@ public class EmpleosController {
             }
 
             empleosRepository.save(empleoExistente);
-            msg.addFlashAttribute("sucesso", "Alimento editado com sucesso.");
+            msg.addFlashAttribute("sucesso", "Empleo editado com sucesso.");
         }
 
         return "redirect:/users/listarempleos";
