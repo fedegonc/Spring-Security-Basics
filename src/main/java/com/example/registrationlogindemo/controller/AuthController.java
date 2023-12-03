@@ -22,10 +22,7 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @GetMapping("")
-    public String redirectToIndex() {
-        return "redirect:/index";
-    }
+
 
     @GetMapping("/error")
     public String redirectToIndexOnError() {

@@ -20,11 +20,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/users")
 public class EmpleosController {
 
     @Autowired
     EmpleosRepository empleosRepository;
+
+
     @RequestMapping(value = "/inicioempleos", method = RequestMethod.GET)
     public String inicioEmpleo() {
         return "empleos/inicioempleo";
@@ -69,7 +70,7 @@ public class EmpleosController {
         empleosRepository.save(empleos);
         msg.addFlashAttribute("sucesso",
                 "empleos cadastrado.");
-        return "redirect:/users/listarempleos";
+        return "redirect:/dashboard";
     }
 
     @RequestMapping(value = "/listarempleos", method = RequestMethod.GET)

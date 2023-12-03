@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -23,24 +24,31 @@ public class SpringSecurity {
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+        requestCache.setMatchingRequestParameterName(null);
+
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/register/**").permitAll()
                                 .requestMatchers("/index").permitAll()
                                 .requestMatchers("/imagem/**").permitAll()
                                 .requestMatchers("/imagen/**").permitAll()
-                                .requestMatchers("/users/**").permitAll()
+                                .requestMatchers("/img/**").permitAll()
+                                .requestMatchers("/**").permitAll()
                                 .requestMatchers("/dashboard/**").hasRole("ADMIN")
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/dashboard/control")
+                                .defaultSuccessUrl("/dashboard")
                                 .permitAll()
                 ).logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                                 .permitAll()
+                ).requestCache((cache) -> cache
+                        .requestCache(requestCache)
                 );
         return http.build();
     }
