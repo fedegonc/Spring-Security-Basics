@@ -25,26 +25,34 @@
         </div>
     </div>
 </nav>
-<div class="container mt-4">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="container">
+    <div class="row">
+
+        <div class="row">
+            <h1>Trabajos Destacados</h1>
+        </div>
+        <div class="col-md-10 offset-md-1">
+    <div class="row row-cols-2 row-cols-md-2 g-4">
         <div th:each="empleo : ${empleos}" class="col">
             <div class="card">
                 <img th:src="@{/imagem/{imagem}(imagem=${empleo.imagen})}" width="100" height="100">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${empleo.puesto}"></h5>
+                     Cargo: <span th:text="${empleo.puesto}"></span>
                     <p class="card-text" th:text="${empleo.descripcion}"></p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Empresa: <span th:text="${empleo.empresa}"></span></li>
                     <li class="list-group-item">Ubicación: <span th:text="${empleo.ubicacion}"></span></li>
                     <li class="list-group-item">Categoría: <span th:text="${empleo.categoria}"></span></li>
-                    <li class="list-group-item">Contacto: <span th:text="${empleo.contacto}"></span></li>
+                    <li class="list-group-item">Contacto: <span th:text="${empleo.jornada}"></span></li>
                 </ul>
                 <div class="card-body">
                     <a class="btn btn-primary" th:href="@{/users/postularse/{id}(id=${empleo.id})}">Postularse</a>
                 </div>
             </div>
         </div>
+    </div>
+</div>
     </div>
 </div>
 </body>

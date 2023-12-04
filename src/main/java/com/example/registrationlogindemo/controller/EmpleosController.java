@@ -31,47 +31,23 @@ public class EmpleosController {
         return "empleos/inicioempleo";
     }
 
-    @RequestMapping(value = "/imagen/{imagem}", method = RequestMethod.GET)
+    @RequestMapping(value = "/imagen/{imagen}", method = RequestMethod.GET)
     @ResponseBody
-    public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
-        File caminho = new File("./src/main/resources/static/img/" + imagem);
-        if (imagem != null || imagem.trim().length() > 0) {
+    public byte[] getImagens(@PathVariable("imagen") String imagen) throws IOException {
+        File caminho = new File("./src/main/resources/static/img/" + imagen);
+        if (imagen != null || imagen.trim().length() > 0) {
             return Files.readAllBytes(caminho.toPath());
         }
         return null;
     }
 
 
-    @RequestMapping(value = "/nuevoempleo", method = RequestMethod.GET)
-    public String novoEmpleo() {
-        return "empleos/nuevoempleo";
-    }
+    //@RequestMapping(value = "/nuevoempleo", method = RequestMethod.GET)
+    //public String novoEmpleo() {
+      //  return "empleos/nuevoempleo";
+    //}
 
-    @RequestMapping(value = "/nuevoempleo", method = RequestMethod.POST)
-    public String novoEmpleo(@Valid Empleos empleos,
-                                         BindingResult result, RedirectAttributes msg,
-                                         @RequestParam("file") MultipartFile imagem) {
-        if (result.hasErrors()) {
-            msg.addFlashAttribute("erro",
-                    "Erro ao cadastrar empleos. Por favor, preencha todos os campos");
-            return "redirect:/users/nuevoempleo";
-        }
-        try {
-            if (!imagem.isEmpty()) {
-                byte[] bytes = imagem.getBytes();
-                Path caminho = Paths.get("./src/main/resources/static/img/" + imagem.getOriginalFilename());
-                Files.write(caminho, bytes);
-                empleos.setImagen(imagem.getOriginalFilename());
-            }
-        } catch (IOException e) {
-            System.out.println("Erro ao salvar imagem");
-        }
 
-        empleosRepository.save(empleos);
-        msg.addFlashAttribute("sucesso",
-                "empleos cadastrado.");
-        return "redirect:/dashboard";
-    }
 
     @RequestMapping(value = "/listarempleos", method = RequestMethod.GET)
     public ModelAndView getListarEmpleos() {
@@ -87,8 +63,8 @@ public class EmpleosController {
         ModelAndView mv = new ModelAndView("empleos/editarempleo");
         Optional<Empleos> empleosOptional = empleosRepository.findById(id);
         if (empleosOptional.isPresent()) {
-            Empleos empleos = empleosOptional.get();
-            mv.addObject("empleos", empleos);
+            Empleos empleo = empleosOptional.get();
+            mv.addObject("empleo", empleo);
         } else {
             mv.setViewName("redirect:/users/error"); // Redirigir a la página de error
         }
@@ -96,31 +72,31 @@ public class EmpleosController {
     }
 
     @RequestMapping(value = "/editarempleo/{id}", method = RequestMethod.POST)
-    public String editarEmpleoBanco(@ModelAttribute("empleo") @Valid Empleos empleos,
+    public String editarEmpleoBanco(@ModelAttribute("empleo") @Valid Empleos empleo,
                                       BindingResult result, RedirectAttributes msg,
-                                      @RequestParam("file") MultipartFile imagem) {
+                                      @RequestParam("file") MultipartFile imagen) {
         if (result.hasErrors()) {
             msg.addFlashAttribute("erro", "Erro ao editar." +
                     " Por favor, preencha todos os campos");
-            return "redirect:/users/editar/" + empleos.getId();
+            return "redirect:/editarempleo/" + empleo.getId();
         }
-        Empleos empleoExistente = empleosRepository.findById(Math.toIntExact(empleos.getId())).orElse(null);
+        Empleos empleoExistente = empleosRepository.findById(Math.toIntExact(empleo.getId())).orElse(null);
         if (empleoExistente != null) {
-            empleoExistente.setId(empleos.getId());
-            empleoExistente.setEmpresa(empleos.getEmpresa());
-            empleoExistente.setDescripcion(empleos.getDescripcion());
-            empleoExistente.setCategoria(empleos.getCategoria());
-            empleoExistente.setActivo(empleos.getActivo());
-            empleoExistente.setContacto(empleos.getContacto());
-            empleoExistente.setPuesto(empleos.getPuesto());
-            empleoExistente.setUbicacion(empleos.getUbicacion());
+            empleoExistente.setId(empleo.getId());
+            empleoExistente.setEmpresa(empleo.getEmpresa());
+            empleoExistente.setDescripcion(empleo.getDescripcion());
+            empleoExistente.setCategoria(empleo.getCategoria());
+            empleoExistente.setActivo(empleo.getActivo());
+            empleoExistente.setPuesto(empleo.getPuesto());
+            empleoExistente.setUbicacion(empleo.getUbicacion());
+            empleoExistente.setJornada(empleo.getJornada());
 
             try {
-                if (!imagem.isEmpty()) {
-                    byte[] bytes = imagem.getBytes();
-                    Path caminho = Paths.get("./src/main/resources/static/img/" + imagem.getOriginalFilename());
+                if (!imagen.isEmpty()) {
+                    byte[] bytes = imagen.getBytes();
+                    Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
                     Files.write(caminho, bytes);
-                    empleoExistente.setImagen(imagem.getOriginalFilename());
+                    empleoExistente.setImagen(imagen.getOriginalFilename());
                 }
             } catch (IOException e) {
                 System.out.println("Error de imagen");
@@ -130,13 +106,13 @@ public class EmpleosController {
             msg.addFlashAttribute("sucesso", "Empleo editado com sucesso.");
         }
 
-        return "redirect:/users/listarempleos";
+        return "redirect:/dashboard";
     }
 
     @RequestMapping(value = "/deletarempleo/{id}", method = RequestMethod.GET)
     public String excluirEmpleo(@PathVariable("id") int id) {
         empleosRepository.deleteById(id);
-        return "redirect:/users/listarempleos";
+        return "redirect:/dashbard";
     }
 
 }

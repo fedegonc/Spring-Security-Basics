@@ -27,7 +27,7 @@ public class Empleos {
 
     private String categoria;
 
-    private String contacto;
+    private String jornada;
 
     private String imagen;
 

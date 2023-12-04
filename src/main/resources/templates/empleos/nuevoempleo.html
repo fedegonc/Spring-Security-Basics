@@ -16,58 +16,72 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <a class="navbar-brand" th:href="@{/dashboard}">@SpringJobs</a>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/index}">Index</a>
+                    <a class="navbar-brand" href="#">@SpringJobs</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/dashboard}">Dashboard</a>
+                    <a class="nav-link active" th:href="@{/index}">Index</a>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/dashboard}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/logout}">Logout</a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+<div class="container">
+    <div class="row">
 
-<div class="container mt-5">
-    <h1 class="text-center">Nuevo Empleo</h1>
-    <form method="post" enctype="multipart/form-data" class="col-md-6 offset-md-3">
+
+
+        <div class="col-md-6 offset-md-3">
+
+    <h1 class="mb-4">Nuevo Empleo</h1>
+    <form method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="puesto" class="form-label">Puesto</label>
-            <input type="text" class="form-control" id="puesto" name="puesto"/>
+            <input type="text" class="form-control" id="puesto" name="puesto" required>
         </div>
         <div class="mb-3">
             <label for="empresa" class="form-label">Empresa</label>
-            <input type="text" class="form-control" id="empresa" name="empresa"/>
+            <input type="text" class="form-control" id="empresa" name="empresa" required>
         </div>
         <div class="mb-3">
-            <label for="ubicacion" class="form-label">Ubicación</label>
-            <input type="text" class="form-control" id="ubicacion" name="ubicacion"/>
+            <label for="ubicacion" class="form-label">Ubicacion</label>
+            <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
         </div>
         <div class="mb-3">
-            <label for="categoria" class="form-label">Categoría</label>
-            <input type="text" class="form-control" id="categoria" name="categoria"/>
+            <label for="categoria" class="form-label">Categoria</label>
+            <input type="text" class="form-control" id="categoria" name="categoria" required>
         </div>
+
         <div class="mb-3">
-            <label for="contacto" class="form-label">Contacto</label>
-            <input type="text" class="form-control" id="contacto" name="contacto"/>
+            <label for="jornada" class="form-label">Jornada</label>
+            <input type="text" class="form-control" id="jornada" name="jornada" required>
         </div>
-        <div class="mb-3">
-            <label for="imagen" class="form-label">Imagen</label>
-            <input type="file" class="form-control" id="imagen" name="imagen"/>
-        </div>
+
         <div class="mb-3">
             <label for="activo" class="form-label">Activo</label>
-            <input type="text" class="form-control" id="activo" name="activo"/>
+            <input type="text" class="form-control" id="activo" name="activo" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="file" class="form-label">Imagem</label>
+            <input type="file" class="form-control" id="file" name="file">
         </div>
         <div class="mb-3">
-            <label for="descripcion" class="form-label">Descripción</label>
-            <textarea class="form-control" id="descripcion" name="descripcion"></textarea>
+            <label for="descripcion" class="form-label">Descripcion</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Enviar</button>
     </form>
 
 
+</div>
+</div>
 </div>
 
 </body>
