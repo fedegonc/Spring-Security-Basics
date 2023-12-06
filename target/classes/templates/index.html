@@ -47,7 +47,7 @@
                     <li class="list-group-item">Contacto: <span th:text="${empleo.jornada}"></span></li>
                 </ul>
                 <div class="card-body">
-                    <a class="btn btn-primary" th:href="@{/users/postularse/{id}(id=${empleo.id})}">Postularse</a>
+                    <a class="btn btn-primary" th:href="@{/postularse/{id}(id=${empleo.id})}">Postularse</a>
                 </div>
             </div>
         </div>

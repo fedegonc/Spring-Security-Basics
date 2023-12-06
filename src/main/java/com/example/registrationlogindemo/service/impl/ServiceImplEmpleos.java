@@ -4,9 +4,10 @@ import com.example.registrationlogindemo.entity.Empleos;
 import com.example.registrationlogindemo.repository.EmpleosRepository;
 import com.example.registrationlogindemo.service.ServiceEmpleos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class ServiceImplEmpleos implements ServiceEmpleos {
 
     @Autowired

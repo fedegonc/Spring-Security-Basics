@@ -1,9 +1,11 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
+import com.example.registrationlogindemo.entity.Candidato;
 import com.example.registrationlogindemo.entity.Empleos;
 import com.example.registrationlogindemo.repository.EmpleosRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.CandidatoService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class DashboardController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    CandidatoService candidatoService;
+
     public DashboardController(UserService userService) {
         this.userService = userService;
     }
@@ -47,6 +52,9 @@ public class DashboardController {
 
         List<UserDto> users = userService.findAllUsers();
         mv.addObject("users", users);
+
+        List<Candidato> candidatos = candidatoService.findAll();
+        mv.addObject("candidatos", candidatos);
 
         return mv;
     }
