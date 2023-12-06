@@ -33,10 +33,11 @@ public class SpringSecurity {
                         authorize.requestMatchers("/register/**").permitAll()
                                 .requestMatchers("/index").permitAll()
                                 .requestMatchers("/imagem/**").permitAll()
-                                .requestMatchers("/imagen/**").permitAll()
-                                .requestMatchers("/img/**").permitAll()
-                                .requestMatchers("/**").permitAll()
+                                .requestMatchers("/postularse/**").permitAll()
+                                .requestMatchers("/gracias").permitAll()
                                 .requestMatchers("/dashboard/**").hasRole("ADMIN")
+                                .requestMatchers("/nuevoempleo/**").hasRole("ADMIN")
+                                .requestMatchers("/empleo/**").hasRole("ADMIN")
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")

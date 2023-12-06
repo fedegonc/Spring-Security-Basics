@@ -100,9 +100,10 @@ public class DashboardController {
         return "redirect:/dashboard";
     }
 
-    @RequestMapping(value = "/excluirempleo/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/deletarempleo/{id}", method = RequestMethod.GET)
     public String excluirEmpleo(@PathVariable("id") int id) {
         empleosRepository.deleteById(id);
-        return "redirect:/dashboard";
+        return "redirect:/dashbard";
     }
+
 }

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/admin")
 public class EmpleosController {
 
     @Autowired
@@ -31,7 +32,7 @@ public class EmpleosController {
         return "empleos/inicioempleo";
     }
 
-    @RequestMapping(value = "/imagen/{imagen}", method = RequestMethod.GET)
+    @RequestMapping(value = "/img/{imagen}", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImagens(@PathVariable("imagen") String imagen) throws IOException {
         File caminho = new File("./src/main/resources/static/img/" + imagen);
@@ -41,11 +42,6 @@ public class EmpleosController {
         return null;
     }
 
-
-    //@RequestMapping(value = "/nuevoempleo", method = RequestMethod.GET)
-    //public String novoEmpleo() {
-      //  return "empleos/nuevoempleo";
-    //}
 
 
 
@@ -109,10 +105,6 @@ public class EmpleosController {
         return "redirect:/dashboard";
     }
 
-    @RequestMapping(value = "/deletarempleo/{id}", method = RequestMethod.GET)
-    public String excluirEmpleo(@PathVariable("id") int id) {
-        empleosRepository.deleteById(id);
-        return "redirect:/dashbard";
-    }
+
 
 }
