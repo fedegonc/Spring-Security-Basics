@@ -35,6 +35,8 @@ public class SpringSecurity {
                                 .requestMatchers("/imagem/**").permitAll()
                                 .requestMatchers("/postularse/**").permitAll()
                                 .requestMatchers("/gracias").permitAll()
+                                .requestMatchers("/favicon.*").permitAll()
+                                .requestMatchers("/error").permitAll()
                                 .requestMatchers("/dashboard/**").hasRole("ADMIN")
                                 .requestMatchers("/nuevoempleo/**").hasRole("ADMIN")
                                 .requestMatchers("/empleo/**").hasRole("ADMIN")

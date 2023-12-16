@@ -84,7 +84,7 @@
             <td th:text="${empleo.jornada}"></td>
             <td th:text="${empleo.activo}"></td>
             <td th:text="${empleo.descripcion}"></td>
-            <td><img th:src="@{/imagem/{img}(img=${empleo.imagen})}" width="50" height="50"></td>
+            <td><img th:src="@{/imagem/{img}(img=${empleo.imagen})}" width="100" height="100"></td>
             <td>
                 <a class="btn btn-primary" th:href="@{/editarempleo/{id}(id=${empleo.id})}">Edit</a>
                 <a class="btn btn-danger" th:href="@{/deletarempleo/{id}(id=${empleo.id})}">Delete</a>
@@ -98,14 +98,14 @@
     <table class="table table-striped table-bordered table-hover">
         <thead class="table-dark">
         <tr>
-            <th scope="col">_id</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Apellido</th>
-            <th scope="col">Email</th>
-            <th scope="col">LinkedIn</th>
-            <th scope="col">Aptitudes</th>
-            <th scope="col">Puesto</th>
-            <th scope="col">Empresa</th>
+            <th >_id</th>
+            <th >Nombre</th>
+            <th >Apellido</th>
+            <th >Email</th>
+            <th >LinkedIn</th>
+            <th >Aptitudes</th>
+            <th >Puesto</th>
+            <th >Empresa</th>
         </tr>
         </thead>
         <tbody>
