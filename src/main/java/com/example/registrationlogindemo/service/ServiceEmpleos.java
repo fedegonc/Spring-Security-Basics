@@ -12,4 +12,5 @@ public interface ServiceEmpleos {
     List<Empleos> findEmpleosByCategoriaLike(String descripcion);
     List<Empleos> findEmpleosByEmpresaLike(String empresa);
 
+    List<Empleos> findEmpleosActivos();
 }

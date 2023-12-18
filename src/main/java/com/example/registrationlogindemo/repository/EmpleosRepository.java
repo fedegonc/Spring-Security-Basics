@@ -10,5 +10,6 @@ public interface EmpleosRepository extends JpaRepository<Empleos, Integer> {
     List<Empleos> findEmpleosByCategoriaLike(String descripcion);
 
     List<Empleos> findEmpleosByEmpresaLike(String empresa);
+    List<Empleos> findEmpleosByActivo(String estado);
 
 }

@@ -31,7 +31,7 @@ public class IndexController {
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public ModelAndView getLivroUsers() {
         ModelAndView mv = new ModelAndView("/index");
-        List<Empleos> empleos = empleosRepository.findAll();
+        List<Empleos> empleos = empleosRepository.findEmpleosByActivo("Activo");
         mv.addObject("empleos", empleos);
         return mv;
     }

@@ -61,7 +61,7 @@ public class EmpleosController {
     @RequestMapping(value = "/editarempleo/{id}", method = RequestMethod.POST)
     public String editarEmpleoBanco(@ModelAttribute("empleo") @Valid Empleos empleo,
                                       BindingResult result, RedirectAttributes msg,
-                                      @RequestParam("file") MultipartFile imagen) {
+                                      @RequestParam("file") MultipartFile imagem) {
         if (result.hasErrors()) {
             msg.addFlashAttribute("erro", "Erro ao editar." +
                     " Por favor, preencha todos os campos");
@@ -79,11 +79,11 @@ public class EmpleosController {
             empleoExistente.setJornada(empleo.getJornada());
 
             try {
-                if (!imagen.isEmpty()) {
-                    byte[] bytes = imagen.getBytes();
-                    Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
+                if (!imagem.isEmpty()) {
+                    byte[] bytes = imagem.getBytes();
+                    Path caminho = Paths.get("./src/main/resources/static/img/" + imagem.getOriginalFilename());
                     Files.write(caminho, bytes);
-                    empleoExistente.setImagen(imagen.getOriginalFilename());
+                    empleoExistente.setImagen(imagem.getOriginalFilename());
                 }
             } catch (IOException e) {
                 System.out.println("Error de imagen");

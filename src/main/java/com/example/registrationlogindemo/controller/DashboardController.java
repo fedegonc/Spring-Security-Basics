@@ -43,7 +43,6 @@ public class DashboardController {
     public String redirect() {
         return "redirect:/index";
     }
-
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public ModelAndView getEmpleos() {
         ModelAndView mv = new ModelAndView("/dashboard");
@@ -58,8 +57,6 @@ public class DashboardController {
 
         return mv;
     }
-
-
     @RequestMapping(value = "/img/{imagem}", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
@@ -73,7 +70,6 @@ public class DashboardController {
     public String novoAlimento() {
         return "empleos/nuevoempleo";
     }
-
     @RequestMapping(value = "/nuevoempleo", method = RequestMethod.POST)
     public String novoEmpleo(@Valid Empleos empleos,
                              BindingResult result, RedirectAttributes msg,
@@ -93,17 +89,27 @@ public class DashboardController {
         } catch (IOException e) {
             System.out.println("Erro ao salvar imagem");
         }
-
         empleosRepository.save(empleos);
         msg.addFlashAttribute("sucesso",
                 "empleos cadastrado.");
         return "redirect:/dashboard";
     }
-
     @RequestMapping(value = "/deletarempleo/{id}", method = RequestMethod.GET)
     public String excluirEmpleo(@PathVariable("id") int id) {
         empleosRepository.deleteById(id);
-        return "redirect:/dashbard";
+        return "redirect:/dashboard";
     }
-
+    @RequestMapping(value = "/modificarestadoempleo/{id}", method = RequestMethod.GET)
+    public String modificarEstadoEmpleo(@PathVariable("id") int id) {
+        Empleos empleo = empleosRepository.findById(id).orElse(null);
+        if (empleo != null) {
+            if ("Activo".equals(empleo.getActivo())) {
+                empleo.setActivo("Inactivo");
+            } else {
+                empleo.setActivo("Activo");
+            }
+            empleosRepository.save(empleo);
+        }
+        return "redirect:/dashboard";
+    }
 }

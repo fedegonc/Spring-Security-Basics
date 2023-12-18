@@ -23,6 +23,7 @@ public class Candidato {
     private String email;
     private String linkedin;
     private String aptitudes;
+    private String imagen;
 
     @ManyToOne
     @JoinColumn(name = "empleo_id")

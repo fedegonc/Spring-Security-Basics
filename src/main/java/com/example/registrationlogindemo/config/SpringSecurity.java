@@ -39,10 +39,13 @@ public class SpringSecurity {
                                 .requestMatchers("/gracias").permitAll()
                                 .requestMatchers("/favicon.*").permitAll()
                                 .requestMatchers("/error").permitAll()
-                                .requestMatchers("/admin/buscar").permitAll()
+                                .requestMatchers("/modificarestadoempleo/**").hasRole("ADMIN")
                                 .requestMatchers("/dashboard/**").hasRole("ADMIN")
                                 .requestMatchers("/nuevoempleo/**").hasRole("ADMIN")
                                 .requestMatchers("/empleo/**").hasRole("ADMIN")
+                                .requestMatchers("/editarempleo/**").hasRole("ADMIN")
+                                .requestMatchers("/deletarempleo/**").hasRole("ADMIN")
+                                .requestMatchers("/img/**").hasRole("ADMIN")
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")

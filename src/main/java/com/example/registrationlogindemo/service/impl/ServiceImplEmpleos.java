@@ -37,5 +37,8 @@ public class ServiceImplEmpleos implements ServiceEmpleos {
         return empleosRepository.findEmpleosByEmpresaLike(empresa);
     }
 
-
+    @Override
+    public List<Empleos> findEmpleosActivos() {
+        return empleosRepository.findEmpleosByActivo("Activo");
+    }
 }
