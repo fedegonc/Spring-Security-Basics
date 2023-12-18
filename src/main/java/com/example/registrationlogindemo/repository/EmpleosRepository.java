@@ -7,9 +7,8 @@ import java.util.List;
 
 public interface EmpleosRepository extends JpaRepository<Empleos, Integer> {
     void findAllById(int id);
-    List<Empleos> findEmpleosByDescripcionLike(String descripcion);
-
-    List<Empleos> findEmpleosByPuestoLike(String puesto);
+    List<Empleos> findEmpleosByCategoriaLike(String descripcion);
 
     List<Empleos> findEmpleosByEmpresaLike(String empresa);
+
 }

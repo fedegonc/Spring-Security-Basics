@@ -28,18 +28,13 @@ public class ServiceImplEmpleos implements ServiceEmpleos {
     }
 
     @Override
-    public List<Empleos> findEmpleosByDescripcion(String descripcion) {
-        return empleosRepository.findEmpleosByDescripcionLike(descripcion);
+    public List<Empleos> findEmpleosByCategoriaLike(String categoria) {
+        return empleosRepository.findEmpleosByCategoriaLike(categoria);
     }
 
     @Override
     public List<Empleos> findEmpleosByEmpresaLike(String empresa) {
         return empleosRepository.findEmpleosByEmpresaLike(empresa);
-    }
-
-    @Override
-    public List<Empleos> findEmpleosByPuestoLike(String puesto) {
-        return empleosRepository.findEmpleosByPuestoLike(puesto);
     }
 
 

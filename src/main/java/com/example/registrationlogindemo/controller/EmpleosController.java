@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/admin")
 public class EmpleosController {
 
     @Autowired
@@ -44,14 +43,6 @@ public class EmpleosController {
 
 
 
-
-    @RequestMapping(value = "/listarempleos", method = RequestMethod.GET)
-    public ModelAndView getListarEmpleos() {
-        ModelAndView mv = new ModelAndView("/empleos/listarempleos");
-        List<Empleos> empleos = empleosRepository.findAll();
-        mv.addObject("empleos", empleos);
-        return mv;
-    }
 
 
     @RequestMapping(value = "/editarempleo/{id}", method = RequestMethod.GET)
@@ -107,4 +98,18 @@ public class EmpleosController {
 
 
 
+    @RequestMapping(value = {"/buscarPorEmpresa"}, method=RequestMethod.POST)
+    public ModelAndView pesquisar(@RequestParam("buscarPorEmpresa") String buscarPorEmpresa) {
+        ModelAndView mv = new ModelAndView("/index");
+        List<Empleos> empleosPorEmpresa = empleosRepository.findEmpleosByEmpresaLike("%"+buscarPorEmpresa+"%");
+        mv.addObject("empleos", empleosPorEmpresa);
+        return mv;
+    }
+    @PostMapping("/buscarPorCategoria")
+    public ModelAndView buscar(@RequestParam("buscarPorCategoria") String buscarPorCategoria) {
+        ModelAndView mv = new ModelAndView("/index");
+        List<Empleos> empleosPorCategoria = empleosRepository.findEmpleosByCategoriaLike("%"+buscarPorCategoria+"%");
+        mv.addObject("empleos", empleosPorCategoria);
+        return mv;
+    }
 }

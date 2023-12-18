@@ -7,32 +7,21 @@
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
+
     <style>
-        .card {
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
         .card img {
-            max-height: 200px;
-            object-fit: cover;
-            border-bottom: 1px solid #dee2e6;
+            width: 50px;
+            height: 50px;
+            object-fit: cover; /* Para mantener la relación de aspecto */
         }
 
-        .card-body {
-            text-align: left;
-        }
-
-        .list-group-item {
-            border: none;
-        }
-
-        .btn-postularse {
-            width: 100%;
+        .card:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease-in-out;
         }
     </style>
 </head>
-<body>
+<body class="bg-light">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,42 +29,54 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <a class="navbar-brand" th:href="@{/dashboard}">@SpringJobs</a>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
+                    <a class="navbar-brand" th:href="@{/dashboard}">@SpringJobs</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
 <div class="container mt-4">
-    <div class="row" align="center">
-        <div class="row">
-            <h1>Trabajos Destacados</h1>
+
+    <div class="row text-left">
+        <div class="col">
+            <h2>Trabajos Destacados</h2> <br> <br>
         </div>
-        <div class="col-md-10 offset-md-1">
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                <div th:each="empleo : ${empleos}" class="col">
-                    <div class="card">
-                        <img th:src="@{/imagem/{imagem}(imagem=${empleo.imagen})}" class="card-img-top" alt="Imagen del trabajo">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${empleo.puesto}"></h5>
-                            <p class="card-text" th:text="${empleo.descripcion}"></p>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Empresa: <span th:text="${empleo.empresa}"></span></li>
-                            <li class="list-group-item">Ubicación: <span th:text="${empleo.ubicacion}"></span></li>
-                            <li class="list-group-item">Categoría: <span th:text="${empleo.categoria}"></span></li>
-                            <li class="list-group-item">Contacto: <span th:text="${empleo.jornada}"></span></li>
-                        </ul>
-                        <div class="card-body">
-                            <a class="btn btn-primary btn-postularse" th:href="@{/postularse/{id}(id=${empleo.id})}">Postularse</a>
-                        </div>
-                    </div>
+    </div>
+
+    <div class="container mt-4">
+        <form method="post" action="buscarPorEmpresa">
+            Buscar por Empresa: <input type="text" name="buscarPorEmpresa"/>
+            <input type="submit"/>
+        </form><hr>
+
+        <form method="post" action="buscarPorCategoria">
+            Buscar por Categoría: <input type="text" name="buscarPorCategoria"/>
+            <input type="submit"/>
+        </form><hr>
+        <br><br>
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+        <div th:each="empleo : ${empleos}" class="col">
+            <div class="card">
+                <img th:src="@{/imagem/{imagem}(imagem=${empleo.imagen})}"  height="50" class="card-img-top" alt="Imagen del trabajo">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${empleo.puesto}"></h5>
+                    <p class="card-text" th:text="${empleo.descripcion}"></p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Empresa: <span th:text="${empleo.empresa}"></span></li>
+                    <li class="list-group-item">Ubicación: <span th:text="${empleo.ubicacion}"></span></li>
+                    <li class="list-group-item">Categoría: <span th:text="${empleo.categoria}"></span></li>
+                    <li class="list-group-item">Jornada: <span th:text="${empleo.jornada}"></span></li>
+                </ul>
+                <div class="card-body">
+                    <a class="btn btn-primary" th:href="@{/postularse/{id}(id=${empleo.id})}">Postularse</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>
