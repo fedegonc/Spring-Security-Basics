@@ -18,13 +18,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <a class="navbar-brand" th:href="@{/dashboard}">@SpringJobs</a>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
-                </li>
+
             </ul>
         </div>
     </div>
 </nav>
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <li class="breadcrumb-item"><a th:href="@{/index}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Gracias</li>
+        </ol>
+    </nav>
+</div>
 <div class="container mt-5">
     <h1 class="mb-4">¡Gracias por tu postulación!</h1>
     <p>Nos pondremos en contacto contigo pronto.</p>
