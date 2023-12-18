@@ -25,6 +25,14 @@ public class Candidato {
     private String aptitudes;
     private String imagen;
 
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
     @ManyToOne
     @JoinColumn(name = "empleo_id")
     private Empleos empleo;

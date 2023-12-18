@@ -35,6 +35,15 @@
     </div>
 </nav>
 
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <li class="breadcrumb-item"><a th:href="@{/index}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Dashobard</li>
+        </ol>
+    </nav>
+</div>
+
 <div class="container mt-4">
     <div class="row">
         <h3>Administration Users</h3>
@@ -99,7 +108,7 @@
     <table class="table table-striped table-bordered table-hover">
         <thead class="table-dark">
         <tr>
-            <th >_id</th>
+            <th >Id</th>
             <th >Nombre</th>
             <th >Apellido</th>
             <th >Email</th>
@@ -107,6 +116,7 @@
             <th >Aptitudes</th>
             <th >Puesto</th>
             <th >Empresa</th>
+            <th >Foto</th>
         </tr>
         </thead>
         <tbody>
@@ -119,6 +129,7 @@
             <td th:text="${candidato.aptitudes}"></td>
             <td th:text="${candidato.empleo.puesto}"></td>
             <td th:text="${candidato.empleo.empresa}"></td>
+            <td><img th:src="@{/imagem/{img}(img=${candidato.imagen})}" width="100" height="100"></td>
         </tr>
         </tbody>
     </table>

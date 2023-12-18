@@ -30,8 +30,8 @@
 </div>
 <div class="container mt-5">
     <h3 class="mb-4">Formulario de Postulación</h3>
-    <form th:action="@{/postularse/{id}(id=${empleo.id})}" method="post" th:object="${candidato}">
-        <!-- Agrega campos para el nombre, apellido, email, LinkedIn, aptitudes -->
+    <form th:action="@{/postularse/{id}(id=${empleo.id})}" method="post" th:object="${candidato}" enctype="multipart/form-data">
+
         <div class="form-group">
             <label for="nombre">Nombre:</label>
             <input type="text" class="form-control" id="nombre" name="nombre" th:field="*{nombre}" required>
@@ -52,6 +52,12 @@
             <label for="aptitudes">Aptitudes:</label>
             <textarea class="form-control" id="aptitudes" name="aptitudes" th:field="*{aptitudes}" required></textarea>
         </div>
+
+        <div class="mb-3">
+            <label class="form-label">Imagem</label>
+            <input type="file" name="file">
+        </div>
+
         <button type="submit" class="btn btn-primary">Enviar Postulación</button>
     </form>
 </div>

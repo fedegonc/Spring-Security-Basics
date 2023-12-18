@@ -37,8 +37,25 @@
     </div>
 </nav>
 
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <li class="breadcrumb-item"><a th:href="@{/index}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Busquedas</li>
+        </ol>
+    </nav>
+</div>
 <div class="container mt-4">
+    <form method="post" action="buscarPorEmpresa">
+        Buscar por Empresa: <input type="text" name="buscarPorEmpresa"/>
+        <input type="submit"/>
+    </form><hr>
 
+    <form method="post" action="buscarPorCategoria">
+        Buscar por Categoría: <input type="text" name="buscarPorCategoria"/>
+        <input type="submit"/>
+    </form><hr>
+    <br><br>
     <div class="row text-left">
         <div class="col">
             <h2>Trabajos Destacados</h2> <br> <br>
@@ -46,16 +63,7 @@
     </div>
 
     <div class="container mt-4">
-        <form method="post" action="buscarPorEmpresa">
-            Buscar por Empresa: <input type="text" name="buscarPorEmpresa"/>
-            <input type="submit"/>
-        </form><hr>
 
-        <form method="post" action="buscarPorCategoria">
-            Buscar por Categoría: <input type="text" name="buscarPorCategoria"/>
-            <input type="submit"/>
-        </form><hr>
-        <br><br>
         <div class="row row-cols-1 row-cols-md-3 g-3">
             <div th:each="empleo : ${empleos}" class="col-md-4">
                 <div class="card">
