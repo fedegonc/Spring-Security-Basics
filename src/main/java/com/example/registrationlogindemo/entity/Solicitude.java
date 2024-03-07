@@ -8,34 +8,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "empleos")
+@Table(name = "solicitude")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Empleos {
+public class Solicitude {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String puesto;
-
-    private String empresa;
+    private String nombre;
 
     private String ubicacion;
 
     private String categoria;
-
-    private String jornada;
-
-    private String imagen;
 
     private String activo;
 
     @Lob
     private String descripcion;
 
+    private String imagen;
 
 
 }

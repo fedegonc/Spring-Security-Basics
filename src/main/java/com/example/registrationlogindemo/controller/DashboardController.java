@@ -1,11 +1,9 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
-import com.example.registrationlogindemo.entity.Candidato;
-import com.example.registrationlogindemo.entity.Empleos;
-import com.example.registrationlogindemo.repository.EmpleosRepository;
+import com.example.registrationlogindemo.entity.Solicitude;
+import com.example.registrationlogindemo.repository.solicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.CandidatoService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +23,11 @@ import java.util.List;
 
 @Controller
 public class DashboardController {
-
     @Autowired
-    EmpleosRepository empleosRepository;
+    solicitudeRepository solicitudeRepository;
     private final UserService userService;
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    CandidatoService candidatoService;
-
     public DashboardController(UserService userService) {
         this.userService = userService;
     }
@@ -43,17 +36,15 @@ public class DashboardController {
     public String redirect() {
         return "redirect:/index";
     }
+
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public ModelAndView getEmpleos() {
         ModelAndView mv = new ModelAndView("/dashboard");
-        List<Empleos> empleos = empleosRepository.findAll();
-        mv.addObject("empleos", empleos);
-
+        List<Solicitude> solicitude = solicitudeRepository.findAll();
+        mv.addObject("solicitude", solicitude);
         List<UserDto> users = userService.findAllUsers();
         mv.addObject("users", users);
 
-        List<Candidato> candidatos = candidatoService.findAll();
-        mv.addObject("candidatos", candidatos);
 
         return mv;
     }
@@ -66,17 +57,19 @@ public class DashboardController {
         }
         return null;
     }
-    @RequestMapping(value = "/nuevoempleo", method = RequestMethod.GET)
+    @RequestMapping(value = "/inisolicitude", method = RequestMethod.GET)
     public String novoAlimento() {
-        return "empleos/nuevoempleo";
+        return "empleos/inisolicitude";
     }
-    @RequestMapping(value = "/nuevoempleo", method = RequestMethod.POST)
-    public String novoEmpleo(@Valid Empleos empleos,
+
+
+    @RequestMapping(value = "/inisolicitude", method = RequestMethod.POST)
+    public String novoEmpleo(@Valid Solicitude solicitud,
                              BindingResult result, RedirectAttributes msg,
                              @RequestParam("file") MultipartFile imagem) {
         if (result.hasErrors()) {
             msg.addFlashAttribute("erro",
-                    "Erro ao cadastrar empleos. Por favor, preencha todos os campos");
+                    "Error al iniciar solicitud. Por favor, llenar todos los campos");
             return "redirect:/dashboard";
         }
         try {
@@ -84,31 +77,31 @@ public class DashboardController {
                 byte[] bytes = imagem.getBytes();
                 Path caminho = Paths.get("./src/main/resources/static/img/" + imagem.getOriginalFilename());
                 Files.write(caminho, bytes);
-                empleos.setImagen(imagem.getOriginalFilename());
+                solicitud.setImagen(imagem.getOriginalFilename());
             }
         } catch (IOException e) {
-            System.out.println("Erro ao salvar imagem");
+            System.out.println("Error al salvar imagen");
         }
-        empleosRepository.save(empleos);
-        msg.addFlashAttribute("sucesso",
-                "empleos cadastrado.");
+        solicitudeRepository.save(solicitud);
+        msg.addFlashAttribute("Exito",
+                "solicitud realizada con exito.");
         return "redirect:/dashboard";
     }
-    @RequestMapping(value = "/deletarempleo/{id}", method = RequestMethod.GET)
-    public String excluirEmpleo(@PathVariable("id") int id) {
-        empleosRepository.deleteById(id);
+    @RequestMapping(value = "/deletsolicitude/{id}", method = RequestMethod.GET)
+    public String excluirSolicitud(@PathVariable("id") int id) {
+        solicitudeRepository.deleteById(id);
         return "redirect:/dashboard";
     }
-    @RequestMapping(value = "/modificarestadoempleo/{id}", method = RequestMethod.GET)
-    public String modificarEstadoEmpleo(@PathVariable("id") int id) {
-        Empleos empleo = empleosRepository.findById(id).orElse(null);
+    @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.GET)
+    public String modifyEstateSolicitud(@PathVariable("id") int id) {
+        Solicitude empleo = solicitudeRepository.findById(id).orElse(null);
         if (empleo != null) {
             if ("Activo".equals(empleo.getActivo())) {
                 empleo.setActivo("Inactivo");
             } else {
                 empleo.setActivo("Activo");
             }
-            empleosRepository.save(empleo);
+            solicitudeRepository.save(empleo);
         }
         return "redirect:/dashboard";
     }

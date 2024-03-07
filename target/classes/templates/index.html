@@ -30,7 +30,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/dashboard}">@SpringJobs</a>
+                    <a class="navbar-brand" th:href="@{/dashboard}">Frontera Sustentable</a>
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/login}">Login</a>
                 </li>
             </ul>
         </div>
@@ -41,13 +44,13 @@
 
     <div class="row text-left">
         <div class="col">
-            <h2>Trabajos Destacados</h2> <br> <br>
+            <h2>Solicitudes</h2> <br> <br>
         </div>
     </div>
 
     <div class="container mt-4">
         <form method="post" action="buscarPorEmpresa">
-            Buscar por Empresa: <input type="text" name="buscarPorEmpresa"/>
+            Buscar por Nombre: <input type="text" name="buscarPorEmpresa"/>
             <input type="submit"/>
         </form><hr>
 

@@ -1,7 +1,7 @@
 package com.example.registrationlogindemo.controller;
 
-import com.example.registrationlogindemo.entity.Empleos;
-import com.example.registrationlogindemo.repository.EmpleosRepository;
+import com.example.registrationlogindemo.entity.Solicitude;
+import com.example.registrationlogindemo.repository.solicitudeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @Controller
 public class IndexController {
     @Autowired
-    EmpleosRepository empleosRepository;
+    solicitudeRepository empleosRepository;
 
     @GetMapping("")
     public String redirectToIndex() {
@@ -31,7 +31,7 @@ public class IndexController {
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public ModelAndView getLivroUsers() {
         ModelAndView mv = new ModelAndView("/index");
-        List<Empleos> empleos = empleosRepository.findEmpleosByActivo("Activo");
+        List<Solicitude> empleos = empleosRepository.findEmpleosByActivo("Activo");
         mv.addObject("empleos", empleos);
         return mv;
     }

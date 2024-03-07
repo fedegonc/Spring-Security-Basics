@@ -23,7 +23,6 @@ public class AuthController {
     }
 
 
-
     @GetMapping("/error")
     public String redirectToIndexOnError() {
         return "redirect:/index";
@@ -68,7 +67,7 @@ public class AuthController {
             return "register";
         }
         userService.saveUser(user);
-        return "redirect:/register?users";
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/users")

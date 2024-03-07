@@ -11,7 +11,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" th:fragment="header">
     <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}"> SpringJobs Registration and Login System</a>
+        <a class="navbar-brand" th:href="@{/}"> Frontera Sustentable</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -24,17 +24,16 @@
     <div class="row col-md-8 offset-md-2">
         <div class="card">
             <div th:if="${param.success}">
-                <div class="alert alert-info">You've successfully registered
-                    to our app!</div>
+                <div class="alert alert-info">Registro realizado con éxito</div>
             </div>
             <div class="card-header">
-                <h2 class="text-center">Registration</h2>
+                <h2 class="text-center">Formulario de Registro</h2>
             </div>
             <div class="card-body">
                 <form method="post" role="form" th:action="@{/register/save}" th:object="${user}">
 
                     <div class="form-group mb-3">
-                        <label class="form-label">First Name</label>
+                        <label class="form-label">Nombre</label>
                         <input class="form-control"
                                id="firstName"
                                name="firstName"
@@ -48,7 +47,7 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="form-label">Last Name</label>
+                        <label class="form-label">Apellido</label>
                         <input class="form-control"
                                id="lastName"
                                name="lastName"
@@ -74,7 +73,7 @@
                         </p>
                     </div>
                     <div class="form-group mb-3">
-                        <label class="form-label">Password</label>
+                        <label class="form-label">Contraseña</label>
                         <input class="form-control"
                                id="password"
                                name="password"
@@ -88,9 +87,8 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <button class="btn btn-primary" type="submit">Register</button>
-                        <span>Already registered? <a href="/" th:href="@{/login}">Login
-                             here</a></span>
+                        <button class="btn btn-primary" type="submit">Registrarse</button>
+                        <span>Ya esta registrado? <a th:href="@{/login}">Inicie Sesión aquí</a></span>
                     </div>
                 </form>
             </div>
