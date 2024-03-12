@@ -1,7 +1,7 @@
 package com.example.registrationlogindemo.service.impl;
 
 import com.example.registrationlogindemo.entity.Solicitude;
-import com.example.registrationlogindemo.repository.solicitudeRepository;
+import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.service.ServiceSolicitude;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import java.util.List;
 public class ServiceImplSolicitude implements ServiceSolicitude {
 
     @Autowired
-    solicitudeRepository solicitudeRepository;
+    SolicitudeRepository solicitudeRepository;
     @Override
     public List<Solicitude> findAll() {
         return solicitudeRepository.findAll();
@@ -29,16 +29,16 @@ public class ServiceImplSolicitude implements ServiceSolicitude {
 
     @Override
     public List<Solicitude> findSolicitudeByCategoriaLike(String categoria) {
-        return solicitudeRepository.findEmpleosByCategoriaLike(categoria);
+        return solicitudeRepository.findSolicitudeByCategoriaLike(categoria);
     }
 
     @Override
     public List<Solicitude> findSolicitudeByEmpresaLike(String empresa) {
-        return solicitudeRepository.findEmpleosByEmpresaLike(empresa);
+        return solicitudeRepository.findSolicitudeByNombreLike(empresa);
     }
 
     @Override
     public List<Solicitude> findSolicitudeActivos() {
-        return solicitudeRepository.findEmpleosByActivo("Activo");
+        return solicitudeRepository.findSolicitudeByActivo("Activo");
     }
 }

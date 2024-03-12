@@ -77,4 +77,9 @@ public class AuthController {
         return "users";
     }
 
+    @GetMapping("/logout")
+    public String redirect() {
+        return "redirect:/index";
+    }
+
 }

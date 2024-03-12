@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Editar Empleo</title>
+    <title>Frontera Sustentable</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
@@ -18,16 +18,16 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="navbar-brand" href="#">@SpringJobs</a>
+                    <a class="navbar-brand" href="#">Frontera Sustentable</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/index}">Index</a>
+                    <a class="nav-link active" th:href="@{/index}">Indice</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/dashboard}">Dashboard</a>
+                    <a class="nav-link active" th:href="@{/dashboard}">Panel de Control</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/logout}">Logout</a>
+                    <a class="nav-link active" th:href="@{/logout}">Salir</a>
                 </li>
             </ul>
         </div>
@@ -35,36 +35,30 @@
 </nav>
 
 <div class="container mt-4">
-    <h1>Editar Empleo</h1>
+    <h1>Editar Solicitud</h1>
 
-    <form method="post" enctype="multipart/form-data" th:action="@{'/editarempleo/' + ${empleo.id}}">
+    <form method="post" enctype="multipart/form-data" th:action="@{'/editsolicitude/' + ${solicitude.id}}">
+
         <div class="mb-3">
-            <label class="form-label" th:for="puesto">Puesto</label>
-            <input type="text" class="form-control" name="puesto" th:value="${empleo.puesto}" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:for="empresa">Empresa</label>
-            <input type="text" class="form-control" name="empresa" th:value="${empleo.empresa}" required>
+            <label class="form-label" th:for="nombre">Nombre</label>
+            <input type="text" class="form-control" name="nombre" th:value="${solicitude.nombre}" required>
         </div>
         <div class="mb-3">
             <label class="form-label" th:for="ubicacion">Ubicación</label>
-            <input type="text" class="form-control" name="ubicacion" th:value="${empleo.ubicacion}" required>
+            <input type="text" class="form-control" name="ubicacion" th:value="${solicitude.ubicacion}" required>
         </div>
         <div class="mb-3">
             <label class="form-label" th:for="categoria">Categoria</label>
-            <input type="text" class="form-control" name="categoria" th:value="${empleo.categoria}" required>
+            <input type="text" class="form-control" name="categoria" th:value="${solicitude.categoria}" required>
         </div>
-        <div class="mb-3">
-            <label class="form-label" th:for="jornada">Jornada</label>
-            <input type="text" class="form-control" name="jornada" th:value="${empleo.jornada}" required>
-        </div>
+
         <div class="mb-3">
             <label class="form-label" th:for="activo">Activo</label>
-            <input type="text" class="form-control" name="activo" th:value="${empleo.activo}" required>
+            <input type="text" class="form-control" name="activo" th:value="${solicitude.activo}" required>
         </div>
         <div class="mb-3">
             <label class="form-label" th:for="file">Imagen actual</label>
-            <img th:src="@{/imagem/{imagen}(imagen=${empleo.imagen})}" width="100" height="100" class="mb-2"/>
+            <img th:src="@{/imagem/{imagen}(imagen=${solicitude.imagen})}" width="100" height="100" class="mb-2"/>
             <label class="form-label" th:for="file">Nueva imagen</label>
             <input class="form-control" type="file"  name="file">
         </div>

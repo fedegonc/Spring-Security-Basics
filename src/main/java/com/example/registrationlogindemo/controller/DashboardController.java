@@ -2,8 +2,7 @@ package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.Solicitude;
-import com.example.registrationlogindemo.repository.solicitudeRepository;
-import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +23,15 @@ import java.util.List;
 @Controller
 public class DashboardController {
     @Autowired
-    solicitudeRepository solicitudeRepository;
+    SolicitudeRepository solicitudeRepository;
     private final UserService userService;
-    @Autowired
-    UserRepository userRepository;
     public DashboardController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/logout")
-    public String redirect() {
-        return "redirect:/index";
-    }
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-    public ModelAndView getEmpleos() {
+    public ModelAndView getSolicitude() {
         ModelAndView mv = new ModelAndView("/dashboard");
         List<Solicitude> solicitude = solicitudeRepository.findAll();
         mv.addObject("solicitude", solicitude);
@@ -57,14 +50,14 @@ public class DashboardController {
         }
         return null;
     }
-    @RequestMapping(value = "/inisolicitude", method = RequestMethod.GET)
-    public String novoAlimento() {
-        return "empleos/inisolicitude";
+    @RequestMapping(value = "/newsolicitude", method = RequestMethod.GET)
+    public String newSolicitude() {
+        return "solicitude/newsolicitude";
     }
 
 
-    @RequestMapping(value = "/inisolicitude", method = RequestMethod.POST)
-    public String novoEmpleo(@Valid Solicitude solicitud,
+    @RequestMapping(value = "/newsolicitude", method = RequestMethod.POST)
+    public String newSolicitudePost(@Valid Solicitude solicitud,
                              BindingResult result, RedirectAttributes msg,
                              @RequestParam("file") MultipartFile imagem) {
         if (result.hasErrors()) {
@@ -94,14 +87,14 @@ public class DashboardController {
     }
     @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.GET)
     public String modifyEstateSolicitud(@PathVariable("id") int id) {
-        Solicitude empleo = solicitudeRepository.findById(id).orElse(null);
-        if (empleo != null) {
-            if ("Activo".equals(empleo.getActivo())) {
-                empleo.setActivo("Inactivo");
+        Solicitude solicitude = solicitudeRepository.findById(id).orElse(null);
+        if (solicitude != null) {
+            if ("Activo".equals(solicitude.getActivo())) {
+                solicitude.setActivo("Inactivo");
             } else {
-                empleo.setActivo("Activo");
+                solicitude.setActivo("Activo");
             }
-            solicitudeRepository.save(empleo);
+            solicitudeRepository.save(solicitude);
         }
         return "redirect:/dashboard";
     }

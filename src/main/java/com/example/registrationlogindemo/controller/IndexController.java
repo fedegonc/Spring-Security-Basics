@@ -1,7 +1,7 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Solicitude;
-import com.example.registrationlogindemo.repository.solicitudeRepository;
+import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @Controller
 public class IndexController {
     @Autowired
-    solicitudeRepository empleosRepository;
+    SolicitudeRepository solicitudeRepository;
 
     @GetMapping("")
     public String redirectToIndex() {
@@ -27,15 +27,13 @@ public class IndexController {
         return "redirect:/index";
     }
 
-
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public ModelAndView getLivroUsers() {
+    public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("/index");
-        List<Solicitude> empleos = empleosRepository.findEmpleosByActivo("Activo");
-        mv.addObject("empleos", empleos);
+        List<Solicitude> solicitude = solicitudeRepository.findSolicitudeByActivo("Activo");
+        mv.addObject("solicitude", solicitude);
         return mv;
     }
-
     @RequestMapping(value = "/imagem/{imagem}", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
@@ -45,7 +43,4 @@ public class IndexController {
         }
         return null;
     }
-
-
-
 }

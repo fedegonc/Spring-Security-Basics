@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Nuevo Livro</title>
+    <title>Frontera Sustentable</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
@@ -17,7 +17,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="navbar-brand" href="#">@SpringJobs</a>
+                    <a class="navbar-brand" href="#">Frontera Sustentable</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" th:href="@{/index}">Index</a>
@@ -39,15 +39,11 @@
 
         <div class="col-md-6 offset-md-3">
 
-    <h1 class="mb-4">Nuevo Empleo</h1>
+    <h1 class="mb-4">Nueva Solicitud</h1>
     <form method="post" enctype="multipart/form-data">
         <div class="mb-3">
-            <label for="puesto" class="form-label">Puesto</label>
-            <input type="text" class="form-control" id="puesto" name="puesto" required>
-        </div>
-        <div class="mb-3">
-            <label for="empresa" class="form-label">Empresa</label>
-            <input type="text" class="form-control" id="empresa" name="empresa" required>
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
         </div>
         <div class="mb-3">
             <label for="ubicacion" class="form-label">Ubicacion</label>
@@ -59,24 +55,19 @@
         </div>
 
         <div class="mb-3">
-            <label for="jornada" class="form-label">Jornada</label>
-            <input type="text" class="form-control" id="jornada" name="jornada" required>
-        </div>
-
-        <div class="mb-3">
             <label for="activo" class="form-label">Activo</label>
             <input type="text" class="form-control" id="activo" name="activo" required>
         </div>
 
         <div class="mb-3">
-            <label for="file" class="form-label">Imagem</label>
+            <label for="file" class="form-label">Imagen</label>
             <input type="file" class="form-control" id="file" name="file">
         </div>
         <div class="mb-3">
-            <label for="descripcion" class="form-label">Descripcion</label>
+            <label for="descripcion" class="form-label">Descripción</label>
             <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Enviar</button>
+        <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
     </form>
 
 
