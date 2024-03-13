@@ -56,6 +56,12 @@
             <label class="form-label" th:for="activo">Activo</label>
             <input type="text" class="form-control" name="activo" th:value="${solicitude.activo}" required>
         </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="descripcion">Descripcion</label>
+            <input type="text" class="form-control" name="descripcion" th:value="${solicitude.descripcion}" required>
+        </div>
+
         <div class="mb-3">
             <label class="form-label" th:for="file">Imagen actual</label>
             <img th:src="@{/imagem/{imagen}(imagen=${solicitude.imagen})}" width="100" height="100" class="mb-2"/>

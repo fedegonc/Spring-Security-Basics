@@ -32,5 +32,4 @@ public class Solicitude {
 
     private String imagen;
 
-
 }

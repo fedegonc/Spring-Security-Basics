@@ -1,4 +1,4 @@
-package com.example.registrationlogindemo.config;
+package com.example.registrationlogindemo.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,14 +31,15 @@ public class SpringSecurity {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/register/**").permitAll()
+                                .requestMatchers("/").permitAll()
                                 .requestMatchers("/index").permitAll()
                                 .requestMatchers("/imagem/**").permitAll()
                                 .requestMatchers("/buscarPorNombre").permitAll()
                                 .requestMatchers("/buscarPorCategoria").permitAll()
-
                                 .requestMatchers("/gracias").permitAll()
                                 .requestMatchers("/favicon.*").permitAll()
                                 .requestMatchers("/error").permitAll()
+
                                 .requestMatchers("/modifysolicitude/**").hasRole("ADMIN")
                                 .requestMatchers("/dashboard/**").hasRole("ADMIN")
                                 .requestMatchers("/newsolicitude/**").hasRole("ADMIN")

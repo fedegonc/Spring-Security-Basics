@@ -23,4 +23,5 @@ public class UserDto
     private String email;
     @NotEmpty(message = "La contraseña no puede estar vacía")
     private String password;
+
 }

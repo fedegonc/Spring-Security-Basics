@@ -1,7 +1,9 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
+import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.Solicitude;
+import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
@@ -19,11 +21,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class DashboardController {
     @Autowired
     SolicitudeRepository solicitudeRepository;
+    @Autowired
+    RoleRepository roleRepository;
     private final UserService userService;
     public DashboardController(UserService userService) {
         this.userService = userService;
@@ -37,8 +42,6 @@ public class DashboardController {
         mv.addObject("solicitude", solicitude);
         List<UserDto> users = userService.findAllUsers();
         mv.addObject("users", users);
-
-
         return mv;
     }
     @RequestMapping(value = "/img/{imagem}", method = RequestMethod.GET)
@@ -85,7 +88,7 @@ public class DashboardController {
         solicitudeRepository.deleteById(id);
         return "redirect:/dashboard";
     }
-    @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/modifyestate/{id}", method = RequestMethod.GET)
     public String modifyEstateSolicitud(@PathVariable("id") int id) {
         Solicitude solicitude = solicitudeRepository.findById(id).orElse(null);
         if (solicitude != null) {
@@ -97,5 +100,67 @@ public class DashboardController {
             solicitudeRepository.save(solicitude);
         }
         return "redirect:/dashboard";
+    }
+
+
+
+    @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.GET)
+    public ModelAndView editSolicitude(@PathVariable("id") int id) {
+        ModelAndView mv = new ModelAndView("solicitude/editsolicitude");
+        Optional<Solicitude> alimentoOptional = solicitudeRepository.findById(id);
+
+        if (alimentoOptional.isPresent()) {
+            Solicitude solicitude = alimentoOptional.get();
+            mv.addObject("solicitude", solicitude);
+        } else {
+            mv.setViewName("redirect:/error");
+        }
+        return mv;
+    }
+
+
+    @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.POST)
+    public String editSolicitudeBanco(@ModelAttribute("solicitude") @Valid Solicitude solicitude,
+                                      BindingResult result, RedirectAttributes msg,
+                                      @RequestParam("file") MultipartFile imagem) {
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("erro", "Erro ao editar." +
+                    " Por favor, preencha todos os campos");
+            return "redirect:/editar/" + solicitude.getId();
+        }
+        Solicitude changeSolicitude = solicitudeRepository.findById(solicitude.getId()).orElse(null);
+        if (changeSolicitude != null) {
+            changeSolicitude.setNombre(solicitude.getNombre());
+            changeSolicitude.setCategoria(solicitude.getCategoria());
+            changeSolicitude.setActivo(solicitude.getActivo());
+
+            changeSolicitude.setDescripcion(solicitude.getDescripcion());
+            changeSolicitude.setUbicacion(solicitude.getUbicacion());
+            try {
+                if (!imagem.isEmpty()) {
+                    byte[] bytes = imagem.getBytes();
+                    Path caminho = Paths.get("./src/main/resources/static/img/" + imagem.getOriginalFilename());
+                    Files.write(caminho, bytes);
+                    changeSolicitude.setImagen(imagem.getOriginalFilename());
+                }
+            } catch (IOException e) {
+                System.out.println("Error de imagen");
+            }
+
+            solicitudeRepository.save(changeSolicitude);
+            msg.addFlashAttribute("sucesso", "Alimento editado com sucesso.");
+        }
+
+        return "redirect:/dashboard";
+    }
+
+    @RequestMapping(value = "/imagemalimento/{imagem}", method = RequestMethod.GET)
+    @ResponseBody
+    public byte[] getImagensSolicitude(@PathVariable("imagem") String imagem) throws IOException {
+        Path caminho = Paths.get("./src/main/resources/static/img/" + imagem);
+        if (imagem != null || imagem.trim().length() > 0) {
+            return Files.readAllBytes(caminho);
+        }
+        return null;
     }
 }

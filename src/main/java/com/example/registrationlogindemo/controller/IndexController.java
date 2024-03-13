@@ -19,12 +19,12 @@ public class IndexController {
 
     @GetMapping("")
     public String redirectToIndex() {
-        return "redirect:/index";
+        return "index";
     }
 
     @GetMapping("/")
     public String redirect() {
-        return "redirect:/index";
+        return "index";
     }
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)

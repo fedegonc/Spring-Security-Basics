@@ -64,7 +64,6 @@
                 <div class="card">
                     <img th:src="@{/imagem/{imagem}(imagem=${solicitude.imagen})}"  height="50" class="card-img-top" alt="Imagen del trabajo">
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${solicitude.puesto}"></h5>
                         <p class="card-text" th:text="${solicitude.descripcion}"></p>
                     </div>
                     <ul class="list-group list-group-flush">
