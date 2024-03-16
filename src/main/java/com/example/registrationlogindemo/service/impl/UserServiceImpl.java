@@ -9,8 +9,6 @@ import com.example.registrationlogindemo.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +19,7 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
 
-     public UserServiceImpl(UserRepository userRepository,
+    public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -35,26 +33,30 @@ public class UserServiceImpl implements UserService {
         user.setName(userDto.getFirstName() + " " + userDto.getLastName());
         user.setEmail(userDto.getEmail());
 
-        //encrypt the password once we integrate spring security
-        //user.setPassword(userDto.getPassword());
+        // Encrypt the password
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        Role roleAdmin = roleRepository.findByName("ROLE_ADMIN");
-        Role roleUser = roleRepository.findByName("ROLE_USER");
-
-        List<Role> roles = new ArrayList<>();
-
-        /*if("ROLE_ADMIN".equals(userDto.getRole())){
-            roles.add(getRoleIfExist(roleAdmin));
-            roles.add(getRoleIfExist(roleUser));
+        // Check if there are any users registered
+        long userCount = userRepository.count();
+        Role role;
+        if (userCount == 0) {
+            // If no users are registered, assign admin role
+            role = roleRepository.findByName("ROLE_ADMIN");
+            if (role == null) {
+                role = checkRoleExist("ROLE_ADMIN");
+            }
         } else {
-            roles.add(getRoleIfExist(roleAdmin));
-        }*/
-        roles.add(roleUser);
-        user.setRoles(roles);
+            // If there are registered users, assign user role
+            role = roleRepository.findByName("ROLE_USER");
+            if (role == null) {
+                role = checkRoleExist("ROLE_USER");
+            }
+        }
+
+        user.setRoles(List.of(role));
         userRepository.save(user);
     }
-    private  Role getRoleIfExist(Role role) { return role != null ? role : new Role(); }
+
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -67,7 +69,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    private UserDto convertEntityToDto(User user){
+    private UserDto convertEntityToDto(User user) {
         UserDto userDto = new UserDto();
         String[] name = user.getName().split(" ");
         userDto.setFirstName(name[0]);
@@ -78,13 +80,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private Role checkRoleExist(String roleName) {
-        Role role = roleRepository.findByName(roleName);
-        if(role==null){
-            role = new Role();
-            role.setName(roleName);
-            roleRepository.save(role);
-        }
-
-        return role;
+        Role role = new Role();
+        role.setName(roleName);
+        return roleRepository.save(role);
     }
 }

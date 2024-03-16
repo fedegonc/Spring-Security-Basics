@@ -13,6 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDto
 {
+
+
     private Long id;
     @NotEmpty
     private String firstName;
@@ -24,4 +26,8 @@ public class UserDto
     @NotEmpty(message = "La contraseña no puede estar vacía")
     private String password;
 
+    private String roleName;
+    public String getRoleName() {
+        return roleName;
+    }
 }
