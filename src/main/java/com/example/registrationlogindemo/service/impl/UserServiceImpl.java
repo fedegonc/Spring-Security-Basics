@@ -48,13 +48,19 @@ public class UserServiceImpl implements UserService {
         long userCount = userRepository.count();
         Role role;
         if (userCount == 0) {
-            // If no users are registered, assign admin role
+            // If no users are registered, assign root role
+            role = roleRepository.findByName("ROLE_ROOT");
+            if (role == null) {
+                role = checkRoleExist("ROLE_ROOT");
+            }
+        } else if (userCount == 1) {
+            // If there's one user registered, assign admin role
             role = roleRepository.findByName("ROLE_ADMIN");
             if (role == null) {
                 role = checkRoleExist("ROLE_ADMIN");
             }
         } else {
-            // If there are registered users, assign user role
+            // If there are more than one registered users, assign user role
             role = roleRepository.findByName("ROLE_USER");
             if (role == null) {
                 role = checkRoleExist("ROLE_USER");

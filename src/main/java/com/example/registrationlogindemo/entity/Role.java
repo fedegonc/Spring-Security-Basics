@@ -33,6 +33,8 @@ public class Role
                 return "User";
             case "ROLE_ADMIN":
                 return "Admin";
+            case "USER_ROOT":
+                return "Root";
             default:
                 return this.name;
         }
