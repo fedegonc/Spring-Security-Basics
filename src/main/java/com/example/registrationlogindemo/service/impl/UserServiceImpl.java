@@ -26,7 +26,15 @@ public class UserServiceImpl implements UserService {
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
+    private UserDto convertEntityToDto(User user) {
+        UserDto userDto = new UserDto();
+        String[] name = user.getName().split(" ");
+        userDto.setFirstName(name[0]);
+        userDto.setLastName(name[1]);
+        userDto.setEmail(user.getEmail());
 
+        return userDto;
+    }
     @Override
     public void saveUser(UserDto userDto) {
         User user = new User();
@@ -69,19 +77,24 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    private UserDto convertEntityToDto(User user) {
-        UserDto userDto = new UserDto();
-        String[] name = user.getName().split(" ");
-        userDto.setFirstName(name[0]);
-        userDto.setLastName(name[1]);
-        userDto.setEmail(user.getEmail());
 
-        return userDto;
-    }
 
     private Role checkRoleExist(String roleName) {
         Role role = new Role();
         role.setName(roleName);
         return roleRepository.save(role);
+    }
+
+    public User get(Long id) {
+        return userRepository.findById(id).get();
+    }
+
+    public List<Role> listRoles() {
+        return roleRepository.findAll();
+
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
     }
 }

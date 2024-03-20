@@ -25,4 +25,16 @@ public class Role
 
     @ManyToMany(mappedBy="roles")
     private List<User> users;
+
+    @Override
+    public String toString() {
+        switch (this.name) {
+            case "ROLE_USER":
+                return "User";
+            case "ROLE_ADMIN":
+                return "Admin";
+            default:
+                return this.name;
+        }
+    }
 }

@@ -1,11 +1,6 @@
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\repository\CandidatoRepository.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\service\ServiceEmpleos.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\service\impl\ServiceImplEmpleos.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\controller\EmpleosController.java
+C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\service\ServiceSolicitude.java
 C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\security\CustomUserDetailsService.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\service\CandidatoService.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\controller\UserController.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\service\impl\ServiceImplCandidatos.java
+C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\entity\Solicitude.java
 C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\RegistrationLoginDemoApplication.java
 C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\controller\AuthController.java
 C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\repository\RoleRepository.java
@@ -15,10 +10,8 @@ C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\
 C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\repository\UserRepository.java
 C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\service\impl\UserServiceImpl.java
 C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\dto\UserDto.java
+C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\security\SpringSecurity.java
+C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\service\impl\ServiceImplSolicitude.java
 C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\service\UserService.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\controller\AdminController.java
 C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\controller\IndexController.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\config\SpringSecurity.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\entity\Candidato.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\entity\Empleos.java
-C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\repository\EmpleosRepository.java
+C:\Users\UTEC-5695\OneDrive\Escritorio\Spring-Security-Basics\src\main\java\com\example\registrationlogindemo\repository\SolicitudeRepository.java

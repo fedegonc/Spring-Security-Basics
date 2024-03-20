@@ -1,10 +1,11 @@
 package com.example.registrationlogindemo.controller;
 
-import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.Solicitude;
+import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
+import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class DashboardController {
     @Autowired
     SolicitudeRepository solicitudeRepository;
     @Autowired
+    UserRepository userRepository;
+    @Autowired
     RoleRepository roleRepository;
     private final UserService userService;
     public DashboardController(UserService userService) {
@@ -40,10 +43,57 @@ public class DashboardController {
         ModelAndView mv = new ModelAndView("/dashboard");
         List<Solicitude> solicitude = solicitudeRepository.findAll();
         mv.addObject("solicitude", solicitude);
-        List<UserDto> users = userService.findAllUsers();
+        List<User> users = userRepository.findAll();
         mv.addObject("users", users);
         return mv;
     }
+
+    @GetMapping("/users/edit/{id}")
+    public ModelAndView editUser(@PathVariable("id") long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        ModelAndView mv = new ModelAndView("user_form");
+
+            User user = userOptional.get();
+            List<Role> listRoles = userService.listRoles(); // Obtener la lista de roles
+            mv.addObject("user", user); // Agregar el usuario como objeto al modelo
+            mv.addObject("listRoles", listRoles); // Agregar la lista de roles como objeto al modelo
+            return mv;
+
+    }
+
+    @PostMapping("/users/edit/{id}")
+    public String editUserBanco(@ModelAttribute("user_form") @Valid User user,
+                                BindingResult result, RedirectAttributes msg) {
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("erro", "Error al editar. Por favor, complete todos los campos correctamente.");
+            return "redirect:/editar/" + user.getId();
+        }
+
+        User userEdit = userRepository.findById(user.getId()).orElse(null);
+
+        if (userEdit != null) {
+            // Actualiza los datos del usuario con los nuevos valores
+            userEdit.setName(user.getName());
+            userEdit.setEmail(user.getEmail());
+            userEdit.setRoles(user.getRoles());
+            // Guarda los cambios en la base de datos
+            userRepository.save(userEdit);
+            msg.addFlashAttribute("success", "Usuario editado exitosamente.");
+        } else {
+            msg.addFlashAttribute("error", "No se encontró el usuario a editar.");
+        }
+
+        return "redirect:/dashboard";
+    }
+
+
+    @PostMapping("/users/save")
+    public String saveUser(User user) {
+        userService.save(user);
+
+        return "redirect:/users";
+    }
+    
     @RequestMapping(value = "/img/{imagem}", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
@@ -107,10 +157,10 @@ public class DashboardController {
     @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.GET)
     public ModelAndView editSolicitude(@PathVariable("id") int id) {
         ModelAndView mv = new ModelAndView("solicitude/editsolicitude");
-        Optional<Solicitude> alimentoOptional = solicitudeRepository.findById(id);
+        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById(id);
 
-        if (alimentoOptional.isPresent()) {
-            Solicitude solicitude = alimentoOptional.get();
+        if (solicitudeOptional.isPresent()) {
+            Solicitude solicitude = solicitudeOptional.get();
             mv.addObject("solicitude", solicitude);
         } else {
             mv.setViewName("redirect:/error");
@@ -162,5 +212,11 @@ public class DashboardController {
             return Files.readAllBytes(caminho);
         }
         return null;
+    }
+
+    @GetMapping("/user/delet/{id}")
+    public String excluirUser(@PathVariable("id") int id) {
+        userRepository.deleteById((long) id);
+        return "redirect:/dashboard";
     }
 }

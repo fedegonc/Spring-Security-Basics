@@ -27,7 +27,5 @@ public class UserDto
     private String password;
 
     private String roleName;
-    public String getRoleName() {
-        return roleName;
-    }
+
 }

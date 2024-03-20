@@ -11,6 +11,5 @@ public interface ServiceSolicitude {
     Solicitude save(Solicitude empleos);
     List<Solicitude> findSolicitudeByCategoriaLike(String descripcion);
     List<Solicitude> findSolicitudeByEmpresaLike(String nombre);
-
     List<Solicitude> findSolicitudeActivos();
 }

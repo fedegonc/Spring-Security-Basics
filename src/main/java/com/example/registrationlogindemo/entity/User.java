@@ -32,7 +32,7 @@ public class User
     @Column(nullable=false)
     private String password;
 
-   @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+   @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
     @JoinTable(
             name="users_roles",
             joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
@@ -41,11 +41,11 @@ public class User
 
     private List<Role> roles = new ArrayList<>();
 
-    public String getUserRole() {
-        if (roles != null && !roles.isEmpty()) {
-            return roles.get(0).getName(); // Suponiendo que cada usuario solo tenga un rol
-        } else {
-            return "No Role Assigned";
+    public List<String> getUserRoles() {
+        List<String> userRoles = new ArrayList<>();
+        for (Role role : roles) {
+            userRoles.add(role.getName());
         }
+        return userRoles;
     }
 }
