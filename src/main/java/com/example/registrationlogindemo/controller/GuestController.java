@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 @Controller
-public class IndexController {
+public class GuestController {
     @Autowired
     SolicitudeRepository solicitudeRepository;
 
