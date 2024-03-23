@@ -30,9 +30,14 @@ public class SpringSecurity {
 
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/register/**").permitAll()
+                        authorize.requestMatchers("/register").permitAll()
                                 .requestMatchers("/").permitAll()
                                 .requestMatchers("/index").permitAll()
+                                .requestMatchers("/user/**").hasRole("USER")
+                                .requestMatchers("/user/**").hasRole("ADMIN")
+
+
+
                                 .requestMatchers("/imagem/**").permitAll()
                                 .requestMatchers("/buscarPorNombre").permitAll()
                                 .requestMatchers("/buscarPorCategoria").permitAll()
@@ -53,11 +58,12 @@ public class SpringSecurity {
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/index")
+                                .defaultSuccessUrl("/welcome")
                                 .permitAll()
                 ).logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .logoutSuccessUrl("/index")
                                 .permitAll()
                 ).requestCache((cache) -> cache
                         .requestCache(requestCache)

@@ -7,14 +7,12 @@
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
-
     <style>
         .card img {
             width: 50px;
             height: 50px;
             object-fit: cover; /* Para mantener la relación de aspecto */
         }
-
         .card:hover {
             transform: scale(1.05);
             transition: transform 0.3s ease-in-out;
@@ -30,10 +28,18 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/index}"> Frontera Sustentable</a>
+                    <a class="navbar-brand" th:href="@{/index}">Frontera Sustentable</a>
                 </li>
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/user/welcome}"> -> Entrar</a>
+                    <a class="navbar-brand" th:href="@{/user/solicitude}">Solicitar Recolección</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/user/profile}">Perfil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/logout}">Salir</a>
                 </li>
             </ul>
         </div>
@@ -41,39 +47,39 @@
 </nav>
 
 <div class="container mt-4">
-
     <div class="row text-left">
         <div class="col">
-            <h2>Solicitudes</h2> <br> <br>
+            <h2>Solicitudes</h2>
         </div>
     </div>
-
     <div class="container mt-4">
         <form method="post" action="buscarPorNombre">
             Buscar por Nombre: <input type="text" name="buscarPorNombre"/>
             <input type="submit"/>
-        </form><hr>
-
+        </form>
+        <hr>
         <form method="post" action="buscarPorCategoria">
             Buscar por Categoría: <input type="text" name="buscarPorCategoria"/>
             <input type="submit"/>
-        </form><hr>
+        </form>
+        <hr>
         <br><br>
         <div class="row row-cols-1 row-cols-md-3 g-3">
-            <div th:each="solicitude : ${solicitude}" class="col-md-4">
+            <!-- Aquí deberías tener tu iteración de solicitudes -->
+            <!-- Ejemplo de card -->
+            <div class="col-md-4">
                 <div class="card">
-                    <img th:src="@{/imagem/{imagem}(imagem=${solicitude.imagen})}"  height="50" class="card-img-top" alt="Imagen del trabajo">
                     <div class="card-body">
-                        <p class="card-text" th:text="${solicitude.descripcion}"></p>
+                        <p class="card-text">Descripción de la solicitud</p>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Empresa: <span th:text="${solicitude.nombre}"></span></li>
-                        <li class="list-group-item">Ubicación: <span th:text="${solicitude.ubicacion}"></span></li>
-                        <li class="list-group-item">Categoría: <span th:text="${solicitude.categoria}"></span></li>
-
+                        <li class="list-group-item">Empresa: <span>Nombre de la empresa</span></li>
+                        <li class="list-group-item">Ubicación: <span>Ubicación de la empresa</span></li>
+                        <li class="list-group-item">Categoría: <span>Categoría de la solicitud</span></li>
                     </ul>
                 </div>
             </div>
+            <!-- Fin del ejemplo -->
         </div>
     </div>
 </div>

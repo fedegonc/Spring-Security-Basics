@@ -34,7 +34,7 @@ public class AuthController {
 
         if (principal instanceof UserDetails) {
             // El usuario ya está autenticado, redirigir a la página de inicio
-            return "redirect:/index";
+            return "user/welcome";
         }
         return "login";
     }
@@ -48,7 +48,7 @@ public class AuthController {
 
         if (principal instanceof UserDetails) {
             // El usuario ya está autenticado, redirigir a la página de inicio
-            return "redirect:/index";
+            return "redirect:/user/welcome";
         }
         return "register";
     }
@@ -67,7 +67,7 @@ public class AuthController {
             return "register";
         }
         userService.saveUser(user);
-        return "redirect:/index";
+        return "redirect:/user/welcome";
     }
 
     @GetMapping("/users")
@@ -77,9 +77,6 @@ public class AuthController {
         return "users";
     }
 
-    @GetMapping("/logout")
-    public String redirect() {
-        return "redirect:/index";
-    }
+
 
 }

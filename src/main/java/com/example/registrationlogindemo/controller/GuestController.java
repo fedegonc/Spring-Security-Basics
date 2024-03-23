@@ -27,14 +27,14 @@ public class GuestController {
         return "index";
     }
 
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @GetMapping(value = "/index")
     public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("/index");
         List<Solicitude> solicitude = solicitudeRepository.findSolicitudeByActivo("Activo");
         mv.addObject("solicitude", solicitude);
         return mv;
     }
-    @RequestMapping(value = "/imagem/{imagem}", method = RequestMethod.GET)
+    @GetMapping(value = "/imagem/{imagem}")
     @ResponseBody
     public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
         File caminho = new File("./src/main/resources/static/img/" + imagem);

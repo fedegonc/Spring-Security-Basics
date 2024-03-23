@@ -47,7 +47,7 @@ public class DashboardController {
         mv.addObject("users", users);
         return mv;
     }
-
+/*
     @GetMapping("/users/edit/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
         Optional<User> userOptional = userRepository.findById(id);
@@ -93,7 +93,9 @@ public class DashboardController {
 
         return "redirect:/users";
     }
-    
+
+*/
+
     @RequestMapping(value = "/img/{imagem}", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
