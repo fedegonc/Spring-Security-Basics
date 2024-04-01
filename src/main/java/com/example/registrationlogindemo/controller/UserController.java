@@ -38,7 +38,17 @@ public class UserController {
         this.userService = userService;
     }
 
-
+    private User getAuthenticatedUser() {
+        ModelAndView mv = new ModelAndView();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            User user = userRepository.findByEmail(username); // Obtener el usuario completo
+            mv.addObject("user", user); // Agregar el usuario al modelo
+        }
+        return null;
+    }
     // Método para la página de bienvenida del usuario
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
@@ -67,6 +77,24 @@ public class UserController {
         return "index";
     }
 
+
+    @GetMapping("/profile/edit/{userId}")
+    public String editProfile(@PathVariable Long userId ) {
+        String result = null;
+        User authenticatedUser = getAuthenticatedUser();
+        ModelAndView mv = new ModelAndView("user_form");
+        if (authenticatedUser != null && authenticatedUser.getId().equals(userId)) {
+            User userToEdit = userRepository.findById(userId).orElse(null);
+            if (userToEdit != null) {
+                mv.addObject("user", userToEdit);
+                result = String.valueOf(mv);
+            }
+        }
+        if (result == null) {
+            result = "error";// O redirecciona a otra página
+        }
+        return result;
+    }
 
     // Método para editar el perfil del usuario
     @GetMapping("/profile/{id}")

@@ -46,6 +46,15 @@
     </div>
 </nav>
 <p>¡Hola, <span th:text="${user}"></span>!</p>
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+        <a class="navbar-brand" th:href="@{/user/profile}">Perfil</a>
+    </li>
+    
+    <li class="nav-item">
+        <a class="navbar-brand" th:href="@{/logout}">Salir</a>
+    </li>
+</ul>
 <div class="container mt-4">
     <div class="row text-left">
         <div class="col">

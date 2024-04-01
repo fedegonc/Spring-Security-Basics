@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // Si el usuario existe, crea y devuelve un UserDetails con sus detalles
         if (user != null) {
-            return new org.springframework.security.core.userdetails.User(user.getName(),
+            return new org.springframework.security.core.userdetails.User(user.getEmail(),
                     user.getPassword(),
                     mapRolesToAuthorities(user.getRoles()));
         } else {
@@ -44,6 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Nombre de usuario inválido");
         }
     }
+
 
     // Método para mapear roles a authorities
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {

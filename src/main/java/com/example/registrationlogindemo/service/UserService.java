@@ -17,6 +17,7 @@ public interface UserService {
     // Método para encontrar un usuario por su nombre
     User findByName(String name);
 
+
     // Método para obtener una lista de todos los usuarios como DTOs de usuario
     List<UserDto> findAllUsers();
 
