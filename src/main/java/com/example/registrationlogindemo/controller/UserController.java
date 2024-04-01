@@ -46,16 +46,19 @@ public class UserController {
 
         // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User authenticatedUser = (User) authentication.getPrincipal();
-
-        // Agregar el usuario autenticado al modelo
-        mv.addObject("user", authenticatedUser);
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            // Puedes agregar más lógica aquí para trabajar con los detalles del usuario según tus necesidades
+            mv.addObject("user", username);
+        }
 
         // Establecer la vista
         mv.setViewName("user/welcome");
 
         return mv;
     }
+
 
 
     // Método para cerrar sesión
