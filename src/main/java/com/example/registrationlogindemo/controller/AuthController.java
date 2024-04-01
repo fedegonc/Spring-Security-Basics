@@ -26,7 +26,7 @@ public class AuthController {
     // Método para redirigir a la página de inicio en caso de error
     @GetMapping("/error")
     public String redirectToIndexOnError() {
-        return "redirect:/index";
+        return "error";
     }
 
     // Método para mostrar el formulario de inicio de sesión
@@ -62,13 +62,18 @@ public class AuthController {
                                Model model) {
         User existing = userService.findByEmail(user.getEmail());
         if (existing != null) {
-            result.rejectValue("email", null, "There is already an account registered with that email");
+            result.rejectValue("email", null, "Ya hay un usuario con ese email");
         }
         if (result.hasErrors()) {
             model.addAttribute("user", user);
             return "register";
         }
-        userService.saveUser(user);
+        try {
+            userService.saveUser(user);
+        } catch (Exception e) {
+            result.rejectValue(null, null, "A ocurrido un error temporal, intente registrarse más tarde.");
+            return "register";
+        }
         return "user/welcome";
     }
 
