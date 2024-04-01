@@ -16,60 +16,69 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SpringSecurity {
+
     @Autowired
     private UserDetailsService userDetailsService;
+
+    // Método para configurar el encriptador de contraseñas
     @Bean
-    public static PasswordEncoder passwordEncoder(){
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    // Método para configurar la cadena de filtros de seguridad
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        // Configuración del almacenamiento de solicitudes en caché
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
         requestCache.setMatchingRequestParameterName(null);
 
         http.csrf().disable()
+                // Configuración de las autorizaciones de las solicitudes HTTP
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/register").permitAll()
-                                .requestMatchers("/").permitAll()
-                                .requestMatchers("/index").permitAll()
+                        authorize.requestMatchers("/", "/register/**", "/index").permitAll()
                                 .requestMatchers("/user/**").hasRole("USER")
+                                .requestMatchers("/user/profile/**").hasRole("USER")
                                 .requestMatchers("/user/**").hasRole("ADMIN")
-
-
-
                                 .requestMatchers("/imagem/**").permitAll()
                                 .requestMatchers("/buscarPorNombre").permitAll()
                                 .requestMatchers("/buscarPorCategoria").permitAll()
                                 .requestMatchers("/gracias").permitAll()
                                 .requestMatchers("/favicon.*").permitAll()
                                 .requestMatchers("/error").permitAll()
-
                                 .requestMatchers("/modifysolicitude/**").hasRole("ADMIN")
                                 .requestMatchers("/dashboard/**").hasRole("ADMIN")
                                 .requestMatchers("/users/**").hasRole("ADMIN")
-
                                 .requestMatchers("/newsolicitude/**").hasRole("ADMIN")
                                 .requestMatchers("/solicitude/**").hasRole("ADMIN")
                                 .requestMatchers("/editsolicitude/**").hasRole("ADMIN")
                                 .requestMatchers("/deletsolicitude/**").hasRole("ADMIN")
                                 .requestMatchers("/img/**").hasRole("ADMIN")
-                ).formLogin(
+                )
+                // Configuración de inicio de sesión
+                .formLogin(
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/welcome")
                                 .permitAll()
-                ).logout(
+                )
+                // Configuración de cierre de sesión
+                .logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                                 .logoutSuccessUrl("/index")
                                 .permitAll()
-                ).requestCache((cache) -> cache
+                )
+                // Configuración del almacenamiento de solicitudes en caché
+                .requestCache(cache -> cache
                         .requestCache(requestCache)
                 );
         return http.build();
     }
+
+    // Método para configurar la autenticación global
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth

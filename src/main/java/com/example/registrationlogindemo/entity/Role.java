@@ -14,18 +14,21 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name="roles")
-public class Role
-{
+public class Role {
+    // Identificador único para el rol
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Nombre del rol
     @Column(nullable=false, unique=true)
     private String name;
 
+    // Relación muchos a muchos con la entidad User
     @ManyToMany(mappedBy="roles")
     private List<User> users;
 
+    // Método toString para representar el rol como un string legible
     @Override
     public String toString() {
         switch (this.name) {

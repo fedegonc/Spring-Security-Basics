@@ -33,37 +33,47 @@ public class DashboardController {
     @Autowired
     RoleRepository roleRepository;
     private final UserService userService;
+
+    // Constructor que inyecta el servicio UserService
     public DashboardController(UserService userService) {
         this.userService = userService;
     }
 
-
-    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-    public ModelAndView getSolicitude() {
+    // Método para mostrar el dashboard
+    @GetMapping(value = "/dashboard")
+    public ModelAndView getDashboard() {
         ModelAndView mv = new ModelAndView("/dashboard");
+        // Obtener todas las solicitudes
         List<Solicitude> solicitude = solicitudeRepository.findAll();
         mv.addObject("solicitude", solicitude);
+        // Obtener todos los usuarios
         List<User> users = userRepository.findAll();
         mv.addObject("users", users);
         return mv;
     }
-/*
+
+    // Método para editar un usuario
     @GetMapping("/users/edit/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
         Optional<User> userOptional = userRepository.findById(id);
         ModelAndView mv = new ModelAndView("user_form");
 
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
-            List<Role> listRoles = userService.listRoles(); // Obtener la lista de roles
-            mv.addObject("user", user); // Agregar el usuario como objeto al modelo
-            mv.addObject("listRoles", listRoles); // Agregar la lista de roles como objeto al modelo
-            return mv;
-
+            // Obtener la lista de roles
+            List<Role> listRoles = userService.listRoles();
+            // Agregar el usuario y la lista de roles al modelo
+            mv.addObject("user", user);
+            mv.addObject("listRoles", listRoles);
+        }
+        return mv;
     }
 
+    // Método para procesar la edición de un usuario
     @PostMapping("/users/edit/{id}")
     public String editUserBanco(@ModelAttribute("user_form") @Valid User user,
                                 BindingResult result, RedirectAttributes msg) {
+        // Verificar errores de validación
         if (result.hasErrors()) {
             msg.addFlashAttribute("erro", "Error al editar. Por favor, complete todos los campos correctamente.");
             return "redirect:/editar/" + user.getId();
@@ -72,11 +82,11 @@ public class DashboardController {
         User userEdit = userRepository.findById(user.getId()).orElse(null);
 
         if (userEdit != null) {
-            // Actualiza los datos del usuario con los nuevos valores
+            // Actualizar los datos del usuario con los nuevos valores
             userEdit.setName(user.getName());
             userEdit.setEmail(user.getEmail());
             userEdit.setRoles(user.getRoles());
-            // Guarda los cambios en la base de datos
+            // Guardar los cambios en la base de datos
             userRepository.save(userEdit);
             msg.addFlashAttribute("success", "Usuario editado exitosamente.");
         } else {
@@ -86,16 +96,14 @@ public class DashboardController {
         return "redirect:/dashboard";
     }
 
-
+    // Método para guardar un usuario
     @PostMapping("/users/save")
     public String saveUser(User user) {
         userService.save(user);
-
         return "redirect:/users";
     }
 
-*/
-
+    // Método para obtener imágenes
     @RequestMapping(value = "/img/{imagem}", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
@@ -105,41 +113,45 @@ public class DashboardController {
         }
         return null;
     }
+
+    // Método para mostrar el formulario de nueva solicitud
     @RequestMapping(value = "/newsolicitude", method = RequestMethod.GET)
     public String newSolicitude() {
         return "solicitude/newsolicitude";
     }
 
-
+    // Método para procesar la creación de una nueva solicitud
     @RequestMapping(value = "/newsolicitude", method = RequestMethod.POST)
     public String newSolicitudePost(@Valid Solicitude solicitud,
-                             BindingResult result, RedirectAttributes msg,
-                             @RequestParam("file") MultipartFile imagem) {
+                                    BindingResult result, RedirectAttributes msg,
+                                    @RequestParam("file") MultipartFile imagen) {
         if (result.hasErrors()) {
-            msg.addFlashAttribute("erro",
-                    "Error al iniciar solicitud. Por favor, llenar todos los campos");
+            msg.addFlashAttribute("erro", "Error al iniciar solicitud. Por favor, llenar todos los campos");
             return "redirect:/dashboard";
         }
         try {
-            if (!imagem.isEmpty()) {
-                byte[] bytes = imagem.getBytes();
-                Path caminho = Paths.get("./src/main/resources/static/img/" + imagem.getOriginalFilename());
+            if (!imagen.isEmpty()) {
+                byte[] bytes = imagen.getBytes();
+                Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
                 Files.write(caminho, bytes);
-                solicitud.setImagen(imagem.getOriginalFilename());
+                solicitud.setImagen(imagen.getOriginalFilename());
             }
         } catch (IOException e) {
             System.out.println("Error al salvar imagen");
         }
         solicitudeRepository.save(solicitud);
-        msg.addFlashAttribute("Exito",
-                "solicitud realizada con exito.");
+        msg.addFlashAttribute("Exito", "Solicitud realizada con éxito.");
         return "redirect:/dashboard";
     }
+
+    // Método para eliminar una solicitud
     @RequestMapping(value = "/deletsolicitude/{id}", method = RequestMethod.GET)
     public String excluirSolicitud(@PathVariable("id") int id) {
         solicitudeRepository.deleteById(id);
         return "redirect:/dashboard";
     }
+
+    // Método para modificar el estado de una solicitud
     @RequestMapping(value = "/modifyestate/{id}", method = RequestMethod.GET)
     public String modifyEstateSolicitud(@PathVariable("id") int id) {
         Solicitude solicitude = solicitudeRepository.findById(id).orElse(null);
@@ -154,8 +166,7 @@ public class DashboardController {
         return "redirect:/dashboard";
     }
 
-
-
+    // Método para mostrar el formulario de edición de solicitud
     @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.GET)
     public ModelAndView editSolicitude(@PathVariable("id") int id) {
         ModelAndView mv = new ModelAndView("solicitude/editsolicitude");
@@ -171,24 +182,27 @@ public class DashboardController {
     }
 
 
+    // Método para procesar la edición de una solicitud
     @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.POST)
     public String editSolicitudeBanco(@ModelAttribute("solicitude") @Valid Solicitude solicitude,
                                       BindingResult result, RedirectAttributes msg,
                                       @RequestParam("file") MultipartFile imagem) {
         if (result.hasErrors()) {
-            msg.addFlashAttribute("erro", "Erro ao editar." +
-                    " Por favor, preencha todos os campos");
+            // Si hay errores de validación, redirige con un mensaje de error
+            msg.addFlashAttribute("erro", "Error al editar. Por favor, complete todos los campos correctamente.");
             return "redirect:/editar/" + solicitude.getId();
         }
+        // Obtener la solicitud que se va a editar
         Solicitude changeSolicitude = solicitudeRepository.findById(solicitude.getId()).orElse(null);
         if (changeSolicitude != null) {
+            // Actualizar los campos de la solicitud con los nuevos valores
             changeSolicitude.setNombre(solicitude.getNombre());
             changeSolicitude.setCategoria(solicitude.getCategoria());
             changeSolicitude.setActivo(solicitude.getActivo());
-
             changeSolicitude.setDescripcion(solicitude.getDescripcion());
             changeSolicitude.setUbicacion(solicitude.getUbicacion());
             try {
+                // Guardar la imagen si se proporciona una
                 if (!imagem.isEmpty()) {
                     byte[] bytes = imagem.getBytes();
                     Path caminho = Paths.get("./src/main/resources/static/img/" + imagem.getOriginalFilename());
@@ -198,17 +212,20 @@ public class DashboardController {
             } catch (IOException e) {
                 System.out.println("Error de imagen");
             }
-
+            // Guardar la solicitud editada en la base de datos
             solicitudeRepository.save(changeSolicitude);
+            // Redirigir con un mensaje de éxito
             msg.addFlashAttribute("sucesso", "Alimento editado com sucesso.");
         }
 
         return "redirect:/dashboard";
     }
 
+    // Método para obtener imágenes de solicitudes
     @RequestMapping(value = "/imagemalimento/{imagem}", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImagensSolicitude(@PathVariable("imagem") String imagem) throws IOException {
+        // Obtener la imagen de la ubicación especificada
         Path caminho = Paths.get("./src/main/resources/static/img/" + imagem);
         if (imagem != null || imagem.trim().length() > 0) {
             return Files.readAllBytes(caminho);
@@ -216,9 +233,12 @@ public class DashboardController {
         return null;
     }
 
+    // Método para eliminar un usuario
     @GetMapping("/user/delet/{id}")
     public String excluirUser(@PathVariable("id") int id) {
+        // Eliminar el usuario por su ID
         userRepository.deleteById((long) id);
+        // Redirigir al dashboard después de la eliminación
         return "redirect:/dashboard";
     }
 }

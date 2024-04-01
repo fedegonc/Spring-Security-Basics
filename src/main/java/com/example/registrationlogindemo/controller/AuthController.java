@@ -18,28 +18,30 @@ public class AuthController {
 
     private final UserService userService;
 
+    // Constructor que inyecta el servicio UserService
     public AuthController(UserService userService) {
         this.userService = userService;
     }
 
-
+    // Método para redirigir a la página de inicio en caso de error
     @GetMapping("/error")
     public String redirectToIndexOnError() {
         return "redirect:/index";
     }
 
+    // Método para mostrar el formulario de inicio de sesión
     @GetMapping("/login")
     public String loginForm() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
-            // El usuario ya está autenticado, redirigir a la página de inicio
+            // Si el usuario ya está autenticado, redirigir a la página de inicio del usuario
             return "user/welcome";
         }
         return "login";
     }
 
-    // handler method to handle user registration request
+    // Método para mostrar el formulario de registro
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         UserDto user = new UserDto();
@@ -47,13 +49,13 @@ public class AuthController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
-            // El usuario ya está autenticado, redirigir a la página de inicio
+            // Si el usuario ya está autenticado, redirigir a la página de inicio del usuario
             return "redirect:/user/welcome";
         }
         return "register";
     }
 
-    // handler method to handle register user form submit request
+    // Método para procesar la solicitud de registro de usuario
     @PostMapping("/register/save")
     public String registration(@Valid @ModelAttribute("user") UserDto user,
                                BindingResult result,
@@ -67,16 +69,15 @@ public class AuthController {
             return "register";
         }
         userService.saveUser(user);
-        return "redirect:/user/welcome";
+        return "user/welcome";
     }
 
+    // Método para mostrar la lista de usuarios registrados
     @GetMapping("/users")
     public String listRegisteredUsers(Model model) {
         List<UserDto> users = userService.findAllUsers();
         model.addAttribute("users", users);
         return "users";
     }
-
-
 
 }

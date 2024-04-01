@@ -17,26 +17,33 @@ public class GuestController {
     @Autowired
     SolicitudeRepository solicitudeRepository;
 
+    // Redirecciona a la página de inicio
     @GetMapping("")
     public String redirectToIndex() {
         return "index";
     }
 
+    // Redirecciona a la página de inicio
     @GetMapping("/")
     public String redirect() {
         return "index";
     }
 
+    // Obtiene la página de inicio y muestra las solicitudes activas
     @GetMapping(value = "/index")
     public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("/index");
+        // Obtener todas las solicitudes activas
         List<Solicitude> solicitude = solicitudeRepository.findSolicitudeByActivo("Activo");
         mv.addObject("solicitude", solicitude);
         return mv;
     }
+
+    // Obtiene la imagen según el nombre de archivo proporcionado
     @GetMapping(value = "/imagem/{imagem}")
     @ResponseBody
     public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
+        // Obtener la imagen de la ubicación especificada
         File caminho = new File("./src/main/resources/static/img/" + imagem);
         if (imagem != null || imagem.trim().length() > 0) {
             return Files.readAllBytes(caminho.toPath());

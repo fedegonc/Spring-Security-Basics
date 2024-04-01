@@ -11,21 +11,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto
-{
-
-
-    private Long id;
+public class UserDto {
+    // Atributos de la clase UserDto
+    private Long id; // ID del usuario
     @NotEmpty
-    private String firstName;
+    private String firstName; // Nombre del usuario
     @NotEmpty
-    private String lastName;
+    private String lastName; // Apellido del usuario
     @NotEmpty(message = "El email no puede estar vacío")
     @Email
-    private String email;
+    private String email; // Email del usuario, debe cumplir el formato de email
     @NotEmpty(message = "La contraseña no puede estar vacía")
-    private String password;
-
-    private String roleName;
-
+    private String password; // Contraseña del usuario
+    private String roleName; // Rol del usuario
 }
