@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // Si el usuario existe, crea y devuelve un UserDetails con sus detalles
         if (user != null) {
-            return new org.springframework.security.core.userdetails.User(user.getEmail(),
+            return new org.springframework.security.core.userdetails.User(user.getName(),
                     user.getPassword(),
                     mapRolesToAuthorities(user.getRoles()));
         } else {
