@@ -234,11 +234,5 @@ public class DashboardController {
     }
 
     // Método para eliminar un usuario
-    @GetMapping("/user/delet/{id}")
-    public String excluirUser(@PathVariable("id") int id) {
-        // Eliminar el usuario por su ID
-        userRepository.deleteById((long) id);
-        // Redirigir al dashboard después de la eliminación
-        return "redirect:/dashboard";
-    }
+
 }

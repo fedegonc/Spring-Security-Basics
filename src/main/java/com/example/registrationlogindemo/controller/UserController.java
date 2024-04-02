@@ -43,15 +43,27 @@ public class UserController {
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
         ModelAndView mv = new ModelAndView();
-
-        // Obtener el usuario autenticado actualmente
+        String username = null;
+         // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
+            username = userDetails.getUsername();
             // Puedes agregar más lógica aquí para trabajar con los detalles del usuario según tus necesidades
             mv.addObject("user", username);
         }
+
+        List<User> users = userRepository.findAll();
+
+        User usuario = null;
+        for (User user : users) {
+            if (user.getEmail().equals(username)) {
+                usuario = user;
+                break;
+            }
+        }
+
+        mv.addObject("users", usuario);
 
         // Establecer la vista
         mv.setViewName("user/welcome");
@@ -61,60 +73,25 @@ public class UserController {
 
 
 
-    // Método para cerrar sesión
-    @GetMapping("/logout")
-    public String logout() {
-        return "index";
-    }
 
 
-    @GetMapping("/profile/edit/{userId}")
-    public ModelAndView editProfile(@PathVariable Long userId) {
-        ModelAndView mv = new ModelAndView("user_form");
-
-        // Obtener el usuario autenticado actualmente
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-
-            // Obtener el usuario completo desde la base de datos
-            User authenticatedUser = userRepository.findByEmail(username);
-
-            // Verificar si el usuario autenticado coincide con el usuario que se está intentando editar
-            if (authenticatedUser != null && authenticatedUser.getId().equals(userId)) {
-                // Obtener el usuario que se está intentando editar
-                User userToEdit = userRepository.findById(userId).orElse(null);
-                if (userToEdit != null) {
-                    // Agregar el usuario al modelo y retornar la vista de edición
-                    mv.addObject("user", userToEdit);
-                    return mv;
-                }
-            }
-        }
-
-        // Si no se cumple alguna condición, redireccionar a una página de error
-        mv.setViewName("error");
-        return mv;
-    }
-
-    // Método para editar el perfil del usuario
     @GetMapping("/profile/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
         Optional<User> userOptional = userRepository.findById(id);
-        ModelAndView mv = new ModelAndView("user_form");
+        ModelAndView mv = new ModelAndView("user/profile");
 
-        // Obtener el usuario a editar
-        User user = userOptional.get();
-        // Obtener la lista de roles
-        List<Role> listRoles = userService.listRoles();
-        // Agregar el usuario y la lista de roles al modelo
-        mv.addObject("user", user);
-        mv.addObject("listRoles", listRoles);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            List<Role> listRoles = userService.listRoles();
+            // Agregar el usuario y la lista de roles al modelo
+            mv.addObject("listRoles", listRoles);
+            // Agregar el usuario y la lista de roles al modelo
+            mv.addObject("user", user);
+
+        }
         return mv;
     }
 
-    // Método para procesar la edición del perfil del usuario
     @PostMapping("/profile/{id}")
     public String editUserBanco(@ModelAttribute("user/profile") @Valid User user,
                                 BindingResult result, RedirectAttributes msg) {
@@ -141,13 +118,21 @@ public class UserController {
         return "redirect:/user/welcome";
     }
 
+    @GetMapping("/delet/{id}")
+    public String excluirUser(@PathVariable("id") int id) {
+        // Eliminar el usuario por su ID
+        userRepository.deleteById((long) id);
+        // Redirigir al dashboard después de la eliminación
+        return "redirect:/dashboard";
+    }
 
-    // Método para guardar un usuario
-    @PostMapping("/save")
-    public String saveUser(User user) {
-        userService.save(user);
 
-        return "redirect:/users";
+
+
+    // Método para cerrar sesión
+    @GetMapping("/logout")
+    public String logout() {
+        return "index";
     }
 
 }

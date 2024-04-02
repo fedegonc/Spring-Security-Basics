@@ -36,7 +36,7 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/user/profile}">Perfil</a>
+                    <a class="navbar-brand" th:href="@{/user/profile/{id}(id=${users.id})}">Perfil</a>
                 </li>
                 <li class="nav-item">
                     <a class="navbar-brand" th:href="@{/logout}">Salir</a>
@@ -46,6 +46,25 @@
     </div>
 </nav>
 <p>¡Hola, <span th:text="${user}"></span>!</p>
+<h1>User List</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <!-- Agrega más columnas según sea necesario -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <!-- Agrega más columnas según sea necesario -->
+    </tr>
+    </tbody>
+</table>
 
 <div class="container mt-4">
     <div class="row text-left">

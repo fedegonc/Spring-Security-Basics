@@ -1,5 +1,6 @@
 package com.example.registrationlogindemo.entity;
 
+import com.example.registrationlogindemo.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,28 +15,25 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Solicitude {
-    // Identificador único para la solicitud
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    // Nombre de la solicitud
     private String nombre;
 
-    // Ubicación de la solicitud
     private String ubicacion;
 
-    // Categoría de la solicitud
     private String categoria;
 
-    // Estado activo o inactivo de la solicitud
     private String activo;
 
-    // Descripción de la solicitud
     @Lob
     private String descripcion;
 
-    // Nombre del archivo de imagen asociado a la solicitud
     private String imagen;
 
+    // Relación muchos a uno con la entidad User
+    @ManyToOne
+    @JoinColumn(name = "user_id") // Nombre de la columna que actuará como clave externa en la tabla solicitude
+    private User user; // Objeto que representa al usuario que crea la solicitud
 }
