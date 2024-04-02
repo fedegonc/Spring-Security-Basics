@@ -1,4 +1,4 @@
-package com.example.registrationlogindemo.security;
+package com.example.registrationlogindemo.service.impl;
 
 import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.User;
@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 // Servicio para cargar detalles de usuario personalizados
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements org.springframework.security.core.userdetails.UserDetailsService {
 
     // Repositorios necesarios
     private final UserRepository userRepository;

@@ -2,14 +2,14 @@ package com.example.registrationlogindemo.service.impl;
 
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
-import com.example.registrationlogindemo.service.ServiceSolicitude;
+import com.example.registrationlogindemo.service.SolicitudeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ServiceImplSolicitude implements ServiceSolicitude {
+public class ServiceSolicitudeImpl implements SolicitudeService {
 
     @Autowired
     SolicitudeRepository solicitudeRepository;

@@ -38,17 +38,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    private User getAuthenticatedUser() {
-        ModelAndView mv = new ModelAndView();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-            User user = userRepository.findByEmail(username); // Obtener el usuario completo
-            mv.addObject("user", user); // Agregar el usuario al modelo
-        }
-        return null;
-    }
+
     // Método para la página de bienvenida del usuario
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
@@ -79,21 +69,33 @@ public class UserController {
 
 
     @GetMapping("/profile/edit/{userId}")
-    public String editProfile(@PathVariable Long userId ) {
-        String result = null;
-        User authenticatedUser = getAuthenticatedUser();
+    public ModelAndView editProfile(@PathVariable Long userId) {
         ModelAndView mv = new ModelAndView("user_form");
-        if (authenticatedUser != null && authenticatedUser.getId().equals(userId)) {
-            User userToEdit = userRepository.findById(userId).orElse(null);
-            if (userToEdit != null) {
-                mv.addObject("user", userToEdit);
-                result = String.valueOf(mv);
+
+        // Obtener el usuario autenticado actualmente
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+
+            // Obtener el usuario completo desde la base de datos
+            User authenticatedUser = userRepository.findByEmail(username);
+
+            // Verificar si el usuario autenticado coincide con el usuario que se está intentando editar
+            if (authenticatedUser != null && authenticatedUser.getId().equals(userId)) {
+                // Obtener el usuario que se está intentando editar
+                User userToEdit = userRepository.findById(userId).orElse(null);
+                if (userToEdit != null) {
+                    // Agregar el usuario al modelo y retornar la vista de edición
+                    mv.addObject("user", userToEdit);
+                    return mv;
+                }
             }
         }
-        if (result == null) {
-            result = "error";// O redirecciona a otra página
-        }
-        return result;
+
+        // Si no se cumple alguna condición, redireccionar a una página de error
+        mv.setViewName("error");
+        return mv;
     }
 
     // Método para editar el perfil del usuario

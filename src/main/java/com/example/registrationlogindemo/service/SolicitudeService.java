@@ -4,7 +4,7 @@ import com.example.registrationlogindemo.entity.Solicitude;
 
 import java.util.List;
 
-public interface ServiceSolicitude {
+public interface SolicitudeService {
 
     // Método para encontrar todas las solicitudes
     List<Solicitude> findAll();
