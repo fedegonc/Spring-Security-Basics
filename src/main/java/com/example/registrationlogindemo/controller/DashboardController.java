@@ -233,6 +233,5 @@ public class DashboardController {
         return null;
     }
 
-    // Método para eliminar un usuario
 
 }
