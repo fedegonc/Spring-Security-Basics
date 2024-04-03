@@ -99,5 +99,44 @@
     </table>
 </div>
 
+
+<div class="container mt-4">
+    <div class="row text-left">
+        <div class="col">
+            <h2>Solicitudes</h2>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <form method="post" action="buscarPorNombre">
+            Buscar por Nombre: <input type="text" name="buscarPorNombre"/>
+            <input type="submit"/>
+        </form>
+        <hr>
+        <form method="post" action="buscarPorCategoria">
+            Buscar por Categoría: <input type="text" name="buscarPorCategoria"/>
+            <input type="submit"/>
+        </form>
+        <hr>
+        <br><br>
+        <div class="row row-cols-1 row-cols-md-3 g-3">
+            <!-- Aquí deberías tener tu iteración de solicitudes -->
+            <!-- Ejemplo de card -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">Descripción de la solicitud</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Empresa: <span>Nombre de la empresa</span></li>
+                        <li class="list-group-item">Ubicación: <span>Ubicación de la empresa</span></li>
+                        <li class="list-group-item">Categoría: <span>Categoría de la solicitud</span></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Fin del ejemplo -->
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

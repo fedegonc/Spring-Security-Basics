@@ -37,7 +37,7 @@ public class SpringSecurity {
         http.csrf().disable()
                 // Configuración de las autorizaciones de las solicitudes HTTP
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/", "/register/**", "/index","/favicon.ico").permitAll()
+                        authorize.requestMatchers("/", "/register/**", "/index","/favicon.ico", "/img/**").permitAll()
                                 .requestMatchers("/user/**").hasRole("USER")
                                 .requestMatchers("/user/profile/**").hasRole("USER")
                                 .requestMatchers("/user/**").hasRole("ADMIN")
@@ -54,7 +54,6 @@ public class SpringSecurity {
                                 .requestMatchers("/solicitude/**").hasRole("ADMIN")
                                 .requestMatchers("/editsolicitude/**").hasRole("ADMIN")
                                 .requestMatchers("/deletsolicitude/**").hasRole("ADMIN")
-                                .requestMatchers("/img/**").hasRole("ADMIN")
                 )
                 // Configuración de inicio de sesión
                 .formLogin(
