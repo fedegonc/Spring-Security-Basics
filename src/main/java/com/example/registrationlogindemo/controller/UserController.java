@@ -123,16 +123,21 @@ public class UserController {
         // Eliminar el usuario por su ID
         userRepository.deleteById((long) id);
         // Redirigir al dashboard después de la eliminación
-        return "redirect:/dashboard";
+        return "index";
     }
-
-
-
 
     // Método para cerrar sesión
     @GetMapping("/logout")
     public String logout() {
         return "index";
     }
+
+    @GetMapping("/newsolicitude")
+    public ModelAndView newSolicitude() {
+        ModelAndView mv = new ModelAndView("solicitude/newsolicitude");
+        return mv;
+    }
+
+
 
 }
