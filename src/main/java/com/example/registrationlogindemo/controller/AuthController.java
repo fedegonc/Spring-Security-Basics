@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -53,21 +54,25 @@ public class AuthController {
         return "register";
     }
 
-    // handler method to handle register user form submit request
+    // Método para manejar la solicitud POST de registro de usuario
     @PostMapping("/register/save")
-    public String registration(@Valid @ModelAttribute("user") UserDto user,
+    public String registration(@Valid @ModelAttribute("user") UserDto userDto,
                                BindingResult result,
-                               Model model) {
-        User existing = userService.findByEmail(user.getEmail());
-        if (existing != null) {
-            result.rejectValue("email", null, "There is already an account registered with that email");
+                               Model model){
+        User existingUser = userService.findByEmail(userDto.getEmail());
+
+        if(existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()){
+            result.rejectValue("email", null,
+                    "There is already an account registered with the same email");
         }
-        if (result.hasErrors()) {
-            model.addAttribute("user", user);
-            return "register";
+
+        if(result.hasErrors()){
+            model.addAttribute("user", userDto);
+            return "/register";
         }
-        userService.saveUser(user);
-        return "user/welcome";
+
+        userService.saveUser(userDto);
+        return "redirect:/login";
     }
 
     @GetMapping("/users")

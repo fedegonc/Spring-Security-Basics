@@ -40,7 +40,7 @@
         <div class="col-md-6 offset-md-3">
 
     <h1 class="mb-4">Nueva Solicitud</h1>
-    <form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
             <input type="text" class="form-control" id="nombre" name="nombre" required>

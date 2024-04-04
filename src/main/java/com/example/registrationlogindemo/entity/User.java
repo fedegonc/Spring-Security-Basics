@@ -41,7 +41,7 @@ public class User {
             inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ID")})
     private List<Role> roles = new ArrayList<>();
 
-    // Método para obtener los nombres de los roles del usuario como una lista de cadenas
+    // Método para pasar los roles
     public List<String> getUserRoles() {
         List<String> userRoles = new ArrayList<>();
         for (Role role : roles) {
@@ -49,4 +49,7 @@ public class User {
         }
         return userRoles;
     }
+    @OneToMany(mappedBy = "user")
+    private List<Solicitude> solicitudes = new ArrayList<>();
+
 }

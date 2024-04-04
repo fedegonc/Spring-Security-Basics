@@ -37,16 +37,19 @@ public class SpringSecurity {
         http.csrf().disable()
                 // Configuración de las autorizaciones de las solicitudes HTTP
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/", "/register/**", "/index","/favicon.ico", "/img/**").permitAll()
-                                .requestMatchers("/user/**").hasRole("USER")
+                        authorize.requestMatchers("/", "/register/**", "/register/save", "/index","/favicon.ico", "/img/**").permitAll()
+                                .requestMatchers("/user/welcome").hasRole("USER")
                                 .requestMatchers("/user/profile/**").hasRole("USER")
-                                .requestMatchers("/user/**").hasRole("ADMIN")
+                                .requestMatchers("/user/newsolicitude/**").hasRole("USER")
+
                                 .requestMatchers("/imagem/**").permitAll()
                                 .requestMatchers("/buscarPorNombre").permitAll()
                                 .requestMatchers("/buscarPorCategoria").permitAll()
                                 .requestMatchers("/gracias").permitAll()
                                 .requestMatchers("/favicon.*").permitAll()
                                 .requestMatchers("/error").permitAll()
+
+                                .requestMatchers("/user/**").hasRole("ADMIN")
                                 .requestMatchers("/modifysolicitude/**").hasRole("ADMIN")
                                 .requestMatchers("/dashboard/**").hasRole("ADMIN")
                                 .requestMatchers("/users/**").hasRole("ADMIN")
@@ -60,7 +63,7 @@ public class SpringSecurity {
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/welcome")
+                                .defaultSuccessUrl("/user/welcome")
                                 .permitAll()
                 )
                 // Configuración de cierre de sesión

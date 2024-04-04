@@ -2,6 +2,7 @@ package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.Role;
+import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
@@ -16,9 +17,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,20 +83,33 @@ public class UserController {
 
     @GetMapping("/profile/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Optional<User> currentUserOptional = Optional.ofNullable(userRepository.findByEmail(username));
+
+        if (currentUserOptional.isPresent()) {
+            User currentUser = currentUserOptional.get();
+            // Verificar si la ID en la URL coincide con la ID del usuario autenticado
+            if (currentUser.getId() != id) {
+                // Si el usuario intenta acceder al perfil de otro usuario, redirigirlo a su propio perfil
+                return new ModelAndView("redirect:/user/profile/" + currentUser.getId());
+            }
+        }
+
+        // Si la ID en la URL coincide con la ID del usuario autenticado, continuar con la lógica actual del método
         Optional<User> userOptional = userRepository.findById(id);
         ModelAndView mv = new ModelAndView("user/profile");
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             List<Role> listRoles = userService.listRoles();
-            // Agregar el usuario y la lista de roles al modelo
             mv.addObject("listRoles", listRoles);
-            // Agregar el usuario y la lista de roles al modelo
             mv.addObject("user", user);
-
         }
+
         return mv;
     }
+
 
     @PostMapping("/profile/{id}")
     public String editUserBanco(@ModelAttribute("user/profile") @Valid User user,
@@ -118,6 +137,34 @@ public class UserController {
         return "redirect:/user/welcome";
     }
 
+    @GetMapping("/newsolicitude")
+    public ModelAndView newSolicitude() {
+        ModelAndView mv = new ModelAndView("solicitude/newsolicitude");
+        return mv;
+    }
+
+    @PostMapping("/newsolicitude")
+    public String newSolicitudePost(@Valid Solicitude solicitud,
+                                    BindingResult result, RedirectAttributes msg,
+                                    @RequestParam("file") MultipartFile imagen) {
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("erro", "Error al iniciar solicitud. Por favor, llenar todos los campos");
+            return "redirect:/user/welcome";
+        }
+        try {
+            if (!imagen.isEmpty()) {
+                byte[] bytes = imagen.getBytes();
+                Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
+                Files.write(caminho, bytes);
+                solicitud.setImagen(imagen.getOriginalFilename());
+            }
+        } catch (IOException e) {
+            System.out.println("Error al salvar imagen");
+        }
+        solicitudeRepository.save(solicitud);
+        msg.addFlashAttribute("Exito", "Solicitud realizada con éxito.");
+        return "redirect:/user/welcome";
+    }
     @GetMapping("/delet/{id}")
     public String excluirUser(@PathVariable("id") int id) {
         // Eliminar el usuario por su ID
@@ -131,13 +178,4 @@ public class UserController {
     public String logout() {
         return "index";
     }
-
-    @GetMapping("/newsolicitude")
-    public ModelAndView newSolicitude() {
-        ModelAndView mv = new ModelAndView("solicitude/newsolicitude");
-        return mv;
-    }
-
-
-
 }

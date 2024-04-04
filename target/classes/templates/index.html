@@ -50,7 +50,12 @@
                             <a class="navbar-brand" th:href="@{/index}"> Frontera Sustentable</a>
                         </li>
                         <li class="nav-item">
-                            <a class="navbar-brand" th:href="@{/user/welcome}"> Entrar</a>
+                            <a class="btn btn-primary" th:href="@{/user/welcome}">Acceder</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="navbar-brand" th:href="@{/register}">Registro</a>
                         </li>
                     </ul>
                 </div>
@@ -58,7 +63,10 @@
         </nav>
         <div class="transparencia">
             <img src="/img/foto1.jpg" class="img-fluid" alt="Banner">
-            <div class="texto-superior">Test</div>
+            <div class="texto-superior">Bienvenido a Frontera Sustentable <br>
+                Proyecto Binacional de Economía Circular que Facílita la Comunicación
+                entre Instituciones y Personas de Santana do Livramento y Rivera
+                </div>
         </div>
         <div class="container mt-4">
             <!-- Otros elementos HTML aquí -->
