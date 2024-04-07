@@ -49,7 +49,11 @@ public class User {
         }
         return userRoles;
     }
-    @OneToMany(mappedBy = "user")
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+
+    //private List<Blog> blogList;
+    //@OneToMany(mappedBy = "users")
     private List<Solicitude> solicitudes = new ArrayList<>();
 
 }

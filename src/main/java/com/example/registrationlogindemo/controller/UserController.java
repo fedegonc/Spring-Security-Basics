@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.apache.tomcat.util.modeler.BaseAttributeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -58,9 +59,7 @@ public class UserController {
             // Puedes agregar más lógica aquí para trabajar con los detalles del usuario según tus necesidades
             mv.addObject("user", username);
         }
-
         List<User> users = userRepository.findAll();
-
         User usuario = null;
         for (User user : users) {
             if (user.getEmail().equals(username)) {
@@ -68,12 +67,9 @@ public class UserController {
                 break;
             }
         }
-
         mv.addObject("users", usuario);
-
         // Establecer la vista
         mv.setViewName("user/welcome");
-
         return mv;
     }
 
@@ -83,6 +79,7 @@ public class UserController {
 
     @GetMapping("/profile/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         Optional<User> currentUserOptional = Optional.ofNullable(userRepository.findByEmail(username));
@@ -98,6 +95,9 @@ public class UserController {
 
         // Si la ID en la URL coincide con la ID del usuario autenticado, continuar con la lógica actual del método
         Optional<User> userOptional = userRepository.findById(id);
+
+        System.out.println("Valor del id recibido: " + id);
+
         ModelAndView mv = new ModelAndView("user/profile");
 
         if (userOptional.isPresent()) {
@@ -146,11 +146,13 @@ public class UserController {
     @PostMapping("/newsolicitude")
     public String newSolicitudePost(@Valid Solicitude solicitud,
                                     BindingResult result, RedirectAttributes msg,
-                                    @RequestParam("file") MultipartFile imagen) {
+                                    @RequestParam("file") MultipartFile imagen,
+                                    @AuthenticationPrincipal UserDetails currentUser) {
         if (result.hasErrors()) {
-            msg.addFlashAttribute("erro", "Error al iniciar solicitud. Por favor, llenar todos los campos");
-            return "redirect:/user/welcome";
+            msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
+            return "redirect:/dashboard";
         }
+
         try {
             if (!imagen.isEmpty()) {
                 byte[] bytes = imagen.getBytes();
@@ -161,10 +163,27 @@ public class UserController {
         } catch (IOException e) {
             System.out.println("Error al salvar imagen");
         }
-        solicitudeRepository.save(solicitud);
-        msg.addFlashAttribute("Exito", "Solicitud realizada con éxito.");
-        return "redirect:/user/welcome";
+
+        User user = null;
+        List<User> users = userRepository.findAll();
+        for (User u : users) {
+            if (u.getEmail().equals(currentUser.getUsername())) {
+                user = u;
+                break;
+            }
+        }
+
+        if (user != null) {
+            solicitud.setUser(user);
+            solicitudeRepository.save(solicitud);
+            msg.addFlashAttribute("exito", "Solicitud realizada con éxito.");
+            return "redirect:/user/welcome";
+        } else {
+            msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
+            return "redirect:/dashboard";
+        }
     }
+
     @GetMapping("/delet/{id}")
     public String excluirUser(@PathVariable("id") int id) {
         // Eliminar el usuario por su ID

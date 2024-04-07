@@ -1,6 +1,5 @@
 package com.example.registrationlogindemo.entity;
 
-import com.example.registrationlogindemo.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,8 +31,11 @@ public class Solicitude {
 
     private String imagen;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     // Relación muchos a uno con la entidad User
-    @ManyToOne
-    @JoinColumn(name = "user_id") // Nombre de la columna que actuará como clave externa en la tabla solicitude
-    private User user; // Objeto que representa al usuario que crea la solicitud
+    // Nombre de la columna que actuará como clave externa en la tabla solicitude
+    // Objeto que representa al usuario que crea la solicitud
 }
