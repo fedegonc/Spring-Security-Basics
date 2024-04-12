@@ -13,9 +13,11 @@ import org.apache.tomcat.util.modeler.BaseAttributeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,21 +46,34 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
-
+    
     // Método para la página de bienvenida del usuario
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
         ModelAndView mv = new ModelAndView();
         String username = null;
-         // Obtener el usuario autenticado actualmente
+        String userrole = null;
+        // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             username = userDetails.getUsername();
             // Puedes agregar más lógica aquí para trabajar con los detalles del usuario según tus necesidades
             mv.addObject("user", username);
+
         }
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        principal.toString();
+        // Obtener todas las solicitudes
+        mv.addObject("principal", principal);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        username = userDetails.getUsername();
+        userrole = userDetails.getAuthorities().toString();
+        // Verificar si el usuario tiene el rol de ADMIN
+        if (userrole != null && userrole.contains("ADMIN")) {
+            return new ModelAndView("redirect:/dashboard");
+        }
+        // Si el usuario no es un administrador, continuar con la lógica original
         List<User> users = userRepository.findAll();
         User usuario = null;
         for (User user : users) {
@@ -70,12 +85,11 @@ public class UserController {
         mv.addObject("users", usuario);
         // Establecer la vista
         mv.setViewName("user/welcome");
+        List<Solicitude> solicitude = solicitudeRepository.findAll();
+        mv.addObject("solicitude", solicitude);
+
         return mv;
     }
-
-
-
-
 
     @GetMapping("/profile/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
@@ -92,7 +106,6 @@ public class UserController {
                 return new ModelAndView("redirect:/user/profile/" + currentUser.getId());
             }
         }
-
         // Si la ID en la URL coincide con la ID del usuario autenticado, continuar con la lógica actual del método
         Optional<User> userOptional = userRepository.findById(id);
 
@@ -196,5 +209,12 @@ public class UserController {
     @GetMapping("/logout")
     public String logout() {
         return "index";
+    }
+
+    @GetMapping("/users")
+    public String listRegisteredUsers(Model model) {
+        List<UserDto> users = userService.findAllUsers();
+        model.addAttribute("users", users);
+        return "users";
     }
 }

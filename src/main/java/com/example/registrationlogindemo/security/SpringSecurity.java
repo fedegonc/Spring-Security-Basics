@@ -42,6 +42,10 @@ public class SpringSecurity {
                                 .requestMatchers("/user/profile/**").hasRole("USER")
                                 .requestMatchers("/user/newsolicitude/**").hasRole("USER")
 
+
+                               // .requestMatchers("/init").hasRole("ADMIN")
+                                .requestMatchers("/init").permitAll()
+
                                 .requestMatchers("/imagem/**").permitAll()
                                 .requestMatchers("/buscarPorNombre").permitAll()
                                 .requestMatchers("/buscarPorCategoria").permitAll()
@@ -63,7 +67,7 @@ public class SpringSecurity {
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/user/welcome")
+                                .defaultSuccessUrl("/init")
                                 .permitAll()
                 )
                 // Configuración de cierre de sesión

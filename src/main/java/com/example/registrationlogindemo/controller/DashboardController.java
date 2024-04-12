@@ -9,6 +9,7 @@ import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,11 @@ public class DashboardController {
     @GetMapping(value = "/dashboard")
     public ModelAndView getDashboard() {
         ModelAndView mv = new ModelAndView("/dashboard");
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        principal.toString();
         // Obtener todas las solicitudes
+        mv.addObject("principal", principal);
         List<Solicitude> solicitude = solicitudeRepository.findAll();
         mv.addObject("solicitude", solicitude);
         // Obtener todos los usuarios

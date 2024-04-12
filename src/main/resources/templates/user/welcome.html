@@ -45,6 +45,47 @@
         </div>
     </div>
 </nav>
+<div class="container mt-4">
+    <h3>Información del Usuario Autenticado</h3>
+    <spam th:text="${principal}"></spam>
+</div>
+<div class="container mt-4">
+<h3>Solicitudes</h3>
+<table class="table table-striped table-bordered table-hover">
+    <thead class="table-dark">
+    <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Ubicacion</th>
+        <th>Categoria</th>
+        <th>Activo</th>
+        <th>Descripcion</th>
+        <th>Imagen</th>
+        <th>Usuario</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="solicitude : ${solicitude}">
+        <td th:text="${solicitude.id}"></td>
+        <td th:text="${solicitude.nombre}"></td>
+        <td th:text="${solicitude.ubicacion}"></td>
+        <td th:text="${solicitude.categoria}"></td>
+        <td th:text="${solicitude.activo}"></td>
+        <td th:text="${solicitude.descripcion}"></td>
+        <td><img th:src="@{/imagem/{img}(img=${solicitude.imagen})}" width="100" height="100"></td>
+        <td th:text="${solicitude.user.id}"></td>
+        <td>
+            <a class="btn btn-primary" th:href="@{/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
+            <a class="btn btn-danger" th:href="@{/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
+            <a class="btn btn-warning" th:href="@{/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+
 <!-- <p>¡Hola, <span th:text="${user}"></span>!</p>
 <h1>User List</h1>
 <table border="1">
