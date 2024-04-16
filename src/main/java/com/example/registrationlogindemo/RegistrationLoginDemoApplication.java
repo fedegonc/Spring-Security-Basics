@@ -8,7 +8,6 @@ public class RegistrationLoginDemoApplication {
 
 	public static void main(String[] args) {
 		// @SpringBootApplication: Esta anotación combina tres anotaciones: @Configuration, @EnableAutoConfiguration y @ComponentScan. Marca esta clase como una clase de configuración de Spring, habilita la configuración automática de Spring Boot y escanea los paquetes para encontrar componentes y configuración.
-		//
 		//main(): Este método es el punto de entrada principal para la aplicación.
 		// Utiliza SpringApplication.run() para iniciar la aplicación Spring Boot,
 		// pasando la clase principal RegistrationLoginDemoApplication y los argumentos de línea de

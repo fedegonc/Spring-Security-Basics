@@ -1,0 +1,29 @@
+/* Estilos para la transparencia */
+.transparencia {
+    position: relative;
+    width: 100%;
+}
+
+.transparencia::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Cambia el valor de alfa para ajustar la opacidad */
+}
+
+.texto-superior {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 24px;
+}
+
+/* Estilo para el menú desplegable */
+.language-dropdown {
+    margin-left: 20px; /* Espacio entre el desplegable y el enlace 'Acceder' */
+}

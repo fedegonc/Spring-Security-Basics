@@ -2,15 +2,19 @@ package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 public class GuestController {
@@ -49,5 +53,10 @@ public class GuestController {
             return Files.readAllBytes(caminho.toPath());
         }
         return null;
+    }
+
+    @GetMapping("/international")
+    public String getInternationalPage() {
+        return "index";
     }
 }

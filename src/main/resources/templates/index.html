@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Frontera Sustentable</title>
+    <title th:text="#{index.title}">Frontera Sustentable</title>
     <link rel="icon" href="">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -33,6 +33,11 @@
             color: white;
             font-size: 24px;
         }
+
+        /* Estilo para el menú desplegable */
+        .language-dropdown {
+            margin-left: 20px; /* Espacio entre el desplegable y el enlace 'Acceder' */
+        }
     </style>
 </head>
 <body>
@@ -47,26 +52,42 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="navbar-brand" th:href="@{/index}"> Frontera Sustentable</a>
+                            <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary" th:href="@{/login}">Acceder</a>
+                            <a class="btn btn-primary" th:href="@{/login}" th:text="#{button.login}">Acceder</a>
+                        </li>
+                        <!-- Menú desplegable para cambiar de idioma -->
+                        <li class="nav-item dropdown language-dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span th:text="#{label.chooseLang}"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="/index?language=br" th:text="#{label.lang.br}">Português</a></li>
+
+                                <li><a class="dropdown-item" href="/index?language=uy" th:text="#{label.lang.uy}">Español</a></li>
+                                <li><a class="dropdown-item" href="/index?language=us" th:text="#{label.lang.us}">Ingles</a></li>
+                                <!-- Agrega más idiomas según sea necesario -->
+                            </ul>
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="navbar-brand" th:href="@{/register}">Registro</a>
+                            <a class="navbar-brand" th:href="@{/register}" th:text="#{button.register}">Registro</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
+
+
+
         <div class="transparencia">
             <img src="/img/foto1.jpg" class="img-fluid" alt="Banner">
-            <div class="texto-superior">Bienvenido a Frontera Sustentable <br>
-                Proyecto Binacional de Economía Circular que Facílita la Comunicación
-                entre Instituciones y Personas de Santana do Livramento y Rivera
-                </div>
+
+            <div class="texto-superior">
+                <span th:text="#{greeting}"></span>
+            </div>
         </div>
         <div class="container mt-4">
             <!-- Otros elementos HTML aquí -->
@@ -74,6 +95,7 @@
     </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

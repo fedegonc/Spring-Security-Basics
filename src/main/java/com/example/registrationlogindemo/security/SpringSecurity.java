@@ -45,6 +45,9 @@ public class SpringSecurity {
 
                                // .requestMatchers("/init").hasRole("ADMIN")
                                 .requestMatchers("/init").permitAll()
+                                .requestMatchers("/international/**").permitAll()
+                                .requestMatchers("/international").permitAll()
+
 
                                 .requestMatchers("/imagem/**").permitAll()
                                 .requestMatchers("/buscarPorNombre").permitAll()

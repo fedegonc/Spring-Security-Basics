@@ -80,7 +80,6 @@ public class AuthController {
     // Redirige a la página de bienvenida según el rol del usuario
     @GetMapping("/init")
     public ModelAndView welcomePage() {
-        ModelAndView mv = new ModelAndView();
 
         // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
