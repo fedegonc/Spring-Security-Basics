@@ -77,7 +77,7 @@ public class AuthController {
 
         if (principal instanceof UserDetails) {
             // El usuario ya está autenticado, redirigir a la página de inicio
-            return "redirect:/index";
+            return "redirect:/init";
         }
         return "login";
     }

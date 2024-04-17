@@ -26,6 +26,19 @@
                 <li class="nav-item">
                 <a class="nav-link active" aria-current="page" th:href="@{/newsolicitude}">Solicitud</a>
                 </li>
+                <li class="nav-item dropdown language-dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{label.chooseLang}"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!-- Opciones de idioma -->
+                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a>
+                        </li>
+                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" th:href="@{/logout}">Salir</a>
                 </li>

@@ -2,19 +2,17 @@ package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Locale;
 
 @Controller
 public class GuestController {
@@ -24,6 +22,8 @@ public class GuestController {
     // Redirecciona a la página de inicio
     @GetMapping("")
     public String redirectToIndex() {
+
+
         return "index";
     }
 
@@ -35,12 +35,18 @@ public class GuestController {
 
     // Obtiene la página de inicio y muestra las solicitudes activas
     @GetMapping(value = "/index")
-    public ModelAndView getIndex() {
+    public String getIndex() {
         ModelAndView mv = new ModelAndView("/index");
         // Obtener todas las solicitudes activas
         List<Solicitude> solicitude = solicitudeRepository.findSolicitudeByActivo("Activo");
         mv.addObject("solicitude", solicitude);
-        return mv;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            // El usuario ya está autenticado, redirigir a la página de inicio correspondiente
+            return "redirect:/init";
+        }
+        return "/index";
     }
 
     // Obtiene la imagen según el nombre de archivo proporcionado
