@@ -73,6 +73,12 @@ public class AuthController {
     // Muestra el formulario de inicio de sesión
     @GetMapping("/login")
     public String loginForm() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            // El usuario ya está autenticado, redirigir a la página de inicio
+            return "redirect:/index";
+        }
         return "login";
     }
 

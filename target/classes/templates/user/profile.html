@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <title>Frontera Sustentable</title>
+    <title th:text="#{title}">Frontera Sustentable</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
@@ -18,17 +18,17 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="navbar-brand" href="#">Frontera Sustentable</a>
+                    <a class="navbar-brand" href="#" th:text="#{title}">Frontera Sustentable</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/index}">Indice</a>
+                    <a class="nav-link active" th:href="@{/index}" th:text="#{index}">Indice</a>
                 </li>
 
             </ul>
             <ul class="navbar-nav ml-auto">
 
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/logout}">Salir</a>
+                    <a class="navbar-brand" th:href="@{/logout}" th:text="#{logout}">Salir</a>
                 </li>
             </ul>
 
@@ -37,20 +37,20 @@
 </nav>
 
 <div class="container mt-4">
-    <h1>Editar Usuario</h1>
+    <h1 th:text="#{edit.user}">Editar Usuario</h1>
 
     <form method="post" enctype="multipart/form-data" th:action="@{'/user/profile/' + ${user.id}}">
 
         <div class="mb-3">
-            <label class="form-label" th:for="nombre">Nombre</label>
+            <label class="form-label" th:for="nombre" th:text="#{label.name}">Nombre</label>
             <input type="text" class="form-control" name="name" th:value="${user.name}" required>
         </div>
         <div class="mb-3">
-            <label class="form-label" th:for="email">Email</label>
+            <label class="form-label" th:for="email" th:text="#{label.email}">Email</label>
             <input type="text" class="form-control" name="email" th:value="${user.email}" required>
         </div>
         <div class="form-group row">
-            <label class="col-4 col-form-label">Roles:</label>
+            <label class="col-4 col-form-label" th:text="#{label.roles}">Roles:</label>
             <div class="col-8">
                 <th:block th:each="role: ${listRoles}">
                     <input type="checkbox" name="roles" th:value="${role.id}" th:checked="${user.roles.contains(role)}"
@@ -60,11 +60,8 @@
             </div>
         </div>
 
-
-
-
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        <a class="btn btn-danger" th:href="@{/user/delet/{id}(id=${user.id})}">Borrar</a>
+        <button type="submit" class="btn btn-primary" th:text="#{button.save}">Guardar Cambios</button>
+        <a class="btn btn-danger" th:href="@{/user/delet/{id}(id=${user.id})}" th:text="#{button.delete}">Borrar</a>
     </form>
 
 </div>
