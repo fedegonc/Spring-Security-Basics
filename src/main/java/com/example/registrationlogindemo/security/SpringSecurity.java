@@ -37,24 +37,19 @@ public class SpringSecurity {
         http.csrf().disable()
                 // Configuración de las autorizaciones de las solicitudes HTTP
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/", "/register/**", "/register/save", "/index","/favicon.ico", "/img/**").permitAll()
-                                .requestMatchers("/user/welcome").hasRole("USER")
-                                .requestMatchers("/user/profile/**").hasRole("USER")
-                                .requestMatchers("/user/newsolicitude/**").hasRole("USER")
-
-
-                               // .requestMatchers("/init").hasRole("ADMIN")
+                        authorize.requestMatchers("/", "/register/**", "/register/save", "/index", "/favicon.ico", "/img/**").permitAll()
+                                .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/init").permitAll()
-                                .requestMatchers("/international/**").permitAll()
-                                .requestMatchers("/international").permitAll()
-
-
                                 .requestMatchers("/imagem/**").permitAll()
                                 .requestMatchers("/buscarPorNombre").permitAll()
                                 .requestMatchers("/buscarPorCategoria").permitAll()
                                 .requestMatchers("/gracias").permitAll()
                                 .requestMatchers("/favicon.*").permitAll()
                                 .requestMatchers("/error").permitAll()
+
+                                .requestMatchers("/user/welcome").hasRole("USER")
+                                .requestMatchers("/user/profile/**").hasRole("USER")
+                                .requestMatchers("/user/newsolicitude/**").hasRole("USER")
 
                                 .requestMatchers("/user/**").hasRole("ADMIN")
                                 .requestMatchers("/modifysolicitude/**").hasRole("ADMIN")

@@ -1,45 +1,88 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
->
+      xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Frontera Sustentable</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Título de la página -->
+    <title th:text="#{index.title}">Frontera Sustentable</title>
+    <!-- Ícono de la página -->
+    <link rel="icon" href="">
+    <!-- Estilos Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" th:fragment="header">
+<!-- Barra de navegación -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+        <!-- Botón de hamburguesa para dispositivos móviles -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Elementos de la barra de navegación izquierda -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <!-- Título de la aplicación -->
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+                </li>
+                <!-- Botón de Acceder -->
+                <li class="nav-item">
+                    <a class="btn btn-primary" th:href="@{/login}" th:text="#{button.login}">Acceder</a>
+                </li>
+            </ul>
+            <!-- Elementos de la barra de navegación derecha -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Menú desplegable para cambiar de idioma -->
+                <li class="nav-item dropdown language-dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{label.chooseLang}"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!-- Opciones de idioma -->
+                        <li><a class="dropdown-item" href="/login?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/login?language=es" th:text="#{label.lang.es}">Español</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
     </div>
 </nav>
-<br />
-<br />
-<br />
+<!-- Fin de la barra de navegación -->
+<br/>
+
+<!-- Migas de pan -->
 <div class="container mt-1">
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb bg-light">
-        <li class="breadcrumb-item"><a th:href="@{/index}">Inicio</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Login</li>
-    </ol>
-</nav>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <!-- Elemento de inicio de las migas de pan -->
+            <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.login}">Login</li>
+        </ol>
+    </nav>
 </div>
+
+<!-- Contenido principal -->
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
+            <!-- Manejo de errores y mensajes de éxito -->
             <div th:if="${param.error}">
-                <div class="alert alert-danger">Email o Password Incorrectos.</div>
+                <div class="alert alert-danger" th:text="#{error.login}">Email o Contraseña Incorrectos.</div>
             </div>
             <div th:if="${param.logout}">
-                <div class="alert alert-success">Sesión finalizada con éxito.</div>
+                <div class="alert alert-success" th:text="#{success.logout}">Sesión Finalizada con Éxito.</div>
             </div>
+            <!-- Formulario de inicio de sesión -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="text-center">Formulario de Inicio de Sesión</h3>
+                    <!-- Título del formulario -->
+                    <h3 class="text-center" th:text="#{login.form.title}">Formulario de Inicio de Sesión</h3>
                 </div>
                 <div class="card-body">
                     <form
@@ -48,8 +91,9 @@
                             class="form-horizontal"
                             role="form"
                     >
+                        <!-- Campo de email -->
                         <div class="mb-3">
-                            <label for="username" class="control-label">Email *</label>
+                            <label for="username" class="control-label" th:text="#{login.form.email}">Email *</label>
                             <input type="text"
                                    id="username"
                                    name="username"
@@ -58,21 +102,27 @@
                             />
                         </div>
 
+                        <!-- Campo de contraseña -->
                         <div class="mb-3">
-                            <label for="password" class="control-label">Contraseña *</label>
+                            <label for="password" class="control-label" th:text="#{login.form.password}">Contraseña
+                                *</label>
                             <input type="password"
                                    id="password"
                                    name="password"
                                    class="form-control"
-                                   placeholder="Password"
+                                   placeholder="Contraseña"
                             />
                         </div>
 
+                        <!-- Botón de enviar -->
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-                            <span> No se ha registrado?
-                            <a th:href="@{/register}"> Registrese aquí</a>
-                        </span>
+                            <button type="submit" class="btn btn-primary" th:text="#{login.form.submit}">Iniciar
+                                Sesión
+                            </button>
+                            <!-- Enlace para registrarse -->
+                            <span th:text="#{login.form.register.text}"> ¿No tienes una cuenta?
+                                <a th:href="@{/register}" th:text="#{login.form.register.link}"> Regístrate aquí</a>
+                            </span>
                         </div>
                     </form>
                 </div>
@@ -80,5 +130,40 @@
         </div>
     </div>
 </div>
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5 th:text="#{footer.contact.title}">Contacto</h5>
+                <p th:text="#{footer.contact.email}">Email: info@fronterasustentable.com</p>
+                <p th:text="#{footer.contact.phone}">Teléfono: +1234567890</p>
+                <p th:text="#{footer.contact.address}">Dirección: Av. Principal 123, Ciudad, País</p>
+            </div>
+            <div class="col-md-4">
+                <h5 th:text="#{footer.links.title}">Enlaces útiles</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/" th:text="#{footer.links.home}">Inicio</a></li>
+                    <li><a href="/about" th:text="#{footer.links.about}">Acerca de</a></li>
+                    <li><a href="/services" th:text="#{footer.links.services}">Servicios</a></li>
+                    <li><a href="/contact" th:text="#{footer.links.contact}">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 th:text="#{footer.social.title}">Redes Sociales</h5>
+                <ul class="list-unstyled">
+                    <li><a href="https://facebook.com/fronterasustentable"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://twitter.com/frontera_sust"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="https://linkedin.com/company/fronterasustentable"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container text-center">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+    </div>
+</footer>
+<!-- Fin del contenido principal -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

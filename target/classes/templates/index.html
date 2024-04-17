@@ -2,19 +2,25 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <!-- Título de la página -->
     <title th:text="#{index.title}">Frontera Sustentable</title>
+    <!-- Ícono de la página -->
     <link rel="icon" href="">
+    <!-- Estilos Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
 
+    <!-- Estilos CSS personalizados -->
     <style>
+        /* Clase para aplicar transparencia al fondo */
         .transparencia {
             position: relative;
             width: 100%;
         }
 
+        /* Pseudo-elemento para crear la capa de transparencia */
         .transparencia::before {
             content: '';
             position: absolute;
@@ -25,6 +31,7 @@
             background-color: rgba(0, 0, 0, 0.5); /* Cambia el valor de alfa para ajustar la opacidad */
         }
 
+        /* Estilo para el texto superpuesto */
         .texto-superior {
             position: absolute;
             top: 50%;
@@ -41,36 +48,38 @@
     </style>
 </head>
 <body>
-
-<div class="custom-background">
-    <div class="content">
+<!-- Barra de navegación -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
+                <!-- Botón de hamburguesa para dispositivos móviles -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Elementos de la barra de navegación izquierda -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <!-- Título de la aplicación -->
                         <li class="nav-item">
                             <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
                         </li>
+                        <!-- Botón de Acceder -->
                         <li class="nav-item">
                             <a class="btn btn-primary" th:href="@{/login}" th:text="#{button.login}">Acceder</a>
                         </li>
+                    </ul>
+                    <!-- Elementos de la barra de navegación derecha -->
+                    <ul class="navbar-nav ml-auto">
                         <!-- Menú desplegable para cambiar de idioma -->
                         <li class="nav-item dropdown language-dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span th:text="#{label.chooseLang}"></span>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <!-- Opciones de idioma -->
                                 <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-
                                 <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a></li>
-                                <!-- Agrega más idiomas según sea necesario -->
                             </ul>
                         </li>
-                    </ul>
-                    <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
                             <a class="navbar-brand" th:href="@{/register}" th:text="#{button.register}">Registro</a>
                         </li>
@@ -79,21 +88,61 @@
             </div>
         </nav>
 
-
-
+<!-- Contenedor principal con fondo personalizado -->
+<div class="custom-background">
+    <div class="content">
+        <!-- Contenido con transparencia superpuesto -->
         <div class="transparencia">
+            <!-- Imagen de fondo -->
             <img src="/img/foto1.jpg" class="img-fluid" alt="Banner">
-
+            <!-- Texto superpuesto -->
             <div class="texto-superior">
+                <!-- Mensaje de bienvenida -->
                 <span th:text="#{greeting}"></span>
             </div>
         </div>
+
+        <!-- Contenido adicional -->
         <div class="container mt-4">
             <!-- Otros elementos HTML aquí -->
         </div>
     </div>
 </div>
+<!-- footer -->
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5 th:text="#{footer.contact.title}">Contacto</h5>
+                <p th:text="#{footer.contact.email}">Email: info@fronterasustentable.com</p>
+                <p th:text="#{footer.contact.phone}">Teléfono: +1234567890</p>
+                <p th:text="#{footer.contact.address}">Dirección: Av. Principal 123, Ciudad, País</p>
+            </div>
+            <div class="col-md-4">
+                <h5 th:text="#{footer.links.title}">Enlaces útiles</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/" th:text="#{footer.links.home}">Inicio</a></li>
+                    <li><a href="/about" th:text="#{footer.links.about}">Acerca de</a></li>
+                    <li><a href="/services" th:text="#{footer.links.services}">Servicios</a></li>
+                    <li><a href="/contact" th:text="#{footer.links.contact}">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 th:text="#{footer.social.title}">Redes Sociales</h5>
+                <ul class="list-unstyled">
+                    <li><a href="https://facebook.com/fronterasustentable"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://twitter.com/frontera_sust"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="https://linkedin.com/company/fronterasustentable"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container text-center">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+    </div>
+</footer>
 
+<!-- Scripts -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

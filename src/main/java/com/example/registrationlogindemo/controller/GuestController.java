@@ -55,8 +55,4 @@ public class GuestController {
         return null;
     }
 
-    @GetMapping("/international")
-    public String getInternationalPage() {
-        return "index";
-    }
 }

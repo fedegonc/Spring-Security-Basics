@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Frontera Sustentable</title>
+    <title th:text="#{title}">Frontera Sustentable</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
@@ -31,81 +31,92 @@
                     <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
                 </li>
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/user/newsolicitude" th:text="#{get.}">Solicitar Recolección</a>
+                    <a class="navbar-brand" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/user/profile/{id}(id=${users.id})}">Perfil</a>
+                    <a class="navbar-brand" th:href="@{/user/profile/{id}(id=${users.id})}" th:text="#{perfil}">Perfil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/logout}">Salir</a>
+                    <a class="navbar-brand" th:href="@{/logout}" th:text="#{salir}">Salir</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 <div class="container mt-4">
-    <h3>Información del Usuario Autenticado</h3>
-    <spam th:text="${principal}"></spam>
+    <h3 th:text="#{info_usuario}">Información del Usuario Autenticado</h3>
+    <span th:text="${principal}"></span>
 </div>
 <div class="container mt-4">
-<h3>Solicitudes</h3>
-<table class="table table-striped table-bordered table-hover">
-    <thead class="table-dark">
-    <tr>
-        <th>Id</th>
-        <th>Nombre</th>
-        <th>Ubicacion</th>
-        <th>Categoria</th>
-        <th>Activo</th>
-        <th>Descripcion</th>
-        <th>Imagen</th>
-        <th>Usuario</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
+    <h3 th:text="#{solicitudes}">Solicitudes</h3>
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th th:text="#{id}">Id</th>
+            <th th:text="#{nombre}">Nombre</th>
+            <th th:text="#{ubicacion}">Ubicacion</th>
+            <th th:text="#{categoria}">Categoria</th>
+            <th th:text="#{activo}">Activo</th>
+            <th th:text="#{descripcion}">Descripcion</th>
+            <th th:text="#{imagen}">Imagen</th>
+            <th th:text="#{usuario}">Usuario</th>
+            <th th:text="#{acciones}">Acciones</th>
+        </tr>
+        </thead>
 
-    <tbody>
-    <tr th:each="solicitude : ${solicitude}">
-        <td th:text="${solicitude.id}"></td>
-        <td th:text="${solicitude.nombre}"></td>
-        <td th:text="${solicitude.ubicacion}"></td>
-        <td th:text="${solicitude.categoria}"></td>
-        <td th:text="${solicitude.activo}"></td>
-        <td th:text="${solicitude.descripcion}"></td>
-        <td><img th:src="@{/imagem/{img}(img=${solicitude.imagen})}" width="100" height="100"></td>
-        <td th:text="${solicitude.user.id}"></td>
-        <td>
-            <a class="btn btn-primary" th:href="@{/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
-            <a class="btn btn-danger" th:href="@{/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
-            <a class="btn btn-warning" th:href="@{/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        <tbody>
+        <tr th:each="solicitud : ${solicitudes}">
+            <td th:text="${solicitud.id}"></td>
+            <td th:text="${solicitud.nombre}"></td>
+            <td th:text="${solicitud.ubicacion}"></td>
+            <td th:text="${solicitud.categoria}"></td>
+            <td th:text="${solicitud.activo}"></td>
+            <td th:text="${solicitud.descripcion}"></td>
+            <td><img th:src="@{/imagem/{img}(img=${solicitud.imagen})}" width="100" height="100"></td>
+            <td th:text="${solicitud.user.id}"></td>
+            <td>
+                <a class="btn btn-primary" th:href="@{/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{editar}">Editar</a>
+                <a class="btn btn-danger" th:href="@{/deletsolicitude/{id}(id=${solicitud.id})}" th:text="#{borrar}">Borrar</a>
+                <a class="btn btn-warning" th:href="@{/modifysolicitude/{id}(id=${solicitud.id})}" th:text="#{modificar_estado}">Modificar Estado</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
-
-<!-- <p>¡Hola, <span th:text="${user}"></span>!</p>
-<h1>User List</h1>
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-         Agrega más columnas según sea necesario .-.->
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.email}"></td>
-        <!-.- Agrega más columnas según sea necesario -.->
-    </tr>
-    </tbody>
-</table> -->
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5 th:text="#{footer.contact.title}">Contacto</h5>
+                <p th:text="#{footer.contact.email}">Email: info@fronterasustentable.com</p>
+                <p th:text="#{footer.contact.phone}">Teléfono: +1234567890</p>
+                <p th:text="#{footer.contact.address}">Dirección: Av. Principal 123, Ciudad, País</p>
+            </div>
+            <div class="col-md-4">
+                <h5 th:text="#{footer.links.title}">Enlaces útiles</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/" th:text="#{footer.links.home}">Inicio</a></li>
+                    <li><a href="/about" th:text="#{footer.links.about}">Acerca de</a></li>
+                    <li><a href="/services" th:text="#{footer.links.services}">Servicios</a></li>
+                    <li><a href="/contact" th:text="#{footer.links.contact}">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 th:text="#{footer.social.title}">Redes Sociales</h5>
+                <ul class="list-unstyled">
+                    <li><a href="https://facebook.com/fronterasustentable"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://twitter.com/frontera_sust"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="https://linkedin.com/company/fronterasustentable"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container text-center">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+    </div>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
