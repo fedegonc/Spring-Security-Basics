@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class DashboardController {
+public class AdminController {
     @Autowired
     SolicitudeRepository solicitudeRepository;
     @Autowired
@@ -36,7 +36,7 @@ public class DashboardController {
     private final UserService userService;
 
     // Constructor que inyecta el servicio UserService
-    public DashboardController(UserService userService) {
+    public AdminController(UserService userService) {
         this.userService = userService;
     }
 

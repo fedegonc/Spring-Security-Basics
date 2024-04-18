@@ -18,21 +18,42 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="navbar-brand" href="#" th:text="#{title}">Frontera Sustentable</a>
+                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/index}" th:text="#{index}">Indice</a>
-                </li>
+
             </ul>
             <ul class="navbar-nav ml-auto">
-
+                <li class="nav-item dropdown language-dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{label.chooseLang}"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!-- Opciones de idioma -->
+                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a>
+                        </li>
+                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/logout}" th:text="#{logout}">Salir</a>
+                    <a class="navbar-brand" th:href="@{/logout}" th:text="#{salir}">Salir</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <!-- Elemento de inicio de las migas de pan -->
+            <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.login}">Login</li>
+        </ol>
+    </nav>
+</div>
 
 <div class="container mt-4">
     <h1 th:text="#{edit.user}">Editar Usuario</h1>

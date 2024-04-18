@@ -37,10 +37,10 @@ public class SpringSecurity {
         http.csrf().disable()
                 // Configuración de las autorizaciones de las solicitudes HTTP
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/", "/register/**", "/register/save", "/index", "/favicon.ico", "/img/**").permitAll()
-                                .requestMatchers("/login/**").permitAll()
-                                .requestMatchers("/init").permitAll()
-                                .requestMatchers("/imagem/**").permitAll()
+                        authorize.requestMatchers("/", "/register/**", "/register/save", "/index",
+                                        "/favicon.ico", "/img/**","/login/**","/init","/imagem/**",
+                                        "/imagem/**").permitAll()
+
                                 .requestMatchers("/buscarPorNombre").permitAll()
                                 .requestMatchers("/buscarPorCategoria").permitAll()
                                 .requestMatchers("/gracias").permitAll()

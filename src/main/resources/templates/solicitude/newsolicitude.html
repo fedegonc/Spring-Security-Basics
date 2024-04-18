@@ -17,16 +17,26 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="navbar-brand" href="#">Frontera Sustentable</a>
+                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown language-dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{label.chooseLang}"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!-- Opciones de idioma -->
+                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a>
+                        </li>
+                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/index}">Index</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/dashboard}">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/logout}">Logout</a>
+                    <a class="navbar-brand" th:href="@{/logout}" th:text="#{salir}">Salir</a>
                 </li>
             </ul>
         </div>
@@ -34,9 +44,6 @@
 </nav>
 <div class="container">
     <div class="row">
-
-
-
         <div class="col-md-6 offset-md-3">
 
     <h1 class="mb-4">Nueva Solicitud</h1>

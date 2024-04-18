@@ -1,9 +1,10 @@
-/* Estilos para la transparencia */
+/* Clase para aplicar transparencia al fondo */
 .transparencia {
     position: relative;
     width: 100%;
 }
 
+/* Pseudo-elemento para crear la capa de transparencia */
 .transparencia::before {
     content: '';
     position: absolute;
@@ -14,6 +15,7 @@
     background-color: rgba(0, 0, 0, 0.5); /* Cambia el valor de alfa para ajustar la opacidad */
 }
 
+/* Estilo para el texto superpuesto */
 .texto-superior {
     position: absolute;
     top: 50%;
@@ -26,4 +28,15 @@
 /* Estilo para el menú desplegable */
 .language-dropdown {
     margin-left: 20px; /* Espacio entre el desplegable y el enlace 'Acceder' */
+}
+
+/* Estilos para el footer */
+.footer {
+    background-color: #343a40;
+    color: white;
+}
+
+/* Estilos para el contenido */
+.content {
+    padding-top: 60px; /* Altura de la barra de navegación */
 }
