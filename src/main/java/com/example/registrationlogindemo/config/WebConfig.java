@@ -15,6 +15,8 @@ import java.util.Locale;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+
+
     // Bean para cargar los mensajes en diferentes idiomas
     @Bean("messageSource")
     public MessageSource messageSource() {
