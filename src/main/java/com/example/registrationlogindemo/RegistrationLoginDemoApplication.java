@@ -12,5 +12,4 @@ public class RegistrationLoginDemoApplication {
 		// comandos como parámetros.
 		SpringApplication.run(RegistrationLoginDemoApplication.class, args);
 	}
-
 }
