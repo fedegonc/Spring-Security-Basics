@@ -63,13 +63,5 @@ public class GuestController {
         }
         return null;
     }
-    @GetMapping("/css/styles.css")
-    public ResponseEntity<Resource> getCss() throws IOException {
-        // Cargar el archivo CSS desde el sistema de archivos
-        Resource resource = (Resource) new ClassPathResource("/static/css/styles.css");
-
-        // Devolver una respuesta con el recurso y el código de estado 200 OK
-        return ResponseEntity.ok().body(resource);
-    }
 
 }
