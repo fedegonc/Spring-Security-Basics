@@ -1,7 +1,9 @@
 .transparencia {
-            position: relative;
-            width: 100%;
-        }
+    position: relative;
+    width: 100%;
+    margin-bottom: 0; /* Elimina el margen inferior */
+    padding-bottom: 0; /* Elimina el padding inferior */
+}
 
 .transparencia::before {
             content: '';
@@ -20,4 +22,9 @@
             transform: translate(-50%, -50%);
             color: white;
             font-size: 24px;
+        }
+
+        .footer {
+            margin-top: 0; /* Elimina el margen superior */
+            padding-top: 0; /* Elimina el padding superior */
         }
