@@ -6,25 +6,29 @@
 }
 
 .transparencia::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Cambia el valor de alfa para ajustar la opacidad */
-        }
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Cambia el valor de alfa para ajustar la opacidad */
+}
 
 .texto-superior {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 24px;
-        }
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 24px;
+}
 
-        .footer {
-            margin-top: 0; /* Elimina el margen superior */
-            padding-top: 0; /* Elimina el padding superior */
-        }
+.footer {
+    margin-top: 0; /* Elimina el margen superior */
+    padding-top: 0; /* Elimina el padding superior */
+}
+
+.footer a {
+    color: white; /* Cambia el color de los enlaces del footer a blanco */
+}
