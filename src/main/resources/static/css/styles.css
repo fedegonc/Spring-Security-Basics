@@ -32,3 +32,15 @@
 .footer a {
     color: white; /* Cambia el color de los enlaces del footer a blanco */
 }
+.card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover; /* Para mantener la relación de aspecto */
+        }
+        .card-title {
+            color: #343a40; /* Color de texto más oscuro */
+        }
+        .card:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease-in-out;
+        }
