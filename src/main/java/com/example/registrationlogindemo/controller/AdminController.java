@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
     @Autowired
     SolicitudeRepository solicitudeRepository;
@@ -43,7 +44,7 @@ public class AdminController {
     // Método para mostrar el dashboard
     @GetMapping(value = "/dashboard")
     public ModelAndView getDashboard() {
-        ModelAndView mv = new ModelAndView("/dashboard");
+        ModelAndView mv = new ModelAndView("admin/dashboard");
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         principal.toString();

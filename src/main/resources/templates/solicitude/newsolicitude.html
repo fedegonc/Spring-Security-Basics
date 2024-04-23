@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Frontera Sustentable</title>
+    <!-- Estilos CSS personalizados -->
+    <link rel="stylesheet" href="/css/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
@@ -29,9 +31,9 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a>
+                        <li><a class="dropdown-item" href="/user/newsolicitude?language=pt" th:text="#{label.lang.pt}">Português</a>
                         </li>
-                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a>
+                        <li><a class="dropdown-item" href="/user/newsolicitude?language=es" th:text="#{label.lang.es}">Español</a>
                         </li>
                     </ul>
                 </li>
@@ -42,45 +44,94 @@
         </div>
     </div>
 </nav>
+
+<!-- Migas de pan -->
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <!-- Elemento de inicio de las migas de pan -->
+            <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
+            <!-- Segundo elemento -->
+            <li class="breadcrumb-item"><a th:href="@{/bienvenida}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.newRequest}">Nueva Solicitud</li>
+        </ol>
+    </nav>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <h1 class="card-title mb-4" th:text="#{newRequest.title}">Nueva Solicitud</h1>
+                <form method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label" th:text="#{newRequest.name}">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ubicacion" class="form-label" th:text="#{newRequest.location}">Ubicacion</label>
+                        <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label" th:text="#{newRequest.category}">Categoria</label>
+                        <input type="text" class="form-control" id="categoria" name="categoria" required>
+                    </div>
 
-    <h1 class="mb-4">Nueva Solicitud</h1>
-<form method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
-        <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" required>
-        </div>
-        <div class="mb-3">
-            <label for="ubicacion" class="form-label">Ubicacion</label>
-            <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
-        </div>
-        <div class="mb-3">
-            <label for="categoria" class="form-label">Categoria</label>
-            <input type="text" class="form-control" id="categoria" name="categoria" required>
-        </div>
+                    <div class="mb-3">
+                        <label for="activo" class="form-label" th:text="#{newRequest.active}">Activo</label>
+                        <input type="text" class="form-control" id="activo" name="activo" required>
+                    </div>
 
-        <div class="mb-3">
-            <label for="activo" class="form-label">Activo</label>
-            <input type="text" class="form-control" id="activo" name="activo" required>
+                    <div class="mb-3">
+                        <label for="file" class="form-label" th:text="#{newRequest.image}">Imagen</label>
+                        <input type="file" class="form-control" id="file" name="file">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" th:text="#{newRequest.submit}">Enviar Solicitud</button>
+                </form>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label for="file" class="form-label">Imagen</label>
-            <input type="file" class="form-control" id="file" name="file">
-        </div>
-        <div class="mb-3">
-            <label for="descripcion" class="form-label">Descripción</label>
-            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
-    </form>
-
-
+    </div>
 </div>
-</div>
-</div>
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5 th:text="#{footer.contact.title}">Contacto</h5>
+                <p th:text="#{footer.contact.email}">Email: info@fronterasustentable.com</p>
+                <p th:text="#{footer.contact.phone}">Teléfono: +1234567890</p>
+                <p th:text="#{footer.contact.address}">Dirección: Av. Principal 123, Ciudad, País</p>
+            </div>
+            <div class="col-md-4">
+                <h5 th:text="#{footer.links.title}">Enlaces útiles</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/" th:text="#{footer.links.home}">Inicio</a></li>
+                    <li><a href="/about" th:text="#{footer.links.about}">Acerca de</a></li>
+                    <li><a href="/services" th:text="#{footer.links.services}">Servicios</a></li>
+                    <li><a href="/contact" th:text="#{footer.links.contact}">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 th:text="#{footer.social.title}">Redes Sociales</h5>
+                <ul class="list-unstyled">
+                    <li><a href="https://facebook.com/fronterasustentable"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://twitter.com/frontera_sust"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="https://linkedin.com/company/fronterasustentable"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container text-center">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+    </div>
+</footer>
+<!-- Fin del contenido principal -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
