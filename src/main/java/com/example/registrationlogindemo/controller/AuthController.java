@@ -54,11 +54,17 @@ public class AuthController {
     public String registration(@Valid @ModelAttribute("user") UserDto userDto,
                                BindingResult result,
                                Model model){
-        User existingUser = userService.findByEmail(userDto.getEmail());
+        User existingUserByEmail = userService.findByEmail(userDto.getEmail());
+        User existingUserByUsername = userService.findByUsername(userDto.getUsername());
 
-        if(existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()){
+        if(existingUserByEmail != null && existingUserByEmail.getEmail() != null && !existingUserByEmail.getEmail().isEmpty()){
             result.rejectValue("email", null,
                     "There is already an account registered with the same email");
+        }
+
+        if(existingUserByUsername != null && existingUserByUsername.getUsername() != null && !existingUserByUsername.getUsername().isEmpty()){
+            result.rejectValue("username", null,
+                    "There is already an account registered with the same username");
         }
 
         if(result.hasErrors()){
@@ -69,6 +75,7 @@ public class AuthController {
         userService.saveUser(userDto);
         return "redirect:/login";
     }
+
 
     // Muestra el formulario de inicio de sesión
     @GetMapping("/login")

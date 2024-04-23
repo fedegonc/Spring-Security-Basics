@@ -9,11 +9,9 @@ import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
-import org.apache.tomcat.util.modeler.BaseAttributeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -46,7 +44,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    
+
     // Método para la página de bienvenida del usuario
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
@@ -74,14 +72,7 @@ public class UserController {
             return new ModelAndView("redirect:/dashboard");
         }
         // Si el usuario no es un administrador, continuar con la lógica original
-        List<User> users = userRepository.findAll();
-        User usuario = null;
-        for (User user : users) {
-            if (user.getEmail().equals(username)) {
-                usuario = user;
-                break;
-            }
-        }
+        User usuario = userRepository.findByUsername(username);
         mv.addObject("users", usuario);
         // Establecer la vista
         mv.setViewName("user/welcome");
@@ -96,10 +87,9 @@ public class UserController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        Optional<User> currentUserOptional = Optional.ofNullable(userRepository.findByEmail(username));
+        User currentUser = userRepository.findByUsername(username);
 
-        if (currentUserOptional.isPresent()) {
-            User currentUser = currentUserOptional.get();
+        if (currentUser != null) {
             // Verificar si la ID en la URL coincide con la ID del usuario autenticado
             if (currentUser.getId() != id) {
                 // Si el usuario intenta acceder al perfil de otro usuario, redirigirlo a su propio perfil
@@ -177,14 +167,7 @@ public class UserController {
             System.out.println("Error al salvar imagen");
         }
 
-        User user = null;
-        List<User> users = userRepository.findAll();
-        for (User u : users) {
-            if (u.getEmail().equals(currentUser.getUsername())) {
-                user = u;
-                break;
-            }
-        }
+        User user = userRepository.findByUsername(currentUser.getUsername());
 
         if (user != null) {
             solicitud.setUser(user);

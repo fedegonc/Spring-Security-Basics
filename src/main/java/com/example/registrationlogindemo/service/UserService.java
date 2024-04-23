@@ -32,4 +32,6 @@ public interface UserService {
 
     // Método para obtener el ID de un usuario por su ID
     Long getUserById(Long userId);
+
+    User findByUsername(String username);
 }

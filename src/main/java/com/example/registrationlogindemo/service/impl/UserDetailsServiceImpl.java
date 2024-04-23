@@ -28,14 +28,16 @@ public class UserDetailsServiceImpl implements org.springframework.security.core
     private final PasswordEncoder passwordEncoder;
 
     // Método para cargar detalles del usuario por su email
+    // Método para cargar detalles del usuario por su nombre de usuario
+    // Método para cargar detalles del usuario por su nombre de usuario
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // Busca el usuario por su email
-        User user = userRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Busca el usuario por su nombre de usuario
+        User user = userRepository.findByUsername(username);
 
         // Si el usuario existe, crea y devuelve un UserDetails con sus detalles
         if (user != null) {
-            return new org.springframework.security.core.userdetails.User(user.getEmail(),
+            return new org.springframework.security.core.userdetails.User(user.getUsername(),
                     user.getPassword(),
                     mapRolesToAuthorities(user.getRoles()));
         } else {

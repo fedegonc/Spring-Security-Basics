@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(UserDto userDto) {
         User user = new User();
+        user.setUsername(userDto.getUsername()); // Asignar el username
         user.setName(userDto.getFirstName() + " " + userDto.getLastName());
         user.setEmail(userDto.getEmail());
 
@@ -120,4 +121,12 @@ public class UserServiceImpl implements UserService {
     public Long getUserById(Long userId) {
         return userId;
     }
+
+    // Método para buscar un usuario por nombre de usuario
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+
 }

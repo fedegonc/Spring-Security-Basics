@@ -24,4 +24,6 @@ public class UserDto {
     @NotEmpty(message = "La contraseña no puede estar vacía")
     private String password; // Contraseña del usuario
     private String roleName; // Rol del usuario
+    @NotEmpty(message = "El nombre de usuario no puede estar vacío")
+    private String username; // Nombre de usuario del usuario
 }

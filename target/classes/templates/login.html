@@ -75,7 +75,6 @@
             <div th:if="${param.logout}">
                 <div class="alert alert-success" th:text="#{success.logout}">Sesión Finalizada con Éxito.</div>
             </div>
-            <!-- Formulario de inicio de sesión -->
             <div class="card">
                 <div class="card-header">
                     <!-- Título del formulario -->
@@ -88,21 +87,20 @@
                             class="form-horizontal"
                             role="form"
                     >
-                        <!-- Campo de email -->
+                        <!-- Campo de nombre de usuario -->
                         <div class="mb-3">
-                            <label for="username" class="control-label" th:text="#{login.form.email}">Email *</label>
+                            <label for="username" class="control-label" th:text="#{login.form.username}">Nombre de Usuario *</label>
                             <input type="text"
                                    id="username"
                                    name="username"
                                    class="form-control"
-                                   placeholder="Email"
+                                   placeholder="Nombre de Usuario"
                             />
                         </div>
 
                         <!-- Campo de contraseña -->
                         <div class="mb-3">
-                            <label for="password" class="control-label" th:text="#{login.form.password}">Contraseña
-                                *</label>
+                            <label for="password" class="control-label" th:text="#{login.form.password}">Contraseña *</label>
                             <input type="password"
                                    id="password"
                                    name="password"
@@ -113,16 +111,13 @@
 
                         <!-- Botón de enviar -->
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-primary" th:text="#{login.form.submit}">Iniciar
-                                Sesión
-                            </button>
+                            <button type="submit" class="btn btn-primary" th:text="#{login.form.submit}">Iniciar Sesión</button>
                             <!-- Enlace para registrarse -->
                             <span th:text="#{login.form.register.text}"> ¿No tienes una cuenta?</span>
                             <a th:href="@{/register}" th:text="#{login.form.register.link}"> Regístrate aquí</a>
                         </div>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
