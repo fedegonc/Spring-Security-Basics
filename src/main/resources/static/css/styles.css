@@ -6,12 +6,9 @@ body{
 
 .banner {
     position: relative;
-        bottom: 0;
-        width: 100%;
-        max-height: auto;
-        background-size: cover;
-        background-position: center;
-        background-image: url('/img/foto1.jpg');
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh; /* Ajusta la altura como deseado */
 }
 
 .banner-overlay {
@@ -19,37 +16,24 @@ body{
     top: 0;
     left: 0;
     width: 100%;
-     max-height: auto;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.5); /* Transparencia del fondo */
 }
 
 .banner-content {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width:auto;
-    text-align: center; /* Centra el texto horizontalmente */
+    position: center;
+    text-align: center;
     color: white;
-    transform: translateY(-50%); /* Centra verticalmente el contenido */
+    margin: auto;
 }
-
-.banner-text {
-    font-size: 2em;
-    margin-bottom: 20px;
-}
-
-.banner-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-}
-
 .footer {
-    margin-top: 0; /* Elimina el margen superior */
-    padding-top: 0; /* Elimina el padding superior */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #343a40; /* Color de fondo del footer */
+    color: white; /* Color del texto del footer */
+    padding: 20px; /* Ajusta el espacio interno del footer según sea necesario */
 }
 
 .footer a {
