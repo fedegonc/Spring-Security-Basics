@@ -14,8 +14,9 @@
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
-
 </head>
+
+
 <body>
 <!-- Barra de navegación -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -62,24 +63,16 @@
 </nav>
 
 <!-- Contenedor principal con fondo personalizado -->
-<div class="custom-background">
-    <div class="content">
-        <!-- Contenido con transparencia superpuesto -->
-        <div class="transparencia">
-            <!-- Imagen de fondo -->
-            <img src="/img/foto1.jpg" class="img-fluid" alt="Banner">
-            <!-- Texto superpuesto -->
-            <div class="texto-superior">
-                <!-- Mensaje de bienvenida -->
-                <span th:text="#{greeting}"></span>
-            </div>
-        </div>
+
+<div class="banner">
+    <div class="banner-overlay"></div>
+    <div class="banner-content text-center text-white">
+        <span th:text="#{greeting}"></span>
     </div>
 </div>
 
-
 <!-- footer -->
-<footer class="footer mt-auto py-3 bg-dark text-white">
+<footer class="footer fixed-bottom py-3 bg-dark text-white">
     <div class="container">
         <div class="row">
             <div class="col-md-4">

@@ -1,27 +1,50 @@
-.transparencia {
+body{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+.banner {
     position: relative;
-    width: 100%;
-    margin-bottom: 0; /* Elimina el margen inferior */
-    padding-bottom: 0; /* Elimina el padding inferior */
+        bottom: 0;
+        width: 100%;
+        max-height: auto;
+        background-size: cover;
+        background-position: center;
+        background-image: url('/img/foto1.jpg');
 }
 
-.transparencia::before {
-    content: '';
+.banner-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Cambia el valor de alfa para ajustar la opacidad */
+     max-height: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Transparencia del fondo */
 }
 
-.texto-superior {
+.banner-content {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    left: 0;
+    width:auto;
+    text-align: center; /* Centra el texto horizontalmente */
     color: white;
-    font-size: 24px;
+    transform: translateY(-50%); /* Centra verticalmente el contenido */
+}
+
+.banner-text {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.banner-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
 }
 
 .footer {
@@ -43,4 +66,31 @@
         .card:hover {
             transform: scale(1.05);
             transition: transform 0.3s ease-in-out;
+        }
+
+.custom-background {
+            position: relative;
+            min-height: calc(100vh - 56px); /* 56px es la altura aproximada de la barra de navegación */
+            background-color: #f0f0f0; /* Color de fondo */
+        }
+
+        .transparencia {
+            position: relative;
+                width: 100%; /* Haz que la imagen ocupe todo el ancho */
+                height: auto; /* Permite que la altura se ajuste automáticamente */
+            }
+        }
+
+        .texto-superior {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white; /* Color del texto */
+        }
+
+        .footer {
+            background-color: #343a40; /* Color de fondo del footer */
+            color: white; /* Color del texto del footer */
         }
