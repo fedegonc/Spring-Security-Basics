@@ -1,14 +1,19 @@
-body{
-            margin: 0;
-            padding: 0;
-            height: 100%;
-        }
-
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Asegura que el cuerpo ocupe al menos toda la altura de la ventana */
+    display: flex;
+    flex-direction: column; /* Para que el contenido se extienda verticalmente */
+}
 .banner {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    min-height: 100vh; /* Ajusta la altura como deseado */
+   position: relative;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('/img/foto1.jpg');
+       background-size: cover;
+       background-position: center;
+       flex-grow: 1; /* El banner ocupará el espacio restante */
 }
 
 .banner-overlay {
@@ -26,14 +31,13 @@ body{
     color: white;
     margin: auto;
 }
+
+
 .footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #343a40; /* Color de fondo del footer */
-    color: white; /* Color del texto del footer */
-    padding: 20px; /* Ajusta el espacio interno del footer según sea necesario */
+    display: flex;
+        background-color: #343a40;
+        color: white;
+        padding: 10px;
 }
 
 .footer a {
@@ -52,29 +56,3 @@ body{
             transition: transform 0.3s ease-in-out;
         }
 
-.custom-background {
-            position: relative;
-            min-height: calc(100vh - 56px); /* 56px es la altura aproximada de la barra de navegación */
-            background-color: #f0f0f0; /* Color de fondo */
-        }
-
-        .transparencia {
-            position: relative;
-                width: 100%; /* Haz que la imagen ocupe todo el ancho */
-                height: auto; /* Permite que la altura se ajuste automáticamente */
-            }
-        }
-
-        .texto-superior {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: white; /* Color del texto */
-        }
-
-        .footer {
-            background-color: #343a40; /* Color de fondo del footer */
-            color: white; /* Color del texto del footer */
-        }
