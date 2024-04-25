@@ -69,7 +69,7 @@ public class UserController {
         userrole = userDetails.getAuthorities().toString();
         // Verificar si el usuario tiene el rol de ADMIN
         if (userrole != null && userrole.contains("ADMIN")) {
-            return new ModelAndView("admin/dashboard");
+            return new ModelAndView("dashboard");
         }
         // Si el usuario no es un administrador, continuar con la lógica original
         User usuario = userRepository.findByUsername(username);
@@ -153,16 +153,20 @@ public class UserController {
                                     @AuthenticationPrincipal UserDetails currentUser) {
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
-            return "redirect:/dashboard";
+            return "redirect:/user/newsolicitude";
+        }
+
+        // Verificar si se ha seleccionado un archivo y si es una imagen
+        if (imagen.isEmpty() || !isImage(imagen)) {
+            msg.addFlashAttribute("error", "Por favor, seleccione un archivo de imagen válido.");
+            return "redirect:/user/newsolicitude";
         }
 
         try {
-            if (!imagen.isEmpty()) {
-                byte[] bytes = imagen.getBytes();
-                Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
-                Files.write(caminho, bytes);
-                solicitud.setImagen(imagen.getOriginalFilename());
-            }
+            byte[] bytes = imagen.getBytes();
+            Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
+            Files.write(caminho, bytes);
+            solicitud.setImagen(imagen.getOriginalFilename());
         } catch (IOException e) {
             System.out.println("Error al salvar imagen");
         }
@@ -176,12 +180,19 @@ public class UserController {
             return "redirect:/user/welcome";
         } else {
             msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
-            return "redirect:/dashboard";
+            return "redirect:/user/newsolicitude";
         }
     }
 
+    // Método auxiliar para verificar si el archivo es una imagen
+    private boolean isImage(MultipartFile file) {
+        String contentType = file.getContentType();
+        return contentType != null && contentType.startsWith("image");
+    }
+
+
     @GetMapping("/delet/{id}")
-    public String excluirUser(@PathVariable("id") int id) {
+    public String excluirSolicitude(@PathVariable("id") int id) {
         // Eliminar el usuario por su ID
         userRepository.deleteById((long) id);
         // Redirigir al dashboard después de la eliminación
