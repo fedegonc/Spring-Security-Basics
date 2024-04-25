@@ -42,7 +42,7 @@ public class AdminController {
     }
 
     // Método para mostrar el dashboard
-    @GetMapping(value = "/dashboard")
+    @GetMapping("/dashboard")
     public ModelAndView getDashboard() {
         ModelAndView mv = new ModelAndView("admin/dashboard");
 

@@ -69,7 +69,7 @@ public class UserController {
         userrole = userDetails.getAuthorities().toString();
         // Verificar si el usuario tiene el rol de ADMIN
         if (userrole != null && userrole.contains("ADMIN")) {
-            return new ModelAndView("redirect:/dashboard");
+            return new ModelAndView("admin/dashboard");
         }
         // Si el usuario no es un administrador, continuar con la lógica original
         User usuario = userRepository.findByUsername(username);
