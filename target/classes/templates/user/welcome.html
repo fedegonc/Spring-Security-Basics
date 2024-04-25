@@ -65,6 +65,26 @@
     <span th:text="#{info_usuario}"></span>
     <h3 th:text="${principal.username}"></h3>
 </div>
+<!-- En caso de no tener solicitudes, se muestra una solicitud por defecto -->
+<div class="container mt-4" th:if="${#lists.isEmpty(solicitude)}">
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="/images/default-solicitud.jpg" class="card-img-top" th:alt="#{defaultSolicitud.title.alt.image}">
+                <div class="card-body">
+                    <!-- Título personalizable -->
+                    <h5 class="card-title" th:text="#{defaultSolicitud.title}">Nueva Solicitud</h5>
+                    <!-- Texto personalizable -->
+                    <p class="card-text" th:text="#{defaultSolicitud.text}">¡Sé el primero en solicitar!</p>
+                </div>
+                <div class="card-footer">
+                    <!-- Botón con texto personalizable -->
+                    <a class="btn btn-primary" th:href="@{/user/newsolicitude}" th:text="#{defaultSolicitud.button}">Solicitar Ahora</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container mt-4">
     <!-- Código del título de la página -->
