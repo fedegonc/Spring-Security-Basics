@@ -19,10 +19,10 @@ import java.util.List;
 @Controller
 public class AuthController {
 
-    // Constructor de la clase AuthController
+
     // Se utiliza para inyectar el servicio UserService al controlador
     private final UserService userService;
-
+    // Constructor de la clase AuthController
     public AuthController(UserService userService) {
         this.userService = userService;
     }
@@ -32,7 +32,6 @@ public class AuthController {
     public String redirectToIndexOnError() {
         return "redirect:/index";
     }
-
 
 
     // Muestra el formulario de registro de usuario
@@ -75,7 +74,6 @@ public class AuthController {
         userService.saveUser(userDto);
         return "redirect:/login";
     }
-
 
     // Muestra el formulario de inicio de sesión
     @GetMapping("/login")
