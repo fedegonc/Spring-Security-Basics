@@ -104,7 +104,7 @@ public class AuthController {
             if (userrole != null && userrole.contains("USER")) {
                 return new ModelAndView("redirect:/user/welcome");
             } else if (userrole != null && userrole.contains("ADMIN")) {
-                return new ModelAndView("redirect:/dashboard");
+                return new ModelAndView("redirect:/admin/dashboard");
             }
         }
 
