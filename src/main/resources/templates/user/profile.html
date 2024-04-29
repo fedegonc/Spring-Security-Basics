@@ -65,6 +65,8 @@
 
     <form method="post" enctype="multipart/form-data" th:action="@{'/user/profile/' + ${user.id}}">
 
+
+
         <div class="mb-3">
             <label class="form-label" th:for="nombre" th:text="#{label.name}">Nombre</label>
             <input type="text" class="form-control" name="name" th:value="${user.name}" required>
