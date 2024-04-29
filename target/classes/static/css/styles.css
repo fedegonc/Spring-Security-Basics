@@ -10,11 +10,18 @@ body {
        display: flex;
        align-items: center;
        justify-content: center;
-       background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('/img/foto1.jpg');
+       background: url('/img/foto1.png');
        background-size: cover;
        background-position: center;
        flex-grow: 1; /* El banner ocupará el espacio restante */
 }
+
+.banner-text {
+    color: white;
+    padding: 10px;
+    margin: 10px;
+}
+
 
 .banner-overlay {
     position: absolute;
@@ -22,16 +29,9 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+    color: white;
     background-color: rgba(0, 0, 0, 0.5); /* Transparencia del fondo */
 }
-
-.banner-content {
-    position: center;
-    text-align: center;
-    color: white;
-    margin: auto;
-}
-
 
 .footer {
     display: flex;
