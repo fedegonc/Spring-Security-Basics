@@ -16,10 +16,15 @@ import java.util.List;
 @Entity
 @Table(name="users")
 public class User {
+
     // Identificador único para el usuario
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // Foto de perfil del usuario
+    @Column(name = "profile_image")
+    private String profileImage;
 
     // Nombre de usuario del usuario
     @Column(nullable=false, unique=true)
@@ -54,10 +59,10 @@ public class User {
         return userRoles;
     }
 
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
 
-    //private List<Blog> blogList;
-    //@OneToMany(mappedBy = "users")
+
     private List<Solicitude> solicitudes = new ArrayList<>();
 
 }

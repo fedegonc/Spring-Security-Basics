@@ -65,6 +65,26 @@
     <span th:text="#{info_usuario}"></span>
     <h3 th:text="${principal.username}"></h3>
 </div>
+<!-- En caso de no tener solicitudes, se muestra una solicitud por defecto -->
+<div class="container mt-4" th:if="${#lists.isEmpty(solicitude)}">
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="/img/foto2.png" class="card-img-top" th:alt="#{defaultSolicitud.title.alt.image}">
+                <div class="card-body">
+                    <!-- Título personalizable -->
+                    <h5 class="card-title" th:text="#{defaultSolicitud.title}">Nueva Solicitud</h5>
+                    <!-- Texto personalizable -->
+                    <p class="card-text" th:text="#{defaultSolicitud.text}">¡Sé el primero en solicitar!</p>
+                </div>
+                <div class="card-footer">
+                    <!-- Botón con texto personalizable -->
+                    <a class="btn btn-primary" th:href="@{/user/newsolicitude}" th:text="#{defaultSolicitud.button}">Solicitar Ahora</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container mt-4">
     <!-- Código del título de la página -->
@@ -73,7 +93,7 @@
     <div class="row row-cols-1 row-cols-md-3 g-3">
         <div class="col-md-4" th:each="solicitud : ${solicitude}">
             <div class="card">
-                <img th:src="@{/imagem/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
+                <img th:src="@{/user/imagem/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${solicitud.nombre}">Nombre de la empresa</h5>
                     <p class="card-text" th:text="${solicitud.descripcion}">Descripción de la solicitud</p>
@@ -83,9 +103,9 @@
                     <li class="list-group-item" th:text="#{newRequest.category} + ': ' + ${solicitud.categoria}">Categoría de la solicitud</li>
                 </ul>
                 <div class="card-footer">
-                    <a class="btn btn-primary" th:href="@{/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{editar}">Editar</a>
-                    <a class="btn btn-danger" th:href="@{/deletsolicitude/{id}(id=${solicitud.id})}" th:text="#{borrar}">Borrar</a>
-                    <a class="btn btn-warning" th:href="@{/modifysolicitude/{id}(id=${solicitud.id})}" th:text="#{modificar_estado}">Modificar Estado</a>
+                    <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{editar}">Editar</a>
+                    <a class="btn btn-danger" th:href="@{/user/deletsolicitude/{id}(id=${solicitud.id})}" th:text="#{borrar}">Borrar</a>
+                    <a class="btn btn-warning" th:href="@{/user/modifysolicitude/{id}(id=${solicitud.id})}" th:text="#{modificar_estado}">Modificar Estado</a>
                 </div>
             </div>
         </div>

@@ -25,8 +25,6 @@ public class GuestController {
     // Redirecciona a la página de inicio
     @GetMapping("")
     public String redirectToIndex() {
-
-
         return "index";
     }
 
@@ -37,12 +35,12 @@ public class GuestController {
     }
 
     // Obtiene la página de inicio y muestra las solicitudes activas
-    @GetMapping(value = "/index")
+    @GetMapping("/index")
     public String getIndex() {
         ModelAndView mv = new ModelAndView("/index");
-        // Obtener todas las solicitudes activas
+       /* // Obtener todas las solicitudes activas
         List<Solicitude> solicitude = solicitudeRepository.findSolicitudeByActivo("Activo");
-        mv.addObject("solicitude", solicitude);
+        mv.addObject("solicitude", solicitude);*/
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
@@ -53,7 +51,7 @@ public class GuestController {
     }
 
     // Obtiene la imagen según el nombre de archivo proporcionado
-    @GetMapping(value = "/imagem/{imagem}")
+    /*@GetMapping(value = "/imagem/{imagem}")
     @ResponseBody
     public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
         // Obtener la imagen de la ubicación especificada
@@ -62,6 +60,6 @@ public class GuestController {
             return Files.readAllBytes(caminho.toPath());
         }
         return null;
-    }
+    }*/
 
 }

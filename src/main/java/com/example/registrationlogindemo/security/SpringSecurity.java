@@ -36,30 +36,28 @@ public class SpringSecurity {
 
         http.csrf().disable()
                 // Configuración de las autorizaciones de las solicitudes HTTP
+
                 .authorizeHttpRequests((authorize) ->
+
                         authorize.requestMatchers("/", "/register/**", "/register/save", "/index",
-                                        "/favicon.ico", "/img/**","/login/**","/init","/imagem/**",
-                                        "/imagem/**", "/static/css/**", "/css/styles.css").permitAll()
+                                        "/favicon.ico", "/img/**","/login/**","/init","/imagem",
+                                        "/imagem/**", "/static/css/**", "/css/styles.css","/favicon.*",
+                                        "/error","/gracias"
+                                ).permitAll()
 
-                                .requestMatchers("/buscarPorNombre").permitAll()
-                                .requestMatchers("/buscarPorCategoria").permitAll()
-                                .requestMatchers("/gracias").permitAll()
-                                .requestMatchers("/favicon.*").permitAll()
-                                .requestMatchers("/error").permitAll()
+                                .requestMatchers("/user/newsolicitude/**", "/user/modifysolicitude/**",
+                                        "/user/deletesolicitude/**","/user/profile/**", "/user/welcome",
+                                        "/solicitude/newsolicitude/**", "/solicitude/editsolicitude/**",
+                                        "/solicitude/modifysolicitude/**","/user/imagem/**","/imagem/**"
+                                ).hasRole("USER")
 
-                                .requestMatchers("/user/welcome").hasRole("USER")
-                                .requestMatchers("/user/profile/**").hasRole("USER")
-                                .requestMatchers("/user/newsolicitude/**").hasRole("USER")
 
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/user/**").hasRole("ADMIN")
-                                .requestMatchers("/modifysolicitude/**").hasRole("ADMIN")
-                                .requestMatchers("/dashboard/**").hasRole("ADMIN")
-                                .requestMatchers("/users/**").hasRole("ADMIN")
-                                .requestMatchers("/newsolicitude/**").hasRole("ADMIN")
-                                .requestMatchers("/solicitude/**").hasRole("ADMIN")
-                                .requestMatchers("/editsolicitude/**").hasRole("ADMIN")
-                                .requestMatchers("/deletsolicitude/**").hasRole("ADMIN")
+                                .requestMatchers("/user/**","/admin/**","/admin/dashboard/**",
+                                        "/modifysolicitude/**","/dashboard/**", "/users/**",
+                                        "/newsolicitude/**","/solicitude/**","/editsolicitude/**",
+                                        "/deletsolicitude/**"
+                                ).hasRole("ADMIN")
+
                 )
                 // Configuración de inicio de sesión
                 .formLogin(
@@ -91,3 +89,8 @@ public class SpringSecurity {
                 .passwordEncoder(passwordEncoder());
     }
 }
+
+//codigo recidual
+                                /* .requestMatchers("/buscarPorNombre").permitAll()
+                                .requestMatchers("/buscarPorCategoria").permitAll()
+                                */
