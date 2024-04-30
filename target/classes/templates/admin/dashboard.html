@@ -74,8 +74,8 @@
             <td th:text="${user.email}"></td>
             <td th:text="${user.roles}"></td>
             <td>
-                <a class="btn btn-primary" th:href="@{/users/edit/{id}(id=${user.id})}">Editar</a>
-                <a class="btn btn-danger" th:href="@{/user/delet/{id}(id=${user.id})}">Borrar</a>
+                <a class="btn btn-primary" th:href="@{/admin/edit/{id}(id=${user.id})}">Editar</a>
+                <a class="btn btn-danger" th:href="@{/admin/delet/{id}(id=${user.id})}">Borrar</a>
             </td>
         </tr>
         </tbody>
@@ -108,9 +108,9 @@
             <td th:text="${solicitude.descripcion}"></td>
             <td><img th:src="@{/imagem/{img}(img=${solicitude.imagen})}" width="100" height="100"></td>
             <td>
-                <a class="btn btn-primary" th:href="@{/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
-                <a class="btn btn-danger" th:href="@{/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
-                <a class="btn btn-warning" th:href="@{/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
+                <a class="btn btn-primary" th:href="@{/admin/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
+                <a class="btn btn-danger" th:href="@{/admin/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
+                <a class="btn btn-warning" th:href="@{/admin/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
             </td>
         </tr>
         </tbody>
