@@ -5,43 +5,105 @@ body {
     display: flex;
     flex-direction: column; /* Para que el contenido se extienda verticalmente */
 }
+
+.navbar {
+    display: flex; /* Usa flexbox para la disposición de los elementos */
+    justify-content: space-between; /* Distribuye uniformemente los elementos a lo largo del contenedor, dejando espacio entre ellos */
+    align-items: center; /* Centra los elementos verticalmente */
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan a una nueva línea si no caben */
+}
+
+.navbar-brand img {
+    height: 30px; /* Tamaño del logo */
+    width: auto; /* Ajuste automático del ancho para mantener la proporción */
+    margin: 15px; /* Espacio a la derecha del logo */
+}
+
+.navbar-nav {
+    display: flex; /* Usa flexbox para la disposición de los elementos */
+    align-items: center; /* Centra los elementos verticalmente */
+}
+
+.navbar-nav .nav-item {
+    margin-right: 10px; /* Espacio entre elementos del menú */
+}
+
+.nav-link {
+    color: white; /* Color del texto de los enlaces */
+    margin-right: 15px; /* Espacio entre enlaces */
+}
+
+@media (max-width: 768px) {
+    .navbar-nav {
+        flex-direction: column; /* Cambia la dirección de los elementos a columna en dispositivos pequeños */
+        text-align: center; /* Centra los elementos del menú horizontalmente */
+    }
+
+    .nav-link {
+        margin-right: 0; /* Elimina el espacio entre enlaces en dispositivos pequeños */
+        margin-bottom: 10px; /* Añade espacio entre enlaces en dispositivos pequeños */
+    }
+}
+
+
 .banner {
    position: relative;
        display: flex;
        align-items: center;
        justify-content: center;
-       background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('/img/foto1.jpg');
+       background: url('/img/foto1.png');
        background-size: cover;
        background-position: center;
        flex-grow: 1; /* El banner ocupará el espacio restante */
 }
 
-.banner-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Transparencia del fondo */
-}
 
 .banner-content {
     position: center;
     text-align: center;
     color: white;
     margin: auto;
+    padding: 20px;
 }
 
-
 .footer {
-    display: flex;
-        background-color: #343a40;
-        color: white;
-        padding: 10px;
+    background-color: #343a40; /* Color de fondo */
+    color: white; /* Color del texto */
+    padding: 20px 0; /* Espaciado interno superior e inferior */
+}
+
+.footer .container {
+    display: flex; /* Usa flexbox para la disposición de los elementos */
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan a una nueva línea si no caben */
+    justify-content: center; /* Centra los elementos horizontalmente */
+}
+
+.footer .container > .row {
+    flex: 0 1 100%; /* Hace que las filas se expandan a lo ancho */
+}
+
+.footer .container > .row > div {
+    padding: 0 15px; /* Espaciado interno izquierdo y derecho */
+    margin-bottom: 20px; /* Espacio inferior entre columnas */
+}
+
+.footer h5 {
+    margin-bottom: 15px; /* Espacio inferior para los títulos */
+}
+
+.footer ul {
+    padding: 0;
+    list-style: none; /* Elimina los estilos de lista predeterminados */
 }
 
 .footer a {
-    color: white; /* Cambia el color de los enlaces del footer a blanco */
+    color: white; /* Color de los enlaces */
+    text-decoration: none; /* Elimina la subrayado de los enlaces */
+}
+
+.footer span {
+    display: block; /* Hace que el texto de derechos de autor se muestre en una nueva línea */
+    margin-top: 20px; /* Espacio superior */
 }
 .card img {
             width: 100%;
