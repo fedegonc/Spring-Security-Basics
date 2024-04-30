@@ -148,7 +148,7 @@ public class UserController {
                                     @AuthenticationPrincipal UserDetails currentUser) {
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
-            return "redirect:/dashboard";
+            return "redirect:/user/welcome";
         }
 
         try {
@@ -171,8 +171,82 @@ public class UserController {
             return "redirect:/user/welcome";
         } else {
             msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
-            return "redirect:/dashboard";
+            return "redirect:/user/welcome";
         }
+    }
+    @GetMapping("/editsolicitude/{id}")
+    public ModelAndView editSolicitude(@PathVariable("id") int id) {
+        ModelAndView mv = new ModelAndView();
+        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById(id);
+
+        if (solicitudeOptional.isPresent()) {
+            Solicitude solicitude = solicitudeOptional.get();
+            mv.addObject("solicitude", solicitude);
+            mv.setViewName("solicitude/editsolicitude"); // Nombre de la vista de edición
+        } else {
+            mv.setViewName("redirect:/error"); // Redirige a la página de error si la solicitud no existe
+        }
+
+        return mv;
+    }
+
+    @PostMapping("/editsolicitude/{id}")
+    public ModelAndView editSolicitudeBanco(@PathVariable("id") int id, @ModelAttribute("solicitude") @Valid Solicitude solicitude,
+                                            BindingResult result, RedirectAttributes msg,
+                                            @RequestParam("file") MultipartFile imagen) {
+        ModelAndView mv = new ModelAndView();
+
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("erro", "Error al editar. Por favor, complete todos los campos correctamente.");
+            mv.setViewName("redirect:/solicitude/editsolicitude/" + id); // Redirige de vuelta al formulario de edición si hay errores
+            return mv;
+        }
+
+        Solicitude changeSolicitude = solicitudeRepository.findById(solicitude.getId()).orElse(null);
+        if (changeSolicitude != null) {
+            changeSolicitude.setNombre(solicitude.getNombre());
+            changeSolicitude.setCategoria(solicitude.getCategoria());
+            changeSolicitude.setActivo(solicitude.getActivo());
+            changeSolicitude.setDescripcion(solicitude.getDescripcion());
+            changeSolicitude.setUbicacion(solicitude.getUbicacion());
+            try {
+                if (!imagen.isEmpty()) {
+                    byte[] bytes = imagen.getBytes();
+                    Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
+                    Files.write(caminho, bytes);
+                    changeSolicitude.setImagen(imagen.getOriginalFilename());
+                }
+            } catch (IOException e) {
+                System.out.println("Error de imagen");
+            }
+            solicitudeRepository.save(changeSolicitude);
+            msg.addFlashAttribute("sucesso", "Solicitud editada con éxito.");
+            mv.setViewName("redirect:/user/welcome"); // Redirige al dashboard después de editar la solicitud
+        } else {
+            mv.setViewName("redirect:/error"); // Redirige a la página de error si la solicitud no se encuentra
+        }
+
+        return mv;
+    }
+
+    @GetMapping("/deletesolicitude/{id}")
+    public String deleteSolicitude(@PathVariable("id") int id) {
+        solicitudeRepository.deleteById(id);
+        return "redirect:/user/welcome";
+    }
+
+    @GetMapping("/modifystate/{id}")
+    public String modifyStateSolicitude(@PathVariable("id") int id) {
+        Solicitude solicitude = solicitudeRepository.findById(id).orElse(null);
+        if (solicitude != null) {
+            if ("Activo".equals(solicitude.getActivo())) {
+                solicitude.setActivo("Inactivo");
+            } else {
+                solicitude.setActivo("Activo");
+            }
+            solicitudeRepository.save(solicitude);
+        }
+        return "redirect:/user/welcome";
     }
 
     @GetMapping("/delet/{id}")

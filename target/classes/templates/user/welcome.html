@@ -103,9 +103,9 @@
                     <li class="list-group-item" th:text="#{newRequest.category} + ': ' + ${solicitud.categoria}">Categoría de la solicitud</li>
                 </ul>
                 <div class="card-footer">
-                    <a class="btn btn-primary" th:href="@{/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{editar}">Editar</a>
-                    <a class="btn btn-danger" th:href="@{/deletsolicitude/{id}(id=${solicitud.id})}" th:text="#{borrar}">Borrar</a>
-                    <a class="btn btn-warning" th:href="@{/modifysolicitude/{id}(id=${solicitud.id})}" th:text="#{modificar_estado}">Modificar Estado</a>
+                    <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{editar}">Editar</a>
+                    <a class="btn btn-danger" th:href="@{/user/deletsolicitude/{id}(id=${solicitud.id})}" th:text="#{borrar}">Borrar</a>
+                    <a class="btn btn-warning" th:href="@{/user/modifysolicitude/{id}(id=${solicitud.id})}" th:text="#{modificar_estado}">Modificar Estado</a>
                 </div>
             </div>
         </div>
