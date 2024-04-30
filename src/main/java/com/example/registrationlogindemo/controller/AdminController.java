@@ -59,7 +59,7 @@ public class AdminController {
     }
 
     // Método para editar un usuario
-    @GetMapping("/users/edit/{id}")
+    @GetMapping("/edit/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
         Optional<User> userOptional = userRepository.findById(id);
         ModelAndView mv = new ModelAndView("user_form");
@@ -76,7 +76,7 @@ public class AdminController {
     }
 
     // Método para procesar la edición de un usuario
-    @PostMapping("/users/edit/{id}")
+    @PostMapping("/edit/{id}")
     public String editUserBanco(@ModelAttribute("user_form") @Valid User user,
                                 BindingResult result, RedirectAttributes msg) {
         // Verificar errores de validación

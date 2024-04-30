@@ -93,7 +93,7 @@
     <div class="row row-cols-1 row-cols-md-3 g-3">
         <div class="col-md-4" th:each="solicitud : ${solicitude}">
             <div class="card">
-                <img th:src="@{/imagem/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
+                <img th:src="@{/user/imagem/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${solicitud.nombre}">Nombre de la empresa</h5>
                     <p class="card-text" th:text="${solicitud.descripcion}">Descripción de la solicitud</p>
