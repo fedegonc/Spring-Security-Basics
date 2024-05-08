@@ -42,7 +42,7 @@ public class SpringSecurity {
                         authorize.requestMatchers("/", "/register/**", "/register/save", "/index",
                                         "/favicon.ico", "/img/**","/login/**","/init","/imagem",
                                         "/imagem/**", "/static/css/**", "/css/styles.css","/favicon.*",
-                                        "/error","/gracias"
+                                        "/error","/gracias","/img"
                                 ).permitAll()
 
                                 .requestMatchers("/user/newsolicitude/**", "/user/modifysolicitude/**",
