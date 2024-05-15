@@ -21,7 +21,6 @@
                 <li class="nav-item">
                     <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
                 </li>
-
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown language-dropdown">
@@ -58,7 +57,6 @@
         </ol>
     </nav>
 </div>
-
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
@@ -66,29 +64,43 @@
                 <h1 class="card-title mb-4" th:text="#{newRequest.title}">Nueva Solicitud</h1>
                 <form method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
                     <div class="mb-3">
+                        <label for="file" class="form-label" th:text="#{newRequest.image}">Imagen del Residuo</label>
+                        <!-- Imagen por defecto -->
+                        <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" />
+                        <!-- Input para cargar una nueva imagen -->
+                        <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
+                    </div>
+                    <div class="mb-3">
                         <label for="nombre" class="form-label" th:text="#{newRequest.name}">Nombre</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
                     </div>
                     <div class="mb-3">
-                        <label for="ubicacion" class="form-label" th:text="#{newRequest.location}">Ubicacion</label>
+                        <label for="ubicacion" class="form-label" th:text="#{newRequest.location}">Ubicación</label>
                         <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
                     </div>
                     <div class="mb-3">
-                        <label for="categoria" class="form-label" th:text="#{newRequest.category}">Categoria</label>
-                        <input type="text" class="form-control" id="categoria" name="categoria" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="activo" class="form-label" th:text="#{newRequest.active}">Activo</label>
-                        <input type="text" class="form-control" id="activo" name="activo" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="file" class="form-label" th:text="#{newRequest.image}">Imagen</label>
-                        <input type="file" class="form-control" id="file" name="file">
+                        <label for="categoria" class="form-label" th:text="#{newRequest.category}">Tipo de Objeto Reciclable</label>
+                        <select class="form-select" id="categoria" name="categoria" required>
+                            <option value="vidrio">Vidrio</option>
+                            <option value="plastico">Plástico</option>
+                            <option value="carton">Cartón</option>
+                            <option value="madera">Madera</option>
+                            <!-- Agrega otras opciones según los tipos de objetos reciclables disponibles -->
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción</label>
+                        <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles para la Recolección</label>
+                        <select class="form-select" id="diasDisponibles" name="diasDisponibles" required>
+                            <option value="saturday" th:text="#{saturday}">Sábado</option>
+                            <option value="monday" th:text="#{monday}">Lunes</option>
+                            <option value="tuesday" th:text="#{tuesday}">Martes</option>
+                            <option value="wednesday" th:text="#{wednesday}">Miércoles</option>
+                            <option value="thursday" th:text="#{thursday}">Jueves</option>
+                            <option value="friday" th:text="#{friday}">Viernes</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción del Objeto</label>
                         <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary" th:text="#{newRequest.submit}">Enviar Solicitud</button>
@@ -132,6 +144,22 @@
 <!-- Fin del contenido principal -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function previewFile() {
+        var preview = document.querySelector('#previewImage');
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
 
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "/img/default-image.jpg"; // Si no se selecciona ningún archivo, mostrar la imagen por defecto
+        }
+    }
+</script>
 </body>
 </html>
