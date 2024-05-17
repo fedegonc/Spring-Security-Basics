@@ -1,11 +1,12 @@
 package com.example.registrationlogindemo.entity;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name = "solicitude")
@@ -18,12 +19,16 @@ public class Solicitude {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull
     private String nombre;
 
+    @NotNull
     private String ubicacion;
 
+    @NotNull
     private String categoria;
 
+    @NotNull
     private String activo;
 
     @Lob
@@ -31,11 +36,16 @@ public class Solicitude {
 
     private String imagen;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @NotNull
+    private String diasDisponibles;
+
+    @NotNull
+    private String horaRecoleccion;
+
+    @Transient
+    private MultipartFile file;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
-
-    // Relación muchos a uno con la entidad User
-    // Nombre de la columna que actuará como clave externa en la tabla solicitude
-    // Objeto que representa al usuario que crea la solicitud
 }
