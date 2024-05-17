@@ -234,7 +234,7 @@ public class UserController {
         solicitudeRepository.deleteById(id);
         return "redirect:/user/welcome";
     }
-
+/*
     @GetMapping("/modifystate/{id}")
     public String modifyStateSolicitude(@PathVariable("id") int id) {
         Solicitude solicitude = solicitudeRepository.findById(id).orElse(null);
@@ -247,7 +247,7 @@ public class UserController {
             solicitudeRepository.save(solicitude);
         }
         return "redirect:/user/welcome";
-    }
+    }*/
 
     @GetMapping("/delet/{id}")
     public String excluirUser(@PathVariable("id") int id) {

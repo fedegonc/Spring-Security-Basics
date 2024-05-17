@@ -65,9 +65,7 @@
                 <form method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
                     <div class="mb-3">
                         <label for="file" class="form-label" th:text="#{newRequest.image}">Imagen del Residuo</label>
-                        <!-- Imagen por defecto -->
                         <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" />
-                        <!-- Input para cargar una nueva imagen -->
                         <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
                     </div>
                     <div class="mb-3">
@@ -85,18 +83,23 @@
                             <option value="plastico">Plástico</option>
                             <option value="carton">Cartón</option>
                             <option value="madera">Madera</option>
-                            <!-- Agrega otras opciones según los tipos de objetos reciclables disponibles -->
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles para la Recolección</label>
-                        <select class="form-select" id="diasDisponibles" name="diasDisponibles" required>
-                            <option value="saturday" th:text="#{saturday}">Sábado</option>
+                        <select class="form-select" id="diasDisponibles" name="diasDisponibles" required onchange="updateAvailableHours()">
                             <option value="monday" th:text="#{monday}">Lunes</option>
                             <option value="tuesday" th:text="#{tuesday}">Martes</option>
                             <option value="wednesday" th:text="#{wednesday}">Miércoles</option>
                             <option value="thursday" th:text="#{thursday}">Jueves</option>
                             <option value="friday" th:text="#{friday}">Viernes</option>
+                            <option value="saturday" th:text="#{saturday}">Sábado</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.pickupTime}">Hora de Recolección</label>
+                        <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required>
+                            <!-- Las opciones se llenarán dinámicamente con JavaScript -->
                         </select>
                     </div>
                     <div class="mb-3">
@@ -160,6 +163,27 @@
             preview.src = "/img/default-image.jpg"; // Si no se selecciona ningún archivo, mostrar la imagen por defecto
         }
     }
+</script>
+<script>
+    function updateAvailableHours() {
+        const day = document.getElementById('diasDisponibles').value;
+        const hourSelect = document.getElementById('horaRecoleccion');
+        hourSelect.innerHTML = ''; // Limpiar las opciones anteriores
+
+        let startHour = 8;
+        let endHour = (day === 'saturday') ? 11 : 17;
+
+        for (let hour = startHour; hour <= endHour; hour++) {
+            const option = document.createElement('option');
+            option.value = `${hour}:00`;
+            option.text = `${hour}:00`;
+            hourSelect.appendChild(option);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        updateAvailableHours();
+    });
 </script>
 </body>
 </html>

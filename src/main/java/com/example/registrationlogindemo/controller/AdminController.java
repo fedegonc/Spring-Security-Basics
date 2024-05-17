@@ -158,7 +158,7 @@ public class AdminController {
     }
 
     // Método para modificar el estado de una solicitud
-    @RequestMapping(value = "/modifyestate/{id}", method = RequestMethod.GET)
+  /*  @RequestMapping(value = "/modifyestate/{id}", method = RequestMethod.GET)
     public String modifyEstateSolicitud(@PathVariable("id") int id) {
         Solicitude solicitude = solicitudeRepository.findById(id).orElse(null);
         if (solicitude != null) {
@@ -171,7 +171,7 @@ public class AdminController {
         }
         return "redirect:/dashboard";
     }
-
+*/
     // Método para mostrar el formulario de edición de solicitud
     @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.GET)
     public ModelAndView editSolicitude(@PathVariable("id") int id) {

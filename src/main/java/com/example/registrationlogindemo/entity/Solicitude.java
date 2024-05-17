@@ -29,7 +29,7 @@ public class Solicitude {
     private String categoria;
 
     @NotNull
-    private String activo;
+    private Boolean activo;
 
     @Lob
     private String descripcion;
