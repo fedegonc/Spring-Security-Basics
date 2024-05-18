@@ -17,4 +17,4 @@ COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
 
 # Comando para ejecutar la aplicación
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "spring.jar"]
