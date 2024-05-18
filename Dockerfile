@@ -1,23 +1,20 @@
-# Usar una imagen de base de Maven para construir la aplicación
-FROM maven:3.8.4-openjdk-18 AS build
+# Usar una imagen de base de Maven con JDK 18 para construir la aplicación
+FROM maven:3.9.2-openjdk-18 as builder
 WORKDIR /app
 
-# Copiar los archivos de la aplicación y compilar
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
+COPY ./pom.xml ./pom.xml
+COPY ./src ./src
 
-COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Usar una imagen de base de OpenJDK para ejecutar la aplicación
-FROM openjdk:18-jre-slim
+# Usar una imagen de base de OpenJDK 18 para ejecutar la aplicación
+FROM openjdk:18-jdk-alpine
 WORKDIR /app
 
-# Copiar el archivo JAR compilado desde la etapa anterior
-COPY --from=build /app/target/spring.jar app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
 # Exponer el puerto en el que la aplicación se ejecutará
 EXPOSE 8080
 
 # Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar"]
