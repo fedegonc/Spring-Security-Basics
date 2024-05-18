@@ -1,4 +1,4 @@
-# Usar una imagen de base de Maven con JDK 18 para construir la aplicación
+# Usar una imagen de base de Maven para construir la aplicación
 FROM maven:3.8.4-openjdk-18 AS build
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Usar una imagen de base de OpenJDK para ejecutar la aplicación
-FROM openjdk:18-jdk-slim
+FROM openjdk:18-jre-slim
 WORKDIR /app
 
 # Copiar el archivo JAR compilado desde la etapa anterior
