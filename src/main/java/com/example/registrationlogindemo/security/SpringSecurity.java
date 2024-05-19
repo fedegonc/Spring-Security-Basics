@@ -48,14 +48,15 @@ public class SpringSecurity {
                                 .requestMatchers("/user/newsolicitude/**", "/user/modifysolicitude/**",
                                         "/user/deletesolicitude/**","/user/profile/**", "/user/welcome",
                                         "/solicitude/newsolicitude/**", "/solicitude/editsolicitude/**",
-                                        "/solicitude/modifysolicitude/**","/user/imagem/**","/imagem/**"
+                                        "/solicitude/modifysolicitude/**","/user/imagem/**","/imagem/**",
+                                        "/logout"
                                 ).hasRole("USER")
 
 
                                 .requestMatchers("/user/**","/admin/**","/admin/dashboard/**",
                                         "/modifysolicitude/**","/dashboard/**", "/users/**",
                                         "/newsolicitude/**","/solicitude/**","/editsolicitude/**",
-                                        "/deletsolicitude/**"
+                                        "/deletsolicitude/**","/logout"
                                 ).hasRole("ADMIN")
 
                 )
