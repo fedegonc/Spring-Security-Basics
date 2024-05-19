@@ -90,13 +90,4 @@ public class AuthController {
         return new ModelAndView("redirect:/error");
     }
 
-    @GetMapping("/logout")
-    public String logoutPage(RedirectAttributes attributes) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            SecurityContextHolder.getContext().setAuthentication(null);
-        }
-        attributes.addFlashAttribute("message", "You have been logged out successfully.");
-        return "redirect:/login?logout";
-    }
 }

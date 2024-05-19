@@ -258,11 +258,6 @@ public class UserController {
     }
 
     // Método para cerrar sesión
-    @GetMapping("/logout")
-    public String logout() {
-        return "index";
-    }
-
     @GetMapping("/users")
     public String listRegisteredUsers(Model model) {
         List<UserDto> users = userService.findAllUsers();
