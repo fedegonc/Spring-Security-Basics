@@ -38,6 +38,7 @@ public class GuestController {
         return "index";
     }
 
+
     // Obtiene la página de inicio y muestra las solicitudes activas
     @GetMapping("/index")
     public String getIndex() {
@@ -51,7 +52,7 @@ public class GuestController {
             // El usuario ya está autenticado, redirigir a la página de inicio correspondiente
             return "redirect:/init";
         }
-        return "/index";
+        return "redirect:/";
     }
 
     // Obtiene la imagen según el nombre de archivo proporcionado
