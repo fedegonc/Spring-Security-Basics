@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "solicitude")
 @Getter
@@ -45,7 +47,21 @@ public class Solicitude {
     @Transient
     private MultipartFile file;
 
+    @NotNull
+    private LocalDateTime createdAt;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Estado estado;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public enum Estado {
+        EN_ESPERA,
+        ACEPTADA,
+        RECHAZADA,
+        EN_REVISION
+    }
 }

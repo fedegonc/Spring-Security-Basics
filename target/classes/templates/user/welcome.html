@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="#{title}">Frontera Sustentable</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -85,7 +86,6 @@
         </div>
     </div>
 </div>
-
 <div class="container mt-4">
     <!-- Código del título de la página -->
     <!-- Código del formulario de búsqueda -->
@@ -95,17 +95,14 @@
             <div class="card">
                 <img th:src="@{/img/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${solicitud.nombre}">Nombre de la empresa</h5>
-                    <p class="card-text" th:text="${solicitud.descripcion}">Descripción de la solicitud</p>
+                    <h5 class="card-title" th:text="${solicitud.nombre}">Nombre de la solicitud</h5>
+                    <p class="card-text" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item" th:text="#{newRequest.location} + ': ' + ${solicitud.ubicacion}">Ubicación de la empresa</li>
-                    <li class="list-group-item" th:text="#{newRequest.category} + ': ' + ${solicitud.categoria}">Categoría de la solicitud</li>
+                    <li class="list-group-item" th:text="#{newRequest.status} + ': ' + ${solicitud.estado}">Estado de la solicitud</li>
                 </ul>
                 <div class="card-footer">
-                    <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{editar}">Editar</a>
-                    <a class="btn btn-danger" th:href="@{/user/deletsolicitude/{id}(id=${solicitud.id})}" th:text="#{borrar}">Borrar</a>
-                    <a class="btn btn-warning" th:href="@{/user/modifysolicitude/{id}(id=${solicitud.id})}" th:text="#{modificar_estado}">Modificar Estado</a>
+                    <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
                 </div>
             </div>
         </div>
