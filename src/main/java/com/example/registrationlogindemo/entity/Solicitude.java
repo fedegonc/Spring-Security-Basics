@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "solicitude")
@@ -31,10 +32,10 @@ public class Solicitude {
     private String categoria;
 
     @NotNull
-    private Boolean activo;
+    private boolean activo = true; // Inicializar con true por defecto
 
     @Lob
-    private String descripcion;
+    private String descripcion = "";
 
     private String imagen;
 
@@ -48,11 +49,11 @@ public class Solicitude {
     private MultipartFile file;
 
     @NotNull
-    private LocalDateTime createdAt;
+    private LocalDateTime fecha;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Estado estado;
+    private Estado estado = Estado.EN_ESPERA;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -63,5 +64,16 @@ public class Solicitude {
         ACEPTADA,
         RECHAZADA,
         EN_REVISION
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void prePersistUpdate() {
+        if (Objects.isNull(this.descripcion)) {
+            this.descripcion = "";
+        }
+        if (Objects.isNull(this.fecha)) {
+            this.fecha = LocalDateTime.now();
+        }
     }
 }

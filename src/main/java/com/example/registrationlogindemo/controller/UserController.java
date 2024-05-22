@@ -209,7 +209,7 @@ public class UserController {
         if (changeSolicitude != null) {
             changeSolicitude.setNombre(solicitude.getNombre());
             changeSolicitude.setCategoria(solicitude.getCategoria());
-            changeSolicitude.setActivo(solicitude.getActivo());
+            changeSolicitude.setActivo(solicitude.isActivo()); // Uso de isActivo() en lugar de getActivo()
             changeSolicitude.setDescripcion(solicitude.getDescripcion());
             changeSolicitude.setUbicacion(solicitude.getUbicacion());
             try {
