@@ -26,9 +26,6 @@ public class Solicitude {
     private String nombre;
 
     @NotNull
-    private String ubicacion;
-
-    @NotNull
     private String categoria;
 
     @NotNull
@@ -58,6 +55,19 @@ public class Solicitude {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    // Nuevos campos
+    @NotNull
+    private String calle;
+
+    @NotNull
+    private String barrio;
+
+    @NotNull
+    private String numeroDeCasa;
+
+    @NotNull
+    private String telefono;
 
     public enum Estado {
         EN_ESPERA,
