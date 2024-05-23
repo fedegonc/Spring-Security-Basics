@@ -194,20 +194,18 @@
         const hourSelect = document.getElementById('horaRecoleccion');
         hourSelect.innerHTML = ''; // Limpiar las opciones anteriores
 
-        let startHour = 8;
-        let endHour = (day === 'saturday') ? 11 : 17;
+        const startHour = 8;
+        const endHour = (day === 'saturday') ? 11 : 17;
 
         for (let hour = startHour; hour <= endHour; hour++) {
-            const option = document.createElement('option');
-            option.value = `${hour}:00`;
-            option.text = `${hour}:00`;
-            hourSelect.appendChild(option);
+            // Formatear la hora en formato HH:00
+            const formattedHour = `${hour < 10 ? '0' + hour : hour}:00`;
+            const option = new Option(formattedHour, formattedHour);
+            hourSelect.add(option);
         }
     }
 
-    document.addEventListener('DOMContentLoaded', (event) => {
-        updateAvailableHours();
-    });
+    document.addEventListener('DOMContentLoaded', updateAvailableHours);
 </script>
 </body>
 </html>

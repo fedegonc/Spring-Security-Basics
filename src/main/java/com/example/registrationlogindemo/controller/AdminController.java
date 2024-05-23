@@ -153,8 +153,8 @@ public class AdminController {
     // Método para eliminar una solicitud
     @RequestMapping(value = "/deletsolicitude/{id}", method = RequestMethod.GET)
     public String excluirSolicitud(@PathVariable("id") int id) {
-        solicitudeRepository.deleteById(id);
-        return "redirect:/dashboard";
+        solicitudeRepository.deleteSolicitudeById((long) id);
+        return "redirect:/admin/dashboard";
     }
 
     // Método para modificar el estado de una solicitud
