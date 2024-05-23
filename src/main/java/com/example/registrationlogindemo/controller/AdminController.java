@@ -204,7 +204,7 @@ public class AdminController {
             // Actualizar los campos de la solicitud con los nuevos valores
             changeSolicitude.setNombre(solicitude.getNombre());
             changeSolicitude.setCategoria(solicitude.getCategoria());
-            changeSolicitude.setActivo(solicitude.isActivo()); // Uso de isActivo() en lugar de getActivo()
+
             changeSolicitude.setDescripcion(solicitude.getDescripcion());
 
             try {
@@ -226,7 +226,6 @@ public class AdminController {
 
         return "redirect:/dashboard";
     }
-
 
     // Método para obtener imágenes de solicitudes
     @RequestMapping(value = "/imagemalimento/{imagem}", method = RequestMethod.GET)

@@ -66,13 +66,13 @@
             <label class="col-4 col-form-label">Roles:</label>
             <div class="col-8">
                 <th:block th:each="role: ${listRoles}">
-                    <input type="checkbox" name="roles" th:value="${role.id}" th:checked="${user.roles.contains(role)}"
-                           class="m-2" />
-                    <label th:text="${role.name}"></label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="roles" th:id="${'role-' + role.id}" th:value="${role.id}" th:checked="${user.roles.contains(role)}">
+                        <label class="form-check-label" th:for="${'role-' + role.id}" th:text="${role.name}"></label>
+                    </div>
                 </th:block>
             </div>
         </div>
-
 
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
     </form>
