@@ -211,7 +211,7 @@ public class UserController {
             changeSolicitude.setCategoria(solicitude.getCategoria());
             changeSolicitude.setActivo(solicitude.isActivo()); // Uso de isActivo() en lugar de getActivo()
             changeSolicitude.setDescripcion(solicitude.getDescripcion());
-            changeSolicitude.setUbicacion(solicitude.getUbicacion());
+
             try {
                 if (!imagen.isEmpty()) {
                     byte[] bytes = imagen.getBytes();

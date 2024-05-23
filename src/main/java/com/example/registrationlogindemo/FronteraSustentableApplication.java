@@ -18,3 +18,5 @@ public class FronteraSustentableApplication {
 //diagrama de componentes, que no sea solo texto, lo mas visual posible
 //referencias ordenadas por orden alfabetico
 //padrones de diseño, testing unitario, test integracion
+//eliminar imagenes del server cuando elimino la solicitud
+//
