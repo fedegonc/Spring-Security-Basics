@@ -78,8 +78,8 @@
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
                     </div>
                     <div class="mb-3">
-                        <label for="ubicacion" class="form-label" th:text="#{newRequest.location}">Ubicación</label>
-                        <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
+                        <label for="ciudad" class="form-label" th:text="#{newRequest.city}">Ciudad</label>
+                        <input type="text" class="form-control" id="ciudad" name="ciudad" required>
                     </div>
                     <div class="mb-3">
                         <label for="categoria" class="form-label" th:text="#{newRequest.category}">Tipo de Objeto Reciclable</label>
@@ -109,6 +109,22 @@
                         <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required>
                             <!-- Las opciones se llenarán dinámicamente con JavaScript -->
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="calle" class="form-label" th:text="#{newRequest.street}">Calle</label>
+                        <input type="text" class="form-control" id="calle" name="calle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="barrio" class="form-label" th:text="#{newRequest.neighborhood}">Barrio</label>
+                        <input type="text" class="form-control" id="barrio" name="barrio" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa</label>
+                        <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label" th:text="#{newRequest.phone}">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" required>
                     </div>
                     <div class="mb-3">
                         <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción del Objeto</label>

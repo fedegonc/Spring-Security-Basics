@@ -58,6 +58,9 @@ public class Solicitude {
 
     // Nuevos campos
     @NotNull
+    private String ciudad;
+
+    @NotNull
     private String calle;
 
     @NotNull
