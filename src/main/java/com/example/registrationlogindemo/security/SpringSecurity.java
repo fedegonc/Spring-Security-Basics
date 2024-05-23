@@ -59,6 +59,8 @@ public class SpringSecurity {
                                         "/deletsolicitude/**","/logout"
                                 ).hasRole("ADMIN")
 
+                                .requestMatchers("/root/**").hasRole("ROOT")
+
                 )
                 // Configuración de inicio de sesión
                 .formLogin(

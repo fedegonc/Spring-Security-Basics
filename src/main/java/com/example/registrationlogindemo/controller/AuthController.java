@@ -81,13 +81,16 @@ public class AuthController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String userrole = userDetails.getAuthorities().toString();
 
-            if (userrole != null && userrole.contains("USER")) {
+            if (userrole != null && userrole.contains("ROLE_USER")) {
                 return new ModelAndView("redirect:/user/welcome");
-            } else if (userrole != null && userrole.contains("ADMIN")) {
+            } else if (userrole != null && userrole.contains("ROLE_ADMIN")) {
                 return new ModelAndView("redirect:/admin/dashboard");
+            } else if (userrole != null && userrole.contains("ROLE_ROOT")) {
+                return new ModelAndView("redirect:/root/dashboard");
             }
         }
         return new ModelAndView("redirect:/error");
     }
+
 
 }
