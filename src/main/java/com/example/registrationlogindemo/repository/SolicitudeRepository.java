@@ -1,6 +1,7 @@
 package com.example.registrationlogindemo.repository;
 
 import com.example.registrationlogindemo.entity.Solicitude;
+import com.example.registrationlogindemo.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,7 +14,8 @@ import java.util.List;
 public interface SolicitudeRepository extends JpaRepository<Solicitude, Integer> {
     // Método para buscar todas las solicitudes por su ID
     void findAllById(int id);
-
+    // Método para encontrar solicitudes por usuario
+    List<Solicitude> findByUser(User user);
     // Método para buscar solicitudes por categoría que coincida con el texto proporcionado
     List<Solicitude> findSolicitudeByCategoriaLike(String descripcion);
 

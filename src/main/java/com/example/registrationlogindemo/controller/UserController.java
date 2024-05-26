@@ -49,30 +49,24 @@ public class UserController {
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
         ModelAndView mv = new ModelAndView();
-        String username = null;
-        String userrole = null;
+
         // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            username = userDetails.getUsername();
-            // Puedes agregar más lógica aquí para trabajar con los detalles del usuario según tus necesidades
-            mv.addObject("user", username);
+            String username = userDetails.getUsername();
+            mv.addObject("username", username);
 
+            User usuario = userRepository.findByUsername(username);
+            mv.addObject("user", usuario);
         }
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        principal.toString();
-        // Obtener todas las solicitudes
-        mv.addObject("principal", principal);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        username = userDetails.getUsername();
 
-        User usuario = userRepository.findByUsername(username);
-        mv.addObject("users", usuario);
+        // Obtener todas las solicitudes
+        List<Solicitude> solicitudes = solicitudeRepository.findAll();
+        mv.addObject("solicitudes", solicitudes);
+
         // Establecer la vista
         mv.setViewName("user/welcome");
-        List<Solicitude> solicitude = solicitudeRepository.findAll();
-        mv.addObject("solicitude", solicitude);
 
         return mv;
     }
