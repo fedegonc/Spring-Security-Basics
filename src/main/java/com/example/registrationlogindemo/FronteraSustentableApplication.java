@@ -11,8 +11,8 @@ public class FronteraSustentableApplication {
 }
 
 //objetivos especificos en items
-//requisitos funcionales, buscar mas visual, mas iconos
-//aumentar paginado y tamaço de letra, priorizar imagenes y letras mas grandes, mas visual
+//requisitos funcionales, buscar más visual, más iconos
+//aumentar paginado y tamaço de letra, priorizar images y letras mas grandes, mas visual
 //orientar al publico dividiendo, extender una pagina mas para el lector
 //hacer tablas, hacer mas visual, tabla comparativa entre los trabajos relacionados
 //diagrama de componentes, que no sea solo texto, lo mas visual posible

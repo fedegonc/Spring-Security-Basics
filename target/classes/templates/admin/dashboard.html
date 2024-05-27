@@ -19,15 +19,12 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
                 <!-- logo -->
-                <img src="/img/logo.png"  alt="logo">
+                <img src="/img/logo.png" alt="logo">
 
                 <!-- Título de la aplicación -->
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
                 </li>
-                <!--<li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a>
-                </li>-->
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown language-dropdown">
@@ -37,15 +34,10 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" href="/admin/dashboard?language=pt" th:text="#{label.lang.pt}">Português</a>
-                        </li>
-                        <li><a class="dropdown-item" href="/admin/dashboard?language=es" th:text="#{label.lang.es}">Español</a>
-                        </li>
+                        <li><a class="dropdown-item" href="/admin/dashboard?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/admin/dashboard?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
-                <!-- <li class="nav-item">
-                   <a class="navbar-brand" th:href="@{/user/profile/{id}(id=${users.id})}" th:text="#{perfil}">Perfil</a>
-               </li>-->
                 <li class="nav-item">
                     <a class="navbar-brand" th:href="@{/logout}" th:text="#{salir}">Salir</a>
                 </li>
@@ -55,66 +47,94 @@
 </nav>
 
 <div class="container mt-4">
-    <span th:text="#{info_usuario}"></span>
-    <h3 th:text="${principal.username}"></h3>
-</div>
-<div class="container mt-4">
     <div class="row text-left">
         <div class="col">
             <h2>Solicitudes</h2>
         </div>
-    </div><!--
-    <div class="container mt-4">
-        <form method="post" action="buscarPorNombre">
-            Buscar por Nombre: <input type="text" name="buscarPorNombre"/>
-            <input type="submit"/>
-        </form>
-        <hr>
-        <form method="post" action="buscarPorCategoria">
-            Buscar por Categoría: <input type="text" name="buscarPorCategoria"/>
-            <input type="submit"/>
-        </form>
-        <hr>
-        <br><br>
-         Fin del ejemplo
+        <div class="col text-right">
+            <button class="btn btn-primary" id="toggleViewBtn" onclick="toggleView()">Ver en tarjetas</button>
+        </div>
     </div>
-</div>-->
-<div class="container mt-4">
 
-    <table class="table table-striped table-bordered table-hover">
-        <thead class="table-dark">
-        <tr>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Ubicacion</th>
-            <th>Categoria</th>
-            <th>Activo</th>
-            <th>Descripcion</th>
-            <th>Imagen</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
+    <div class="mt-4" th:if="${solicitudes == null or #lists.isEmpty(solicitudes)}">
+        <div class="alert alert-info" role="alert">
+            Aún no has recibido solicitudes.
+        </div>
+    </div>
 
-        <tbody>
-        <tr th:each="solicitude : ${solicitude}">
-            <td th:text="${solicitude.id}"></td>
-            <td th:text="${solicitude.nombre}"></td>
-            <td th:text="${solicitude.categoria}"></td>
-            <td th:text="${solicitude.activo}"></td>
-            <td th:text="${solicitude.descripcion}"></td>
-            <td><img th:src="@{/img/{img}(img=${solicitude.imagen})}" width="100" height="100"></td>
-            <td>
-                <a class="btn btn-primary" th:href="@{/admin/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
-                <a class="btn btn-danger" th:href="@{/admin/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
-                <a class="btn btn-warning" th:href="@{/admin/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div id="tableView" class="mt-4" th:if="${solicitudes != null and !#lists.isEmpty(solicitudes)}">
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Ubicación</th>
+                <th>Categoría</th>
+                <th>Activo</th>
+                <th>Descripción</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="solicitude : ${solicitudes}">
+                <td th:text="${solicitude.id}"></td>
+                <td th:text="${solicitude.nombre}"></td>
+                <td th:text="${solicitude.ubicacion}"></td>
+                <td th:text="${solicitude.categoria}"></td>
+                <td th:text="${solicitude.activo}"></td>
+                <td th:text="${solicitude.descripcion}"></td>
+                <td><img th:src="@{/img/{img}(img=${solicitude.imagen})}" width="100" height="100"></td>
+                <td>
+                    <a class="btn btn-primary" th:href="@{/admin/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
+                    <a class="btn btn-danger" th:href="@{/admin/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
+                    <a class="btn btn-warning" th:href="@{/admin/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="cardView" class="row row-cols-1 row-cols-md-3 g-4 mt-4 d-none" th:if="${solicitudes != null and !#lists.isEmpty(solicitudes)}">
+        <div class="col" th:each="solicitude : ${solicitudes}">
+            <div class="card h-100">
+                <img th:src="@{/img/{img}(img=${solicitude.imagen})}" class="card-img-top" alt="..." width="100" height="200">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${solicitude.nombre}"></h5>
+                    <p class="card-text" th:text="${solicitude.descripcion}"></p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Ubicación: <span th:text="${solicitude.ubicacion}"></span></li>
+                        <li class="list-group-item">Categoría: <span th:text="${solicitude.categoria}"></span></li>
+                        <li class="list-group-item">Activo: <span th:text="${solicitude.activo}"></span></li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-primary" th:href="@{/admin/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
+                    <a class="btn btn-danger" th:href="@{/admin/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
+                    <a class="btn btn-warning" th:href="@{/admin/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script>
+    function toggleView() {
+        const tableView = document.getElementById('tableView');
+        const cardView = document.getElementById('cardView');
+        const toggleBtn = document.getElementById('toggleViewBtn');
 
-
+        if (tableView.classList.contains('d-none')) {
+            tableView.classList.remove('d-none');
+            cardView.classList.add('d-none');
+            toggleBtn.textContent = 'Ver en tarjetas';
+        } else {
+            tableView.classList.add('d-none');
+            cardView.classList.remove('d-none');
+            toggleBtn.textContent = 'Ver en tabla';
+        }
+    }
+</script>
 
 </body>
 </html>
