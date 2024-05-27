@@ -57,9 +57,7 @@
         <ol class="breadcrumb bg-light">
             <!-- Elemento de inicio de las migas de pan -->
             <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
-            <!-- Segundo elemento -->
-            <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
-            <!-- Elemento activo de las migas de pan -->
+            <!-- Elemento activo de las migas pan-->
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.profile}">Perfil</li>
         </ol>
     </nav>
@@ -80,16 +78,6 @@
             <label class="form-label" th:for="email" th:text="#{label.email}">Email</label>
             <input type="text" class="form-control" name="email" th:value="${user.email}" required>
         </div>
-       <!-- <div class="form-group row">
-            <label class="col-4 col-form-label" th:text="#{label.roles}">Roles:</label>
-            <div class="col-8">
-                <th:block th:each="role: ${listRoles}">
-                    <input type="checkbox" name="roles" th:value="${role.id}" th:checked="${user.roles.contains(role)}"
-                           class="m-2" />
-                    <label th:text="${role.name}"></label>
-                </th:block>
-            </div>
-        </div> -->
 
         <button type="submit" class="btn btn-primary" th:text="#{button.save}">Guardar Cambios</button>
         <a class="btn btn-danger" th:href="@{/user/delet/{id}(id=${user.id})}" th:text="#{button.delete}">Borrar</a>

@@ -51,7 +51,7 @@ public class UserController {
             mv.addObject("username", username);
 
             User usuario = userRepository.findByUsername(username);
-            mv.addObject("user", usuario);
+            mv.addObject("users", usuario);
         }
 
         // Obtener todas las solicitudes
