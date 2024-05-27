@@ -111,7 +111,7 @@ public class UserController {
             // Actualizar los datos del usuario con los nuevos valores
             userEdit.setName(user.getName());
             userEdit.setEmail(user.getEmail());
-            userEdit.setRoles(user.getRoles());
+
             // Guardar los cambios en la base de datos
             userRepository.save(userEdit);
             msg.addFlashAttribute("success", "Usuario editado exitosamente.");
