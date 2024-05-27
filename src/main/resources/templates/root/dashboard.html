@@ -81,8 +81,8 @@
                    <td th:text="${user.email}"></td>
                    <td th:text="${user.roles}"></td>
                    <td>
-                       <a class="btn btn-primary" th:href="@{/admin/edit/{id}(id=${user.id})}">Editar</a>
-                       <a class="btn btn-danger" th:href="@{/admin/delet/{id}(id=${user.id})}">Borrar</a>
+                       <a class="btn btn-primary" th:href="@{/root/edit/{id}(id=${user.id})}">Editar</a>
+                       <a class="btn btn-danger" th:href="@{/root/delet/{id}(id=${user.id})}">Borrar</a>
                    </td>
                </tr>
                </tbody>
