@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frontera Sustentable</title>
     <!-- Estilos CSS personalizados -->
     <link rel="stylesheet" href="/css/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .step-section {
+            display: none;
+        }
+        .active-section {
+            display: block;
+        }
+    </style>
 </head>
-
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -21,7 +26,6 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <!-- logo -->
                 <img src="/img/logo.png"  alt="logo">
-
                 <!-- Título de la aplicación -->
                 <li class="nav-item">
                     <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
@@ -29,16 +33,13 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown language-dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span th:text="#{label.chooseLang}"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" href="/user/newsolicitude?language=pt" th:text="#{label.lang.pt}">Português</a>
-                        </li>
-                        <li><a class="dropdown-item" href="/user/newsolicitude?language=es" th:text="#{label.lang.es}">Español</a>
-                        </li>
+                        <li><a class="dropdown-item" href="/user/newsolicitude?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/user/newsolicitude?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -62,100 +63,117 @@
         </ol>
     </nav>
 </div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <div class="card">
                 <h1 class="card-title mb-4" th:text="#{newRequest.title}">Nueva Solicitud</h1>
-                <form method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
-                    <div class="mb-3">
-                        <label for="file" class="form-label" th:text="#{newRequest.image}">Imagen del Residuo</label>
-                        <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" />
-                        <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
-                    </div>
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label" th:text="#{newRequest.name}">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="ciudad" class="form-label" th:text="#{newRequest.city}">Ciudad</label>
-                        <input type="text" class="form-control" id="ciudad" name="ciudad" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="categoria" class="form-label" th:text="#{newRequest.category}">Tipo de Objeto Reciclable</label>
-                        <select class="form-select" id="categoria" name="categoria" required>
 
-                            <option value="plastico">Plástico</option>
-                            <option value="carton">Cartón</option>
-                            <option value="madera">Madera</option>
-                            <option value="madera">Mixto</option>
-                            <option value="madera">Organico</option>
-                            <option value="madera">Otros</option>
-                        </select>
-                    </div>
+                <!-- Paso 1: Selección del Tipo de Material -->
+                <div id="step1" class="step-section active-section">
+                    <h2>Selecciona el Tipo de Material</h2>
+                    <button type="button" class="btn btn-primary" onclick="selectMaterial('plastico')">Plástico</button>
+                    <button type="button" class="btn btn-primary" onclick="selectMaterial('carton')">Cartón</button>
+                    <button type="button" class="btn btn-primary" onclick="selectMaterial('madera')">Madera</button>
+                    <button type="button" class="btn btn-primary" onclick="selectMaterial('mixto')">Mixto</button>
+                    <button type="button" class="btn btn-primary" onclick="selectMaterial('organico')">Orgánico</button>
+                    <button type="button" class="btn btn-primary" onclick="selectMaterial('otros')">Otros</button>
+                </div>
+
+                <!-- Paso 2: Información de Ubicación -->
+                <div id="step2" class="step-section">
+                    <h2>Datos de Ubicación</h2>
                     <div class="mb-3">
-                        <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles para la Recolección</label>
-                        <select class="form-select" id="diasDisponibles" name="diasDisponibles" required onchange="updateAvailableHours()">
-                            <option value="monday" th:text="#{monday}">Lunes</option>
-                            <option value="tuesday" th:text="#{tuesday}">Martes</option>
-                            <option value="wednesday" th:text="#{wednesday}">Miércoles</option>
-                            <option value="thursday" th:text="#{thursday}">Jueves</option>
-                            <option value="friday" th:text="#{friday}">Viernes</option>
-                            <option value="saturday" th:text="#{saturday}">Sábado</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.pickupTime}">Hora de Recolección</label>
-                        <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required>
-                            <!-- Las opciones se llenarán dinámicamente con JavaScript -->
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="calle" class="form-label" th:text="#{newRequest.street}">Calle</label>
-                        <input type="text" class="form-control" id="calle" name="calle" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="barrio" class="form-label" th:text="#{newRequest.neighborhood}">Barrio</label>
+                        <label for="barrio" class="form-label">Barrio</label>
                         <input type="text" class="form-control" id="barrio" name="barrio" required>
                     </div>
                     <div class="mb-3">
-                        <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa</label>
+                        <label for="calle" class="form-label">Calle</label>
+                        <input type="text" class="form-control" id="calle" name="calle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="numeroDeCasa" class="form-label">Número de Casa</label>
                         <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required>
                     </div>
                     <div class="mb-3">
-                        <label for="telefono" class="form-label" th:text="#{newRequest.phone}">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" required>
+                        <label for="diasDisponibles" class="form-label">Días Disponibles</label>
+                        <select class="form-select" id="diasDisponibles" name="diasDisponibles" required onchange="updateAvailableHours()">
+                            <option value="monday">Lunes</option>
+                            <option value="tuesday">Martes</option>
+                            <option value="wednesday">Miércoles</option>
+                            <option value="thursday">Jueves</option>
+                            <option value="friday">Viernes</option>
+                            <option value="saturday">Sábado</option>
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción del Objeto</label>
-                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                        <label for="horaRecoleccion" class="form-label">Hora de Recolección</label>
+                        <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required></select>
                     </div>
-                    <button type="submit" class="btn btn-primary" th:text="#{newRequest.submit}">Enviar Solicitud</button>
-                </form>
+                    <button type="button" class="btn btn-primary" onclick="showStep(3)">Siguiente</button>
+                </div>
+
+                <!-- Paso 3: Detalles de la Solicitud -->
+                <div id="step3" class="step-section">
+                    <h2>Detalles de la Solicitud</h2>
+                    <form id="finalForm" method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
+                        <input type="hidden" id="tipoMaterial" name="categoria">
+                        <input type="hidden" id="finalBarrio" name="barrio">
+                        <input type="hidden" id="finalCalle" name="calle">
+                        <input type="hidden" id="finalNumeroDeCasa" name="numeroDeCasa">
+                        <input type="hidden" id="finalDiasDisponibles" name="diasDisponibles">
+                        <input type="hidden" id="finalHoraRecoleccion" name="horaRecoleccion">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Imagen del Residuo</label>
+                            <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" />
+                            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción del Objeto</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="peso" class="form-label">Peso Aproximado (kg)</label>
+                            <input type="number" class="form-control" id="peso" name="peso" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="volumen" class="form-label">Volumen Aproximado (m³)</label>
+                            <input type="number" class="form-control" id="volumen" name="volumen" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
+                    </form>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <h5 th:text="#{footer.contact.title}">Contacto</h5>
-                <p th:text="#{footer.contact.email}">Email: info@fronterasustentable.com</p>
-                <p th:text="#{footer.contact.phone}">Teléfono: +1234567890</p>
-                <p th:text="#{footer.contact.address}">Dirección: Av. Principal 123, Ciudad, País</p>
+                <h5>Contacto</h5>
+                <p>Email: info@fronterasustentable.com</p>
+                <p>Teléfono: +1234567890</p>
+                <p>Dirección: Av. Principal 123, Ciudad, País</p>
             </div>
             <div class="col-md-4">
-                <h5 th:text="#{footer.links.title}">Enlaces útiles</h5>
+                <h5>Enlaces útiles</h5>
                 <ul class="list-unstyled">
-                    <li><a href="/" th:text="#{footer.links.home}">Inicio</a></li>
-                    <li><a href="/about" th:text="#{footer.links.about}">Acerca de</a></li>
-                    <li><a href="/services" th:text="#{footer.links.services}">Servicios</a></li>
-                    <li><a href="/contact" th:text="#{footer.links.contact}">Contacto</a></li>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/about">Acerca de</a></li>
+                    <li><a href="/services">Servicios</a></li>
+                    <li><a href="/contact">Contacto</a></li>
                 </ul>
             </div>
             <div class="col-md-4">
-                <h5 th:text="#{footer.social.title}">Redes Sociales</h5>
+                <h5>Redes Sociales</h5>
                 <ul class="list-unstyled">
                     <li><a href="https://facebook.com/fronterasustentable"><i class="fab fa-facebook"></i> Facebook</a></li>
                     <li><a href="https://twitter.com/frontera_sust"><i class="fab fa-twitter"></i> Twitter</a></li>
@@ -165,30 +183,37 @@
         </div>
     </div>
     <div class="container text-center">
-        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+        <span class="text-muted">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
     </div>
 </footer>
+
 <!-- Fin del contenido principal -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    function previewFile() {
-        var preview = document.querySelector('#previewImage');
-        var file = document.querySelector('input[type=file]').files[0];
-        var reader = new FileReader();
+    const formData = {};
 
-        reader.onloadend = function () {
-            preview.src = reader.result;
-        }
+    function selectMaterial(material) {
+        formData.tipoMaterial = material;
+        showStep(2);
+    }
 
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = "/img/default-image.jpg"; // Si no se selecciona ningún archivo, mostrar la imagen por defecto
+    function showStep(step) {
+        // Ocultar todas las secciones
+        document.querySelectorAll('.step-section').forEach(section => section.classList.remove('active-section'));
+        // Mostrar la sección del paso actual
+        document.getElementById(`step${step}`).classList.add('active-section');
+        // Si estamos en el paso 3, rellenar el formulario final con los datos almacenados
+        if (step === 3) {
+            document.getElementById('finalBarrio').value = document.getElementById('barrio').value;
+            document.getElementById('finalCalle').value = document.getElementById('calle').value;
+            document.getElementById('finalNumeroDeCasa').value = document.getElementById('numeroDeCasa').value;
+            document.getElementById('finalDiasDisponibles').value = document.getElementById('diasDisponibles').value;
+            document.getElementById('finalHoraRecoleccion').value = document.getElementById('horaRecoleccion').value;
+            document.getElementById('tipoMaterial').value = formData.tipoMaterial;
         }
     }
-</script>
-<script>
+
     function updateAvailableHours() {
         const day = document.getElementById('diasDisponibles').value;
         const hourSelect = document.getElementById('horaRecoleccion');
@@ -206,6 +231,22 @@
     }
 
     document.addEventListener('DOMContentLoaded', updateAvailableHours);
+
+    function previewFile() {
+        var preview = document.querySelector('#previewImage');
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "/img/default-image.jpg"; // Si no se selecciona ningún archivo, mostrar la imagen por defecto
+        }
+    }
 </script>
 </body>
 </html>
