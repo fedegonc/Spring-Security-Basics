@@ -49,7 +49,7 @@ public class SpringSecurity {
                                         "/user/deletesolicitude/**","/user/profile/**", "/user/welcome",
                                         "/solicitude/newsolicitude/**", "/solicitude/editsolicitude/**",
                                         "/solicitude/modifysolicitude/**","/user/imagem/**","/imagem/**",
-                                        "/logout"
+                                        "/logout","/profile/**"
                                 ).hasRole("USER")
 
 
