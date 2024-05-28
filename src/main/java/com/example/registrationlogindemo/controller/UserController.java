@@ -48,15 +48,18 @@ public class UserController {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
+
+            // Agregar el nombre de usuario al modelo para dar la bienvenida
             mv.addObject("username", username);
 
+            // Obtener el usuario de la base de datos
             User usuario = userRepository.findByUsername(username);
             mv.addObject("users", usuario);
-        }
 
-        // Obtener todas las solicitudes
-        List<Solicitude> solicitudes = solicitudeRepository.findAll();
-        mv.addObject("solicitudes", solicitudes);
+            // Obtener las solicitudes realizadas por el usuario autenticado
+            List<Solicitude> solicitude = solicitudeRepository.findByUser(usuario);
+            mv.addObject("solicitude", solicitude);
+        }
 
         // Establecer la vista
         mv.setViewName("user/welcome");

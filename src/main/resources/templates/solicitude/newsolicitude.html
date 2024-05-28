@@ -14,6 +14,10 @@
         .active-section {
             display: block;
         }
+        .error {
+            color: red;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -72,7 +76,7 @@
 
                 <!-- Paso 1: Selección del Tipo de Material -->
                 <div id="step1" class="step-section active-section">
-                    <h2>Selecciona el Tipo de Material</h2>
+                    <h2 th:text="#{newRequest.selectMaterial}">Selecciona el Tipo de Material</h2>
                     <button type="button" class="btn btn-primary" onclick="selectMaterial('plastico')">Plástico</button>
                     <button type="button" class="btn btn-primary" onclick="selectMaterial('carton')">Cartón</button>
                     <button type="button" class="btn btn-primary" onclick="selectMaterial('madera')">Madera</button>
@@ -83,21 +87,29 @@
 
                 <!-- Paso 2: Información de Ubicación -->
                 <div id="step2" class="step-section">
-                    <h2>Datos de Ubicación</h2>
+                    <h2 th:text="#{newRequest.locationData}">Datos de Ubicación</h2>
                     <div class="mb-3">
-                        <label for="barrio" class="form-label">Barrio</label>
+                        <label for="barrio" class="form-label" th:text="#{newRequest.neighborhood}">Barrio</label>
                         <input type="text" class="form-control" id="barrio" name="barrio" required>
+                        <div id="error-barrio" class="error" th:text="#{newRequest.errorNeighborhood}">Barrio es obligatorio</div>
                     </div>
                     <div class="mb-3">
-                        <label for="calle" class="form-label">Calle</label>
+                        <label for="calle" class="form-label" th:text="#{newRequest.street}">Calle</label>
                         <input type="text" class="form-control" id="calle" name="calle" required>
+                        <div id="error-calle" class="error" th:text="#{newRequest.errorStreet}">Calle es obligatorio</div>
                     </div>
                     <div class="mb-3">
-                        <label for="numeroDeCasa" class="form-label">Número de Casa</label>
+                        <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa</label>
                         <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required>
+                        <div id="error-numeroDeCasa" class="error" th:text="#{newRequest.errorHouseNumber}">Número de casa es obligatorio</div>
                     </div>
                     <div class="mb-3">
-                        <label for="diasDisponibles" class="form-label">Días Disponibles</label>
+                        <label for="telefono" class="form-label" th:text="#{newRequest.phoneNumber}">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                        <div id="error-telefono" class="error" th:text="#{newRequest.errorPhoneNumber}">Teléfono es obligatorio</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles</label>
                         <select class="form-select" id="diasDisponibles" name="diasDisponibles" required onchange="updateAvailableHours()">
                             <option value="monday">Lunes</option>
                             <option value="tuesday">Martes</option>
@@ -106,46 +118,53 @@
                             <option value="friday">Viernes</option>
                             <option value="saturday">Sábado</option>
                         </select>
+                        <div id="error-diasDisponibles" class="error" th:text="#{newRequest.errorAvailableDays}">Días disponibles son obligatorios</div>
                     </div>
                     <div class="mb-3">
-                        <label for="horaRecoleccion" class="form-label">Hora de Recolección</label>
+                        <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.collectionTime}">Hora de Recolección</label>
                         <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required></select>
+                        <div id="error-horaRecoleccion" class="error" th:text="#{newRequest.errorCollectionTime}">Hora de recolección es obligatoria</div>
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="showStep(3)">Siguiente</button>
+                    <button type="button" class="btn btn-primary" onclick="validateStep2()">Siguiente</button>
                 </div>
 
                 <!-- Paso 3: Detalles de la Solicitud -->
                 <div id="step3" class="step-section">
-                    <h2>Detalles de la Solicitud</h2>
+                    <h2 th:text="#{newRequest.requestDetails}">Detalles de la Solicitud</h2>
                     <form id="finalForm" method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
                         <input type="hidden" id="tipoMaterial" name="categoria">
                         <input type="hidden" id="finalBarrio" name="barrio">
                         <input type="hidden" id="finalCalle" name="calle">
                         <input type="hidden" id="finalNumeroDeCasa" name="numeroDeCasa">
+                        <input type="hidden" id="finalTelefono" name="telefono">
                         <input type="hidden" id="finalDiasDisponibles" name="diasDisponibles">
                         <input type="hidden" id="finalHoraRecoleccion" name="horaRecoleccion">
                         <div class="mb-3">
-                            <label for="file" class="form-label">Imagen del Residuo</label>
+                            <label for="file" class="form-label" th:text="#{newRequest.wasteImage}">Imagen del Residuo</label>
                             <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" />
                             <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
                         </div>
                         <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
+                            <label for="nombre" class="form-label" th:text="#{newRequest.name}">Nombre</label>
                             <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            <div id="error-nombre" class="error" th:text="#{newRequest.errorName}">Nombre es obligatorio</div>
                         </div>
                         <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripción del Objeto</label>
+                            <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción del Objeto</label>
                             <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                            <div id="error-descripcion" class="error" th:text="#{newRequest.errorDescription}">Descripción es obligatoria</div>
                         </div>
                         <div class="mb-3">
-                            <label for="peso" class="form-label">Peso Aproximado (kg)</label>
+                            <label for="peso" class="form-label" th:text="#{newRequest.weight}">Peso Aproximado (kg)</label>
                             <input type="number" class="form-control" id="peso" name="peso" required>
+                            <div id="error-peso" class="error" th:text="#{newRequest.errorWeight}">Peso es obligatorio</div>
                         </div>
                         <div class="mb-3">
-                            <label for="volumen" class="form-label">Volumen Aproximado (m³)</label>
+                            <label for="volumen" class="form-label" th:text="#{newRequest.volume}">Volumen Aproximado (m³)</label>
                             <input type="number" class="form-control" id="volumen" name="volumen" required>
+                            <div id="error-volumen" class="error" th:text="#{newRequest.errorVolume}">Volumen es obligatorio</div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
+                        <button type="submit" class="btn btn-primary" onclick="validateStep3()">Enviar Solicitud</button>
                     </form>
                 </div>
 
@@ -155,7 +174,6 @@
 </div>
 
 <footer class="footer mt-auto py-3 bg-dark text-white">
-
     <div class="container text-center">
         <span class="text-muted">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
     </div>
@@ -182,6 +200,7 @@
             document.getElementById('finalBarrio').value = document.getElementById('barrio').value;
             document.getElementById('finalCalle').value = document.getElementById('calle').value;
             document.getElementById('finalNumeroDeCasa').value = document.getElementById('numeroDeCasa').value;
+            document.getElementById('finalTelefono').value = document.getElementById('telefono').value;
             document.getElementById('finalDiasDisponibles').value = document.getElementById('diasDisponibles').value;
             document.getElementById('finalHoraRecoleccion').value = document.getElementById('horaRecoleccion').value;
             document.getElementById('tipoMaterial').value = formData.tipoMaterial;
@@ -219,6 +238,82 @@
             reader.readAsDataURL(file);
         } else {
             preview.src = "/img/default-image.jpg"; // Si no se selecciona ningún archivo, mostrar la imagen por defecto
+        }
+    }
+
+    function validateStep2() {
+        let valid = true;
+        if (document.getElementById('barrio').value.trim() === '') {
+            document.getElementById('error-barrio').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-barrio').style.display = 'none';
+        }
+        if (document.getElementById('calle').value.trim() === '') {
+            document.getElementById('error-calle').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-calle').style.display = 'none';
+        }
+        if (document.getElementById('numeroDeCasa').value.trim() === '') {
+            document.getElementById('error-numeroDeCasa').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-numeroDeCasa').style.display = 'none';
+        }
+        if (document.getElementById('telefono').value.trim() === '') {
+            document.getElementById('error-telefono').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-telefono').style.display = 'none';
+        }
+        if (document.getElementById('diasDisponibles').value.trim() === '') {
+            document.getElementById('error-diasDisponibles').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-diasDisponibles').style.display = 'none';
+        }
+        if (document.getElementById('horaRecoleccion').value.trim() === '') {
+            document.getElementById('error-horaRecoleccion').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-horaRecoleccion').style.display = 'none';
+        }
+
+        if (valid) {
+            showStep(3);
+        }
+    }
+
+    function validateStep3() {
+        let valid = true;
+        if (document.getElementById('nombre').value.trim() === '') {
+            document.getElementById('error-nombre').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-nombre').style.display = 'none';
+        }
+        if (document.getElementById('descripcion').value.trim() === '') {
+            document.getElementById('error-descripcion').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-descripcion').style.display = 'none';
+        }
+        if (document.getElementById('peso').value.trim() === '') {
+            document.getElementById('error-peso').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-peso').style.display = 'none';
+        }
+        if (document.getElementById('volumen').value.trim() === '') {
+            document.getElementById('error-volumen').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-volumen').style.display = 'none';
+        }
+
+        if (!valid) {
+            event.preventDefault();
         }
     }
 </script>
