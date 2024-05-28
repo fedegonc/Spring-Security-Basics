@@ -23,8 +23,8 @@ public class User {
     private Long id;
 
     // Foto de perfil del usuario
-    @Column(name = "profile_image")
-    private String profileImage;
+    @Column(name = "profile_image", nullable = false)
+    private String profileImage = "/img/default-profile.png";  // Valor por defecto
 
     // Nombre de usuario del usuario
     @Column(nullable=false, unique=true)
