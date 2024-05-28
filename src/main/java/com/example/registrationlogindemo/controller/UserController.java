@@ -148,4 +148,12 @@ public class UserController {
         return "users";
     }
 
+    @GetMapping("/construction")
+    public ModelAndView showConstructionPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("user/construction"); // Nombre de la vista
+        // Aquí puedes agregar atributos al modelo si lo necesitas
+        return modelAndView;
+    }
+
 }

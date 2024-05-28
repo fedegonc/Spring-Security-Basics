@@ -58,9 +58,6 @@
 <div class="container mt-1">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
-            <!-- Elemento de inicio de las migas de pan -->
-            <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
-            <!-- Segundo elemento -->
             <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
             <!-- Elemento activo de las migas de pan -->
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.newRequest}">Nueva Solicitud</li>
@@ -77,12 +74,12 @@
                 <!-- Paso 1: Selección del Tipo de Material -->
                 <div id="step1" class="step-section active-section">
                     <h2 th:text="#{newRequest.selectMaterial}">Selecciona el Tipo de Material</h2>
-                    <button type="button" class="btn btn-primary" onclick="selectMaterial('plastico')">Plástico</button>
-                    <button type="button" class="btn btn-primary" onclick="selectMaterial('carton')">Cartón</button>
-                    <button type="button" class="btn btn-primary" onclick="selectMaterial('madera')">Madera</button>
-                    <button type="button" class="btn btn-primary" onclick="selectMaterial('mixto')">Mixto</button>
-                    <button type="button" class="btn btn-primary" onclick="selectMaterial('organico')">Orgánico</button>
-                    <button type="button" class="btn btn-primary" onclick="selectMaterial('otros')">Otros</button>
+                    <button type="button" class="btn btn-primary" style="background-color: #FFD700;" onclick="selectMaterial('plastico')">Plástico</button>
+                    <button type="button" class="btn btn-primary" style="background-color: #004080;" onclick="selectMaterial('carton')">Cartón</button>
+                    <button type="button" class="btn btn-primary" style="background-color: #404040;" onclick="selectMaterial('madera')">Madera</button>
+                    <button type="button" class="btn btn-primary" style="background-color: #006400;" onclick="selectMaterial('mixto')">Mixto</button>
+                    <button type="button" class="btn btn-primary" style="background-color: #8B4513;" onclick="selectMaterial('organico')">Orgánico</button>
+                    <button type="button" class="btn btn-primary" style="background-color: #8B0000;" onclick="selectMaterial('otros')">Otros</button>
                 </div>
 
                 <!-- Paso 2: Información de Ubicación -->
