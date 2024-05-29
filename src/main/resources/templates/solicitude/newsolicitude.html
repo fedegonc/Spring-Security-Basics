@@ -136,11 +136,16 @@
                         <input type="hidden" id="finalTelefono" name="telefono">
                         <input type="hidden" id="finalDiasDisponibles" name="diasDisponibles">
                         <input type="hidden" id="finalHoraRecoleccion" name="horaRecoleccion">
-                        <div class="mb-3">
+
+                        <div class="mb-3"> <!-- Contenedor principal con margen inferior -->
                             <label for="file" class="form-label" th:text="#{newRequest.wasteImage}">Imagen del Residuo</label>
+                            <!-- Etiqueta para el campo de entrada de archivo, con texto internacionalizado -->
                             <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" />
+                            <!-- Imagen de vista previa predeterminada con estilos de Bootstrap -->
                             <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
+                            <!-- Campo de entrada de archivo para seleccionar una imagen, con evento onchange para mostrar una vista previa -->
                         </div>
+
                         <div class="mb-3">
                             <label for="nombre" class="form-label" th:text="#{newRequest.name}">Nombre</label>
                             <input type="text" class="form-control" id="nombre" name="nombre" required>

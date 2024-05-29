@@ -67,18 +67,15 @@
     <form method="post" enctype="multipart/form-data" th:action="@{'/user/profile/' + ${user.id}}">
 
         <div class="mb-3">
-            <label for="fileImage" class="form-label" th:text="#{newRequest.profileImage}">Imagen de Perfil</label>
+            <label for="file" class="form-label" th:text="#{newRequest.profileImage}">Imagen de Perfil</label>
             <!-- Mostrar la imagen de perfil actual si existe -->
             <div th:if="${user.profileImage}" class="mb-3">
                 <img id="currentProfileImage" th:src="@{${'/img/' + user.profileImage}}" alt="Imagen de Perfil" class="img-thumbnail" style="max-width: 150px;">
             </div>
             <!-- Mostrar una imagen predeterminada si no hay imagen de perfil -->
-            <div th:unless="${user.profileImage}" class="mb-3">
-                <img id="defaultProfileImage" src="/img/thumbnail-default.jpg" alt="Imagen de Perfil Predeterminada" class="img-thumbnail" style="max-width: 150px;">
-            </div>
+                <img id="defaultProfileImage" src="/img/default-profile.png" alt="Imagen de Perfil Predeterminada" class="img-thumbnail" style="max-width: 150px;">
             <!-- Permitir al usuario seleccionar una nueva imagen -->
-            <input type="file" class="form-control" id="fileImage" name="fileImage" onchange="previewFile()">
-
+            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
 
         </div>
 
