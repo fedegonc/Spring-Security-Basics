@@ -16,9 +16,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +42,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
 
     // Método para la página de bienvenida del usuario
     @GetMapping("/welcome")
@@ -69,60 +75,67 @@ public class UserController {
 
     @GetMapping("/profile/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User currentUser = userRepository.findByUsername(username);
 
-        if (currentUser != null) {
-            // Verificar si el ID en la URL coincide con el ID del usuario autenticado
-            if (currentUser.getId() != id) {
-                // Si el usuario intenta acceder al perfil de otro usuario, redirigirlo a su propio perfil
-                return new ModelAndView("redirect:/user/profile/" + currentUser.getId());
-            }
+        if (currentUser != null && currentUser.getId() != id) {
+            return new ModelAndView("redirect:/user/profile/" + currentUser.getId());
         }
-        // Si el ID en la URL coincide con el ID del usuario autenticado, continuar con la lógica actual del método
+
         Optional<User> userOptional = userRepository.findById(id);
-
-        System.out.println("Valor del id recibido: " + id);
-
         ModelAndView mv = new ModelAndView("user/profile");
-
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            List<Role> listRoles = userService.listRoles();
-            mv.addObject("listRoles", listRoles);
             mv.addObject("user", user);
         }
 
         return mv;
     }
 
-
     @PostMapping("/profile/{id}")
-    public String editUserBanco(@ModelAttribute("user/profile") @Valid User user,
-                                BindingResult result, RedirectAttributes msg) {
-        // Verificar errores de validación
+    public ModelAndView editUser(@PathVariable("id") long id,
+                                 @ModelAttribute("user") @Valid User user,
+                                 BindingResult result,
+                                 @RequestParam("fileImage") MultipartFile imagen,
+                                 @RequestParam("currentProfileImageUrl") String currentProfileImageUrl,
+                                 RedirectAttributes msg) {
+        ModelAndView mv = new ModelAndView();
+
         if (result.hasErrors()) {
-            msg.addFlashAttribute("erro", "Error al editar. Por favor, complete todos los campos correctamente.");
-            return "redirect:user/profile/" + user.getId();
+            msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");
+            mv.setViewName("redirect:/user/profile/" + id);
+            return mv;
         }
 
         User userEdit = userRepository.findById(user.getId()).orElse(null);
 
         if (userEdit != null) {
-            // Actualizar los datos del usuario con los nuevos valores
             userEdit.setName(user.getName());
             userEdit.setEmail(user.getEmail());
 
-            // Guardar los cambios en la base de datos
+            try {
+                if (!imagen.isEmpty()) {
+                    byte[] bytes = imagen.getBytes();
+                    Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
+                    Files.write(caminho, bytes);
+                    userEdit.setProfileImage(imagen.getOriginalFilename());
+                } else {
+                    // Si no se proporciona una nueva imagen, conservar la URL de la imagen actual
+                    userEdit.setProfileImage(currentProfileImageUrl);
+                }
+            } catch (IOException e) {
+                System.out.println("Error de imagen");
+            }
+
             userRepository.save(userEdit);
             msg.addFlashAttribute("success", "Usuario editado exitosamente.");
+            mv.setViewName("redirect:/user/profile/" + user.getId());
         } else {
-            msg.addFlashAttribute("error", "No se encontró el usuario a editar.");
+            mv.setViewName("redirect:/error");
         }
 
-        return "redirect:/user/welcome";
+        return mv;
     }
 
 

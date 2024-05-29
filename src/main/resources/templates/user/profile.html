@@ -38,8 +38,8 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id}, language='pt')}" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id}, language='es')}" th:text="#{label.lang.es}">Español</a></li>
+                        <li><a class="dropdown-item" th:href="@{/profile/{id}(id=${user.id}, language='pt')}" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" th:href="@{/profile/{id}(id=${user.id}, language='es')}" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -66,7 +66,21 @@
 
     <form method="post" enctype="multipart/form-data" th:action="@{'/user/profile/' + ${user.id}}">
 
+        <div class="mb-3">
+            <label for="fileImage" class="form-label" th:text="#{newRequest.profileImage}">Imagen de Perfil</label>
+            <!-- Mostrar la imagen de perfil actual si existe -->
+            <div th:if="${user.profileImage}" class="mb-3">
+                <img id="currentProfileImage" th:src="@{${'/img/' + user.profileImage}}" alt="Imagen de Perfil" class="img-thumbnail" style="max-width: 150px;">
+            </div>
+            <!-- Mostrar una imagen predeterminada si no hay imagen de perfil -->
+            <div th:unless="${user.profileImage}" class="mb-3">
+                <img id="defaultProfileImage" src="/img/thumbnail-default.jpg" alt="Imagen de Perfil Predeterminada" class="img-thumbnail" style="max-width: 150px;">
+            </div>
+            <!-- Permitir al usuario seleccionar una nueva imagen -->
+            <input type="file" class="form-control" id="fileImage" name="fileImage" onchange="previewFile()">
 
+
+        </div>
 
         <div class="mb-3">
             <label class="form-label" th:for="nombre" th:text="#{label.name}">Nombre</label>
@@ -78,10 +92,10 @@
         </div>
 
         <button type="submit" class="btn btn-primary" th:text="#{button.save}">Guardar Cambios</button>
-        <a class="btn btn-danger" th:href="@{/user/delet/{id}(id=${user.id})}" th:text="#{button.delete}">Borrar</a>
+        <a class="btn btn-danger" th:href="@{/user/delete/{id}(id=${user.id})}" th:text="#{button.delete}">Borrar</a>
     </form>
-
 </div>
+
 <footer class="footer mt-auto py-3 bg-dark text-white">
 
     <div class="container text-center">
