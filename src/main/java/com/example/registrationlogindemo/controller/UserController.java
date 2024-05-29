@@ -1,7 +1,6 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
-import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
@@ -9,7 +8,6 @@ import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -76,11 +73,8 @@ public class UserController {
     }
 
     @GetMapping("/profile/{id}")
-    public ModelAndView editUser(@PathVariable("id") long id, @RequestParam(required = false) String language) {
-        if (language != null) {
-            Locale locale = new Locale(language);
-            LocaleContextHolder.setLocale(locale);
-        }
+    public ModelAndView editUser(@PathVariable("id") long id) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User currentUser = userRepository.findByUsername(username);
@@ -106,7 +100,7 @@ public class UserController {
     public ModelAndView editUser(@PathVariable("id") long id,
                                  @ModelAttribute("user") @Valid User user,
                                  BindingResult result,
-                                 @RequestParam("fileImage") MultipartFile imagen,
+                                 @RequestParam("file") MultipartFile fileImage,
                                  @RequestParam("currentProfileImageUrl") String currentProfileImageUrl,
                                  RedirectAttributes msg) {
         ModelAndView mv = new ModelAndView();
@@ -120,17 +114,21 @@ public class UserController {
         User userEdit = userRepository.findById(user.getId()).orElse(null);
 
         if (userEdit != null) {
+            userEdit.setUsername(user.getUsername());
             userEdit.setName(user.getName());
             userEdit.setEmail(user.getEmail());
 
             try {
-                if (!imagen.isEmpty()) {
-                    byte[] bytes = imagen.getBytes();
-                    Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
-                    Files.write(caminho, bytes);
-                    userEdit.setProfileImage(imagen.getOriginalFilename());
+                if (!fileImage.isEmpty()) {
+                    // Reemplazar espacios en el nombre del archivo
+                    String originalFilename = fileImage.getOriginalFilename();
+                    String modifiedFilename = originalFilename.replace(" ", "_");
+
+                    byte[] bytes = fileImage.getBytes();
+                    Path path = Paths.get("./src/main/resources/static/img/" + modifiedFilename);
+                    Files.write(path, bytes);
+                    userEdit.setProfileImage(modifiedFilename);
                 } else {
-                    // Si no se proporciona una nueva imagen, conservar la URL de la imagen actual
                     userEdit.setProfileImage(currentProfileImageUrl);
                 }
             } catch (IOException e) {
