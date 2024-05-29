@@ -9,6 +9,7 @@ import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -74,7 +76,11 @@ public class UserController {
     }
 
     @GetMapping("/profile/{id}")
-    public ModelAndView editUser(@PathVariable("id") long id) {
+    public ModelAndView editUser(@PathVariable("id") long id, @RequestParam(required = false) String language) {
+        if (language != null) {
+            Locale locale = new Locale(language);
+            LocaleContextHolder.setLocale(locale);
+        }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User currentUser = userRepository.findByUsername(username);
@@ -87,6 +93,9 @@ public class UserController {
         ModelAndView mv = new ModelAndView("user/profile");
         if (userOptional.isPresent()) {
             User user = userOptional.get();
+            if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
+                user.setProfileImage("default-profile.jpg");
+            }
             mv.addObject("user", user);
         }
 
@@ -137,7 +146,6 @@ public class UserController {
 
         return mv;
     }
-
 
 
     @GetMapping("/delet/{id}")

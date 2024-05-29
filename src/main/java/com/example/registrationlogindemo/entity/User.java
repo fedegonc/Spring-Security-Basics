@@ -24,7 +24,7 @@ public class User {
 
     // Foto de perfil del usuario
     @Column(name = "profile_image", nullable = false)
-    private String profileImage = "/img/default-profile.png";  // Valor por defecto
+    private String profileImage = "default-profile.jpg";  // Valor por defecto
 
     // Nombre de usuario del usuario
     @Column(nullable=false, unique=true)
@@ -60,7 +60,7 @@ public class User {
     }
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Solicitude> solicitudes = new ArrayList<>();
 
 }
