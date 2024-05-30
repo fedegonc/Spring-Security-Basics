@@ -60,6 +60,11 @@
         </ol>
     </nav>
 </div>
+<div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}"></div>
+
+<!-- Mensajes de error -->
+<div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
 <div class="container mt-4">
     <h1 th:text="#{edit.user}">Editar Usuario</h1>
 
@@ -79,7 +84,10 @@
             <!-- Permitir al usuario seleccionar una nueva imagen -->
             <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
         </div>
-
+        <div class="mb-3">
+            <label class="form-label" th:for="username" th:text="#{label.username}">Username</label>
+            <input type="text" class="form-control" name="username" th:value="${user.username}" required>
+        </div>
         <div class="mb-3">
             <label class="form-label" th:for="nombre" th:text="#{label.name}">Nombre</label>
             <input type="text" class="form-control" name="name" th:value="${user.name}" required>

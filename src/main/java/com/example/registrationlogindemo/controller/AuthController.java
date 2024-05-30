@@ -48,11 +48,11 @@ public class AuthController {
         User existingUserByUsername = userService.findByUsername(userDto.getUsername());
 
         if (existingUserByEmail != null && existingUserByEmail.getEmail() != null && !existingUserByEmail.getEmail().isEmpty()) {
-            result.rejectValue("email", null, "There is already an account registered with the same email");
+            result.rejectValue("email", null, "Email existente");
         }
 
         if (existingUserByUsername != null && existingUserByUsername.getUsername() != null && !existingUserByUsername.getUsername().isEmpty()) {
-            result.rejectValue("username", null, "There is already an account registered with the same username");
+            result.rejectValue("username", null, "Usuario existente");
         }
 
         if (result.hasErrors()) {

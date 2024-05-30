@@ -14,16 +14,16 @@ import lombok.Setter;
 public class UserDto {
     // Atributos de la clase UserDto
     private Long id; // ID del usuario
-    @NotEmpty
+    @NotEmpty(message = "{user.firstName.notEmpty}")
     private String firstName; // Nombre del usuario
-    @NotEmpty
+    @NotEmpty(message = "{user.lastName.notEmpty}")
     private String lastName; // Apellido del usuario
-    @NotEmpty(message = "El email no puede estar vacío")
-    @Email
+    @NotEmpty(message = "{user.email.notEmpty}")
+    @Email(message = "{user.email.invalid}")
     private String email; // Email del usuario, debe cumplir el formato de email
-    @NotEmpty(message = "La contraseña no puede estar vacía")
+    @NotEmpty(message = "{user.password.notEmpty}")
     private String password; // Contraseña del usuario
     private String roleName; // Rol del usuario
-    @NotEmpty(message = "El nombre de usuario no puede estar vacío")
+    @NotEmpty(message = "{user.username.notEmpty}")
     private String username; // Nombre de usuario del usuario
 }
