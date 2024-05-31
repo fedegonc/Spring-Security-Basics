@@ -48,8 +48,8 @@ public class SpringSecurity {
                                 .requestMatchers("/user/newsolicitude/**", "/user/modifysolicitude/**",
                                         "/user/deletesolicitude/**","/user/profile/**", "/user/welcome",
                                         "/solicitude/newsolicitude/**", "/solicitude/editsolicitude/**",
-                                        "/solicitude/modifysolicitude/**","/user/imagem/**","/imagem/**",
-                                        "/logout","/profile/**"
+                                        "/solicitude/modifysolicitude/**","/user/imagem/**","/img/**",
+                                        "/logout","/profile/**","/delete/**"
                                 ).hasRole("USER")
 
 

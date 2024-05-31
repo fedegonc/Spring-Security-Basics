@@ -146,12 +146,15 @@ public class UserController {
     }
 
 
-    @GetMapping("/delet/{id}")
-    public String excluirUser(@PathVariable("id") int id) {
-        // Eliminar el usuario por su ID
-        userRepository.deleteById((long) id);
-        // Redirigir al dashboard después de la eliminación
-        return "index";
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUserById(id);
+            redirectAttributes.addFlashAttribute("success", "Usuario eliminado exitosamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar el usuario.");
+        }
+        return "redirect:/index";
     }
 
     // Método para cerrar sesión

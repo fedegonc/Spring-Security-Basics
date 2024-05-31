@@ -52,7 +52,7 @@ public class Solicitude {
     @Enumerated(EnumType.STRING)
     private Estado estado = Estado.EN_ESPERA;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User user;
 
