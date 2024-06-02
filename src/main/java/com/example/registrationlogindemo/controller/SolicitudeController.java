@@ -1,5 +1,6 @@
 package com.example.registrationlogindemo.controller;
 
+import ch.qos.logback.core.model.Model;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
@@ -80,56 +81,65 @@ public class SolicitudeController {
             return "redirect:/user/welcome";
         }
     }
+    // Método para manejar la solicitud GET para editar una solicitud
     @GetMapping("/editsolicitude/{id}")
-    public ModelAndView editSolicitude(@PathVariable("id") int id) {
-        ModelAndView mv = new ModelAndView();
-        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById(id);
-
-        if (solicitudeOptional.isPresent()) {
-            Solicitude solicitude = solicitudeOptional.get();
-            mv.addObject("solicitude", solicitude);
-            mv.setViewName("solicitude/editsolicitude"); // Nombre de la vista de edición
+    public ModelAndView showEditSolicitudeForm(@PathVariable("id") int id) {
+        ModelAndView mv = new ModelAndView("solicitude/editsolicitude");
+        Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
+        if (solicitudeOpt.isPresent()) {
+            mv.addObject("solicitude", solicitudeOpt.get());
         } else {
-            mv.setViewName("redirect:/error"); // Redirige a la página de error si la solicitud no existe
+            mv.setViewName("redirect:/user/welcome");
         }
-
         return mv;
     }
 
     @PostMapping("/editsolicitude/{id}")
-    public ModelAndView editSolicitudeBanco(@PathVariable("id") int id, @ModelAttribute("solicitude") @Valid Solicitude solicitude,
-                                            BindingResult result, RedirectAttributes msg,
-                                            @RequestParam("file") MultipartFile imagen) {
+    public ModelAndView editSolicitude(@PathVariable("id") int id,
+                                       @ModelAttribute("solicitude") @Valid Solicitude solicitude,
+                                       BindingResult result, RedirectAttributes msg,
+                                       @RequestParam("file") MultipartFile imagen) {
         ModelAndView mv = new ModelAndView();
 
         if (result.hasErrors()) {
-            msg.addFlashAttribute("erro", "Error al editar. Por favor, complete todos los campos correctamente.");
-            mv.setViewName("redirect:/solicitude/editsolicitude/" + id); // Redirige de vuelta al formulario de edición si hay errores
+            msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");
+            mv.setViewName("redirect:/user/editsolicitude/" + id);
             return mv;
         }
 
-        Solicitude changeSolicitude = solicitudeRepository.findById(solicitude.getId()).orElse(null);
-        if (changeSolicitude != null) {
-            changeSolicitude.setNombre(solicitude.getNombre());
-            changeSolicitude.setCategoria(solicitude.getCategoria());
-
-            changeSolicitude.setDescripcion(solicitude.getDescripcion());
+        Optional<Solicitude> existingSolicitudeOpt = solicitudeRepository.findById(id);
+        if (existingSolicitudeOpt.isPresent()) {
+            Solicitude existingSolicitude = existingSolicitudeOpt.get();
+            existingSolicitude.setNombre(solicitude.getNombre());
+            existingSolicitude.setCategoria(solicitude.getCategoria());
+            existingSolicitude.setActivo(solicitude.isActivo());
+            existingSolicitude.setDescripcion(solicitude.getDescripcion());
+            existingSolicitude.setDiasDisponibles(solicitude.getDiasDisponibles());
+            existingSolicitude.setHoraRecoleccion(solicitude.getHoraRecoleccion());
+            existingSolicitude.setCalle(solicitude.getCalle());
+            existingSolicitude.setBarrio(solicitude.getBarrio());
+            existingSolicitude.setNumeroDeCasa(solicitude.getNumeroDeCasa());
+            existingSolicitude.setTelefono(solicitude.getTelefono());
+            existingSolicitude.setPeso(solicitude.getPeso());
+            existingSolicitude.setVolumen(solicitude.getVolumen());
 
             try {
                 if (!imagen.isEmpty()) {
                     byte[] bytes = imagen.getBytes();
-                    Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
-                    Files.write(caminho, bytes);
-                    changeSolicitude.setImagen(imagen.getOriginalFilename());
+                    Path path = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
+                    Files.write(path, bytes);
+                    existingSolicitude.setImagen(imagen.getOriginalFilename());
                 }
             } catch (IOException e) {
-                System.out.println("Error de imagen");
+                e.printStackTrace();
             }
-            solicitudeRepository.save(changeSolicitude);
-            msg.addFlashAttribute("sucesso", "Solicitud editada con éxito.");
-            mv.setViewName("redirect:/user/welcome"); // Redirige al dashboard después de editar la solicitud
+
+            solicitudeRepository.save(existingSolicitude);
+            msg.addFlashAttribute("exito", "Solicitud editada con éxito.");
+            mv.setViewName("redirect:/user/welcome");
         } else {
-            mv.setViewName("redirect:/error"); // Redirige a la página de error si la solicitud no se encuentra
+            msg.addFlashAttribute("error", "No se encontró la solicitud a editar.");
+            mv.setViewName("redirect:/user/welcome");
         }
 
         return mv;

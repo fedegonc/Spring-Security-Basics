@@ -38,39 +38,80 @@
 <div class="container mt-4">
     <h1>Editar Solicitud</h1>
 
-    <form method="post" enctype="multipart/form-data" th:action="@{'/editsolicitude/' + ${solicitude.id}}">
+    <form method="post" enctype="multipart/form-data" th:action="@{'/user/editsolicitude/' + ${solicitude.id}}">
+        <div class="mb-3">
+            <label class="form-label" th:for="file">Imagen actual</label>
+            <img th:src="@{/img/{imagen}(imagen=${solicitude.imagen})}" width="100" height="100" class="mb-2"/>
+            <label class="form-label" th:for="file">Nueva imagen</label>
+            <input class="form-control" type="file" name="file">
+        </div>
 
         <div class="mb-3">
             <label class="form-label" th:for="nombre">Nombre</label>
             <input type="text" class="form-control" name="nombre" th:value="${solicitude.nombre}" required>
         </div>
+
         <div class="mb-3">
-            <label class="form-label" th:for="ubicacion">Ubicación</label>
-            <input type="text" class="form-control" name="ubicacion" th:value="${solicitude.ubicacion}" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:for="categoria">Categoria</label>
+            <label class="form-label" th:for="categoria">Categoría</label>
             <input type="text" class="form-control" name="categoria" th:value="${solicitude.categoria}" required>
         </div>
 
         <div class="mb-3">
             <label class="form-label" th:for="activo">Activo</label>
-            <input type="text" class="form-control" name="activo" th:value="${solicitude.activo}" required>
+            <input type="checkbox" class="form-check-input" name="activo" th:checked="${solicitude.activo}">
         </div>
 
         <div class="mb-3">
-            <label class="form-label" th:for="descripcion">Descripcion</label>
-            <input type="text" class="form-control" name="descripcion" th:value="${solicitude.descripcion}" required>
+            <label class="form-label" th:for="descripcion">Descripción</label>
+            <textarea class="form-control" name="descripcion" required th:text="${solicitude.descripcion}"></textarea>
         </div>
 
         <div class="mb-3">
-            <label class="form-label" th:for="file">Imagen actual</label>
-            <img th:src="@{/imagem/{imagen}(imagen=${solicitude.imagen})}" width="100" height="100" class="mb-2"/>
-            <label class="form-label" th:for="file">Nueva imagen</label>
-            <input class="form-control" type="file"  name="file">
+            <label class="form-label" th:for="diasDisponibles">Días Disponibles</label>
+            <input type="text" class="form-control" name="diasDisponibles" th:value="${solicitude.diasDisponibles}" required>
         </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="horaRecoleccion">Hora de Recolección</label>
+            <input type="text" class="form-control" name="horaRecoleccion" th:value="${solicitude.horaRecoleccion}" required>
+        </div>
+
+        <div class="mb-3">
+            <label th:for="peso" class="form-label">Peso Aproximado (kg)</label>
+            <input type="number" class="form-control" id="peso" name="peso" th:value="${solicitude.peso}" required>
+            <div id="error-peso" class="error">Peso es obligatorio</div>
+        </div>
+
+        <div class="mb-3">
+            <label th:for="volumen" class="form-label">Volumen Aproximado (m³)</label>
+            <input type="number" class="form-control" id="volumen" name="volumen" th:value="${solicitude.volumen}" required>
+            <div id="error-volumen" class="error">Volumen es obligatorio</div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="calle">Calle</label>
+            <input type="text" class="form-control" name="calle" th:value="${solicitude.calle}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="barrio">Barrio</label>
+            <input type="text" class="form-control" name="barrio" th:value="${solicitude.barrio}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="numeroDeCasa">Número de Casa</label>
+            <input type="text" class="form-control" name="numeroDeCasa" th:value="${solicitude.numeroDeCasa}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="telefono">Teléfono</label>
+            <input type="text" class="form-control" name="telefono" th:value="${solicitude.telefono}" required>
+        </div>
+
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
     </form>
+
+
 
 </div>
 

@@ -56,9 +56,6 @@ public class Solicitude {
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Nuevos campos
-    @NotNull
-    private String ciudad;
 
     @NotNull
     private String calle;
@@ -71,6 +68,12 @@ public class Solicitude {
 
     @NotNull
     private String telefono;
+
+    @NotNull
+    private String peso;
+
+    @NotNull
+    private String volumen;
 
     public enum Estado {
         EN_ESPERA,
