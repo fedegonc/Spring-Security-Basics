@@ -43,7 +43,7 @@ public class User {
     private String password;
 
     // Relación muchos a muchos con la entidad Role, cargada de forma eager y con eliminación en cascada
-    @ManyToMany(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade={CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name="users_roles",
             joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},

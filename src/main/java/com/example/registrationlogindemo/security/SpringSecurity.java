@@ -45,18 +45,11 @@ public class SpringSecurity {
                                         "/error","/gracias","/img"
                                 ).permitAll()
 
-                                .requestMatchers("/user/newsolicitude/**", "/user/modifysolicitude/**",
-                                        "/user/deletesolicitude/**","/user/profile/**", "/user/welcome",
-                                        "/solicitude/newsolicitude/**", "/solicitude/editsolicitude/**",
-                                        "/solicitude/modifysolicitude/**","/user/imagem/**","/img/**",
-                                        "/logout","/profile/**","/delete/**", "/user/editsolicitude/**", "/editsolicitude/**"
+                                .requestMatchers("/user/**"
                                 ).hasRole("USER")
 
 
-                                .requestMatchers("/user/**","/admin/**","/admin/dashboard/**",
-                                        "/modifysolicitude/**","/dashboard/**", "/users/**",
-                                        "/newsolicitude/**","/solicitude/**","/editsolicitude/**",
-                                        "/deletsolicitude/**","/logout"
+                                .requestMatchers("/user/**","/admin/**"
                                 ).hasRole("ADMIN")
 
                                 .requestMatchers("/root/**").hasRole("ROOT")

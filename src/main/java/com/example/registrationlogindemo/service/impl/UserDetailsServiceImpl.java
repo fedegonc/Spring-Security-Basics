@@ -5,6 +5,7 @@ import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -75,5 +76,22 @@ public class UserDetailsServiceImpl implements org.springframework.security.core
 
         // Guarda el usuario en la base de datos
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        // Eliminar las relaciones many-to-many manualmente
+        User user = userRepository.findById(userId).orElseThrow();
+        user.getRoles().clear();  // Elimina las relaciones de roles
+
+        // Guardar cambios para asegurarse de que las relaciones se eliminen
+        userRepository.save(user);
+
+        // Eliminar las solicitudes relacionadas
+        user.getSolicitudes().clear();  // Elimina las relaciones de solicitudes
+        userRepository.save(user);
+
+        // Finalmente, eliminar el usuario
+        userRepository.deleteById(userId);
     }
 }

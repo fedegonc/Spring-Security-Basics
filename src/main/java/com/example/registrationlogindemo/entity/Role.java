@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -25,8 +26,8 @@ public class Role {
     private String name;
 
     // Relación muchos a muchos con la entidad User
-    @ManyToMany(mappedBy="roles")
-    private List<User> users;
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    private List<User> users = new ArrayList<>();
 
     // Método toString para representar el rol como un string legible
     @Override

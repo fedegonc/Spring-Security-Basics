@@ -94,6 +94,12 @@ public class RootController {
         return "redirect:/root/dashboard";
     }
 
+    @GetMapping("/delet/{id}")
+    public String deleteUser(@PathVariable("id") long id) {
+        userRepository.deleteUserById(id);
+        return "redirect:/user/dashboard";
+    }
+
 
 
 }
