@@ -187,6 +187,16 @@
 <script>
     const formData = {};
 
+    // Objeto de traducción de días de la semana
+    const dayTranslations = {
+        'monday': 'Lunes',
+        'tuesday': 'Martes',
+        'wednesday': 'Miércoles',
+        'thursday': 'Jueves',
+        'friday': 'Viernes',
+        'saturday': 'Sábado'
+    };
+
     function selectMaterial(material) {
         formData.tipoMaterial = material;
         showStep(2);
@@ -203,7 +213,11 @@
             document.getElementById('finalCalle').value = document.getElementById('calle').value;
             document.getElementById('finalNumeroDeCasa').value = document.getElementById('numeroDeCasa').value;
             document.getElementById('finalTelefono').value = document.getElementById('telefono').value;
-            document.getElementById('finalDiasDisponibles').value = document.getElementById('diasDisponibles').value;
+
+            // Traducir el día seleccionado antes de almacenarlo
+            const selectedDay = document.getElementById('diasDisponibles').value;
+            document.getElementById('finalDiasDisponibles').value = dayTranslations[selectedDay] || selectedDay;
+
             document.getElementById('finalHoraRecoleccion').value = document.getElementById('horaRecoleccion').value;
             document.getElementById('tipoMaterial').value = formData.tipoMaterial;
         }
