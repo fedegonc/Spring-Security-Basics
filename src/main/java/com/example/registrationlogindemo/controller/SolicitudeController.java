@@ -146,8 +146,8 @@ public class SolicitudeController {
     }
 
     @GetMapping("/deletesolicitude/{id}")
-    public String deleteSolicitude(@PathVariable("id") int id) {
-        solicitudeRepository.deleteById(id);
+    public String deleteSolicitude(@PathVariable("id") long id) {
+        solicitudeRepository.deleteSolicitudeById(id);
         return "redirect:/user/welcome";
     }
 /*

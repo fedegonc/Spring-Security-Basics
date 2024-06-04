@@ -60,7 +60,7 @@ public class User {
     }
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={ CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Solicitude> solicitudes = new ArrayList<>();
 
 }
