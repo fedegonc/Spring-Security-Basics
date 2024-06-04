@@ -149,7 +149,7 @@ public class UserController {
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
-            userService.deleteUserById(id);
+            userRepository.deleteUserById(id);
             redirectAttributes.addFlashAttribute("success", "Usuario eliminado exitosamente.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al eliminar el usuario.");

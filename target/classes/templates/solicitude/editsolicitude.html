@@ -69,12 +69,14 @@
 
         <div class="mb-3">
             <label class="form-label" th:for="categoria">Categoría</label>
-            <input type="text" class="form-control" name="categoria" th:value="${solicitude.categoria}" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" th:for="activo">Activo</label>
-            <input type="checkbox" class="form-check-input" name="activo" th:checked="${solicitude.activo}">
+            <select class="form-select" name="categoria" required>
+                <option value="plastico" th:selected="${solicitude.categoria == 'plastico'}">Plástico</option>
+                <option value="carton" th:selected="${solicitude.categoria == 'carton'}">Cartón</option>
+                <option value="madera" th:selected="${solicitude.categoria == 'madera'}">Madera</option>
+                <option value="mixto" th:selected="${solicitude.categoria == 'mixto'}">Mixto</option>
+                <option value="organico" th:selected="${solicitude.categoria == 'organico'}">Orgánico</option>
+                <option value="otros" th:selected="${solicitude.categoria == 'otros'}">Otros</option>
+            </select>
         </div>
 
         <div class="mb-3">
@@ -84,12 +86,30 @@
 
         <div class="mb-3">
             <label class="form-label" th:for="diasDisponibles">Días Disponibles</label>
-            <input type="text" class="form-control" name="diasDisponibles" th:value="${solicitude.diasDisponibles}" required>
+            <select class="form-select" name="diasDisponibles" required>
+                <option value="monday" th:selected="${solicitude.diasDisponibles == 'monday'}">Lunes</option>
+                <option value="tuesday" th:selected="${solicitude.diasDisponibles == 'tuesday'}">Martes</option>
+                <option value="wednesday" th:selected="${solicitude.diasDisponibles == 'wednesday'}">Miércoles</option>
+                <option value="thursday" th:selected="${solicitude.diasDisponibles == 'thursday'}">Jueves</option>
+                <option value="friday" th:selected="${solicitude.diasDisponibles == 'friday'}">Viernes</option>
+                <option value="saturday" th:selected="${solicitude.diasDisponibles == 'saturday'}">Sábado</option>
+            </select>
         </div>
 
         <div class="mb-3">
             <label class="form-label" th:for="horaRecoleccion">Hora de Recolección</label>
-            <input type="text" class="form-control" name="horaRecoleccion" th:value="${solicitude.horaRecoleccion}" required>
+            <select class="form-select" name="horaRecoleccion" required>
+                <option value="08:00" th:selected="${solicitude.horaRecoleccion == '08:00'}">08:00</option>
+                <option value="09:00" th:selected="${solicitude.horaRecoleccion == '09:00'}">09:00</option>
+                <option value="10:00" th:selected="${solicitude.horaRecoleccion == '10:00'}">10:00</option>
+                <option value="11:00" th:selected="${solicitude.horaRecoleccion == '11:00'}">11:00</option>
+                <option value="12:00" th:selected="${solicitude.horaRecoleccion == '12:00'}">12:00</option>
+                <option value="13:00" th:selected="${solicitude.horaRecoleccion == '13:00'}">13:00</option>
+                <option value="14:00" th:selected="${solicitude.horaRecoleccion == '14:00'}">14:00</option>
+                <option value="15:00" th:selected="${solicitude.horaRecoleccion == '15:00'}">15:00</option>
+                <option value="16:00" th:selected="${solicitude.horaRecoleccion == '16:00'}">16:00</option>
+                <option value="17:00" th:selected="${solicitude.horaRecoleccion == '17:00'}">17:00</option>
+            </select>
         </div>
 
         <div class="mb-3">
@@ -127,7 +147,7 @@
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
     </form>
 
-
+    <a th:href="@{'/user/deletesolicitude/' + ${solicitude.id}}" class="btn btn-danger mt-2">Borrar Solicitud</a>
 
 </div>
 <footer class="footer mt-auto py-3 bg-dark text-white">
