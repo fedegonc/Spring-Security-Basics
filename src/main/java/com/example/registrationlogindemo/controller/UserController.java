@@ -145,9 +145,11 @@ public class UserController {
         return mv;
     }
     @GetMapping("/delet/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
+
+    public ModelAndView deleteUser(@PathVariable("id") long id) {
         userRepository.deleteUserById(id);
-        return "redirect:/logout";
+        ModelAndView mv = new ModelAndView("logout");
+        return mv;
     }
 
     // Método para cerrar sesión
