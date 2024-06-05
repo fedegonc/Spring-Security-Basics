@@ -83,9 +83,20 @@ public class AuthController {
 
             if (userrole != null && userrole.contains("ROLE_USER")) {
                 return new ModelAndView("redirect:/user/welcome");
-            } else if (userrole != null && userrole.contains("ROLE_ADMIN")) {
+            }
+            else if (userrole != null && userrole.contains("ROLE_COOPERATIVA")) {
+                return new ModelAndView("redirect:/cooperativa/dashboard");
+            }
+
+            else if (userrole != null && userrole.contains("ROLE_ASOCIACION")) {
+                return new ModelAndView("redirect:/asociacion/dashboard");
+            }
+
+            else if (userrole != null && userrole.contains("ROLE_ADMIN")) {
                 return new ModelAndView("redirect:/admin/dashboard");
-            } else if (userrole != null && userrole.contains("ROLE_ROOT")) {
+            }
+
+            else if (userrole != null && userrole.contains("ROLE_ROOT")) {
                 return new ModelAndView("redirect:/root/dashboard");
             }
         }

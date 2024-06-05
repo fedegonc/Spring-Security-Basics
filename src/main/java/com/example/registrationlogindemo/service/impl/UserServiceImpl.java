@@ -64,6 +64,17 @@ public class UserServiceImpl implements UserService {
             if (role == null) {
                 role = checkRoleExist("ROLE_ADMIN");
             }
+        } else if (userCount == 2) {
+            role = roleRepository.findByName("ROLE_ASOCIACION");
+            if (role == null) {
+                role = checkRoleExist("ROLE_ASOCIACION");
+            }
+        } else if (userCount == 3) {
+            role = roleRepository.findByName("ROLE_COOPERATIVA");
+            if (role == null) {
+                role = checkRoleExist("ROLE_COOPERATIVA");
+            }
+
         } else {
             role = roleRepository.findByName("ROLE_USER");
             if (role == null) {

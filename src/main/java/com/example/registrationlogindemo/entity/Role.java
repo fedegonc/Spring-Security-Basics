@@ -35,6 +35,10 @@ public class Role {
         switch (this.name) {
             case "ROLE_USER":
                 return "User";
+            case "ROLE_COOPERATIVA":
+                return "Cooperativa";
+            case "ROLE_ASOCIACION":
+                return "Asociacion";
             case "ROLE_ADMIN":
                 return "Admin";
             case "ROLE_ROOT":

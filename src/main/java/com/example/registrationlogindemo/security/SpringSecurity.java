@@ -48,11 +48,17 @@ public class SpringSecurity {
                                 .requestMatchers("/user/**"
                                 ).hasRole("USER")
 
+                                .requestMatchers("/cooperativa/**"
+                                ).hasRole("COOPERATIVA")
+
+                                .requestMatchers("/asociacion/**"
+                                ).hasRole("ASOCIACION")
 
                                 .requestMatchers("/user/**","/admin/**"
                                 ).hasRole("ADMIN")
 
-                                .requestMatchers("/root/**").hasRole("ROOT")
+                                .requestMatchers("/root/**")
+                                .hasRole("ROOT")
 
                 )
                 // Configuración de inicio de sesión
