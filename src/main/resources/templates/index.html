@@ -30,16 +30,17 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Elementos de la barra de navegación izquierda -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- logo -->
-                <img src="/img/logo.png"  alt="logo">
-
+                <!-- Logo -->
+                <li class="nav-item">
+                    <img src="/img/logo.png" alt="logo">
+                </li>
                 <!-- Título de la aplicación -->
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+                    <a class="navbar-brand" href="/index">Frontera Sustentable</a>
                 </li>
                 <!-- Botón de Acceder -->
                 <li class="nav-item">
-                    <a class="btn btn-primary" th:href="@{/login}" th:text="#{button.login}">Acceder</a>
+                    <a class="btn btn-primary" href="/login">Acceder</a>
                 </li>
             </ul>
             <!-- Elementos de la barra de navegación derecha -->
@@ -48,18 +49,16 @@
                 <li class="nav-item dropdown language-dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <span th:text="#{label.chooseLang}"></span>
+                        <span>Elige idioma</span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a>
-                        </li>
-                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a>
-                        </li>
+                        <li><a class="dropdown-item" href="/index?language=pt">Português</a></li>
+                        <li><a class="dropdown-item" href="/index?language=es">Español</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/register}" th:text="#{button.register}">Registro</a>
+                    <a class="navbar-brand" href="/register">Registro</a>
                 </li>
             </ul>
         </div>

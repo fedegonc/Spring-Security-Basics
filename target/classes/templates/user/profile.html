@@ -99,8 +99,7 @@
 
         <button type="submit" class="btn btn-primary" th:text="#{button.save}">Guardar Cambios</button>
     </form>
-    <a class="btn btn-danger" th:href="@{/user/delete/{id}(id=${user.id})}" th:text="#{button.delete}">Borrar</a>
-    <a class="btn btn-danger" th:href="@{/user/delet/{id}(id=${user.id})}">Borrar</a>
+    <a class="btn btn-danger" th:href="@{/user/delet/{id}(id=${user.id})}" th:text="#{button.delete}">Borrar</a>
 </div>
 
 <footer class="footer mt-auto py-3 bg-dark text-white">
