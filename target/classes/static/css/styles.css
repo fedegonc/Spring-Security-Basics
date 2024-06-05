@@ -8,7 +8,18 @@ body {
     font-size: 16px; /* Ajuste de tamaño de fuente base */
     line-height: 1.5;
 }
+.custom-card {
+        border: 1px solid #e3e6ea;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+    }
 
+    .custom-card .card-inner {
+        background-color: #f0f4f7; /* Background color for the inner card */
+        padding: 15px;
+        border-radius: 5px;
+    }
 
 .container-fluid {
     display: flex;
@@ -160,4 +171,7 @@ body {
     .footer .container {
         padding: 10px; /* Añade padding para mejor visualización en móviles */
     }
+
+    /* Card Styles */
+
 }

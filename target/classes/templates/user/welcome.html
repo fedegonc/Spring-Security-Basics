@@ -76,7 +76,7 @@
 <div class="container mt-4" th:if="${#lists.isEmpty(solicitude)}">
     <div class="row row-cols-1 row-cols-md-3 g-3">
         <div class="col-md-4">
-            <div class="card">
+            <div class="card custom-card">
                 <img src="/img/foto2.png" class="card-img-top" th:alt="#{defaultSolicitud.title.alt.image}">
                 <div class="card-body">
                     <!-- Título personalizable -->
@@ -98,17 +98,19 @@
     <!-- Código de las cartas de solicitudes -->
     <div class="row row-cols-1 row-cols-md-3 g-3">
         <div class="col-md-4" th:each="solicitud : ${solicitude}">
-            <div class="card">
-                <img th:src="@{/img/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${solicitud.nombre}">Nombre de la solicitud</h5>
-                    <p class="card-text date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item estado-field" th:text="#{newRequest.status} + ': ' + ${solicitud.estado}">Estado de la solicitud</li>
-                </ul>
-                <div class="card-footer">
-                    <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
+            <div class="card custom-card">
+                <div class="card-inner">
+                    <img th:src="@{/img/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${solicitud.nombre}">Nombre de la solicitud</h5>
+                        <p class="card-text date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item estado-field" th:text="#{newRequest.status} + ': ' + ${solicitud.estado}">Estado de la solicitud</li>
+                    </ul>
+                    <div class="card-footer">
+                        <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
+                    </div>
                 </div>
             </div>
         </div>
