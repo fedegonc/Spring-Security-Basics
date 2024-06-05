@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -145,11 +146,9 @@ public class UserController {
         return mv;
     }
     @GetMapping("/delet/{id}")
-
-    public ModelAndView deleteUser(@PathVariable("id") long id) {
+    public String deleteUser(@PathVariable("id") long id) {
         userRepository.deleteUserById(id);
-        ModelAndView mv = new ModelAndView("logout");
-        return mv;
+        return "redirect:/logout";
     }
 
     // Método para cerrar sesión
