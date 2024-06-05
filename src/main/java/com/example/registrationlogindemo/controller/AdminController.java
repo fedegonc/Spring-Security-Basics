@@ -47,14 +47,14 @@ public class AdminController {
         ModelAndView mv = new ModelAndView("admin/dashboard");
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        principal.toString();
-        // Obtener todas las solicitudes
-        mv.addObject("principal", principal);
-        List<Solicitude> solicitude = solicitudeRepository.findAll();
-        mv.addObject("solicitude", solicitude);
-        // Obtener todos los usuarios
+        mv.addObject("principal", principal.toString());
+
+        List<Solicitude> solicitudes = solicitudeRepository.findAll();
+        mv.addObject("solicitudes", solicitudes);
+
         List<User> users = userRepository.findAll();
         mv.addObject("users", users);
+
         return mv;
     }
 

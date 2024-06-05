@@ -74,7 +74,6 @@
             <tr>
                 <th>Id</th>
                 <th>Nombre</th>
-                <th>Ubicación</th>
                 <th>Categoría</th>
                 <th>Activo</th>
                 <th>Descripción</th>
@@ -86,7 +85,6 @@
             <tr th:each="solicitude : ${solicitudes}">
                 <td th:text="${solicitude.id}"></td>
                 <td th:text="${solicitude.nombre}"></td>
-                <td th:text="${solicitude.ubicacion}"></td>
                 <td th:text="${solicitude.categoria}"></td>
                 <td th:text="${solicitude.activo}"></td>
                 <td th:text="${solicitude.descripcion}"></td>
@@ -109,7 +107,7 @@
                     <h5 class="card-title" th:text="${solicitude.nombre}"></h5>
                     <p class="card-text" th:text="${solicitude.descripcion}"></p>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Ubicación: <span th:text="${solicitude.ubicacion}"></span></li>
+
                         <li class="list-group-item">Categoría: <span th:text="${solicitude.categoria}"></span></li>
                         <li class="list-group-item">Activo: <span th:text="${solicitude.activo}"></span></li>
                     </ul>
