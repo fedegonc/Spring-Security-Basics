@@ -75,6 +75,9 @@ public class Solicitude {
     @NotNull
     private String volumen;
 
+    @NotNull
+    private String destino;
+
     public enum Estado {
         EN_ESPERA,
         ACEPTADA,
