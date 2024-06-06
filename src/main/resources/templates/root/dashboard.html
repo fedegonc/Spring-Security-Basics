@@ -76,6 +76,7 @@
                <thead class="table-dark">
                <tr>
                    <th>Usuario ID</th>
+                   <th>Nombre de usuario</th>
                    <th>Nombre</th>
                    <th>Email</th>
                    <th>Rol</th>
@@ -85,6 +86,7 @@
                <tbody>
                <tr th:each="user: ${users}">
                    <td th:text="${user.id}"></td>
+                   <td th:text="${user.username}"></td>
                    <td th:text="${user.name}"></td>
                    <td th:text="${user.email}"></td>
                    <td th:text="${user.roles}"></td>
