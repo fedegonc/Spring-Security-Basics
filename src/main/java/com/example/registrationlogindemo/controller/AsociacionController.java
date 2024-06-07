@@ -40,7 +40,7 @@ public class AsociacionController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         mv.addObject("principal", principal.toString());
 
-        List<Solicitude> solicitudes = solicitudeRepository.findAll();
+        List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("asociacion");
         mv.addObject("solicitudes", solicitudes);
 
         List<User> users = userRepository.findAll();

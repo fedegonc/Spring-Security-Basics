@@ -35,12 +35,12 @@ public class CooperativaController {
 
     @GetMapping("/dashboard")
     public ModelAndView getDashboardCooperativa() {
-        ModelAndView mv = new ModelAndView("cooperativa/dashboard");
+        ModelAndView mv = new ModelAndView("asociacion/dashboard");
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         mv.addObject("principal", principal.toString());
 
-        List<Solicitude> solicitudes = solicitudeRepository.findAll();
+        List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("cooperativa");
         mv.addObject("solicitudes", solicitudes);
 
         List<User> users = userRepository.findAll();

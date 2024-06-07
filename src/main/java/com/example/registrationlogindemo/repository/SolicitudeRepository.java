@@ -29,4 +29,7 @@ public interface SolicitudeRepository extends JpaRepository<Solicitude, Integer>
     @Modifying
     @Query("DELETE FROM Solicitude s WHERE s.id = :id")
     void deleteSolicitudeById(@Param("id") Long id);
+
+    List<Solicitude> findByDestinoContaining(String string);
+
 }
