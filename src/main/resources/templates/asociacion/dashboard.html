@@ -38,8 +38,8 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" href="/admin/dashboard?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" href="/admin/dashboard?language=es" th:text="#{label.lang.es}">Español</a></li>
+                        <li><a class="dropdown-item" href="/asociacion/dashboard?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/asociacion/dashboard?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -49,6 +49,21 @@
         </div>
     </div>
 </nav>
+
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <!-- Elemento de inicio de las migas de pan -->
+            <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
+        </ol>
+    </nav>
+</div>
+<div class="container mt-4">
+    <span th:text="#{info_usuario}">Información del Usuario</span>
+    <h3 th:text="${username}">Nombre de Usuario</h3>
+</div>
 
 <div class="container mt-4">
     <div class="row text-left">
@@ -77,6 +92,10 @@
                 <th>Descripción</th>
                 <th>Imagen</th>
                 <th>Acciones</th>
+                <th>Acciones</th>
+                <th>Acciones</th>
+                <th>Acciones</th>
+                <th>Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -87,10 +106,13 @@
                 <td th:text="${solicitude.activo}"></td>
                 <td th:text="${solicitude.descripcion}"></td>
                 <td><img th:src="@{/img/{img}(img=${solicitude.imagen})}" width="100" height="100"></td>
+                <td th:text="${solicitude.diasDisponibles}"></td>
+                <td th:text="${solicitude.horaRecoleccion}"></td>
+                <td th:text="${solicitude.fecha}"></td>
+                <td th:text="${solicitude.estado}"></td>
                 <td>
                     <a class="btn btn-info" th:href="@{/asociacion/reviewsolicitude/{id}(id=${solicitude.id})}">Revisar</a>
                 </td>
-
             </tr>
             </tbody>
         </table>

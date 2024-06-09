@@ -73,7 +73,6 @@
         </div>
     </div>
 </nav>
-<div class="card custom-card">
 <div class="container mt-1">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
@@ -84,12 +83,9 @@
         </ol>
     </nav>
 </div>
-</div>
 <div class="container mt-4">
-
         <span th:text="#{info_usuario}">Información del Usuario</span>
         <h3 th:text="${username}">Nombre de Usuario</h3>
-
 </div>
 <!-- En caso de no tener solicitudes, se muestra una solicitud por defecto -->
 <div class="container mt-4" th:if="${#lists.isEmpty(solicitude)}">

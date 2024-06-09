@@ -5,14 +5,20 @@ import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +70,27 @@ public class AsociacionController {
         }
         return mv;
     }
+    @PostMapping("/reviewsolicitude/{id}")
+    public ModelAndView editSolicitude(@PathVariable("id") int id,
+                                       @ModelAttribute("solicitude") @Valid Solicitude solicitude,
+                                       BindingResult result, RedirectAttributes msg,
+                                       @RequestParam("estado") String estado) {
+        ModelAndView mv = new ModelAndView();
 
+        Optional<Solicitude> existingSolicitudeOpt = solicitudeRepository.findById(id);
+        if (existingSolicitudeOpt.isPresent()) {
+            Solicitude existingSolicitude = existingSolicitudeOpt.get();
+            existingSolicitude.setEstado(Solicitude.Estado.valueOf(estado));
+
+            solicitudeRepository.save(existingSolicitude);
+            msg.addFlashAttribute("exito", "Estado de la solicitud editado con éxito.");
+            mv.setViewName("redirect:/asociacion/dashboard");
+        } else {
+            msg.addFlashAttribute("error", "No se encontró la solicitud a editar.");
+            mv.setViewName("redirect:/asociacion/dashboard");
+        }
+
+        return mv;
+    }
 
 }
