@@ -23,10 +23,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
                 <!-- logo -->
                 <img src="/img/logo.png" alt="logo">
-
                 <!-- Título de la aplicación -->
                 <li class="nav-item">
                     <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
@@ -90,10 +88,9 @@
                 <td th:text="${solicitude.descripcion}"></td>
                 <td><img th:src="@{/img/{img}(img=${solicitude.imagen})}" width="100" height="100"></td>
                 <td>
-                    <a class="btn btn-primary" th:href="@{/admin/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
-                    <a class="btn btn-danger" th:href="@{/admin/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
-                    <a class="btn btn-warning" th:href="@{/admin/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
+                    <a class="btn btn-info" th:href="@{/asociacion/reviewsolicitude/{id}(id=${solicitude.id})}">Revisar</a>
                 </td>
+
             </tr>
             </tbody>
         </table>
@@ -107,15 +104,12 @@
                     <h5 class="card-title" th:text="${solicitude.nombre}"></h5>
                     <p class="card-text" th:text="${solicitude.descripcion}"></p>
                     <ul class="list-group list-group-flush">
-
                         <li class="list-group-item">Categoría: <span th:text="${solicitude.categoria}"></span></li>
                         <li class="list-group-item">Activo: <span th:text="${solicitude.activo}"></span></li>
                     </ul>
                 </div>
                 <div class="card-footer">
-                    <a class="btn btn-primary" th:href="@{/admin/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
-                    <a class="btn btn-danger" th:href="@{/admin/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
-                    <a class="btn btn-warning" th:href="@{/admin/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
+                    <a class="btn btn-info" th:href="@{/asociacion/reviewsilicitude/{id}(id=${solicitude.id})}">Revisar</a>
                 </div>
             </div>
         </div>

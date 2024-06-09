@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/asociacion")
 public class AsociacionController {
@@ -48,4 +51,19 @@ public class AsociacionController {
 
         return mv;
     }
+
+    @GetMapping("/reviewsolicitude/{id}")
+    public ModelAndView reviewSolicitude(@PathVariable("id") int id) {
+        ModelAndView mv = new ModelAndView("asociacion/reviewsolicitude");
+        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById( id);
+
+        if (solicitudeOptional.isPresent()) {
+            mv.addObject("solicitude", solicitudeOptional.get());
+        } else {
+            mv.setViewName("redirect:/asociacion/dashboard");
+        }
+        return mv;
+    }
+
+
 }

@@ -58,6 +58,22 @@ public class AdminController {
         return mv;
     }
 
+    // Método para revisar una solicitud específica
+    @GetMapping("/reviewsolicitude/{id}")
+    public ModelAndView reviewSolicitude(@PathVariable("id") long id) {
+        ModelAndView mv = new ModelAndView("reviewsolicitude");
+        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById((int) id);
+
+        if (solicitudeOptional.isPresent()) {
+            Solicitude solicitude = solicitudeOptional.get();
+            mv.addObject("solicitude", solicitude);
+        } else {
+            mv.setViewName("redirect:/admin/dashboard");
+        }
+
+        return mv;
+    }
+
     // Método para editar un usuario
     @GetMapping("/edit/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {

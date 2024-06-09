@@ -14,9 +14,9 @@
             background-color: #f8f9fa; /* Fondo ligeramente diferente */
             padding: 20px; /* Espaciado interno */
             margin: 20px 0; /* Espaciado externo */
-            border-radius: 10px; /* Bordes redondeados */
+            border-radius: 3px; /* Bordes redondeados */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
-            transition: transform 0.3s, box-shadow 0.3s; /* Transiciones suaves */
+            transition: transform 0.2s, box-shadow 0.2s; /* Transiciones suaves */
         }
 
         .card-inner:hover {
@@ -73,7 +73,7 @@
         </div>
     </div>
 </nav>
-
+<div class="card custom-card">
 <div class="container mt-1">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
@@ -84,11 +84,12 @@
         </ol>
     </nav>
 </div>
+</div>
 <div class="container mt-4">
-    <div class="card-inner">
+
         <span th:text="#{info_usuario}">Información del Usuario</span>
         <h3 th:text="${username}">Nombre de Usuario</h3>
-    </div>
+
 </div>
 <!-- En caso de no tener solicitudes, se muestra una solicitud por defecto -->
 <div class="container mt-4" th:if="${#lists.isEmpty(solicitude)}">
