@@ -172,6 +172,22 @@ public class UserController {
         return modelAndView;
     }
 
+    @GetMapping("/view-requests")
+    public ModelAndView viewRequests() {
+        ModelAndView mv = new ModelAndView();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            User usuario = userRepository.findByUsername(username);
+
+            List<Solicitude> solicitudes = solicitudeRepository.findByUser(usuario);
+            mv.addObject("solicitudes", solicitudes);
+        }
+        mv.setViewName("user/view-requests");
+        return mv;
+    }
+
 
 
 
