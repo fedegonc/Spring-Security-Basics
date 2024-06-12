@@ -53,7 +53,7 @@
           <a class="navbar-brand" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a>
         </li>
         <li class="nav-item">
-          <a class="navbar-brand" th:href="@{/user/view-requests}" th:text="#{solicitudes}">Ver Solicitudes</a>
+          <a class="navbar-brand" th:href="@{/user/view-requests}" th:text="#{historysolicitudes}">Ver Solicitudes</a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
@@ -129,6 +129,7 @@
 <footer class="footer mt-auto py-3 bg-dark text-white">
   <div class="container text-center">
     <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+    <button onclick="window.history.back()" class="btn btn-link text-muted">Volver atrás</button>
   </div>
 </footer>
 <script>

@@ -79,16 +79,16 @@ body {
 }
 
 .footer {
-    background-color: #343a40;
-    color: white;
-    padding: 20px 0;
-    text-align: center; /* Centra el texto en el footer */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .footer .container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start; /* Alinea los elementos a la izquierda */
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 }
 
 .footer .container > .row {
