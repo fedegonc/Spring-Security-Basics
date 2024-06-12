@@ -126,7 +126,7 @@
                     </div>
                     <button type="button" class="btn btn-primary" onclick="validateStep2()">Siguiente</button>
                 </div>
-
+                <button type="button" class="btn btn-secondary mt-3" onclick="goBack(1)">Volver atrás</button>
                 <!-- Paso 3: Detalles de la Solicitud -->
                 <div id="step3" class="step-section">
                     <h2 th:text="#{newRequest.requestDetails}">Detalles de la Solicitud</h2>
@@ -177,6 +177,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary" onclick="validateStep3()">Enviar Solicitud</button>
                     </form>
+                    <button type="button" class="btn btn-secondary mt-3" onclick="goBack(3)">Volver atrás</button>
                 </div>
 
             </div>
@@ -185,8 +186,9 @@
 </div>
 
 <footer class="footer mt-auto py-3 bg-dark text-white">
-    <div class="container text-center">
-        <span class="text-muted">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+    <div class="container text-right">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right">Volver atrás</button>
     </div>
 </footer>
 
@@ -231,7 +233,12 @@
             document.getElementById('tipoMaterial').value = formData.tipoMaterial;
         }
     }
-
+    function goBack(step) {
+    // Ocultar el paso actual
+    document.getElementById(`step${step}`).classList.remove('active-section');
+    // Mostrar el paso anterior
+    showStep(step - 1);
+    }
     function updateAvailableHours() {
         const day = document.getElementById('diasDisponibles').value;
         const hourSelect = document.getElementById('horaRecoleccion');
