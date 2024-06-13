@@ -53,33 +53,45 @@ public class SolicitudeController {
                                     BindingResult result, RedirectAttributes msg,
                                     @RequestParam("file") MultipartFile imagen,
                                     @AuthenticationPrincipal UserDetails currentUser) {
+        // Validación de errores en el formulario
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
             return "redirect:/user/welcome";
         }
 
-        try {
-            if (!imagen.isEmpty()) {
+        // Procesamiento de la imagen
+        if (!imagen.isEmpty()) {
+            try {
                 byte[] bytes = imagen.getBytes();
-                Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
-                Files.write(caminho, bytes);
+                // Ruta donde se guardará la imagen
+                Path rutaImagen = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
+                // Guardar la imagen en el sistema de archivos
+                Files.write(rutaImagen, bytes);
+                // Establecer el nombre de la imagen en la solicitud
                 solicitud.setImagen(imagen.getOriginalFilename());
+            } catch (IOException e) {
+                // Manejo de errores al guardar la imagen
+                msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
+                return "redirect:/user/welcome";
             }
-        } catch (IOException e) {
-            System.out.println("Error al salvar imagen");
+        } else {
+            // Manejar el caso donde no se adjunta ninguna imagen
+            solicitud.setImagen(null); // Opcional: Puedes establecer un valor por defecto si es necesario
         }
 
+        // Obtener el usuario actual
         User user = userRepository.findByUsername(currentUser.getUsername());
 
+        // Guardar la solicitud en la base de datos
         if (user != null) {
             solicitud.setUser(user);
             solicitudeRepository.save(solicitud);
             msg.addFlashAttribute("exito", "Solicitud realizada con éxito.");
-            return "redirect:/user/welcome";
         } else {
             msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
-            return "redirect:/user/welcome";
         }
+
+        return "redirect:/user/welcome";
     }
     // Método para manejar la solicitud GET para editar una solicitud
     @GetMapping("/editsolicitude/{id}")
