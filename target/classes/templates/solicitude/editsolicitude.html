@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Frontera de la Paz Sustentable</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <!-- logo -->
+                <img src="/img/logo3.png"  alt="logo">
+                <!-- Título de la aplicación -->
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown language-dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{label.chooseLang}"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!-- Opciones de idioma -->
+                        <li><a class="dropdown-item" href="/user/editsolicitude?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/user/editsolicitude?language=es" th:text="#{label.lang.es}">Español</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/logout}" th:text="#{salir}">Salir</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.newRequest}">Nueva Solicitud</li>
+        </ol>
+    </nav>
+</div>
+<div class="container mt-4">
+    <h1>Editar Solicitud</h1>
+
+    <form method="post" enctype="multipart/form-data" th:action="@{'/user/editsolicitude/' + ${solicitude.id}}">
+        <div class="mb-3">
+            <label class="form-label" th:for="file">Imagen actual</label>
+            <img th:src="@{/img/{imagen}(imagen=${solicitude.imagen})}" width="100" height="100" class="mb-2"/>
+            <label class="form-label" th:for="file">Nueva imagen</label>
+            <input class="form-control" type="file" name="file">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="nombre">Nombre</label>
+            <input type="text" class="form-control" name="nombre" th:value="${solicitude.nombre}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="categoria">Categoría</label>
+            <select class="form-select" name="categoria" required>
+                <option value="plastico" th:selected="${solicitude.categoria == 'plastico'}">Plástico</option>
+                <option value="carton" th:selected="${solicitude.categoria == 'carton'}">Cartón</option>
+                <option value="madera" th:selected="${solicitude.categoria == 'madera'}">Madera</option>
+                <option value="mixto" th:selected="${solicitude.categoria == 'mixto'}">Mixto</option>
+                <option value="organico" th:selected="${solicitude.categoria == 'organico'}">Orgánico</option>
+                <option value="otros" th:selected="${solicitude.categoria == 'otros'}">Otros</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="descripcion">Descripción</label>
+            <textarea class="form-control" name="descripcion" required th:text="${solicitude.descripcion}"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="diasDisponibles">Días Disponibles</label>
+            <select class="form-select" name="diasDisponibles" required>
+                <option value="monday" th:selected="${solicitude.diasDisponibles == 'monday'}">Lunes</option>
+                <option value="tuesday" th:selected="${solicitude.diasDisponibles == 'tuesday'}">Martes</option>
+                <option value="wednesday" th:selected="${solicitude.diasDisponibles == 'wednesday'}">Miércoles</option>
+                <option value="thursday" th:selected="${solicitude.diasDisponibles == 'thursday'}">Jueves</option>
+                <option value="friday" th:selected="${solicitude.diasDisponibles == 'friday'}">Viernes</option>
+                <option value="saturday" th:selected="${solicitude.diasDisponibles == 'saturday'}">Sábado</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="horaRecoleccion">Hora de Recolección</label>
+            <select class="form-select" name="horaRecoleccion" required>
+                <option value="08:00" th:selected="${solicitude.horaRecoleccion == '08:00'}">08:00</option>
+                <option value="09:00" th:selected="${solicitude.horaRecoleccion == '09:00'}">09:00</option>
+                <option value="10:00" th:selected="${solicitude.horaRecoleccion == '10:00'}">10:00</option>
+                <option value="11:00" th:selected="${solicitude.horaRecoleccion == '11:00'}">11:00</option>
+                <option value="12:00" th:selected="${solicitude.horaRecoleccion == '12:00'}">12:00</option>
+                <option value="13:00" th:selected="${solicitude.horaRecoleccion == '13:00'}">13:00</option>
+                <option value="14:00" th:selected="${solicitude.horaRecoleccion == '14:00'}">14:00</option>
+                <option value="15:00" th:selected="${solicitude.horaRecoleccion == '15:00'}">15:00</option>
+                <option value="16:00" th:selected="${solicitude.horaRecoleccion == '16:00'}">16:00</option>
+                <option value="17:00" th:selected="${solicitude.horaRecoleccion == '17:00'}">17:00</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label th:for="peso" class="form-label">Peso Aproximado (kg)</label>
+            <input type="number" class="form-control" id="peso" name="peso" th:value="${solicitude.peso}" required>
+            <div id="error-peso" class="error">Peso es obligatorio</div>
+        </div>
+
+        <div class="mb-3">
+            <label th:for="volumen" class="form-label">Volumen Aproximado (m³)</label>
+            <input type="number" class="form-control" id="volumen" name="volumen" th:value="${solicitude.volumen}" required>
+            <div id="error-volumen" class="error">Volumen es obligatorio</div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="calle">Calle</label>
+            <input type="text" class="form-control" name="calle" th:value="${solicitude.calle}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="barrio">Barrio</label>
+            <input type="text" class="form-control" name="barrio" th:value="${solicitude.barrio}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="numeroDeCasa">Número de Casa</label>
+            <input type="text" class="form-control" name="numeroDeCasa" th:value="${solicitude.numeroDeCasa}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:for="telefono">Teléfono</label>
+            <input type="text" class="form-control" name="telefono" th:value="${solicitude.telefono}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
+
+    <a th:href="@{'/user/deletesolicitude/' + ${solicitude.id}}" class="btn btn-danger mt-2">Borrar Solicitud</a>
+
+</div>
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-right">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right">Volver atrás</button>
+    </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

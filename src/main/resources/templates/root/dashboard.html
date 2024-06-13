@@ -60,13 +60,14 @@
        </div>
    </nav>
    <div class="container mt-4">
-       <h1>Bienvenido, Root User!</h1>
-       <p>Esta es la página de inicio del usuario ROOT.</p>
-
+       <hr/>
        <div class="container mt-4">
-           <h3>Información del Usuario Autenticado</h3>
-           <spam th:text="${principal}"></spam>
+           <span th:text="#{info_usuario}">Información del Usuario</span>
+           <h3 th:text="${username}">Nombre de Usuario </h3>
+
        </div>
+       <hr/>
+
 
        <div class="container mt-4">
            <div class="row">
