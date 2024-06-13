@@ -60,7 +60,7 @@ public class UserController {
 
             // Obtener el usuario de la base de datos
             User usuario = userRepository.findByUsername(username);
-            mv.addObject("users", usuario);
+            mv.addObject("user", usuario);
 
             // Obtener las solicitudes realizadas por el usuario autenticado
             List<Solicitude> solicitude = solicitudeRepository.findByUser(usuario);

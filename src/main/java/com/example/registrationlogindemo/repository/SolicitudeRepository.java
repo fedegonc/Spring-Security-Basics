@@ -32,4 +32,5 @@ public interface SolicitudeRepository extends JpaRepository<Solicitude, Integer>
 
     List<Solicitude> findByDestinoContaining(String string);
 
+    List<Solicitude> findByUserId(long id);
 }

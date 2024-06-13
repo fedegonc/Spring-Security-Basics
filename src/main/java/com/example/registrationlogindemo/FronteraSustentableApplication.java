@@ -10,8 +10,8 @@ public class FronteraSustentableApplication {
 	}
 }
 
-//objetivos especificos en items
-//requisitos funcionales, buscar más visual, más iconos
+
+//requisitos funcionales, buscar más visual
 //aumentar paginado y tamaço de letra, priorizar images y letras mas grandes, mas visual
 //orientar al publico dividiendo, extender una pagina mas para el lector
 //hacer tablas, hacer mas visual, tabla comparativa entre los trabajos relacionados
@@ -19,6 +19,7 @@ public class FronteraSustentableApplication {
 //referencias ordenadas por orden alfabetico
 
 //private-policy
+// más iconos
 //padrones de diseño, testing unitario, test integracion
 //eliminar imagenes del server cuando elimino la solicitud
 //si el usuario esta en rivera llama a cooperativa

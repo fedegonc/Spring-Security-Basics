@@ -94,10 +94,15 @@ public class RootController {
         return "redirect:/root/dashboard";
     }
 
-    @GetMapping("/delet/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
-        userRepository.deleteUserById(id);
-        return "redirect:/root/dashboard";
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") long id, RedirectAttributes msg) {
+        List<Solicitude> solicitudes = solicitudeRepository.findByUserId(id);
+        for (Solicitude solicitude : solicitudes) {
+            solicitudeRepository.delete(solicitude);
+        }
+        userRepository.deleteById(id);
+        msg.addFlashAttribute("success", "Usuario eliminado exitosamente.");
+        return "redirect:/admin/dashboard";
     }
 
 
