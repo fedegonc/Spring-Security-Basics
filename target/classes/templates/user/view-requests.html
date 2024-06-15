@@ -77,6 +77,18 @@
     </div>
   </div>
 </nav>
+
+<!-- Migas de pan -->
+<div class="container mt-1">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-light">
+      <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
+      <!-- Elemento activo de las migas de pan -->
+      <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.historyRequest}">Historial de Solicitudes</li>
+    </ol>
+  </nav>
+</div>
+
 <div class="container mt-4">
   <h2 th:text="#{solicitudes.titulo}">Solicitudes</h2>
   <div class="view-buttons">

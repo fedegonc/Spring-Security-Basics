@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -188,7 +189,15 @@ public class UserController {
         return mv;
     }
 
-
-
+    // Método para obtener imágenes
+    @RequestMapping(value = "/img/{img}", method = RequestMethod.GET)
+    @ResponseBody
+    public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
+        File caminho = new File("./src/main/resources/static/img/" + imagem);
+        if (imagem != null || imagem.trim().length() > 0) {
+            return Files.readAllBytes(caminho.toPath());
+        }
+        return null;
+    }
 
 }

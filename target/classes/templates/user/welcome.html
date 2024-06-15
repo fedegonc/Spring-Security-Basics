@@ -118,6 +118,11 @@
         </ol>
     </nav>
 </div>
+<div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}"></div>
+
+<!-- Mensajes de error -->
+<div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
 <hr/>
 <div class="container mt-4">
     <span th:text="#{info_usuario}">Información del Usuario</span>
