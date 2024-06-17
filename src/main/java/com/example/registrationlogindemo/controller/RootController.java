@@ -43,19 +43,11 @@ public class RootController {
         ModelAndView mv = new ModelAndView("root/dashboard");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         principal.toString();
-        // Obtener todas las solicitudes
         mv.addObject("principal", principal);
-        List<Solicitude> solicitude = solicitudeRepository.findAll();
-        mv.addObject("solicitude", solicitude);
-        // Obtener todos los usuarios
-        List<User> users = userRepository.findAll();
-        mv.addObject("users", users);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
-
-            // Agregar el nombre de usuario al modelo para dar la bienvenida
             mv.addObject("username", username);}
         return mv;
     }
@@ -63,7 +55,7 @@ public class RootController {
     @GetMapping("/edit/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
         Optional<User> userOptional = userRepository.findById(id);
-        ModelAndView mv = new ModelAndView("user_form");
+        ModelAndView mv = new ModelAndView("root/edit");
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -78,7 +70,7 @@ public class RootController {
 
     // Método para procesar la edición de un usuario
     @PostMapping("/edit/{id}")
-    public String editUserBanco(@ModelAttribute("user_form") @Valid User user,
+    public String editUserBanco(@ModelAttribute("root/user_form") @Valid User user,
                                 BindingResult result, RedirectAttributes msg) {
         // Verificar errores de validación
         if (result.hasErrors()) {
@@ -115,5 +107,54 @@ public class RootController {
     }
 
 
+    @GetMapping("/images")
+    public ModelAndView rootImages() {
+        ModelAndView mv = new ModelAndView("root/images");
+
+        return mv;
+    }
+
+    @GetMapping("/users")
+    public ModelAndView rootUsers() {
+        ModelAndView mv = new ModelAndView("root/users");
+        List<User> users = userRepository.findAll();
+        mv.addObject("users", users);
+        List<Solicitude> solicitude = solicitudeRepository.findAll();
+        mv.addObject("solicitude", solicitude);
+        return mv;
+    }
+    @GetMapping("/solicitudes")
+    public ModelAndView rootSolicitudes() {
+        ModelAndView mv = new ModelAndView("root/solicitudes");
+
+        return mv;
+    }
+
+    @GetMapping("/articles")
+    public ModelAndView rootArticles() {
+        ModelAndView mv = new ModelAndView("root/articles");
+
+        return mv;
+    }
+
+    @GetMapping("/reports")
+    public ModelAndView rootReports() {
+        ModelAndView mv = new ModelAndView("root/reports");
+
+        return mv;
+    }
+    @GetMapping("/roles")
+    public ModelAndView rootRoles() {
+        ModelAndView mv = new ModelAndView("root/roles");
+
+        return mv;
+    }
+
+    @GetMapping("/settings")
+    public ModelAndView rootSettings() {
+        ModelAndView mv = new ModelAndView("root/settings");
+
+        return mv;
+    }
 
 }
