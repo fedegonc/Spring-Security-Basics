@@ -45,19 +45,19 @@ public class SpringSecurity {
                                         "/error","/gracias","/img"
                                 ).permitAll()
 
-                                .requestMatchers("/user/**"
+                                .requestMatchers("/user/**","/img/**"
                                 ).hasRole("USER")
 
-                                .requestMatchers("/cooperativa/**"
+                                .requestMatchers("/cooperativa/**","/img/**"
                                 ).hasRole("COOPERATIVA")
 
-                                .requestMatchers("/asociacion/**"
+                                .requestMatchers("/asociacion/**","/img/**"
                                 ).hasRole("ASOCIACION")
 
-                                .requestMatchers("/admin/**"
+                                .requestMatchers("/admin/**","/img/**"
                                 ).hasRole("ADMIN")
 
-                                .requestMatchers("/root/**")
+                                .requestMatchers("/root/**","/img/**")
                                 .hasRole("ROOT")
 
                 )

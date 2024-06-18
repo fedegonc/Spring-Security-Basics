@@ -26,6 +26,8 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/user")
 public class SolicitudeController {
+    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
+
     @Autowired
     SolicitudeRepository solicitudeRepository;
     @Autowired
@@ -53,36 +55,26 @@ public class SolicitudeController {
                                     BindingResult result, RedirectAttributes msg,
                                     @RequestParam("file") MultipartFile imagen,
                                     @AuthenticationPrincipal UserDetails currentUser) {
-        // Validación de errores en el formulario
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
             return "redirect:/user/welcome";
         }
 
-        // Procesamiento de la imagen
         if (!imagen.isEmpty()) {
             try {
                 byte[] bytes = imagen.getBytes();
-                // Ruta donde se guardará la imagen
-                Path rutaImagen = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
-                // Guardar la imagen en el sistema de archivos
+                Path rutaImagen = Paths.get(UPLOAD_DIR + imagen.getOriginalFilename());
                 Files.write(rutaImagen, bytes);
-                // Establecer el nombre de la imagen en la solicitud
                 solicitud.setImagen(imagen.getOriginalFilename());
             } catch (IOException e) {
-                // Manejo de errores al guardar la imagen
                 msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
                 return "redirect:/user/welcome";
             }
         } else {
-            // Manejar el caso donde no se adjunta ninguna imagen
-            solicitud.setImagen(null); // Opcional: Puedes establecer un valor por defecto si es necesario
+            solicitud.setImagen(null); // O establece un valor por defecto
         }
 
-        // Obtener el usuario actual
         User user = userRepository.findByUsername(currentUser.getUsername());
-
-        // Guardar la solicitud en la base de datos
         if (user != null) {
             solicitud.setUser(user);
             solicitudeRepository.save(solicitud);

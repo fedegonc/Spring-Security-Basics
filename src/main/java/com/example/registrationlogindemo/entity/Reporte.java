@@ -6,15 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "telefono")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Telefono {
+@Entity
+@Table(name="reporte")
+public class Reporte {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
 }
