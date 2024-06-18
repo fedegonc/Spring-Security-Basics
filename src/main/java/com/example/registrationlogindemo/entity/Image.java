@@ -5,17 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.web.multipart.MultipartFile;
 
+import org.jetbrains.annotations.NotNull;
 import java.time.LocalDateTime;
-@Entity
-@Table(name = "solicitude")
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "image")
 public class Image {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -27,26 +28,22 @@ public class Image {
     private String categoria;
 
     @NotNull
-    private boolean activo = true; // Inicializar con true por defecto
+    private boolean activo = true; // Inicializado con true por defecto
 
     @Lob
-    private String descripcion = "";
+    @Column(columnDefinition = "TEXT")
+    private String descripcion = ""; // Inicializado a una cadena vacía por defecto
 
-    private String imagen;
-
-    @Transient
-    private MultipartFile file;
+    private String imagen; // Ruta o URL de la imagen
 
     @NotNull
     private LocalDateTime fecha;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Solicitude.Estado estado = Solicitude.Estado.EN_ESPERA;
+    private Solicitude.Estado estado = Solicitude.Estado.EN_ESPERA; // Inicializado a EN_ESPERA por defecto
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-
 }

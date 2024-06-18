@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -15,35 +14,37 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="material")
+@Table(name = "material")
 public class Material {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull
+    @Column(nullable = false)
     private String nombre;
 
-    @NotNull
+    @Column(nullable = false)
     private String categoria;
 
-    @NotNull
-    private boolean activo = true; // Inicializar con true por defecto
+    @Column(nullable = false)
+    private boolean activo = true; // Inicializado a true por defecto
 
     @Lob
-    private String descripcion = "";
+    @Column(columnDefinition = "TEXT")
+    private String descripcion = ""; // Inicializado a una cadena vacía por defecto
 
     private String imagen;
 
     @Transient
     private MultipartFile file;
 
-    @NotNull
+    @Column(nullable = false)
     private LocalDateTime fecha;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
-    private Solicitude.Estado estado = Solicitude.Estado.EN_ESPERA;
+    @Column(nullable = false)
+    private Solicitude.Estado estado = Solicitude.Estado.EN_ESPERA; // Inicializado a EN_ESPERA por defecto
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
