@@ -1,4 +1,4 @@
-package com.example.registrationlogindemo.security;
+package com.example.registrationlogindemo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
