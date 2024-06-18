@@ -34,19 +34,10 @@ public class Material {
     @Column(columnDefinition = "TEXT")
     private String descripcion = ""; // Inicializado a una cadena vacía por defecto
 
-    private String imagen;
-
-    @Transient
-    private MultipartFile file;
-
     @Column(nullable = false)
     private LocalDateTime fecha;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Solicitude.Estado estado = Solicitude.Estado.EN_ESPERA; // Inicializado a EN_ESPERA por defecto
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "solicitude_id", nullable = false)
+    private Solicitude solicitude;
 }
