@@ -56,7 +56,8 @@ public class RootController {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
-            mv.addObject("username", username);}
+            mv.addObject("username", username);
+        }
         return mv;
     }
 
@@ -118,6 +119,8 @@ public class RootController {
     @GetMapping("/images")
     public ModelAndView rootImages() {
         ModelAndView mv = new ModelAndView("root/images");
+        List<Image> images = imageRepository.findAll();
+        mv.addObject("images", images);
 
         return mv;
     }
@@ -135,38 +138,33 @@ public class RootController {
         ModelAndView mv = new ModelAndView("root/solicitudes");
         List<Solicitude> solicitude = solicitudeRepository.findAll();
         mv.addObject("solicitude", solicitude);
-
         return mv;
     }
 
     @GetMapping("/articles")
     public ModelAndView rootArticles() {
         ModelAndView mv = new ModelAndView("root/articles");
-        List<Article> articulos = articleRepository.findAll();
-        mv.addObject("articulos", articulos);
+        List<Article> articles = articleRepository.findAll();
+        mv.addObject("articles", articles);
         return mv;
     }
 
     @GetMapping("/reports")
     public ModelAndView rootReports() {
         ModelAndView mv = new ModelAndView("root/reports");
-        List<Report> reportes = reportRepository.findAll();
-        mv.addObject("reportes", reportes);
+        List<Report> reports = reportRepository.findAll();
+        mv.addObject("reports", reports);
 
         return mv;
     }
     @GetMapping("/roles")
     public ModelAndView rootRoles() {
         ModelAndView mv = new ModelAndView("root/roles");
+        List<Role> roles = roleRepository.findAll();
+        mv.addObject("roles", roles);
 
         return mv;
     }
 
-    @GetMapping("/settings")
-    public ModelAndView rootSettings() {
-        ModelAndView mv = new ModelAndView("root/settings");
-
-        return mv;
-    }
 
 }
