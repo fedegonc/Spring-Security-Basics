@@ -1,4 +1,6 @@
 package com.example.registrationlogindemo.service.impl;
 
-public class MaterialServiceImpl {
+import com.example.registrationlogindemo.service.MaterialService;
+
+public class MaterialServiceImpl implements MaterialService {
 }
