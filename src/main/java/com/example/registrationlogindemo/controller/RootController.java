@@ -1,9 +1,6 @@
 package com.example.registrationlogindemo.controller;
 
-import com.example.registrationlogindemo.entity.Article;
-import com.example.registrationlogindemo.entity.Role;
-import com.example.registrationlogindemo.entity.Solicitude;
-import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.entity.*;
 import com.example.registrationlogindemo.repository.*;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
@@ -153,6 +150,8 @@ public class RootController {
     @GetMapping("/reports")
     public ModelAndView rootReports() {
         ModelAndView mv = new ModelAndView("root/reports");
+        List<Report> reportes = reportRepository.findAll();
+        mv.addObject("reportes", reportes);
 
         return mv;
     }
