@@ -1,11 +1,10 @@
 package com.example.registrationlogindemo.controller;
 
+import com.example.registrationlogindemo.entity.Article;
 import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
-import com.example.registrationlogindemo.repository.RoleRepository;
-import com.example.registrationlogindemo.repository.SolicitudeRepository;
-import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.repository.*;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,18 @@ public class RootController {
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    ArticleRepository articleRepository;
+
+    @Autowired
+    ReportRepository reportRepository;
+
+    @Autowired
+    MaterialRepository materialRepository;
+
+    @Autowired
+    ImageRepository imageRepository;
     private final UserService userService;
 
     // Constructor que inyecta el servicio UserService
@@ -119,13 +130,14 @@ public class RootController {
         ModelAndView mv = new ModelAndView("root/users");
         List<User> users = userRepository.findAll();
         mv.addObject("users", users);
-        List<Solicitude> solicitude = solicitudeRepository.findAll();
-        mv.addObject("solicitude", solicitude);
+
         return mv;
     }
     @GetMapping("/solicitudes")
     public ModelAndView rootSolicitudes() {
         ModelAndView mv = new ModelAndView("root/solicitudes");
+        List<Solicitude> solicitude = solicitudeRepository.findAll();
+        mv.addObject("solicitude", solicitude);
 
         return mv;
     }
@@ -133,7 +145,8 @@ public class RootController {
     @GetMapping("/articles")
     public ModelAndView rootArticles() {
         ModelAndView mv = new ModelAndView("root/articles");
-
+        List<Article> articulos = articleRepository.findAll();
+        mv.addObject("articulos", articulos);
         return mv;
     }
 
