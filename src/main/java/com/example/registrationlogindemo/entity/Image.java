@@ -39,10 +39,6 @@ public class Image {
     @NotNull
     private LocalDateTime fecha;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Solicitude.Estado estado = Solicitude.Estado.EN_ESPERA; // Inicializado a EN_ESPERA por defecto
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
