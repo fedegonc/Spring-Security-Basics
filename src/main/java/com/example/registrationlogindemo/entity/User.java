@@ -63,4 +63,7 @@ public class User {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={ CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Solicitude> solicitudes = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={ CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
+    private List<Article> articulos = new ArrayList<>();
+
 }

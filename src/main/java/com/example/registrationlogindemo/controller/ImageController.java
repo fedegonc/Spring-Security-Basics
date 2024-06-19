@@ -16,17 +16,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
-@RequestMapping("/image")
+@RequestMapping("/images")
 public class ImageController {
 
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
-    @GetMapping("/upload")
+    @GetMapping("/newimage")
     public String uploadImageForm(Model model) {
         model.addAttribute("image", new Image());
-        return "image/upload"; // Vista para cargar una nueva imagen
+        return "image/newimage"; // Vista para cargar una nueva imagen
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/newimage")
     public String uploadImage(@Valid Image image,
                               BindingResult result,
                               @RequestParam("file") MultipartFile file,
