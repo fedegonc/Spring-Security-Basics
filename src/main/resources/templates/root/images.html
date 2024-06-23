@@ -67,12 +67,9 @@
         <thead class="table-dark">
         <tr>
             <th>Imagen id</th>
-            <th>Nombre</th>
-            <th>Categoria</th>
-            <th>Activo</th>
-            <th>Descripcion</th>
             <th>Imagen</th>
             <th>Usuario</th>
+            <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -80,18 +77,18 @@
         <tr th:if="${#lists.isEmpty(images)}">
             <td colspan="7" class="text-center">
                 No hay imágenes disponibles.
-                <a th:href="@{/images/newimage}" class="btn btn-primary">Cargar Imagen</a>
+                <a th:href="@{/root/newimage}" class="btn btn-primary">Cargar Imagen</a>
             </td>
         </tr>
         <!-- Filas dinámicas -->
         <tr th:each="image: ${images}">
             <td th:text="${image.id}"></td>
-            <td th:text="${image.nombre}"></td>
-            <td th:text="${image.categoria}"></td>
-            <td th:text="${image.activo}"></td>
-            <td th:text="${image.descripcion}"></td>
-            <td th:text="${image.imagen}"></td>
+            <td><img th:src="@{/img/{img}(img=${image.imagen})}" width="100" height="100"></td>
             <td th:text="${image.user}"></td>
+            <td>
+                <a class="btn btn-primary" th:href="@{/root/editimage/{id}(id=${image.id})}">Editar</a>
+                <a class="btn btn-danger" th:href="@{/root/deletimage/{id}(id=${image.id})}">Borrar</a>
+            </td>
         </tr>
         </tbody>
     </table>

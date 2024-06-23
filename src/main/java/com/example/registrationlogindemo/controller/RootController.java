@@ -6,20 +6,29 @@ import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @RequestMapping("/root")
 @Controller
 public class RootController {
+    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
+
 
     @Autowired
     SolicitudeRepository solicitudeRepository;
@@ -165,6 +174,48 @@ public class RootController {
 
         return mv;
     }
+    @GetMapping("/newimage")
+    public ModelAndView newimage() {
+        ModelAndView mv = new ModelAndView("image/newimage");
+        return mv;
+    }
 
+    @PostMapping("/newimage")
+    public String uploadImage(@Valid Image image,
+                              BindingResult result,
+                              RedirectAttributes redirectAttributes,
+                              @RequestParam("file") MultipartFile file,
+                              @AuthenticationPrincipal UserDetails currentUser) {
 
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos.");
+            return "redirect:/user/welcome"; // Cambia esta URL según la estructura de tu aplicación
+        }
+
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                Path imagePath = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
+                Files.write(imagePath, bytes);
+                image.setImagen(file.getOriginalFilename());
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
+                return "redirect:/user/welcome"; // Cambia esta URL según la estructura de tu aplicación
+            }
+        } else {
+            image.setImagen(null); // O establece un valor por defecto
+        }
+
+        User user = userRepository.findByUsername(currentUser.getUsername());
+        if (user != null) {
+            image.setUser(user);
+            image.setFecha(LocalDateTime.now()); // Establece la fecha actual
+            imageRepository.save(image);
+            redirectAttributes.addFlashAttribute("exito", "Imagen subida con éxito.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
+        }
+
+        return "redirect:/user/welcome"; // Cambia esta URL según la estructura de tu aplicación
+    }
 }

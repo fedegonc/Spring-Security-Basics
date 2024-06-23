@@ -21,18 +21,6 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull
-    private String nombre;
-
-    @NotNull
-    private String categoria;
-
-    @NotNull
-    private boolean activo = true; // Inicializado con true por defecto
-
-    @Lob
-    @Column(columnDefinition = "TEXT")
-    private String descripcion = ""; // Inicializado a una cadena vacía por defecto
 
     private String imagen; // Ruta o URL de la imagen
 

@@ -22,5 +22,4 @@ public class FronteraSustentableApplication {
 // más iconos
 //padrones de diseño, testing unitario, test integracion
 //eliminar imagenes del server cuando elimino la solicitud
-//si el usuario esta en rivera llama a cooperativa
-//si el usuario esta en liramento llama a asociacion
+
