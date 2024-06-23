@@ -218,4 +218,60 @@ public class RootController {
 
         return "redirect:/user/welcome"; // Cambia esta URL según la estructura de tu aplicación
     }
+
+
+    @GetMapping("/editimage/{id}")
+    public ModelAndView editImage(@PathVariable("id") long id) {
+        ModelAndView mv = new ModelAndView("image/editimage");
+        Optional<Image> image = imageRepository.findById(id);
+        if (image.isPresent()) {
+            mv.addObject("image", image.get());
+        } else {
+            mv.setViewName("redirect:/user/welcome");
+        }
+        return mv;
+    }
+
+    @PostMapping("/editimage/{id}")
+    public ModelAndView editImage(@PathVariable("id") long id,
+                                  @ModelAttribute("image") @Valid Image image,
+                                  BindingResult result, RedirectAttributes msg,
+                                  @RequestParam("file") MultipartFile imagen) {
+        ModelAndView mv = new ModelAndView();
+
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");
+            mv.setViewName("redirect:/editimage/" + id);
+            return mv;
+        }
+
+        Optional<Image> imageOptional = imageRepository.findById(id);
+        if (imageOptional.isPresent()) {
+            Image imageEdit = imageOptional.get();
+
+            try {
+                if (!imagen.isEmpty()) {
+                    byte[] bytes = imagen.getBytes();
+                    Path path = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
+                    Files.write(path, bytes);
+                    imageEdit.setImagen(imagen.getOriginalFilename());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                msg.addFlashAttribute("error", "Error al cargar el archivo de imagen.");
+                mv.setViewName("redirect:/editimage/" + id);
+                return mv;
+            }
+
+            imageRepository.save(imageEdit);
+            msg.addFlashAttribute("exito", "Imagen editada con éxito.");
+            mv.setViewName("redirect:/root/images");
+        } else {
+            msg.addFlashAttribute("error", "No se encontró la imagen a editar.");
+            mv.setViewName("redirect:/root/images");
+        }
+
+        return mv;
+    }
+
 }
