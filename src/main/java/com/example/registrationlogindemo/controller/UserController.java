@@ -1,14 +1,18 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
+import com.example.registrationlogindemo.entity.Image;
+import com.example.registrationlogindemo.entity.Report;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.repository.ReportRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -25,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +37,14 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
 
+    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
+
     @Autowired
     SolicitudeRepository solicitudeRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ReportRepository reportRepository;
 
     private final UserService userService;
 
@@ -198,6 +207,26 @@ public class UserController {
             return Files.readAllBytes(caminho.toPath());
         }
         return null;
+    }
+    @GetMapping("/report")
+    public ModelAndView newReport() {
+        ModelAndView mv = new ModelAndView("/report-problem");
+        return mv;
+    }
+    @PostMapping("/report")
+    public String newReportPost(@Valid Report report,
+                                    BindingResult result, RedirectAttributes msg,
+                                    @AuthenticationPrincipal UserDetails currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername());
+        if (user != null) {
+            report.setUser(user);
+            reportRepository.save(report);
+            msg.addFlashAttribute("rexito", "report realizada con éxito.");
+        } else {
+            msg.addFlashAttribute("rerror", "No se pudo encontrar el usuario actual.");
+        }
+
+        return "redirect:/user/welcome";
     }
 
 }
