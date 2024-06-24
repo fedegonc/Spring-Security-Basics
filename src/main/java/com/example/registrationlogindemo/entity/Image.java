@@ -20,13 +20,9 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-
     private String imagen; // Ruta o URL de la imagen
-
     @NotNull
     private LocalDateTime fecha;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
