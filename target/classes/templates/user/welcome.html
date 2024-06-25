@@ -70,6 +70,11 @@
                 </li>
                 <li class="nav-item">
                     <a class="navbar-brand" th:href="@{/user/view-requests}" th:text="#{historysolicitudes}">Ver Solicitudes</a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Ver Publicaciones</a>
+
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
@@ -171,9 +176,16 @@
 </div>
 <footer class="footer mt-auto py-3 bg-dark text-white">
 
-    <div class="container text-center">
+    <div class="container">
         <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
-        <a class="navbar-brand" th:href="@{/user/report}" >Reportar problema</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="navbar-brand" th:href="@{/user/report}">Reportar problema</a>
+            </li>
+            <li class="nav-item">
+                <a class="navbar-brand" onclick="window.history.back()" th:text="#{salir}">Salir</a>
+            </li>
+        </ul>
     </div>
 </footer>
 <script>

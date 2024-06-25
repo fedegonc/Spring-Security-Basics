@@ -128,7 +128,7 @@
                     <h5 class="card-title" th:text="${article.titulo}">Título del artículo</h5>
                 </div>
                 <div class="card-footer">
-                    <a class="btn btn-primary" th:href="@{/asociacion/editarticle/{id}(id=${article.id})}">Editar</a>
+                    <a class="btn btn-primary" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
                 </div>
             </div>
         </div>
@@ -168,10 +168,16 @@
                         LinkedIn</a></li>
                 </ul>
             </div>
-            <div class="col-md-4">
-                <ul class="list-unstyled">
-                    <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+            <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
 
+            <div class="col-md-4">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="navbar-brand" th:href="@{/user/report}">Reportar problema</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="navbar-brand" onclick="window.history.back()" th:text="#{salir}">Salir</a>
+                    </li>
                 </ul>
             </div>
         </div>

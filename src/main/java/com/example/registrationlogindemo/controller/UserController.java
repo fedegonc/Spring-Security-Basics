@@ -1,10 +1,8 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
-import com.example.registrationlogindemo.entity.Image;
-import com.example.registrationlogindemo.entity.Report;
-import com.example.registrationlogindemo.entity.Solicitude;
-import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.entity.*;
+import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.ReportRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
@@ -45,7 +43,8 @@ public class UserController {
     UserRepository userRepository;
     @Autowired
     ReportRepository reportRepository;
-
+    @Autowired
+    ArticleRepository articleRepository;
     private final UserService userService;
 
     // Constructor que inyecta el servicio UserService
@@ -229,4 +228,32 @@ public class UserController {
         return "redirect:/user/welcome";
     }
 
+    @GetMapping("/viewarticles")
+    public ModelAndView getArticles() {
+
+        ModelAndView mv = new ModelAndView();
+
+        // Obtener el usuario autenticado actualmente
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+
+            // Agregar el nombre de usuario al modelo para dar la bienvenida
+            mv.addObject("username", username);
+
+            // Obtener el usuario de la base de datos
+            User usuario = userRepository.findByUsername(username);
+            mv.addObject("user", usuario);
+
+            // Obtener las solicitudes realizadas por el usuario autenticado
+            List<Article> articles = articleRepository.findAll();
+            mv.addObject("articles", articles);
+        }
+
+        // Establecer la vista
+        mv.setViewName("user/viewarticles");
+
+        return mv;
+    }
 }

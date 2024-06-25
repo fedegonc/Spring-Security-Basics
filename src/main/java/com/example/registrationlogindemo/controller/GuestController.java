@@ -1,16 +1,10 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Article;
-import com.example.registrationlogindemo.entity.Solicitude;
-import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ArticleRepository;
-import com.example.registrationlogindemo.repository.SolicitudeRepository;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 @Controller
@@ -45,9 +36,8 @@ public class GuestController {
 
     // Obtiene la página de inicio y muestra las solicitudes activas
     @GetMapping("/index")
-    public ModelAndView getIndex() {
+    public Object getIndex() {
         ModelAndView mv = new ModelAndView("/index");
-        ModelAndView mi = new ModelAndView("/index");
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Article> articles = articleRepository.findAll();
@@ -55,7 +45,8 @@ public class GuestController {
 
         if (principal instanceof UserDetails) {
             // El usuario ya está autenticado, redirigir a la página de inicio correspondiente
-            return mi;
+            String redirect;
+            return ("redirect:/init");
         }
         return mv;
     }
