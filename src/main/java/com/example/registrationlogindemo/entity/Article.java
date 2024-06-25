@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.Objects;
 @Entity
-@Table(name = "solicitude")
+@Table(name = "post")
 @Getter
 @Setter
 @NoArgsConstructor

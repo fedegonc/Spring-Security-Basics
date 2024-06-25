@@ -1,13 +1,17 @@
 package com.example.registrationlogindemo.controller;
 
+import com.example.registrationlogindemo.entity.Article;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/asociacion")
@@ -30,7 +35,8 @@ public class AsociacionController {
     SolicitudeRepository solicitudeRepository;
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    ArticleRepository articleRepository;
     private UserService userService;
 
     // Constructor que inyecta el servicio UserService
@@ -41,6 +47,7 @@ public class AsociacionController {
     public AsociacionController(UserService userService) {
         this.userService = userService;
     }
+    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     @GetMapping("/dashboard")
     public ModelAndView getDashboardAsociacion() {
@@ -54,6 +61,9 @@ public class AsociacionController {
 
         List<User> users = userRepository.findAll();
         mv.addObject("users", users);
+
+        List<Article> articles = articleRepository.findAll(); // Obtener la lista de artículos
+        mv.addObject("articles", articles); // Agr
 
         return mv;
     }
@@ -92,5 +102,60 @@ public class AsociacionController {
 
         return mv;
     }
+
+    @GetMapping("/articles")
+    public ModelAndView getArticles() {
+        ModelAndView mv = new ModelAndView("asociacion/articles");
+        List<Article> articles = articleRepository.findAll();
+        mv.addObject("articles", articles);
+        return mv;
+    }
+
+    @GetMapping("/delet/{id}")
+    public String deleteUser(@PathVariable("id") long id) {
+        articleRepository.deleteById(id);
+        return "redirect:/asociacion";
+    }
+    @GetMapping("/newarticle")
+    public ModelAndView newarticle() {
+        return new ModelAndView("asociacion/newarticle");
+    }
+
+    @PostMapping("/newarticle")
+    public String newArticlePost(@Valid Article article,
+                                 BindingResult result, RedirectAttributes msg,
+                                 @RequestParam("file") MultipartFile file,
+                                 @AuthenticationPrincipal UserDetails currentUser) {
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos.");
+            return "redirect:/asociacion/newarticle";
+        }
+
+        if (!file.isEmpty()) {
+            try {
+                // Crear nombre de archivo único
+                String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                Path filePath = Paths.get(UPLOAD_DIR + uniqueFileName);
+                Files.write(filePath, file.getBytes());
+                article.setImagen(uniqueFileName);
+            } catch (IOException e) {
+                msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
+                return "redirect:/asociacion/newarticle";
+            }
+        }
+
+        User user = userRepository.findByUsername(currentUser.getUsername());
+        if (user != null) {
+            article.setUser(user);
+            articleRepository.save(article);
+            msg.addFlashAttribute("exito", "Solicitud realizada con éxito.");
+        } else {
+            msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
+            return "redirect:/asociacion/newarticle";
+        }
+
+        return "redirect:/asociacion/dashboard";
+    }
+
 
 }

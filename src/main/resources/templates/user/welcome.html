@@ -10,23 +10,7 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
     <style>
-        .card-inner {
-            background-color: #f8f9fa;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 3px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
 
-        .card-inner:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-inner h3 {
-            color: #343a40;
-        }
 
         .view-buttons {
             margin-bottom: 20px;
@@ -66,7 +50,7 @@
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -168,7 +152,7 @@
     <div class="row row-cols-1 row-cols-md-3 g-3">
         <div class="col-md-4" th:each="solicitud : ${solicitude}">
             <div class="card custom-card">
-                <div class="card-inner">
+
                     <img th:src="@{/img/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${solicitud.nombre}">Nombre de la solicitud</h5>
@@ -180,7 +164,7 @@
                     <div class="card-footer">
                         <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
                     </div>
-                </div>
+
             </div>
         </div>
     </div>

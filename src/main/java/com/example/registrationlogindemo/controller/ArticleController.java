@@ -34,6 +34,22 @@ public class ArticleController {
 
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
+    @GetMapping("/viewarticle/{id}")
+    public ModelAndView getArticle(@PathVariable("id") int id) {
+        ModelAndView mv = new ModelAndView("article/viewarticle");
+        Optional<Article> articleOptional = articleRepository.findById((long) id);
+
+        if (articleOptional.isPresent()) {
+            Article article = articleOptional.get();
+            mv.addObject("articles", article);
+            mv.setViewName("article/viewarticle");  // Esta vista debe mostrar los detalles del artículo
+        } else {
+            mv.setViewName("redirect:/error");
+        }
+
+        return mv;
+    }
+
     @PostMapping("/newarticle")
     public String newArticlePost(@Valid Article article,
                                  BindingResult result, RedirectAttributes msg,

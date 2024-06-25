@@ -32,6 +32,9 @@
                 <li class="nav-item">
                     <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
                 </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/cooperativa/articles}" >Publicaciones</a>
+                </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown language-dropdown">
@@ -61,6 +64,7 @@
         <div class="col text-right">
             <button class="btn btn-primary" id="toggleViewBtn" onclick="toggleView()">Ver en tarjetas</button>
         </div>
+
     </div>
 
     <div class="mt-4" th:if="${solicitudes == null or #lists.isEmpty(solicitudes)}">

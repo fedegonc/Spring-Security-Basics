@@ -1,6 +1,9 @@
 package com.example.registrationlogindemo.controller;
 
+import com.example.registrationlogindemo.entity.Article;
 import com.example.registrationlogindemo.entity.Solicitude;
+import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +27,8 @@ import java.util.List;
 @Controller
 public class GuestController {
     @Autowired
-    SolicitudeRepository solicitudeRepository;
+    ArticleRepository articleRepository;
+
 
     // Redirecciona a la página de inicio
     @GetMapping("")
@@ -41,31 +45,21 @@ public class GuestController {
 
     // Obtiene la página de inicio y muestra las solicitudes activas
     @GetMapping("/index")
-    public String getIndex() {
+    public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("/index");
-       /* // Obtener todas las solicitudes activas
-        List<Solicitude> solicitude = solicitudeRepository.findSolicitudeByActivo("Activo");
-        mv.addObject("solicitude", solicitude);*/
+        ModelAndView mi = new ModelAndView("/index");
+
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Article> articles = articleRepository.findAll();
+        mv.addObject("articles", articles);
 
         if (principal instanceof UserDetails) {
             // El usuario ya está autenticado, redirigir a la página de inicio correspondiente
-            return "redirect:/init";
+            return mi;
         }
-        return "redirect:/";
+        return mv;
     }
 
-    // Obtiene la imagen según el nombre de archivo proporcionado
-    /*@GetMapping(value = "/imagem/{imagem}")
-    @ResponseBody
-    public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
-        // Obtener la imagen de la ubicación especificada
-        File caminho = new File("./src/main/resources/static/img/" + imagem);
-        if (imagem != null || imagem.trim().length() > 0) {
-            return Files.readAllBytes(caminho.toPath());
-        }
-        return null;
-    }*/
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         // Obtiene el contexto de seguridad
