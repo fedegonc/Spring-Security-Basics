@@ -20,23 +20,15 @@ public class GuestController {
     @Autowired
     ArticleRepository articleRepository;
 
-
     // Redirecciona a la página de inicio
-    @GetMapping("")
+    @GetMapping({"", "/"})
     public String redirectToIndex() {
-        return "index";
+        return "redirect:/index";
     }
-
-    // Redirecciona a la página de inicio
-    @GetMapping("/")
-    public String redirect() {
-        return "index";
-    }
-
 
     // Obtiene la página de inicio y muestra las solicitudes activas
     @GetMapping("/index")
-    public Object getIndex() {
+    public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("/index");
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -45,9 +37,9 @@ public class GuestController {
 
         if (principal instanceof UserDetails) {
             // El usuario ya está autenticado, redirigir a la página de inicio correspondiente
-            String redirect;
-            return ("redirect:/init");
+            return new ModelAndView("redirect:/init");
         }
+
         return mv;
     }
 
@@ -63,3 +55,4 @@ public class GuestController {
         return "redirect:/";
     }
 }
+

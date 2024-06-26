@@ -62,8 +62,19 @@ body {
 .banner {
     position: relative;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: left;
+    background: rgba(0, 0, 0, 0.5) url('/img/foto1.png');
+    background-size: cover;
+    background-position: center;
+    flex-grow: 1;
+    padding: 20px; /* Añade padding para mejor visualización en móviles */
+    text-align: center; /* Centra el texto en móviles */
+}
+
+.banner2 {
+    position: relative;
+    display: flex;
+    align-items: left;
     background: url('/img/foto1.png');
     background-size: cover;
     background-position: center;
@@ -73,6 +84,9 @@ body {
 }
 
 .banner-content {
+    display: flex;
+ align-items: left;
+ flex-wrap: wrap;
     color: white;
     margin: auto;
     padding: 20px;
