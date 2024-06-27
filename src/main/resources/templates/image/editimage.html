@@ -12,10 +12,56 @@
 </head>
 
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <!-- Logo -->
+                <li class="nav-item">
+                    <img src="/img/logov4.png" alt="logo" width="50" height="50">
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a>
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/user/view-requests}" th:text="#{historysolicitudes}">Ver Solicitudes</a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Ver Publicaciones</a>
+
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown language-dropdown">
+
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{label.chooseLang}"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/logout}" th:text="#{salir}">Salir</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <div class="container mt-4">
     <h1>Editar Imagen</h1>
 
-    <form method="post" enctype="multipart/form-data" th:action="@{'/root/editimage/' + ${image.id}}">
+    <form method="post" enctype="multipart/form-data" th:action="@{'/admin/editimage/' + ${image.id}}">
         <div class="mb-3">
             <label class="form-label" th:for="file">Imagen actual</label>
 
@@ -28,7 +74,7 @@
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
     </form>
 
-    <a th:href="@{'/user/deleteimage/' + ${image.id}}" class="btn btn-danger mt-2">Borrar Imagen</a>
+    <a th:href="@{'/admin/deleteimage/' + ${image.id}}" class="btn btn-danger mt-2">Borrar Imagen</a>
 </div>
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container text-right">

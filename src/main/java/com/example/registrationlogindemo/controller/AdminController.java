@@ -1,15 +1,14 @@
 package com.example.registrationlogindemo.controller;
 
-import com.example.registrationlogindemo.entity.Role;
-import com.example.registrationlogindemo.entity.Solicitude;
-import com.example.registrationlogindemo.entity.User;
-import com.example.registrationlogindemo.repository.RoleRepository;
-import com.example.registrationlogindemo.repository.SolicitudeRepository;
-import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.entity.*;
+import com.example.registrationlogindemo.repository.*;
+import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -22,23 +21,41 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
+
+
     @Autowired
     SolicitudeRepository solicitudeRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    ArticleRepository articleRepository;
+
+    @Autowired
+    ReportRepository reportRepository;
+
+    @Autowired
+    MaterialRepository materialRepository;
+
+    @Autowired
+    ImageRepository imageRepository;
     private final UserService userService;
+    private final ImageService imageService;
 
     // Constructor que inyecta el servicio UserService
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, ImageService imageService) {
         this.userService = userService;
+        this.imageService = imageService;
     }
 
     // Método para mostrar el dashboard
@@ -242,18 +259,139 @@ public class AdminController {
 
         return "redirect:/dashboard";
     }
+    @GetMapping("/images")
+    public ModelAndView rootImages() {
+        ModelAndView mv = new ModelAndView("admin/images");
+        List<Image> images = imageRepository.findAll();
+        mv.addObject("images", images);
 
-    // Método para obtener imágenes de solicitudes
-    @RequestMapping(value = "/imagemalimento/{imagem}", method = RequestMethod.GET)
-    @ResponseBody
-    public byte[] getImagensSolicitude(@PathVariable("imagem") String imagem) throws IOException {
-        // Obtener la imagen de la ubicación especificada
-        Path caminho = Paths.get("./src/main/resources/static/img/" + imagem);
-        if (imagem != null || imagem.trim().length() > 0) {
-            return Files.readAllBytes(caminho);
+        return mv;
+    }
+    @GetMapping("/newimage")
+    public ModelAndView newimage() {
+        ModelAndView mv = new ModelAndView("image/newimage");
+        return mv;
+    }
+
+    @PostMapping("/newimage")
+    public String uploadImage(@Valid Image image,
+                              BindingResult result,
+                              RedirectAttributes redirectAttributes,
+                              @RequestParam("file") MultipartFile file,
+                              @AuthenticationPrincipal UserDetails currentUser) {
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos.");
+            return "redirect:/admin/dashboard"; // Cambia esta URL según la estructura de tu aplicación
         }
-        return null;
+
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                Path imagePath = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
+                Files.write(imagePath, bytes);
+                image.setImagen(file.getOriginalFilename());
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
+                return "redirect:/admin/images"; // Cambia esta URL según la estructura de tu aplicación
+            }
+        } else {
+            image.setImagen(null); // O establece un valor por defecto
+        }
+
+        User user = userRepository.findByUsername(currentUser.getUsername());
+        if (user != null) {
+            image.setUser(user);
+            image.setFecha(LocalDateTime.now()); // Establece la fecha actual
+            imageRepository.save(image);
+            redirectAttributes.addFlashAttribute("exito", "Imagen subida con éxito.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
+        }
+
+        return "redirect:/admin/images"; // Cambia esta URL según la estructura de tu aplicación
     }
 
 
+    @GetMapping("/editimage/{id}")
+    public ModelAndView editImage(@PathVariable("id") long id) {
+        ModelAndView mv = new ModelAndView("image/editimage");
+        Optional<Image> image = imageRepository.findById(id);
+        if (image.isPresent()) {
+            mv.addObject("image", image.get());
+        } else {
+            mv.setViewName("redirect:/user/welcome");
+        }
+        return mv;
+    }
+
+    @PostMapping("/editimage/{id}")
+    public ModelAndView editImage(@PathVariable("id") long id,
+                                  @ModelAttribute("image") @Valid Image image,
+                                  BindingResult result, RedirectAttributes msg,
+                                  @RequestParam("file") MultipartFile imagen) {
+        ModelAndView mv = new ModelAndView();
+
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");
+            mv.setViewName("redirect:/admin/editimage/" + id);
+            return mv;
+        }
+
+        Optional<Image> imageOptional = imageRepository.findById(id);
+        if (imageOptional.isPresent()) {
+            Image imageEdit = imageOptional.get();
+
+            try {
+                if (!imagen.isEmpty()) {
+                    byte[] bytes = imagen.getBytes();
+                    Path path = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
+                    Files.write(path, bytes);
+                    imageEdit.setImagen(imagen.getOriginalFilename());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                msg.addFlashAttribute("error", "Error al cargar el archivo de imagen.");
+                mv.setViewName("redirect:/admin/editimage/" + id);
+                return mv;
+            }
+
+            imageRepository.save(imageEdit);
+            msg.addFlashAttribute("exito", "Imagen editada con éxito.");
+            mv.setViewName("redirect:/admin/images");
+        } else {
+            msg.addFlashAttribute("error", "No se encontró la imagen a editar.");
+            mv.setViewName("redirect:/admin/images");
+        }
+
+        return mv;
+    }
+
+
+    @GetMapping("/deletimage/{id}")
+    public String deleteiMAUser(@PathVariable("id") long id) {
+        imageService.eliminarEntidad(id);
+        return "redirect:/root/images";
+    }
+
+    @GetMapping("/report")
+    public ModelAndView newReport() {
+        ModelAndView mv = new ModelAndView("/report-problem");
+        return mv;
+    }
+    @PostMapping("/report")
+    public String newReportPost(@Valid Report report,
+                                BindingResult result, RedirectAttributes msg,
+                                @AuthenticationPrincipal UserDetails currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername());
+        if (user != null) {
+            report.setUser(user);
+            reportRepository.save(report);
+            msg.addFlashAttribute("rexito", "report realizada con éxito.");
+        } else {
+            msg.addFlashAttribute("rerror", "No se pudo encontrar el usuario actual.");
+        }
+
+        return "redirect:/admin/dashboard";
+    }
 }

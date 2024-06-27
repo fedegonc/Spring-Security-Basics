@@ -249,5 +249,4 @@ public class UserController {
         return mv;
     }
     // Método para obtener imágenes
-
 }
