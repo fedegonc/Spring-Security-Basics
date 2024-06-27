@@ -394,4 +394,12 @@ public class AdminController {
 
         return "redirect:/admin/dashboard";
     }
+    @GetMapping("/users")
+    public ModelAndView rootUsers() {
+        ModelAndView mv = new ModelAndView("root/users");
+        List<User> users = userRepository.findAll();
+        mv.addObject("users", users);
+
+        return mv;
+    }
 }

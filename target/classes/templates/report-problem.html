@@ -74,7 +74,7 @@
           <h3 class="text-center" th:text="#{report.form.title}">Formulario de Reporte de Problemas </h3>
         </div>
         <div class="card-body">
-          <form th:action="@{/user/report}" method="post" th:object="${report}">
+          <form th:action="@{/report}" method="post" th:object="${report}">
             <div class="mb-3">
               <label for="problema" class="form-label" th:text="#{report.form.problem}">Problema:</label>
               <input type="text" class="form-control" id="problema" name="problema" required>
@@ -94,7 +94,7 @@
 <footer class="footer mt-auto py-3 bg-dark text-white">
   <div class="container text-right">
     <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
-    <a class="navbar-brand" th:href="@{/user/report}">Reportar problema</a>
+    <a class="navbar-brand" th:href="@{/report}">Reportar problema</a>
     <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right">Volver atrás</button>
   </div>
 </footer>

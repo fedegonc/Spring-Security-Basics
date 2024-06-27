@@ -199,26 +199,7 @@ public class UserController {
         return mv;
     }
 
-    @GetMapping("/report")
-    public ModelAndView newReport() {
-        ModelAndView mv = new ModelAndView("/report-problem");
-        return mv;
-    }
-    @PostMapping("/report")
-    public String newReportPost(@Valid Report report,
-                                    BindingResult result, RedirectAttributes msg,
-                                    @AuthenticationPrincipal UserDetails currentUser) {
-        User user = userRepository.findByUsername(currentUser.getUsername());
-        if (user != null) {
-            report.setUser(user);
-            reportRepository.save(report);
-            msg.addFlashAttribute("rexito", "report realizada con éxito.");
-        } else {
-            msg.addFlashAttribute("rerror", "No se pudo encontrar el usuario actual.");
-        }
 
-        return "redirect:/user/welcome";
-    }
 
     @GetMapping("/viewarticles")
     public ModelAndView getArticles() {
