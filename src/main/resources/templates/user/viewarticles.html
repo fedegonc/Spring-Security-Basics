@@ -100,13 +100,23 @@
         </div>
     </div>
 </div>
+
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-right">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.
+        </span>
+        <a class="navbar-brand" th:href="@{/user/report}">Reportar problema</a>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right">Volver atrás</button>
+    </div>
+</footer>
+
 <footer class="footer mt-auto py-3 bg-dark text-white">
 
     <div class="container text-center">
         <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="navbar-brand" th:href="@{/user/report}">Reportar problema</a>
+
             </li>
             <li class="nav-item">
                 <a class="navbar-brand" onclick="window.history.back()" th:text="#{salir}">Salir</a>

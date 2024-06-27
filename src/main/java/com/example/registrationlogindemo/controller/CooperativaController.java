@@ -54,6 +54,14 @@ public class CooperativaController {
     @GetMapping("/dashboard")
     public ModelAndView getDashboardCooperativa() {
         ModelAndView mv = new ModelAndView("cooperativa/dashboard");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            // Agregar el nombre de usuario al modelo para dar la bienvenida
+            mv.addObject("username", username);
+
+        }
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         mv.addObject("principal", principal.toString());

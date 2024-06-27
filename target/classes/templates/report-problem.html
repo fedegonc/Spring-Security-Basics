@@ -10,52 +10,95 @@
         rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
         crossorigin="anonymous">
-  <style>
-    body, html {
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #f8f9fa;
-    }
-    .form-container {
-        width: 80%;
-        max-width: 600px;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-  </style>
 </head>
-<body>
-<div class="form-container">
-  <h2 th:text="#{newimage.title}">Reportar problema</h2>
+<body><nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <!-- Botón de hamburguesa para dispositivos móviles -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Elementos de la barra de navegación izquierda -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-  <!-- Formulario para subir nueva imagen -->
-  <form th:action="@{/user/report}" method="post"  th:object="${report}">
+        <!-- Logo -->
+        <li class="nav-item">
+          <img src="/img/logov4.png" alt="logo" width="50" height="50">
+        </li>
 
-    <div class="mb-3">
-      <label for="problema" class="form-label">Problema:</label>
-      <input type="text" class="form-control" id="problema" name="problema" required>
+        <!-- Título de la aplicación -->
+        <li class="nav-item">
+          <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+        </li>
+
+      </ul>
+      <!-- Elementos de la barra de navegación derecha -->
+      <ul class="navbar-nav ml-auto">
+        <!-- Menú desplegable para cambiar de idioma -->
+        <li class="nav-item dropdown language-dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span th:text="#{label.chooseLang}"></span>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <!-- Opciones de idioma -->
+            <li><a class="dropdown-item" href="/user/report?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+            <li><a class="dropdown-item" href="user/report?language=es" th:text="#{label.lang.es}">Español</a></li>
+          </ul>
+        </li>
+
+      </ul>
     </div>
-
-    <div class="mb-3">
-      <label for="descripcion" class="form-label">Descripción:</label>
-      <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
-    </div>
-
-    <!-- Botón de envío -->
-    <button type="submit" class="btn btn-primary">Reportar problema</button>
-  </form>
-
-  <!-- Mensajes de éxito o error -->
-  <div th:if="${param.error}" class="alert alert-danger mt-3" role="alert">
-    <span th:text="${param.error}"></span>
   </div>
-  <div th:if="${param.exito}" class="alert alert-success mt-3" role="alert">
-    <span th:text="${param.exito}"></span>
+</nav>
+
+<div class="container mt-1">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-light">
+      <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
+      <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.report}">Reportar problema</li>
+    </ol>
+  </nav>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <div th:if="${param.error}">
+        <div class="alert alert-danger" th:text="${param.error}"></div>
+      </div>
+      <div th:if="${param.exito}">
+        <div class="alert alert-success" th:text="${param.exito}"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-center" th:text="#{report.form.title}">Formulario de Reporte de Problemas </h3>
+        </div>
+        <div class="card-body">
+          <form th:action="@{/user/report}" method="post" th:object="${report}">
+            <div class="mb-3">
+              <label for="problema" class="form-label" th:text="#{report.form.problem}">Problema:</label>
+              <input type="text" class="form-control" id="problema" name="problema" required>
+            </div>
+            <div class="mb-3">
+              <label for="descripcion" class="form-label" th:text="#{report.form.description}">Descripción:</label>
+              <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" th:text="#{report.form.submit}">Reportar problema</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+<br>
+<footer class="footer mt-auto py-3 bg-dark text-white">
+  <div class="container text-right">
+    <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+    <a class="navbar-brand" th:href="@{/user/report}">Reportar problema</a>
+    <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right">Volver atrás</button>
+  </div>
+</footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

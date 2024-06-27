@@ -141,6 +141,8 @@ public class UserController {
                 } else {
                     userEdit.setProfileImage(currentProfileImageUrl);
                 }
+
+
             } catch (IOException e) {
                 System.out.println("Error de imagen");
             }
@@ -156,7 +158,7 @@ public class UserController {
     }
     @GetMapping("/delet/{id}")
     public String deleteUser(@PathVariable("id") long id) {
-        userRepository.deleteUserById(id);
+        userService.eliminarEntidad(id);
         return "redirect:/logout";
     }
 
@@ -197,16 +199,6 @@ public class UserController {
         return mv;
     }
 
-    // Método para obtener imágenes
-    @RequestMapping(value = "/img/{img}", method = RequestMethod.GET)
-    @ResponseBody
-    public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
-        File caminho = new File("./src/main/resources/static/img/" + imagem);
-        if (imagem != null || imagem.trim().length() > 0) {
-            return Files.readAllBytes(caminho.toPath());
-        }
-        return null;
-    }
     @GetMapping("/report")
     public ModelAndView newReport() {
         ModelAndView mv = new ModelAndView("/report-problem");
@@ -256,4 +248,6 @@ public class UserController {
 
         return mv;
     }
+    // Método para obtener imágenes
+
 }

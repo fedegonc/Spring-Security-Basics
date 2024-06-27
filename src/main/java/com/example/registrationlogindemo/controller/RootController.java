@@ -2,6 +2,7 @@ package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.*;
 import com.example.registrationlogindemo.repository.*;
+import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +50,12 @@ public class RootController {
     @Autowired
     ImageRepository imageRepository;
     private final UserService userService;
+    private final ImageService imageService;
 
     // Constructor que inyecta el servicio UserService
-    public RootController(UserService userService) {
+    public RootController(UserService userService, ImageService imageService) {
         this.userService = userService;
+        this.imageService = imageService;
     }
 
     @GetMapping("/dashboard")
@@ -200,7 +203,7 @@ public class RootController {
                 image.setImagen(file.getOriginalFilename());
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
-                return "redirect:/user/welcome"; // Cambia esta URL según la estructura de tu aplicación
+                return "redirect:/root/images"; // Cambia esta URL según la estructura de tu aplicación
             }
         } else {
             image.setImagen(null); // O establece un valor por defecto
@@ -216,7 +219,7 @@ public class RootController {
             redirectAttributes.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
         }
 
-        return "redirect:/user/welcome"; // Cambia esta URL según la estructura de tu aplicación
+        return "redirect:/root/images"; // Cambia esta URL según la estructura de tu aplicación
     }
 
 
@@ -272,6 +275,13 @@ public class RootController {
         }
 
         return mv;
+    }
+
+
+    @GetMapping("/deletimage/{id}")
+    public String deleteiMAUser(@PathVariable("id") long id) {
+        imageService.eliminarEntidad(id);
+        return "redirect:/root/images";
     }
 
 }

@@ -7,6 +7,7 @@ import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -142,6 +143,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
+    @Override
+    @Transactional
+    public void eliminarEntidad(Long id) {
         userRepository.deleteById(id);
     }
 }

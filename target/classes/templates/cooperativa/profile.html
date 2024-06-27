@@ -75,7 +75,7 @@
             <label for="file" class="form-label" th:text="#{newRequest.profileImage}">Imagen de Perfil</label>
             <!-- Mostrar la imagen de perfil actual si existe -->
             <div th:if="${user.profileImage != null}">
-                <img id="currentProfileImage" th:src="@{'/img/' + ${user.profileImage}}" alt="Imagen de Perfil" class="img-thumbnail" style="max-width: 150px;">
+                <img id="currentProfileImage" th:src="@{'/images/' + ${user.profileImage}}" alt="Imagen de Perfil" class="img-thumbnail" style="max-width: 150px;">
                 <input type="hidden" name="currentProfileImageUrl" th:value="${user.profileImage}">
             </div>
             <!-- Mostrar una imagen predeterminada si no hay imagen de perfil -->

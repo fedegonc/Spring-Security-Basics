@@ -4,6 +4,7 @@ package com.example.registrationlogindemo.service;
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.User;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -38,5 +39,8 @@ public interface UserService {
 
 
     void deleteUserById(Long id);
+
+    @Transactional
+    void eliminarEntidad(Long id);
 
 }

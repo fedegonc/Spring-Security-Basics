@@ -73,6 +73,16 @@ public class SolicitudeController {
         } else {
             solicitud.setImagen(null); // O establece un valor por defecto
         }
+        try {
+            if (!imagen.isEmpty()) {
+                byte[] bytes = imagen.getBytes();
+                Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
+                Files.write(caminho, bytes);
+                solicitud.setImagen(imagen.getOriginalFilename());
+            }
+        } catch (IOException e) {
+            System.out.println("Error al salvar imagen");
+        }
 
         User user = userRepository.findByUsername(currentUser.getUsername());
         if (user != null) {

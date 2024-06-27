@@ -13,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 @Controller
@@ -53,6 +56,16 @@ public class GuestController {
         }
         // Redirige a la página de inicio después de cerrar sesión
         return "redirect:/";
+    }
+
+    @RequestMapping(value = "/img/{img}", method = RequestMethod.GET)
+    @ResponseBody
+    public byte[] getImagens(@PathVariable("img") String img) throws IOException {
+        File caminho = new File("./src/main/resources/static/img/" + img);
+        if (img != null || img.trim().length() > 0) {
+            return Files.readAllBytes(caminho.toPath());
+        }
+        return null;
     }
 }
 
