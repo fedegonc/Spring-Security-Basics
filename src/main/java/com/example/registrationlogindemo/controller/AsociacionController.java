@@ -54,27 +54,27 @@ public class AsociacionController {
     public ModelAndView getDashboardAsociacion() {
         ModelAndView mv = new ModelAndView("asociacion/dashboard");
 
+        // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
-            // Agregar el nombre de usuario al modelo para dar la bienvenida
+
+            // Obtener el usuario de la base de datos
+            User usuario = userRepository.findByUsername(username);
+
+            // Obtener los artículos del usuario actual
+            List<Article> articles = articleRepository.findByUser(usuario);
+            mv.addObject("articles", articles);
+
+            // Otros datos que puedan ser útiles para el dashboard
             mv.addObject("username", username);
-
+            mv.addObject("principal", authentication.getPrincipal().toString());
+            List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("asociacion");
+            mv.addObject("solicitudes", solicitudes);
+            List<User> users = userRepository.findAll();
+            mv.addObject("users", users);
         }
-
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        mv.addObject("principal", principal.toString());
-
-        List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("asociacion");
-        mv.addObject("solicitudes", solicitudes);
-
-        List<User> users = userRepository.findAll();
-        mv.addObject("users", users);
-
-        List<Article> articles = articleRepository.findAll(); // Obtener la lista de artículos
-        mv.addObject("articles", articles); // Agr
 
         return mv;
     }
@@ -165,6 +165,11 @@ public class AsociacionController {
             return "redirect:/asociacion/newarticle";
         }
 
+        return "redirect:/asociacion/dashboard";
+    }
+    @GetMapping("/deletarticle/{id}")
+    public String deletarticle(@PathVariable("id") long id) {
+        userService.eliminarEntidad(id);
         return "redirect:/asociacion/dashboard";
     }
 

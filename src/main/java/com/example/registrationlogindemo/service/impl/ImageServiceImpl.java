@@ -10,6 +10,7 @@ public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
 
     public ImageServiceImpl(ImageRepository imageRepository) {
+
         this.imageRepository = imageRepository;
     }
 

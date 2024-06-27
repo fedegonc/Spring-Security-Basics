@@ -61,18 +61,17 @@
 </div>
 <div class="container mt-5">
     <div class="text-center">
-        <h1 class="text-danger" th:text="#{error.page.title}">Página de Error</h1>
-        <p th:text="#{error.page.message}">Disculpe, algo ha salido mal.</p>
-        <p>Click <a th:href="@{/index}" class="text-primary" th:text="#{error.page.redirect}">aquí</a> para redirigirse al inicio.</p>
+        <h1 class="text-danger">Error 404: Página No Encontrada</h1>
+        <p>Lo sentimos, la página que está buscando no existe o ha ocurrido un error inesperado.</p>
+        <p>Haga clic <a href="/index" class="text-primary">aquí</a> para volver a la página de inicio.</p>
     </div>
 </div>
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container text-right">
-        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.
+        </span>
+        <a class="navbar-brand" th:href="@{/user/report}">Reportar problema</a>
         <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right">Volver atrás</button>
-        <li class="nav-item">
-            <a class="navbar-brand" th:href="@{/user/report}">Reportar problema</a>
-        </li>
     </div>
 </footer>
 
