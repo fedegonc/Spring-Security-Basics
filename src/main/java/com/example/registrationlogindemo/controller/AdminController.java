@@ -374,6 +374,15 @@ public class AdminController {
         return "redirect:/root/images";
     }
 
+    @GetMapping("/reports")
+    public ModelAndView newReports() {
+        ModelAndView mv = new ModelAndView("admin/reports");
+        List<User> users = userRepository.findAll();
+        mv.addObject("users", users);
+        List<Report> reports = reportRepository.findAll();
+        mv.addObject("reports", reports);
+        return mv;
+    }
     @GetMapping("/report")
     public ModelAndView newReport() {
         ModelAndView mv = new ModelAndView("/report-problem");
@@ -396,7 +405,7 @@ public class AdminController {
     }
     @GetMapping("/users")
     public ModelAndView rootUsers() {
-        ModelAndView mv = new ModelAndView("root/users");
+        ModelAndView mv = new ModelAndView("admin/users");
         List<User> users = userRepository.findAll();
         mv.addObject("users", users);
 
