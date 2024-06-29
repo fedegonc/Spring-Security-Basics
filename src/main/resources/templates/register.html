@@ -22,23 +22,14 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <!-- Botón de hamburguesa para dispositivos móviles -->
+        <img src="/img/logov4.png" alt="logo" width="50" height="50">
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Elementos de la barra de navegación izquierda -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- Logo -->
-                <li class="nav-item">
-                    <img src="/img/logov4.png" alt="logo" width="50" height="50">
-                </li>
-
-                <!-- Título de la aplicación -->
-                <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
-                </li>
-            </ul>
             <!-- Elementos de la barra de navegación derecha -->
             <ul class="navbar-nav ml-auto">
                 <!-- Menú desplegable para cambiar de idioma -->
@@ -73,9 +64,6 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <div th:if="${param.success}">
-                <div class="alert alert-info">Registro realizado con éxito</div>
-            </div>
             <div class="card">
                 <div class="card-header">
                     <h3 class="text-center" th:text="#{form.registration}">Formulario de Registro</h3>
