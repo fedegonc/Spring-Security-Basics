@@ -6,6 +6,7 @@ import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -377,8 +378,16 @@ public class AdminController {
     @GetMapping("/reports")
     public ModelAndView newReports() {
         ModelAndView mv = new ModelAndView("admin/reports");
-        List<User> users = userRepository.findAll();
-        mv.addObject("users", users);
+        // Obtener el usuario autenticado actualmente
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            // Agregar el nombre de usuario al modelo para dar la bienvenida
+            mv.addObject("username", username);
+
+        }
+
         List<Report> reports = reportRepository.findAll();
         mv.addObject("reports", reports);
         return mv;
@@ -406,8 +415,18 @@ public class AdminController {
     @GetMapping("/users")
     public ModelAndView rootUsers() {
         ModelAndView mv = new ModelAndView("admin/users");
+        // Obtener el usuario autenticado actualmente
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            // Agregar el nombre de usuario al modelo para dar la bienvenida
+            mv.addObject("username", username);
+
+        }
         List<User> users = userRepository.findAll();
         mv.addObject("users", users);
+
 
         return mv;
     }

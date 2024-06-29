@@ -98,7 +98,7 @@ public class GuestController {
             msg.addFlashAttribute("rerror", "No se pudo encontrar el usuario actual.");
         }
 
-        return "redirect:/user/welcome";
+        return "redirect:/init";
     }
 
 }

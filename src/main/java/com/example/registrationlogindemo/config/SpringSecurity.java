@@ -44,6 +44,8 @@ public class SpringSecurity {
                                         "/imagem/**", "/static/css/**", "/css/styles.css","/favicon.*",
                                         "/error","/gracias","/article/**","/img/**"
                  ).permitAll()
+                                .requestMatchers("/report/**").hasAnyRole("USER", "COOPERATIVA", "ASOCIACION", "ADMIN", "ROOT")
+
 
                                 .requestMatchers("/user/**","/index/**","/init/**","/report/**"
                                 ).hasRole("USER")
