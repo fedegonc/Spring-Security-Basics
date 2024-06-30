@@ -3,6 +3,7 @@ package com.example.registrationlogindemo.controller;
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,27 +76,42 @@ public class AuthController {
     }
 
     @GetMapping("/init")
-    public ModelAndView welcomePage(RedirectAttributes msg) {
+    public ModelAndView welcomePage(RedirectAttributes msg, HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String userrole = userDetails.getAuthorities().toString();
 
-            if (userrole != null && userrole.contains("ROLE_USER")) {
-                msg.addFlashAttribute("success", "message.user.welcome");
-                return new ModelAndView("redirect:/user/welcome");
-            } else if (userrole != null && userrole.contains("ROLE_COOPERATIVA")) {
-                msg.addFlashAttribute("success", "message.cooperativa.welcome");
-                return new ModelAndView("redirect:/cooperativa/dashboard");
-            } else if (userrole != null && userrole.contains("ROLE_ASOCIACION")) {
-                msg.addFlashAttribute("success", "message.asociacion.welcome");
-                return new ModelAndView("redirect:/asociacion/dashboard");
-            } else if (userrole != null && userrole.contains("ROLE_ADMIN")) {
-                msg.addFlashAttribute("success", "message.admin.welcome");
-                return new ModelAndView("redirect:/admin/dashboard");
-            } else if (userrole != null && userrole.contains("ROLE_ROOT")) {
-                msg.addFlashAttribute("success", "message.root.welcome");
-                return new ModelAndView("redirect:/root/dashboard");
+            if (session.getAttribute("hasLoggedIn") == null) {
+                session.setAttribute("hasLoggedIn", true);
+                if (userrole != null && userrole.contains("ROLE_USER")) {
+                    msg.addFlashAttribute("success", "message.user.welcome");
+                    return new ModelAndView("redirect:/user/welcome");
+                } else if (userrole != null && userrole.contains("ROLE_COOPERATIVA")) {
+                    msg.addFlashAttribute("success", "message.cooperativa.welcome");
+                    return new ModelAndView("redirect:/cooperativa/dashboard");
+                } else if (userrole != null && userrole.contains("ROLE_ASOCIACION")) {
+                    msg.addFlashAttribute("success", "message.asociacion.welcome");
+                    return new ModelAndView("redirect:/asociacion/dashboard");
+                } else if (userrole != null && userrole.contains("ROLE_ADMIN")) {
+                    msg.addFlashAttribute("success", "message.admin.welcome");
+                    return new ModelAndView("redirect:/admin/dashboard");
+                } else if (userrole != null && userrole.contains("ROLE_ROOT")) {
+                    msg.addFlashAttribute("success", "message.root.welcome");
+                    return new ModelAndView("redirect:/root/dashboard");
+                }
+            } else {
+                if (userrole != null && userrole.contains("ROLE_USER")) {
+                    return new ModelAndView("redirect:/user/welcome");
+                } else if (userrole != null && userrole.contains("ROLE_COOPERATIVA")) {
+                    return new ModelAndView("redirect:/cooperativa/dashboard");
+                } else if (userrole != null && userrole.contains("ROLE_ASOCIACION")) {
+                    return new ModelAndView("redirect:/asociacion/dashboard");
+                } else if (userrole != null && userrole.contains("ROLE_ADMIN")) {
+                    return new ModelAndView("redirect:/admin/dashboard");
+                } else if (userrole != null && userrole.contains("ROLE_ROOT")) {
+                    return new ModelAndView("redirect:/root/dashboard");
+                }
             }
         }
         msg.addFlashAttribute("error", "message.auth.error");
