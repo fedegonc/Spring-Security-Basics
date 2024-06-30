@@ -75,33 +75,33 @@ public class AuthController {
     }
 
     @GetMapping("/init")
-    public ModelAndView welcomePage() {
+    public ModelAndView welcomePage(RedirectAttributes msg) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String userrole = userDetails.getAuthorities().toString();
 
             if (userrole != null && userrole.contains("ROLE_USER")) {
+                msg.addFlashAttribute("success", "message.user.welcome");
                 return new ModelAndView("redirect:/user/welcome");
-            }
-            else if (userrole != null && userrole.contains("ROLE_COOPERATIVA")) {
+            } else if (userrole != null && userrole.contains("ROLE_COOPERATIVA")) {
+                msg.addFlashAttribute("success", "message.cooperativa.welcome");
                 return new ModelAndView("redirect:/cooperativa/dashboard");
-            }
-
-            else if (userrole != null && userrole.contains("ROLE_ASOCIACION")) {
+            } else if (userrole != null && userrole.contains("ROLE_ASOCIACION")) {
+                msg.addFlashAttribute("success", "message.asociacion.welcome");
                 return new ModelAndView("redirect:/asociacion/dashboard");
-            }
-
-            else if (userrole != null && userrole.contains("ROLE_ADMIN")) {
+            } else if (userrole != null && userrole.contains("ROLE_ADMIN")) {
+                msg.addFlashAttribute("success", "message.admin.welcome");
                 return new ModelAndView("redirect:/admin/dashboard");
-            }
-
-            else if (userrole != null && userrole.contains("ROLE_ROOT")) {
+            } else if (userrole != null && userrole.contains("ROLE_ROOT")) {
+                msg.addFlashAttribute("success", "message.root.welcome");
                 return new ModelAndView("redirect:/root/dashboard");
             }
         }
+        msg.addFlashAttribute("error", "message.auth.error");
         return new ModelAndView("redirect:/error");
     }
+
 
 
 }

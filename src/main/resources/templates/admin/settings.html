@@ -34,5 +34,13 @@
     <p th:text="#{construction.message}">Lo sentimos, estamos trabajando en esta página. Por favor, vuelve más tarde.</p>
     <button class="btn btn-primary" onclick="history.back()" th:text="#{construction.backButton}">Volver</button>
 </div>
+
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-right">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
+        float-right" th:text="#{volver}">Volver atrás</button>    </div>
+</footer>
 </body>
 </html>
