@@ -18,10 +18,9 @@
           crossorigin="anonymous">
 </head>
 <body>
-<!-- Barra de navegación -->
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <!-- Botón de hamburguesa para dispositivos móviles -->
         <img src="/img/logov4.png" alt="logo" width="50" height="50">
         <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
 
@@ -30,28 +29,30 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Elementos de la barra de navegación izquierda -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-            <!-- Elementos de la barra de navegación derecha -->
+            </ul>
             <ul class="navbar-nav ml-auto">
-                <!-- Menú desplegable para cambiar de idioma -->
                 <li class="nav-item dropdown language-dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
                         <span th:text="#{label.chooseLang}"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" href="/login?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" href="/login?language=es" th:text="#{label.lang.es}">Español</a></li>
+                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}" th:text="#{salir}">Salir</a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
-<!-- Fin de la barra de navegación -->
-<br/>
+
 
 <!-- Migas de pan -->
 <div class="container mt-1">
