@@ -43,6 +43,9 @@
                         <li><a class="dropdown-item" href="/admin/dashboard?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
+
+                <li class="nav-item"><a class="btn btn-primary" th:href="@{/cooperativa/profile/{id}(id=${user.id})}">Ver Perfil</a></li>
+
                 <li class="nav-item">
                     <a class="navbar-brand" th:href="@{/logout}" th:text="#{salir}">Salir</a>
                 </li>

@@ -24,15 +24,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- Logo -->
-                <li class="nav-item">
-                    <img src="/img/logov4.png" alt="logo" width="50" height="50">
-                </li>
-
-                <!-- Título de la aplicación -->
-                <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
-                </li>
 
             </ul>
             <ul class="navbar-nav ml-auto">
@@ -55,6 +46,7 @@
     </div>
 </nav>
 
+
 <div class="container mt-1">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
@@ -70,41 +62,55 @@
 <!-- Mensajes de error -->
 <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
 
-<div class="container mt-4">
-    <h1 th:text="#{edit.user}">Editar Usuario</h1>
 
-    <form method="post" enctype="multipart/form-data" th:action="@{'/root/profile/' + ${user.id}}">
-        <div class="mb-3">
-            <label for="file" class="form-label" th:text="#{newRequest.profileImage}">Imagen de Perfil</label>
-            <!-- Mostrar la imagen de perfil actual si existe -->
-            <div th:if="${user.profileImage != null}">
-                <img id="currentProfileImage" th:src="@{'/img/' + ${user.profileImage}}" alt="Imagen de Perfil" class="img-thumbnail" style="max-width: 150px;">
-                <input type="hidden" name="currentProfileImageUrl" th:value="${user.profileImage}">
-            </div>
-            <!-- Mostrar una imagen predeterminada si no hay imagen de perfil -->
-            <div th:if="${user.profileImage == null}">
-                <img id="defaultProfileImage" src="/img/default-profile.jpg" alt="Imagen de Perfil Predeterminada" class="img-thumbnail" style="max-width: 150px;">
-                <input type="hidden" name="currentProfileImageUrl" value="default-profile.jpg">
-            </div>
-            <!-- Permitir al usuario seleccionar una nueva imagen -->
-            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:for="username" th:text="#{label.username}">Username</label>
-            <input type="text" class="form-control" name="username" th:value="${user.username}" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:for="nombre" th:text="#{label.name}">Nombre</label>
-            <input type="text" class="form-control" name="name" th:value="${user.name}" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:for="email" th:text="#{label.email}">Email</label>
-            <input type="text" class="form-control" name="email" th:value="${user.email}" required>
-        </div>
 
-        <button type="submit" class="btn btn-primary" th:text="#{button.save}">Guardar Cambios</button>
-    </form>
-    <a class="btn btn-danger" th:href="@{/root/delet/{id}(id=${user.id})}" th:text="#{button.delete}">Borrar</a>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <div class="card">
+                <div class="card-header">
+                    <!-- Título del formulario -->
+                    <h3 class="text-center" >Editar Usuario</h3>
+                </div>
+                <div class="card-body">
+
+                    <form method="post" enctype="multipart/form-data" th:action="@{'/user/profile/' + ${user.id}}">
+                        <div class="mb-3">
+                            <label for="file" class="form-label" th:text="#{newRequest.profileImage}">Imagen de Perfil</label>
+                            <!-- Mostrar la imagen de perfil actual si existe -->
+                            <div th:if="${user.profileImage != null}">
+                                <img id="currentProfileImage" th:src="@{'/img/' + ${user.profileImage}}" alt="Imagen de Perfil" class="img-thumbnail" style="max-width: 200px;">
+                                <input type="hidden" name="currentProfileImageUrl" th:value="${user.profileImage}">
+                            </div>
+                            <!-- Mostrar una imagen predeterminada si no hay imagen de perfil -->
+                            <div th:if="${user.profileImage == null}">
+                                <img id="defaultProfileImage" src="/img/descarga.jpeg" alt="Imagen de Perfil Predeterminada" class="img-thumbnail" style="max-width: 200px;">
+                                <input type="hidden" name="currentProfileImageUrl" value="descarga.jpeg">
+                            </div>
+                            <!-- Permitir al usuario seleccionar una nueva imagen -->
+                            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="username" th:text="#{label.username}">Username</label>
+                            <input type="text" class="form-control" name="username" th:value="${user.username}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="nombre" th:text="#{label.name}">Nombre</label>
+                            <input type="text" class="form-control" name="name" th:value="${user.name}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="email" th:text="#{label.email}">Email</label>
+                            <input type="text" class="form-control" name="email" th:value="${user.email}" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" th:text="#{button.save}">Guardar Cambios</button>
+                        <a class="btn btn-danger" th:href="@{/user/delet/{id}(id=${user.id})}" th:text="#{button.delete}">Borrar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <footer class="footer mt-auto py-3 bg-dark text-white">

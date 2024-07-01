@@ -28,15 +28,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- Logo -->
-                <li class="nav-item">
-                    <img src="/img/logov4.png" alt="logo" width="50" height="50">
-                </li>
 
-                <!-- Título de la aplicación -->
-                <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
-                </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown language-dropdown">
@@ -54,19 +46,33 @@
     </div>
 </nav>
 
-    <div class="container mt-4">
-        <h3>Control de Sistema</h3>
-        <ul class="list-group">
-            <li class="list-group-item"><a href="/admin/images" class="btn btn-link">Imágenes del Sistemas</a></li>
-            <li class="list-group-item"><a href="/admin/users" class="btn btn-link">Usuarios</a></li>
-            <li class="list-group-item"><a href="/admin/solicitudes" class="btn btn-link">Solicitudes</a></li>
-            <li class="list-group-item"><a href="/admin/articles" class="btn btn-link">Ver Todos los Artículos</a></li>
-            <li class="list-group-item"><a href="/admin/reports" class="btn btn-link">Reportes</a></li>
-            <li class="list-group-item"><a href="/admin/roles" class="btn btn-link">Roles</a></li>
-            <li class="list-group-item"><a href="/admin/settings" class="btn btn-link">Configuraciones del Sistema</a></li>
+<div class="container mt-4">
+    <h3>Panel de Control del Sistema</h3>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="/admin/images" class="btn btn-primary btn-block">Imágenes del Sistemas</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/users" class="btn btn-primary btn-block">Usuarios</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/solicitudes" class="btn btn-primary btn-block">Solicitudes</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/articles" class="btn btn-primary btn-block">Ver Todos los Artículos</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/reports" class="btn btn-primary btn-block">Reportes</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/roles" class="btn btn-primary btn-block">Roles</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/settings" class="btn btn-primary btn-block">Configuraciones del Sistema</a>
+        </li>
+    </ul>
+</div>
 
-        </ul>
-    </div>
 
 
 <footer class="footer mt-auto py-3 bg-dark text-white">

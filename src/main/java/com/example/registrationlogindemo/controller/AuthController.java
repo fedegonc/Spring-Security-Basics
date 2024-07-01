@@ -84,40 +84,45 @@ public class AuthController {
 
             if (session.getAttribute("hasLoggedIn") == null) {
                 session.setAttribute("hasLoggedIn", true);
-                if (userrole != null && userrole.contains("ROLE_USER")) {
-                    msg.addFlashAttribute("success", "message.user.welcome");
-                    return new ModelAndView("redirect:/user/welcome");
-                } else if (userrole != null && userrole.contains("ROLE_COOPERATIVA")) {
-                    msg.addFlashAttribute("success", "message.cooperativa.welcome");
-                    return new ModelAndView("redirect:/cooperativa/dashboard");
-                } else if (userrole != null && userrole.contains("ROLE_ASOCIACION")) {
-                    msg.addFlashAttribute("success", "message.asociacion.welcome");
-                    return new ModelAndView("redirect:/asociacion/dashboard");
-                } else if (userrole != null && userrole.contains("ROLE_ADMIN")) {
-                    msg.addFlashAttribute("success", "message.admin.welcome");
-                    return new ModelAndView("redirect:/admin/dashboard");
-                } else if (userrole != null && userrole.contains("ROLE_ROOT")) {
-                    msg.addFlashAttribute("success", "message.root.welcome");
-                    return new ModelAndView("redirect:/root/dashboard");
+                switch (userrole) {
+                    case "[ROLE_USER]":
+                        msg.addFlashAttribute("success", "message.user.welcome");
+                        return new ModelAndView("redirect:/user/welcome");
+                    case "[ROLE_COOPERATIVA]":
+                        msg.addFlashAttribute("success", "message.cooperativa.welcome");
+                        return new ModelAndView("redirect:/cooperativa/dashboard");
+                    case "[ROLE_ASOCIACION]":
+                        msg.addFlashAttribute("success", "message.asociacion.welcome");
+                        return new ModelAndView("redirect:/asociacion/dashboard");
+                    case "[ROLE_ADMIN]":
+                        msg.addFlashAttribute("success", "message.admin.welcome");
+                        return new ModelAndView("redirect:/admin/dashboard");
+                    case "[ROLE_ROOT]":
+                        msg.addFlashAttribute("success", "message.root.welcome");
+                        return new ModelAndView("redirect:/root/dashboard");
+                    default:
+                        break;
                 }
             } else {
-                if (userrole != null && userrole.contains("ROLE_USER")) {
-                    return new ModelAndView("redirect:/user/welcome");
-                } else if (userrole != null && userrole.contains("ROLE_COOPERATIVA")) {
-                    return new ModelAndView("redirect:/cooperativa/dashboard");
-                } else if (userrole != null && userrole.contains("ROLE_ASOCIACION")) {
-                    return new ModelAndView("redirect:/asociacion/dashboard");
-                } else if (userrole != null && userrole.contains("ROLE_ADMIN")) {
-                    return new ModelAndView("redirect:/admin/dashboard");
-                } else if (userrole != null && userrole.contains("ROLE_ROOT")) {
-                    return new ModelAndView("redirect:/root/dashboard");
+                switch (userrole) {
+                    case "[ROLE_USER]":
+                        return new ModelAndView("redirect:/user/welcome");
+                    case "[ROLE_COOPERATIVA]":
+                        return new ModelAndView("redirect:/cooperativa/dashboard");
+                    case "[ROLE_ASOCIACION]":
+                        return new ModelAndView("redirect:/asociacion/dashboard");
+                    case "[ROLE_ADMIN]":
+                        return new ModelAndView("redirect:/admin/dashboard");
+                    case "[ROLE_ROOT]":
+                        return new ModelAndView("redirect:/root/dashboard");
+                    default:
+                        break;
                 }
             }
         }
         msg.addFlashAttribute("error", "message.auth.error");
         return new ModelAndView("redirect:/error");
     }
-
 
 
 }

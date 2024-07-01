@@ -98,7 +98,7 @@ public class UserController {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
-                user.setProfileImage("default-profile.jpg");
+                user.setProfileImage("descargas.jpeg");
             }
             mv.addObject("user", user);
         }

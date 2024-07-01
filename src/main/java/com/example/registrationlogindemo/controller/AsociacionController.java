@@ -62,11 +62,10 @@ public class AsociacionController {
 
             // Obtener el usuario de la base de datos
             User usuario = userRepository.findByUsername(username);
-
+            mv.addObject("user", usuario);
             // Obtener los artículos del usuario actual
             List<Article> articles = articleRepository.findByUser(usuario);
             mv.addObject("articles", articles);
-
             // Otros datos que puedan ser útiles para el dashboard
             mv.addObject("username", username);
             mv.addObject("principal", authentication.getPrincipal().toString());
@@ -78,6 +77,82 @@ public class AsociacionController {
 
         return mv;
     }
+
+    @GetMapping("/profile/{id}")
+    public ModelAndView editUser(@PathVariable("id") long id) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User currentUser = userRepository.findByUsername(username);
+
+        if (currentUser != null && currentUser.getId() != id) {
+            return new ModelAndView("redirect:/asociacion/profile/" + currentUser.getId());
+        }
+
+        Optional<User> userOptional = userRepository.findById(id);
+        ModelAndView mv = new ModelAndView("asociacion/profile");
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
+                user.setProfileImage("descargas.jpeg");
+            }
+            mv.addObject("user", user);
+        }
+
+        return mv;
+    }
+
+    @PostMapping("/profile/{id}")
+    public ModelAndView editUser(@PathVariable("id") long id,
+                                 @ModelAttribute("user") @Valid User user,
+                                 BindingResult result,
+                                 @RequestParam("file") MultipartFile fileImage,
+                                 @RequestParam("currentProfileImageUrl") String currentProfileImageUrl,
+                                 RedirectAttributes msg) {
+        ModelAndView mv = new ModelAndView();
+
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");
+            mv.setViewName("redirect:/asociacion/profile/" + id);
+            return mv;
+        }
+
+        User userEdit = userRepository.findById(user.getId()).orElse(null);
+
+        if (userEdit != null) {
+            userEdit.setUsername(user.getUsername());
+            userEdit.setName(user.getName());
+            userEdit.setEmail(user.getEmail());
+
+            try {
+                if (!fileImage.isEmpty()) {
+                    // Reemplazar espacios en el nombre del archivo
+                    String originalFilename = fileImage.getOriginalFilename();
+                    String modifiedFilename = originalFilename.replace(" ", "_");
+
+                    byte[] bytes = fileImage.getBytes();
+                    Path path = Paths.get("./src/main/resources/static/img/" + modifiedFilename);
+                    Files.write(path, bytes);
+                    userEdit.setProfileImage(modifiedFilename);
+                } else {
+                    userEdit.setProfileImage(currentProfileImageUrl);
+                }
+
+
+            } catch (IOException e) {
+                System.out.println("Error de imagen");
+            }
+
+            userRepository.save(userEdit);
+            msg.addFlashAttribute("success", "Usuario editado exitosamente.");
+            mv.setViewName("redirect:/asociacion/profile/" + user.getId());
+        } else {
+            mv.setViewName("redirect:/error");
+        }
+
+        return mv;
+    }
+
 
     @GetMapping("/reviewsolicitude/{id}")
     public ModelAndView reviewSolicitude(@PathVariable("id") int id) {
@@ -113,7 +188,11 @@ public class AsociacionController {
 
         return mv;
     }
-
+    @GetMapping("/deletesolicitude/{id}")
+    public String deleteSolicitude(@PathVariable("id") long id) {
+        solicitudeRepository.deleteSolicitudeById(id);
+        return "redirect:/user/welcome";
+    }
     @GetMapping("/articles")
     public ModelAndView getArticles() {
         ModelAndView mv = new ModelAndView("asociacion/articles");
@@ -125,7 +204,7 @@ public class AsociacionController {
     @GetMapping("/delet/{id}")
     public String deleteUser(@PathVariable("id") long id) {
         articleRepository.deleteById(id);
-        return "redirect:/asociacion";
+        return "redirect:/asociacion/dashboard";
     }
     @GetMapping("/newarticle")
     public ModelAndView newarticle() {

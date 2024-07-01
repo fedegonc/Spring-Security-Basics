@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -60,6 +61,8 @@ public class CooperativaController {
             String username = userDetails.getUsername();
             // Agregar el nombre de usuario al modelo para dar la bienvenida
             mv.addObject("username", username);
+            User usuario = userRepository.findByUsername(username);
+            mv.addObject("user", usuario);
 
         }
 
@@ -69,6 +72,8 @@ public class CooperativaController {
         List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("cooperativa");
         mv.addObject("solicitudes", solicitudes);
 
+
+
         List<User> users = userRepository.findAll();
         mv.addObject("users", users);
 
@@ -76,6 +81,124 @@ public class CooperativaController {
         mv.addObject("articles", articles); // Agr
 
         return mv;
+    }
+
+
+    @GetMapping("/profile/{id}")
+    public ModelAndView editUser(@PathVariable("id") long id) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User currentUser = userRepository.findByUsername(username);
+
+        if (currentUser != null && currentUser.getId() != id) {
+            return new ModelAndView("redirect:/cooperativa/profile/" + currentUser.getId());
+        }
+
+        Optional<User> userOptional = userRepository.findById(id);
+        ModelAndView mv = new ModelAndView("cooperativa/profile");
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
+                user.setProfileImage("descargas.jpeg");
+            }
+            mv.addObject("user", user);
+        }
+
+        return mv;
+    }
+
+    @PostMapping("/profile/{id}")
+    public ModelAndView editUser(@PathVariable("id") long id,
+                                 @ModelAttribute("user") @Valid User user,
+                                 BindingResult result,
+                                 @RequestParam("file") MultipartFile fileImage,
+                                 @RequestParam("currentProfileImageUrl") String currentProfileImageUrl,
+                                 RedirectAttributes msg) {
+        ModelAndView mv = new ModelAndView();
+
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");
+            mv.setViewName("redirect:/cooperativa/profile/" + id);
+            return mv;
+        }
+
+        User userEdit = userRepository.findById(user.getId()).orElse(null);
+
+        if (userEdit != null) {
+            userEdit.setUsername(user.getUsername());
+            userEdit.setName(user.getName());
+            userEdit.setEmail(user.getEmail());
+
+            try {
+                if (!fileImage.isEmpty()) {
+                    // Reemplazar espacios en el nombre del archivo
+                    String originalFilename = fileImage.getOriginalFilename();
+                    String modifiedFilename = originalFilename.replace(" ", "_");
+
+                    byte[] bytes = fileImage.getBytes();
+                    Path path = Paths.get("./src/main/resources/static/img/" + modifiedFilename);
+                    Files.write(path, bytes);
+                    userEdit.setProfileImage(modifiedFilename);
+                } else {
+                    userEdit.setProfileImage(currentProfileImageUrl);
+                }
+
+
+            } catch (IOException e) {
+                System.out.println("Error de imagen");
+            }
+
+            userRepository.save(userEdit);
+            msg.addFlashAttribute("success", "Usuario editado exitosamente.");
+            mv.setViewName("redirect:/cooperativa/profile/" + user.getId());
+        } else {
+            mv.setViewName("redirect:/error");
+        }
+
+        return mv;
+    }
+
+
+    @GetMapping("/reviewsolicitude/{id}")
+    public ModelAndView reviewSolicitude(@PathVariable("id") int id) {
+        ModelAndView mv = new ModelAndView("asociacion/reviewsolicitude");
+        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById( id);
+
+        if (solicitudeOptional.isPresent()) {
+            mv.addObject("solicitude", solicitudeOptional.get());
+        } else {
+            mv.setViewName("redirect:/asociacion/dashboard");
+        }
+        return mv;
+    }
+    @PostMapping("/reviewsolicitude/{id}")
+    public ModelAndView editSolicitude(@PathVariable("id") int id,
+                                       @ModelAttribute("solicitude") @Valid Solicitude solicitude,
+                                       BindingResult result, RedirectAttributes msg,
+                                       @RequestParam("estado") String estado) {
+        ModelAndView mv = new ModelAndView();
+
+        Optional<Solicitude> existingSolicitudeOpt = solicitudeRepository.findById(id);
+        if (existingSolicitudeOpt.isPresent()) {
+            Solicitude existingSolicitude = existingSolicitudeOpt.get();
+            existingSolicitude.setEstado(Solicitude.Estado.valueOf(estado));
+
+            solicitudeRepository.save(existingSolicitude);
+            msg.addFlashAttribute("exito", "Estado de la solicitud editado con éxito.");
+            mv.setViewName("redirect:/asociacion/dashboard");
+        } else {
+            msg.addFlashAttribute("error", "No se encontró la solicitud a editar.");
+            mv.setViewName("redirect:/asociacion/dashboard");
+        }
+
+        return mv;
+    }
+
+    @GetMapping("/deletesolicitude/{id}")
+    public String deleteSolicitude(@PathVariable("id") long id) {
+        solicitudeRepository.deleteSolicitudeById(id);
+        return "redirect:/cooperativa/dashboard";
     }
 
     @GetMapping("/articles")
