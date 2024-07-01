@@ -63,17 +63,17 @@
         <ol class="breadcrumb bg-light">
             <!-- Elemento de inicio de las migas de pan -->
             <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
-            <!-- Elemento activo de las migas pan-->
-            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.profile}">Perfil</li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
         </ol>
     </nav>
 </div>
-
 <div class="container mt-4">
     <span th:text="#{info_usuario}">Información del Usuario</span>
     <h3 th:text="${username}">Nombre de Usuario </h3>
 </div>
 <hr/>
+
 <div class="container mt-4">
     <div class="row text-left">
         <div class="col">
@@ -82,7 +82,6 @@
         <div class="col text-right">
             <button class="btn btn-primary" id="toggleViewBtn" onclick="toggleView()">Ver en tarjetas</button>
         </div>
-
     </div>
 
     <div class="mt-4" th:if="${solicitudes == null or #lists.isEmpty(solicitudes)}">
@@ -102,6 +101,10 @@
                 <th>Descripción</th>
                 <th>Imagen</th>
                 <th>Acciones</th>
+                <th>Acciones</th>
+                <th>Acciones</th>
+                <th>Acciones</th>
+                <th>Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -112,10 +115,12 @@
                 <td th:text="${solicitude.activo}"></td>
                 <td th:text="${solicitude.descripcion}"></td>
                 <td><img th:src="@{/img/{img}(img=${solicitude.imagen})}" width="100" height="100"></td>
+                <td th:text="${solicitude.diasDisponibles}"></td>
+                <td th:text="${solicitude.horaRecoleccion}"></td>
+                <td th:text="${solicitude.fecha}"></td>
+                <td th:text="${solicitude.estado}"></td>
                 <td>
-                    <a class="btn btn-primary" th:href="@{/admin/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
-                    <a class="btn btn-danger" th:href="@{/admin/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
-                    <a class="btn btn-warning" th:href="@{/admin/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
+                    <a class="btn btn-info" th:href="@{/cooperativa/reviewsolicitude/{id}(id=${solicitude.id})}">Revisar</a>
                 </td>
             </tr>
             </tbody>
@@ -130,20 +135,18 @@
                     <h5 class="card-title" th:text="${solicitude.nombre}"></h5>
                     <p class="card-text" th:text="${solicitude.descripcion}"></p>
                     <ul class="list-group list-group-flush">
-
                         <li class="list-group-item">Categoría: <span th:text="${solicitude.categoria}"></span></li>
                         <li class="list-group-item">Activo: <span th:text="${solicitude.activo}"></span></li>
                     </ul>
                 </div>
                 <div class="card-footer">
-                    <a class="btn btn-primary" th:href="@{/admin/editsolicitude/{id}(id=${solicitude.id})}">Editar</a>
-                    <a class="btn btn-danger" th:href="@{/admin/deletsolicitude/{id}(id=${solicitude.id})}">Borrar</a>
-                    <a class="btn btn-warning" th:href="@{/admin/modifysolicitude/{id}(id=${solicitude.id})}">Modificar Estado</a>
+                    <a class="btn btn-info" th:href="@{/cooperativa/reviewsilicitude/{id}(id=${solicitude.id})}">Revisar</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container text-right">

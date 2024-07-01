@@ -171,13 +171,13 @@ public class CooperativaController {
 
     @GetMapping("/reviewsolicitude/{id}")
     public ModelAndView reviewSolicitude(@PathVariable("id") int id) {
-        ModelAndView mv = new ModelAndView("asociacion/reviewsolicitude");
+        ModelAndView mv = new ModelAndView("cooperativa/reviewsolicitude");
         Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById( id);
 
         if (solicitudeOptional.isPresent()) {
             mv.addObject("solicitude", solicitudeOptional.get());
         } else {
-            mv.setViewName("redirect:/asociacion/dashboard");
+            mv.setViewName("redirect:/cooperativa/dashboard");
         }
         return mv;
     }
@@ -195,10 +195,10 @@ public class CooperativaController {
 
             solicitudeRepository.save(existingSolicitude);
             msg.addFlashAttribute("exito", "Estado de la solicitud editado con éxito.");
-            mv.setViewName("redirect:/asociacion/dashboard");
+            mv.setViewName("redirect:/cooperativa/dashboard");
         } else {
             msg.addFlashAttribute("error", "No se encontró la solicitud a editar.");
-            mv.setViewName("redirect:/asociacion/dashboard");
+            mv.setViewName("redirect:/cooperativa/dashboard");
         }
 
         return mv;
