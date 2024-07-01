@@ -92,7 +92,10 @@
     <button id="view-cards-btn" class="btn btn-secondary">Vista de Tarjetas</button>
     <button id="view-table-btn" class="btn btn-primary">Vista de Tabla</button>
   </div>
-
+  <!-- Mensaje cuando no hay artículos -->
+  <div th:if="${#lists.isEmpty(solicitudes)}" class="col-12 text-center">
+    <p>Aún no hay solicitudes.</p>
+  </div>
   <!-- Vista de Tarjetas -->
   <div id="card-view" class="row row-cols-1 row-cols-md-3 g-3">
     <div class="col-md-4" th:each="solicitud : ${solicitudes}">
