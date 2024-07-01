@@ -159,6 +159,15 @@ public class CooperativaController {
         return mv;
     }
 
+    @GetMapping("/solicitudes")
+    public ModelAndView Solicitudes() {
+        ModelAndView mv = new ModelAndView("cooperativa/solicitudes");
+
+        List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("cooperativa");
+        mv.addObject("solicitudes", solicitudes);
+        return mv;
+    }
+
 
     @GetMapping("/reviewsolicitude/{id}")
     public ModelAndView reviewSolicitude(@PathVariable("id") int id) {

@@ -153,6 +153,17 @@ public class AsociacionController {
         return mv;
     }
 
+    @GetMapping("/solicitudes")
+    public ModelAndView Solicitudes() {
+        ModelAndView mv = new ModelAndView("asociacion/solicitudes");
+
+        List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("asociacion");
+        mv.addObject("solicitudes", solicitudes);
+        return mv;
+
+    }
+
+
 
     @GetMapping("/reviewsolicitude/{id}")
     public ModelAndView reviewSolicitude(@PathVariable("id") int id) {

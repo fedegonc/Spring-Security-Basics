@@ -25,7 +25,9 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
+            </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown language-dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -33,7 +35,6 @@
                         <span th:text="#{label.chooseLang}"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <!-- Opciones de idioma -->
                         <li><a class="dropdown-item" href="/asociacion/articles?language=pt" th:text="#{label.lang.pt}">Português</a></li>
                         <li><a class="dropdown-item" href="/asociacion/articles?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
@@ -45,7 +46,6 @@
         </div>
     </div>
 </nav>
-
 <div class="container mt-4">
     <hr/>
     <div class="container mt-4">
@@ -88,26 +88,7 @@
     </table>
 </div>
 
-<div class="container mt-4">
-    <div class="row text-left">
-        <div class="col">
-            <h2>Solicitudes</h2>
-        </div>
-    </div>
-    <div class="container mt-4">
-        <form method="post" action="buscarPorNombre">
-            Buscar por Nombre: <input type="text" name="buscarPorNombre"/>
-            <input type="submit"/>
-        </form>
-        <hr>
-        <form method="post" action="buscarPorCategoria">
-            Buscar por Categoría: <input type="text" name="buscarPorCategoria"/>
-            <input type="submit"/>
-        </form>
-        <hr>
-        <br><br>
-    </div>
-</div>
+
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container text-right">
         <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
