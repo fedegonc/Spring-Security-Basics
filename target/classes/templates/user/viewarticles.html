@@ -45,7 +45,7 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <!-- Opciones de idioma -->
                         <li><a class="dropdown-item" href="/user/viewarticles?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" href="user/viewarticles?language=es" th:text="#{label.lang.es}">Español</a></li>
+                        <li><a class="dropdown-item" href="/user/viewarticles?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -69,24 +69,24 @@
 
 <div class="container mt-4">
     <div class="row">
-        <h3>Publicaciones</h3>
+        <h3 th:text="#{publicaciones.titulo}">Publicaciones</h3>
     </div>
     <div class="row row-cols-1 row-cols-md-3 g-3">
         <!-- Tarjetas dinámicas -->
         <div class="col" th:each="article: ${articles}">
             <div class="card h-100">
-                <img th:src="@{/img/{img}(img=${article.imagen})}" class="card-img-top" alt="Imagen de la artículo">
+                <img th:src="@{/img/{img}(img=${article.imagen})}" class="card-img-top" alt="Imagen del artículo">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${article.titulo}">Título del artículo</h5>
                 </div>
                 <div class="card-footer">
-                    <a class="btn btn-primary" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
+                    <a class="btn btn-primary" th:href="@{/article/viewarticle/{id}(id=${article.id})}" th:text="#{boton.leer}">Leer</a>
                 </div>
             </div>
         </div>
         <!-- Mensaje cuando no hay artículos -->
         <div th:if="${#lists.isEmpty(articles)}" class="col-12 text-center">
-            <p>Aún no hay artículos.</p>
+            <p th:text="#{mensaje.sinArticulos}">Aún no hay artículos.</p>
         </div>
     </div>
 </div>

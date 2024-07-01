@@ -123,7 +123,7 @@
                         <p class="card-text date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item estado-field" th:text="#{newRequest.status} + ': ' + ${solicitud.estado}">Estado de la solicitud</li>
+                        <li class="list-group-item estado-field" th:text="#{newRequest.status} + ': ' + #{${solicitud.estado}}">Estado de la solicitud</li>
                     </ul>
                     <div class="card-footer">
                         <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
