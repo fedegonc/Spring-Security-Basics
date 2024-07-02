@@ -14,50 +14,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous"><style>
-
-
-    .view-buttons {
-        margin-bottom: 20px;
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    /* Estilos para la ventana emergente */
-    .sidebar {
-        position: fixed;
-        top: 0;
-        left: -250px; /* Inicialmente oculta fuera de la pantalla */
-        width: 250px;
-        height: 100%;
-        background-color: #343a40;
-        color: white;
-        transition: left 0.3s ease-out; /* Animación suave */
-        padding: 20px;
-    }
-
-    .sidebar a {
-        color: white;
-        text-decoration: none;
-        display: block;
-        margin: 10px 0;
-        transition: color 0.2s;
-    }
-
-    .sidebar a:hover {
-        color: #adb5bd;
-    }
-
-    .sidebar.show {
-        left: 0; /* Muestra la barra lateral */
-    }
-</style>
+          crossorigin="anonymous">
 </head>
 
 
-<body style="background-color: #121211; color: white;">
+<body >
 <!-- Barra de navegación -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -148,16 +109,16 @@
 
 
 <!-- footer -->
-<footer class="footer py-3 bg-dark text-white">
-    <div class="container">
+<footer class="footer py-2 bg-dark text-white">
+    <div class="container mt-4">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <h5 th:text="#{footer.contact.title}">Contacto</h5>
                 <p th:text="#{footer.contact.email}">Email: info@fronterasustentable.com</p>
                 <p th:text="#{footer.contact.phone}">Teléfono: +1234567890</p>
                 <p th:text="#{footer.contact.address}">Dirección: Av. Principal 123, Ciudad, País</p>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <h5 th:text="#{footer.links.title}">Enlaces útiles</h5>
                 <ul class="list-unstyled">
                     <li><a href="/" th:text="#{footer.links.home}">Inicio</a></li>
@@ -166,7 +127,7 @@
                     <li><a href="/contact" th:text="#{footer.links.contact}">Contacto</a></li>
                 </ul>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <h5 th:text="#{footer.social.title}">Redes Sociales</h5>
                 <ul class="list-unstyled">
                     <li><a href="https://facebook.com/fronterasustentable"><i class="fab fa-facebook"></i> Facebook</a>
@@ -174,14 +135,18 @@
                     <li><a href="https://twitter.com/frontera_sust"><i class="fab fa-twitter"></i> Twitter</a></li>
                     <li><a href="https://linkedin.com/company/fronterasustentable"><i class="fab fa-linkedin"></i>
                         LinkedIn</a></li>
-                    <li><a class="navbar-brand" th:href="@{/user/report}">Reportar problema</a></li>
                 </ul>
-            </div></div>
-            <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+            </div>
         </div>
-
     </div>
-
+</footer>
+<footer>
+    <div class="footer py-2 bg-dark text-white">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
+        float-right" th:text="#{volver}">Volver atrás</button>
+    </div>
 </footer>
 
 <!-- Scripts -->

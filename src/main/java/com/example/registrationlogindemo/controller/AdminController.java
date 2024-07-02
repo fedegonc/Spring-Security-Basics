@@ -61,7 +61,7 @@ public class AdminController {
 
     // Método para mostrar el dashboard
     @GetMapping("/dashboard")
-    public ModelAndView getDashboard() {
+    public ModelAndView adminDashboard() {
         ModelAndView mv = new ModelAndView("admin/dashboard");
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -78,9 +78,9 @@ public class AdminController {
 
     // Método para revisar una solicitud específica
     @GetMapping("/reviewsolicitude/{id}")
-    public ModelAndView reviewSolicitude(@PathVariable("id") long id) {
+    public ModelAndView adminReviewSolicitude(@PathVariable("id") int id) {
         ModelAndView mv = new ModelAndView("admin/reviewsolicitude");
-        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById((int) id);
+        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById(id);
 
         if (solicitudeOptional.isPresent()) {
             Solicitude solicitude = solicitudeOptional.get();
@@ -94,7 +94,7 @@ public class AdminController {
 
     // Método para editar un usuario
     @GetMapping("/edit/{id}")
-    public ModelAndView editUser(@PathVariable("id") long id) {
+    public ModelAndView adminEditUser(@PathVariable("id") long id) {
         Optional<User> userOptional = userRepository.findById(id);
         ModelAndView mv = new ModelAndView("admin/edit");
 
@@ -111,7 +111,7 @@ public class AdminController {
 
     // Método para procesar la edición de un usuario
     @PostMapping("/edit/{id}")
-    public String editUserBanco(@ModelAttribute("user_form") @Valid User user,
+    public String adminEditUserBanco(@ModelAttribute("user_form") @Valid User user,
                                 BindingResult result, RedirectAttributes msg) {
         // Verificar errores de validación
         if (result.hasErrors()) {
@@ -136,79 +136,18 @@ public class AdminController {
         return "redirect:/dashboard";
     }
 
-    // Método para guardar un usuario
-    @PostMapping("/users/save")
-    public String saveUser(User user) {
-        userService.save(user);
-        return "redirect:/users";
+
+    @GetMapping("/solicitudes")
+    public ModelAndView adminSolicitudes() {
+        ModelAndView mv = new ModelAndView("root/solicitudes");
+        List<Solicitude> solicitude = solicitudeRepository.findAll();
+        mv.addObject("solicitude", solicitude);
+        return mv;
     }
 
-    // Método para obtener imágenes
-    @RequestMapping(value = "/img/{imagem}", method = RequestMethod.GET)
-    @ResponseBody
-    public byte[] getImagens(@PathVariable("imagem") String imagem) throws IOException {
-        File caminho = new File("./src/main/resources/static/img/" + imagem);
-        if (imagem != null || imagem.trim().length() > 0) {
-            return Files.readAllBytes(caminho.toPath());
-        }
-        return null;
-    }
-
-    // Método para mostrar el formulario de nueva solicitud
-    @RequestMapping(value = "/newsolicitude", method = RequestMethod.GET)
-    public String newSolicitude() {
-        return "solicitude/newsolicitude";
-    }
-
-    // Método para procesar la creación de una nueva solicitud
-    @RequestMapping(value = "/newsolicitude", method = RequestMethod.POST)
-    public String newSolicitudePost(@Valid Solicitude solicitud,
-                                    BindingResult result, RedirectAttributes msg,
-                                    @RequestParam("file") MultipartFile imagen) {
-        if (result.hasErrors()) {
-            msg.addFlashAttribute("erro", "Error al iniciar solicitud. Por favor, llenar todos los campos");
-            return "redirect:/dashboard";
-        }
-        try {
-            if (!imagen.isEmpty()) {
-                byte[] bytes = imagen.getBytes();
-                Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
-                Files.write(caminho, bytes);
-                solicitud.setImagen(imagen.getOriginalFilename());
-            }
-        } catch (IOException e) {
-            System.out.println("Error al salvar imagen");
-        }
-        solicitudeRepository.save(solicitud);
-        msg.addFlashAttribute("Exito", "Solicitud realizada con éxito.");
-        return "redirect:/dashboard";
-    }
-
-    // Método para eliminar una solicitud
-    @RequestMapping(value = "/deletsolicitude/{id}", method = RequestMethod.GET)
-    public String excluirSolicitud(@PathVariable("id") int id) {
-        solicitudeRepository.deleteSolicitudeById((long) id);
-        return "redirect:/admin/dashboard";
-    }
-
-    // Método para modificar el estado de una solicitud
-  /*  @RequestMapping(value = "/modifyestate/{id}", method = RequestMethod.GET)
-    public String modifyEstateSolicitud(@PathVariable("id") int id) {
-        Solicitude solicitude = solicitudeRepository.findById(id).orElse(null);
-        if (solicitude != null) {
-            if ("Activo".equals(solicitude.getActivo())) {
-                solicitude.setActivo("Inactivo");
-            } else {
-                solicitude.setActivo("Activo");
-            }
-            solicitudeRepository.save(solicitude);
-        }
-        return "redirect:/dashboard";
-    }
-*/
     // Método para mostrar el formulario de edición de solicitud
-    @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.GET)
-    public ModelAndView editSolicitude(@PathVariable("id") int id) {
+    @GetMapping("/editsolicitude/{id}")
+    public ModelAndView adminEditSolicitude(@PathVariable("id") int id) {
         ModelAndView mv = new ModelAndView("solicitude/editsolicitude");
         Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById(id);
 
@@ -221,9 +160,8 @@ public class AdminController {
         return mv;
     }
 
-
     // Método para procesar la edición de una solicitud
-    @RequestMapping(value = "/editsolicitude/{id}", method = RequestMethod.POST)
+    @PostMapping("/editsolicitude/{id}")
     public String editSolicitudeBanco(@ModelAttribute("solicitude") @Valid Solicitude solicitude,
                                       BindingResult result, RedirectAttributes msg,
                                       @RequestParam("file") MultipartFile imagem) {
@@ -260,8 +198,17 @@ public class AdminController {
 
         return "redirect:/dashboard";
     }
+
+    // Método para eliminar una solicitud
+    @GetMapping("/deletsolicitude/{id}")
+    public String adminExcluirSolicitud(@PathVariable("id") int id) {
+        solicitudeRepository.deleteSolicitudeById((long) id);
+        return "redirect:/admin/dashboard";
+    }
+
+
     @GetMapping("/images")
-    public ModelAndView rootImages() {
+    public ModelAndView adminImages() {
         ModelAndView mv = new ModelAndView("admin/images");
         List<Image> images = imageRepository.findAll();
         mv.addObject("images", images);
@@ -269,13 +216,13 @@ public class AdminController {
         return mv;
     }
     @GetMapping("/newimage")
-    public ModelAndView newimage() {
+    public ModelAndView adminNewImage() {
         ModelAndView mv = new ModelAndView("image/newimage");
         return mv;
     }
 
     @PostMapping("/newimage")
-    public String uploadImage(@Valid Image image,
+    public String adminUploadImage(@Valid Image image,
                               BindingResult result,
                               RedirectAttributes redirectAttributes,
                               @RequestParam("file") MultipartFile file,
@@ -315,7 +262,7 @@ public class AdminController {
 
 
     @GetMapping("/editimage/{id}")
-    public ModelAndView editImage(@PathVariable("id") long id) {
+    public ModelAndView adminEditImage(@PathVariable("id") long id) {
         ModelAndView mv = new ModelAndView("image/editimage");
         Optional<Image> image = imageRepository.findById(id);
         if (image.isPresent()) {
@@ -327,7 +274,7 @@ public class AdminController {
     }
 
     @PostMapping("/editimage/{id}")
-    public ModelAndView editImage(@PathVariable("id") long id,
+    public ModelAndView adminEditImage(@PathVariable("id") long id,
                                   @ModelAttribute("image") @Valid Image image,
                                   BindingResult result, RedirectAttributes msg,
                                   @RequestParam("file") MultipartFile imagen) {
@@ -370,13 +317,13 @@ public class AdminController {
 
 
     @GetMapping("/deletimage/{id}")
-    public String deleteiMAUser(@PathVariable("id") long id) {
+    public String deleteImage(@PathVariable("id") long id) {
         imageService.eliminarEntidad(id);
-        return "redirect:/root/images";
+        return "redirect:/admin/images";
     }
 
     @GetMapping("/reports")
-    public ModelAndView newReports() {
+    public ModelAndView adminReports() {
         ModelAndView mv = new ModelAndView("admin/reports");
         // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -392,26 +339,15 @@ public class AdminController {
         mv.addObject("reports", reports);
         return mv;
     }
-    @GetMapping("/report")
-    public ModelAndView newReport() {
-        ModelAndView mv = new ModelAndView("/report-problem");
-        return mv;
-    }
-    @PostMapping("/report")
-    public String newReportPost(@Valid Report report,
-                                BindingResult result, RedirectAttributes msg,
-                                @AuthenticationPrincipal UserDetails currentUser) {
-        User user = userRepository.findByUsername(currentUser.getUsername());
-        if (user != null) {
-            report.setUser(user);
-            reportRepository.save(report);
-            msg.addFlashAttribute("rexito", "report realizada con éxito.");
-        } else {
-            msg.addFlashAttribute("rerror", "No se pudo encontrar el usuario actual.");
-        }
 
+    // Método para eliminar una solicitud
+    @GetMapping("/deletereport/{id}")
+    public String adminExcluirReport(@PathVariable("id") int id) {
+        solicitudeRepository.deleteSolicitudeById((long) id);
         return "redirect:/admin/dashboard";
     }
+
+
     @GetMapping("/users")
     public ModelAndView rootUsers() {
         ModelAndView mv = new ModelAndView("admin/users");
@@ -426,7 +362,6 @@ public class AdminController {
         }
         List<User> users = userRepository.findAll();
         mv.addObject("users", users);
-
 
         return mv;
     }
