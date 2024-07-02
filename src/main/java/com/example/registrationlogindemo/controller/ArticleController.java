@@ -41,8 +41,7 @@ public class ArticleController {
 
         if (articleOptional.isPresent()) {
             Article article = articleOptional.get();
-            mv.addObject("articles", article);
-            mv.setViewName("article/viewarticle");  // Esta vista debe mostrar los detalles del artículo
+            mv.addObject("article", article);
         } else {
             mv.setViewName("redirect:/error");
         }
