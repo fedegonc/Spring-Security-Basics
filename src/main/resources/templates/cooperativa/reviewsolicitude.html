@@ -41,14 +41,14 @@
 <div class="container mt-1">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
-            <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/cooperativa/dashboard}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.newRequest}">Revisar Solicitud</li>
         </ol>
     </nav>
 </div>
 
 <div class="container mt-4">
-    <h1>Revisar Solicitud</h1>
+    <h1 th:text="#{breadcrumb.newRequest}">Revisar Solicitud</h1>
 
     <div class="card">
         <div class="card-body">

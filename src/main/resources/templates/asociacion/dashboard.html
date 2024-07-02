@@ -93,31 +93,21 @@
         <table class="table table-striped table-bordered table-hover">
             <thead class="table-dark">
             <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Categoría</th>
-                <th>Activo</th>
+
+                <th>Solicitud</th>
                 <th>Descripción</th>
                 <th>Imagen</th>
-                <th>Acciones</th>
-                <th>Acciones</th>
-                <th>Acciones</th>
-                <th>Acciones</th>
+                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="solicitude : ${solicitudes}">
-                <td th:text="${solicitude.id}"></td>
                 <td th:text="${solicitude.nombre}"></td>
-                <td th:text="${solicitude.categoria}"></td>
-                <td th:text="${solicitude.activo}"></td>
+
                 <td th:text="${solicitude.descripcion}"></td>
                 <td><img th:src="@{/img/{img}(img=${solicitude.imagen})}" width="100" height="100"></td>
-                <td th:text="${solicitude.diasDisponibles}"></td>
-                <td th:text="${solicitude.horaRecoleccion}"></td>
-                <td th:text="${solicitude.fecha}"></td>
-                <td th:text="${solicitude.estado}"></td>
+                <td th:text="#{${solicitude.estado}}"></td>
                 <td>
                     <a class="btn btn-info" th:href="@{/asociacion/reviewsolicitude/{id}(id=${solicitude.id})}">Revisar</a>
                 </td>
@@ -135,7 +125,6 @@
                     <p class="card-text" th:text="${solicitude.descripcion}"></p>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">Categoría: <span th:text="${solicitude.categoria}"></span></li>
-                        <li class="list-group-item">Activo: <span th:text="${solicitude.activo}"></span></li>
                     </ul>
                 </div>
                 <div class="card-footer">
