@@ -79,7 +79,7 @@ public class AdminController {
     // Método para revisar una solicitud específica
     @GetMapping("/reviewsolicitude/{id}")
     public ModelAndView reviewSolicitude(@PathVariable("id") long id) {
-        ModelAndView mv = new ModelAndView("reviewsolicitude");
+        ModelAndView mv = new ModelAndView("admin/reviewsolicitude");
         Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById((int) id);
 
         if (solicitudeOptional.isPresent()) {
@@ -96,7 +96,7 @@ public class AdminController {
     @GetMapping("/edit/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
         Optional<User> userOptional = userRepository.findById(id);
-        ModelAndView mv = new ModelAndView("user_form");
+        ModelAndView mv = new ModelAndView("admin/edit");
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
