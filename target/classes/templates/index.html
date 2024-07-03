@@ -54,9 +54,8 @@
                         <span>Elige idioma</span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" href="/index?language=pt">Português</a></li>
-                        <li><a class="dropdown-item" href="/index?language=es">Español</a></li>
+                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -81,7 +80,7 @@
 <div class="container mt-4">
     <div class="row">
         <div class="card-header">
-        <h4>Publicaciones</h4>
+        <h4 th:text="#{publicaciones}">Publicaciones</h4>
         </div>
     </div>
     <div class="row row-cols-1 row-cols-md-3 g-3">

@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
@@ -76,22 +77,25 @@ public class AdminController {
         return mv;
     }
 
-    // Método para revisar una solicitud específica
-    @GetMapping("/reviewsolicitude/{id}")
-    public ModelAndView adminReviewSolicitude(@PathVariable("id") int id) {
-        ModelAndView mv = new ModelAndView("admin/reviewsolicitude");
-        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById(id);
 
-        if (solicitudeOptional.isPresent()) {
-            Solicitude solicitude = solicitudeOptional.get();
-            mv.addObject("solicitude", solicitude);
-        } else {
-            mv.setViewName("redirect:/admin/dashboard");
+
+    @GetMapping("/users")
+    public ModelAndView rootUsers() {
+        ModelAndView mv = new ModelAndView("admin/users");
+        // Obtener el usuario autenticado actualmente
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            // Agregar el nombre de usuario al modelo para dar la bienvenida
+            mv.addObject("username", username);
+
         }
+        List<User> users = userRepository.findAll();
+        mv.addObject("users", users);
 
         return mv;
     }
-
     // Método para editar un usuario
     @GetMapping("/edit/{id}")
     public ModelAndView adminEditUser(@PathVariable("id") long id) {
@@ -134,6 +138,13 @@ public class AdminController {
         }
 
         return "redirect:/dashboard";
+    }
+
+    // Método para eliminar una solicitud
+    @GetMapping("/deletuser/{id}")
+    public String adminExcluirUser(@PathVariable("id") int id) {
+        userService.deleteUserById((long) id);
+        return "redirect:/admin/dashboard";
     }
 
 
@@ -340,29 +351,86 @@ public class AdminController {
         return mv;
     }
 
-    // Método para eliminar una solicitud
+    // Método para eliminar un usuario
     @GetMapping("/deletereport/{id}")
     public String adminExcluirReport(@PathVariable("id") int id) {
         solicitudeRepository.deleteSolicitudeById((long) id);
         return "redirect:/admin/dashboard";
     }
 
+    @GetMapping("/viewarticle/{id}")
+    public ModelAndView getArticle(@PathVariable("id") int id) {
+        ModelAndView mv = new ModelAndView("article/viewarticle");
+        Optional<Article> articleOptional = articleRepository.findById((long) id);
 
-    @GetMapping("/users")
-    public ModelAndView rootUsers() {
-        ModelAndView mv = new ModelAndView("admin/users");
-        // Obtener el usuario autenticado actualmente
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-            // Agregar el nombre de usuario al modelo para dar la bienvenida
-            mv.addObject("username", username);
-
+        if (articleOptional.isPresent()) {
+            Article article = articleOptional.get();
+            mv.addObject("article", article);
+        } else {
+            mv.setViewName("redirect:/error");
         }
-        List<User> users = userRepository.findAll();
-        mv.addObject("users", users);
 
         return mv;
     }
+
+    @PostMapping("/newarticle")
+    public String newArticlePost(@Valid Article article,
+                                 BindingResult result, RedirectAttributes msg,
+                                 @RequestParam("file") MultipartFile file,
+                                 @AuthenticationPrincipal UserDetails currentUser) {
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
+            return "redirect:/user/welcome";
+        }
+
+        if (!file.isEmpty()) {
+            try {
+                // Crear nombre de archivo único
+                String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                Path filePath = Paths.get(UPLOAD_DIR + uniqueFileName);
+                Files.write(filePath, file.getBytes());
+                article.setImagen(uniqueFileName);
+            } catch (IOException e) {
+                msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
+                return "redirect:/user/welcome";
+            }
+        }
+
+        User user = userRepository.findByUsername(currentUser.getUsername());
+        if (user != null) {
+            article.setUser(user);
+            articleRepository.save(article);
+            msg.addFlashAttribute("exito", "Solicitud realizada con éxito.");
+        } else {
+            msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
+        }
+
+        return "redirect:/user/welcome";
+    }
+
+    @GetMapping("/editarticle/{id}")
+    public ModelAndView editArticle(@PathVariable("id") int id) {
+        ModelAndView mv = new ModelAndView();
+        Optional<Article> articleOptional = articleRepository.findById((long) id);
+
+        if (articleOptional.isPresent()) {
+            Article article = articleOptional.get();
+            mv.addObject("article", article);
+            mv.setViewName("article/editarticle");
+        } else {
+            mv.setViewName("redirect:/error");
+        }
+
+        return mv;
+    }
+
+    // Método para eliminar un articulo
+    @GetMapping("/deletarticle/{id}")
+    public String adminExcluir(@PathVariable("id") int id) {
+        articleRepository.deleteById(id);
+        return "redirect:/admin/dashboard";
+    }
+
+
+
 }
