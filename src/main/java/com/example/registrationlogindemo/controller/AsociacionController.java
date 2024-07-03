@@ -257,9 +257,23 @@ public class AsociacionController {
 
         return "redirect:/asociacion/dashboard";
     }
-    @GetMapping("/deletarticle/{id}")
-    public String deletarticle(@PathVariable("id") long id) {
-        userService.eliminarEntidad(id);
+    @GetMapping("/editarticle/{id}")
+    public ModelAndView editArticle(@PathVariable("id") int id) {
+        ModelAndView mv = new ModelAndView();
+        Optional<Article> articleOptional = articleRepository.findById((long) id);
+
+        if (articleOptional.isPresent()) {
+            Article article = articleOptional.get();
+            mv.addObject("article", article);
+        } else {
+            mv.setViewName("redirect:/error");
+        }
+
+        return mv;
+    }
+    @GetMapping("/deletearticle/{id}")
+    public String deletearticle(@PathVariable("id") long id) {
+        articleRepository.deleteById(id);
         return "redirect:/asociacion/dashboard";
     }
 

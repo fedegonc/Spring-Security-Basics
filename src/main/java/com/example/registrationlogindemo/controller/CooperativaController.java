@@ -220,10 +220,10 @@ public class CooperativaController {
         return mv;
     }
 
-    @GetMapping("/delet/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
+    @GetMapping("/deletearticle/{id}")
+    public String deleteArticle(@PathVariable("id") long id) {
         articleRepository.deleteById(id);
-        return "redirect:/logout";
+        return "redirect:/cooperativa/dashboard";
     }
 
     @GetMapping("/newarticle")

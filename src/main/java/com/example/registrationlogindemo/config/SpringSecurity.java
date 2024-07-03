@@ -95,6 +95,6 @@ public class SpringSecurity {
 }
 
 //codigo recidual
-                                /* .requestMatchers("/buscarPorNombre").permitAll()
-                                .requestMatchers("/buscarPorCategoria").permitAll()
-                                */
+/* .requestMatchers("/buscarPorNombre").permitAll()
+ .requestMatchers("/buscarPorCategoria").permitAll()
+ */
