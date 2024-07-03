@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitudes</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <style>
+        .step-section {
+            display: none;
+        }
+        .active-section {
+            display: block;
+        }
+        .error {
+            color: red;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <img src="/img/logov4.png" alt="logo" width="50" height="50">
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown language-dropdown">
+
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{label.chooseLang}"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/user/newsolicitude?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/user/newsolicitude?language=es" th:text="#{label.lang.es}">Español</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}" th:text="#{salir}">Salir</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Migas de pan -->
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.newRequest}">Nueva Solicitud</li>
+        </ol>
+    </nav>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <!-- Título del formulario -->
+                    <h3 class="card-title mb-4" th:text="#{newRequest.title}" >Nueva Solicitud</h3>
+                </div>
+
+                <div class="card-body">
+                <!-- Paso 1: Selección del Tipo de Material -->
+                <div id="step1" class="step-section active-section">
+                    <h4 th:text="#{newRequest.selectMaterial}">Selecciona el Tipo de Material</h4>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-primary" style="background-color: #FFD700;" onclick="selectMaterial('plastico')">Plástico</button>
+                        <button type="button" class="btn btn-primary" style="background-color: #004080;" onclick="selectMaterial('carton')">Cartón</button>
+                        <button type="button" class="btn btn-primary" style="background-color: #404040;" onclick="selectMaterial('madera')">Madera</button>
+                        <button type="button" class="btn btn-primary" style="background-color: #006400;" onclick="selectMaterial('mixto')">Mixto</button>
+                        <button type="button" class="btn btn-primary" style="background-color: #8B4513;" onclick="selectMaterial('organico')">Orgánico</button>
+                        <button type="button" class="btn btn-primary" style="background-color: #8B0000;" onclick="selectMaterial('otros')">Otros</button>
+                    </div>
+                </div>
+                </div>
+
+                <!-- Paso 2: Información de Ubicación -->
+                <div id="step2" class="step-section">
+                    <div class="card-header">
+                        <!-- Título del formulario -->
+                        <h3 th:text="#{newRequest.locationData}">Datos de Ubicación</h3>
+                    </div>
+                    <div class="card-body">
+                    <div class="mb-3">
+                        <label for="barrio" class="form-label" th:text="#{newRequest.neighborhood}">Barrio</label>
+                        <input type="text" class="form-control" id="barrio" name="barrio" required>
+                        <div id="error-barrio" class="error" th:text="#{newRequest.errorNeighborhood}">Barrio es obligatorio</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="calle" class="form-label" th:text="#{newRequest.street}">Calle</label>
+                        <input type="text" class="form-control" id="calle" name="calle" required>
+                        <div id="error-calle" class="error" th:text="#{newRequest.errorStreet}">Calle es obligatorio</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa</label>
+                        <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required>
+                        <div id="error-numeroDeCasa" class="error" th:text="#{newRequest.errorHouseNumber}">Número de casa es obligatorio</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label" th:text="#{newRequest.phoneNumber}">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                        <div id="error-telefono" class="error" th:text="#{newRequest.errorPhoneNumber}">Teléfono es obligatorio</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles</label>
+                        <select class="form-select" id="diasDisponibles" name="diasDisponibles" required onchange="updateAvailableHours()">
+                            <option value="monday">Lunes</option>
+                            <option value="tuesday">Martes</option>
+                            <option value="wednesday">Miércoles</option>
+                            <option value="thursday">Jueves</option>
+                            <option value="friday">Viernes</option>
+                            <option value="saturday">Sábado</option>
+                        </select>
+                        <div id="error-diasDisponibles" class="error" th:text="#{newRequest.errorAvailableDays}">Días disponibles son obligatorios</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.collectionTime}">Hora de Recolección</label>
+                        <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required></select>
+                        <div id="error-horaRecoleccion" class="error" th:text="#{newRequest.errorCollectionTime}">Hora de recolección es obligatoria</div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="validateStep2()">Siguiente</button>
+                </div>
+                </div>
+                <!-- Paso 3: Detalles de la Solicitud -->
+                <div id="step3" class="step-section">
+                    <div class="card-header">
+                        <!-- Título del formulario -->
+                        <h3 th:text="#{newRequest.requestDetails}">Detalles de la Solicitud</h3>
+                    </div>
+                    <div class="card-body">
+                    <form id="finalForm" method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
+                        <input type="hidden" id="tipoMaterial" name="categoria">
+                        <input type="hidden" id="finalBarrio" name="barrio">
+                        <input type="hidden" id="finalCalle" name="calle">
+                        <input type="hidden" id="finalNumeroDeCasa" name="numeroDeCasa">
+                        <input type="hidden" id="finalTelefono" name="telefono">
+                        <input type="hidden" id="finalDiasDisponibles" name="diasDisponibles">
+                        <input type="hidden" id="finalHoraRecoleccion" name="horaRecoleccion">
+
+                        <div class="mb-3"> <!-- Contenedor principal con margen inferior -->
+                            <label for="file" class="form-label" th:text="#{newRequest.wasteImage}">Imagen del Residuo</label>
+                            <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" />
+                            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label" th:text="#{newRequest.name}">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            <div id="error-nombre" class="error" th:text="#{newRequest.errorName}">Nombre es obligatorio</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="destino" class="form-label" th:text="#{newRequest.destino}">Destino</label>
+                            <select class="form-select" id="destino" name="destino">
+                                <option value="cooperativa">Cooperativa</option>
+                                <option value="asociacion">Asociacion</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción del Objeto</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                            <div id="error-descripcion" class="error" th:text="#{newRequest.errorDescription}">Descripción es obligatoria</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="peso" class="form-label" th:text="#{newRequest.weight}">Peso Aproximado (kg)</label>
+                            <input type="number" class="form-control" id="peso" name="peso" required>
+                            <div id="error-peso" class="error" th:text="#{newRequest.errorWeight}">Peso es obligatorio</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="volumen" class="form-label" th:text="#{newRequest.volume}">Volumen Aproximado (m³)</label>
+                            <input type="number" class="form-control" id="volumen" name="volumen" required>
+                            <div id="error-volumen" class="error" th:text="#{newRequest.errorVolume}">Volumen es obligatorio</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" onclick="validateStep3()">Enviar Solicitud</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-right">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
+        float-right" th:text="#{volver}">Volver atrás</button>    </div>
+</footer>
+
+<!-- Fin del contenido principal -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const formData = {};
+
+    // Objeto de traducción de días de la semana
+    const dayTranslations = {
+        'monday': 'Lunes',
+        'tuesday': 'Martes',
+        'wednesday': 'Miércoles',
+        'thursday': 'Jueves',
+        'friday': 'Viernes',
+        'saturday': 'Sábado'
+    };
+
+    function selectMaterial(material) {
+        formData.tipoMaterial = material;
+        showStep(2);
+    }
+
+    function showStep(step) {
+        // Ocultar todas las secciones
+        document.querySelectorAll('.step-section').forEach(section => section.classList.remove('active-section'));
+        // Mostrar la sección del paso actual
+        document.getElementById(`step${step}`).classList.add('active-section');
+        // Si estamos en el paso 3, rellenar el formulario final con los datos almacenados
+        if (step === 3) {
+            document.getElementById('finalBarrio').value = document.getElementById('barrio').value;
+            document.getElementById('finalCalle').value = document.getElementById('calle').value;
+            document.getElementById('finalNumeroDeCasa').value = document.getElementById('numeroDeCasa').value;
+            document.getElementById('finalTelefono').value = document.getElementById('telefono').value;
+
+            // Traducir el día seleccionado antes de almacenarlo
+            const selectedDay = document.getElementById('diasDisponibles').value;
+            document.getElementById('finalDiasDisponibles').value = dayTranslations[selectedDay] || selectedDay;
+
+            document.getElementById('finalHoraRecoleccion').value = document.getElementById('horaRecoleccion').value;
+            document.getElementById('tipoMaterial').value = formData.tipoMaterial;
+        }
+    }
+    function goBack(step) {
+    // Ocultar el paso actual
+    document.getElementById(`step${step}`).classList.remove('active-section');
+    // Mostrar el paso anterior
+    showStep(step - 1);
+    }
+    function updateAvailableHours() {
+        const day = document.getElementById('diasDisponibles').value;
+        const hourSelect = document.getElementById('horaRecoleccion');
+        hourSelect.innerHTML = ''; // Limpiar las opciones anteriores
+
+        const startHour = 8;
+        const endHour = (day === 'saturday') ? 11 : 17;
+
+        for (let hour = startHour; hour <= endHour; hour++) {
+            // Formatear la hora en formato HH:00
+            const formattedHour = `${hour < 10 ? '0' + hour : hour}:00`;
+            const option = new Option(formattedHour, formattedHour);
+            hourSelect.add(option);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', updateAvailableHours);
+
+    function previewFile() {
+        var preview = document.querySelector('#previewImage');
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "/img/default-image.jpg"; // Si no se selecciona ningún archivo, mostrar la imagen por defecto
+        }
+    }
+
+    function validateStep2() {
+        let valid = true;
+        if (document.getElementById('barrio').value.trim() === '') {
+            document.getElementById('error-barrio').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-barrio').style.display = 'none';
+        }
+        if (document.getElementById('calle').value.trim() === '') {
+            document.getElementById('error-calle').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-calle').style.display = 'none';
+        }
+        if (document.getElementById('numeroDeCasa').value.trim() === '') {
+            document.getElementById('error-numeroDeCasa').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-numeroDeCasa').style.display = 'none';
+        }
+        if (document.getElementById('telefono').value.trim() === '') {
+            document.getElementById('error-telefono').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-telefono').style.display = 'none';
+        }
+        if (document.getElementById('diasDisponibles').value.trim() === '') {
+            document.getElementById('error-diasDisponibles').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-diasDisponibles').style.display = 'none';
+        }
+        if (document.getElementById('horaRecoleccion').value.trim() === '') {
+            document.getElementById('error-horaRecoleccion').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-horaRecoleccion').style.display = 'none';
+        }
+
+        if (valid) {
+            showStep(3);
+        }
+    }
+
+    function validateStep3() {
+        let valid = true;
+        if (document.getElementById('nombre').value.trim() === '') {
+            document.getElementById('error-nombre').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-nombre').style.display = 'none';
+        }
+        if (document.getElementById('descripcion').value.trim() === '') {
+            document.getElementById('error-descripcion').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-descripcion').style.display = 'none';
+        }
+        if (document.getElementById('peso').value.trim() === '') {
+            document.getElementById('error-peso').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-peso').style.display = 'none';
+        }
+        if (document.getElementById('volumen').value.trim() === '') {
+            document.getElementById('error-volumen').style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('error-volumen').style.display = 'none';
+        }
+
+        if (!valid) {
+            event.preventDefault();
+        }
+    }
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

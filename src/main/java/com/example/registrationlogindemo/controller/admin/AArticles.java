@@ -28,24 +28,15 @@ import java.util.UUID;
 public class AArticles {
 
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
-    @Autowired
-    SolicitudeRepository solicitudeRepository;
+
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    RoleRepository roleRepository;
 
     @Autowired
     ArticleRepository articleRepository;
 
-    @Autowired
-    ReportRepository reportRepository;
 
-    @Autowired
-    MaterialRepository materialRepository;
 
-    @Autowired
-    ImageRepository imageRepository;
     private UserService userService;
     private ImageService imageService;
 

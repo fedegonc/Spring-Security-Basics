@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título de la página -->
+    <title th:text="#{index.title}">Frontera Sustentable</title>
+    <!-- Ícono de la página -->
+    <link rel="icon" href="">
+    <!-- Estilos CSS personalizados -->
+    <link rel="stylesheet" href="/css/styles.css">
+    <!-- Estilos Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <img src="/img/logov4.png" alt="logo" width="50" height="50">
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="true" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown language-dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{label.chooseLang}"></span>
+                    </a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand" th:href="@{/logout}" th:text="#{salir}">Salir</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <!-- Elemento de inicio de las migas de pan -->
+            <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
+            <!-- Elemento activo de las migas pan-->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.Panel}">Perfil</li>
+        </ol>
+    </nav>
+</div>
+
+
+<div class="container mt-4">
+    <h3>Panel de Control del Sistema</h3>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="/admin/images" class="btn btn-primary btn-block">Imágenes del Sistemas</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/users" class="btn btn-primary btn-block">Usuarios</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/solicitudes" class="btn btn-primary btn-block">Solicitudes</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/articles" class="btn btn-primary btn-block">Ver Todos los Artículos</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/reports" class="btn btn-primary btn-block">Reportes</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/roles" class="btn btn-primary btn-block">Roles</a>
+        </li>
+        <li class="list-group-item">
+            <a href="/admin/settings" class="btn btn-primary btn-block">Configuraciones del Sistema</a>
+        </li>
+    </ul>
+</div>
+
+
+
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-right">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
+        float-right" th:text="#{volver}">Volver atrás</button>    </div>
+</footer>
+<script>
+    function toggleView() {
+        const tableView = document.getElementById('tableView');
+        const cardView = document.getElementById('cardView');
+        const toggleBtn = document.getElementById('toggleViewBtn');
+
+        if (tableView.classList.contains('d-none')) {
+            tableView.classList.remove('d-none');
+            cardView.classList.add('d-none');
+            toggleBtn.textContent = 'Ver en tarjetas';
+        } else {
+            tableView.classList.add('d-none');
+            cardView.classList.remove('d-none');
+            toggleBtn.textContent = 'Ver en tabla';
+        }
+    }
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

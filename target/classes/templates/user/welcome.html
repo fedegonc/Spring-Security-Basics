@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitudes</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <img src="/img/logov4.png" alt="logo" width="50" height="50">
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/view-requests}" th:text="#{historysolicitudes}">Solicitudes</a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Publicaciones</a>
+
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown language-dropdown">
+
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{label.chooseLang}"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="btn btn-primary" th:href="@{/user/profile/{id}(id=${user.id})}">Ver Perfil</a></li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}" th:text="#{salir}">Salir</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+<!-- Mensajes de éxito o error -->
+<div th:if="${rerror}" class="alert alert-danger mt-3" role="alert" th:text="${rerror}">
+
+</div>
+<div th:if="${rexito}" class="alert alert-success mt-3" role="alert" th:text="${rexito}">
+
+</div>
+
+<div th:if="${success}" class="alert alert-success mt-3" role="alert" th:text="#{${success}}"></div>
+<div th:if="${error}" class="alert alert-danger mt-3" role="alert" th:text="#{${error}}"></div>
+
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <!-- Elemento de inicio de las migas de pan -->
+            <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
+        </ol>
+    </nav>
+</div>
+<div class="container mt-4">
+    <span th:text="#{info_usuario}">Información del Usuario</span>
+    <h3 th:text="${username}">Nombre de Usuario </h3>
+</div>
+<hr/>
+<!-- En caso de no tener solicitudes, se muestra una solicitud por defecto -->
+<!-- Tarjeta de bienvenida -->
+<div class="container mt-4" th:if="${#lists.isEmpty(solicitude)}">
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+        <div class="col-md-4">
+            <div class="card custom-card">
+                <img src="/img/foto2.png" class="card-img-top" th:alt="#{defaultSolicitud.title.alt.image}">
+                <div class="card-body">
+                    <!-- Título personalizable -->
+                    <h5 class="card-title" th:text="#{defaultSolicitud.title}">Nueva Solicitud</h5>
+                    <!-- Texto personalizable -->
+                    <p class="card-text" th:text="#{defaultSolicitud.text}">¡Sé el primero en solicitar!</p>
+                </div>
+                <div class="card-footer">
+                    <!-- Botón con texto personalizable -->
+                    <a class="btn btn-primary" th:href="@{/user/newsolicitude}" th:text="#{defaultSolicitud.button}">Solicitar Ahora</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-4">
+
+    <!-- Código del título de la página -->
+    <!-- Código del formulario de búsqueda -->
+    <!-- Código de las cartas de solicitudes -->
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+        <div class="col-md-4" th:each="solicitud : ${solicitude}">
+            <div class="card custom-card">
+
+                    <img th:src="@{/img/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${solicitud.nombre}">Nombre de la solicitud</h5>
+                        <p class="card-text date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item estado-field" th:text="#{newRequest.status} + ': ' + #{${solicitud.estado}}">Estado de la solicitud</li>
+                    </ul>
+                    <div class="card-footer">
+                        <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-right">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
+        float-right" th:text="#{volver}">Volver atrás</button>    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateFields = document.querySelectorAll('.date-field');
+        const estadoFields = document.querySelectorAll('.estado-field');
+
+        const requestedText = /*[[${'date.requested'}]]*/ 'solicitado'; // Fallback in case Thymeleaf doesn't replace it
+        const estadoTranslations = {
+            'EN_ESPERA': /*[[#{estado.EN_ESPERA}]]*/ 'En espera',
+            'ACEPTADA': /*[[#{estado.ACEPTADA}]]*/ 'Aceptada',
+            'RECHAZADA': /*[[#{estado.RECHAZADA}]]*/ 'Rechazada',
+            'EN_REVISION': /*[[#{estado.EN_REVISION}]]*/ 'En revisión'
+        };
+
+        dateFields.forEach(field => {
+            const rawDate = field.textContent.trim();
+            if (rawDate) {
+                const date = new Date(rawDate);
+                const day = date.getDate();
+                const month = date.getMonth() + 1;
+                const year = date.getFullYear().toString().slice(-2);
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+
+                const formattedDate = `${requestedText}: ${day}/${month}/${year} - ${hours}:${minutes} hs`;
+                field.textContent = formattedDate;
+            }
+        });
+
+        estadoFields.forEach(field => {
+            const estado = field.textContent.trim();
+            if (estadoTranslations[estado]) {
+                field.textContent = estadoTranslations[estado];
+            }
+        });
+
+        const viewCardsBtn = document.getElementById('view-cards-btn');
+        const viewTableBtn = document.getElementById('view-table-btn');
+        const cardView = document.getElementById('card-view');
+        const tableView = document.getElementById('table-view');
+
+        viewCardsBtn.addEventListener('click', () => {
+            cardView.classList.remove('hidden');
+            tableView.classList.add('hidden');
+            viewCardsBtn.classList.add('btn-primary');
+            viewCardsBtn.classList.remove('btn-secondary');
+            viewTableBtn.classList.add('btn-secondary');
+            viewTableBtn.classList.remove('btn-primary');
+        });
+
+        viewTableBtn.addEventListener('click', () => {
+            cardView.classList.add('hidden');
+            tableView.classList.remove('hidden');
+            viewTableBtn.classList.add('btn-primary');
+            viewTableBtn.classList.remove('btn-secondary');
+            viewCardsBtn.classList.add('btn-secondary');
+            viewCardsBtn.classList.remove('btn-primary');
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const logo = document.getElementById('logo');
+        const sidebar = document.getElementById('sidebar');
+
+        logo.addEventListener('mouseenter', function() {
+            sidebar.classList.add('show');
+        });
+
+        logo.addEventListener('mouseleave', function() {
+            sidebar.classList.remove('show');
+        });
+
+        sidebar.addEventListener('mouseenter', function() {
+            sidebar.classList.add('show');
+        });
+
+        sidebar.addEventListener('mouseleave', function() {
+            sidebar.classList.remove('show');
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
