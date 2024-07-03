@@ -358,6 +358,17 @@ public class AdminController {
         return "redirect:/admin/dashboard";
     }
 
+    @GetMapping("/articles")
+    public ModelAndView adminViewArticles() {
+        ModelAndView mv = new ModelAndView("admin/articles");
+
+
+        List<Article> articles = articleRepository.findAll();
+        mv.addObject("articles", articles);
+
+        return mv;
+    }
+
     @GetMapping("/viewarticle/{id}")
     public ModelAndView getArticle(@PathVariable("id") int id) {
         ModelAndView mv = new ModelAndView("article/viewarticle");
@@ -373,14 +384,19 @@ public class AdminController {
         return mv;
     }
 
+    @GetMapping("/newarticle")
+    public ModelAndView newarticle() {
+        return new ModelAndView("admin/newarticle");
+    }
+
     @PostMapping("/newarticle")
     public String newArticlePost(@Valid Article article,
                                  BindingResult result, RedirectAttributes msg,
                                  @RequestParam("file") MultipartFile file,
                                  @AuthenticationPrincipal UserDetails currentUser) {
         if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
-            return "redirect:/user/welcome";
+            msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos.");
+            return "redirect:/admin/newarticle";
         }
 
         if (!file.isEmpty()) {
@@ -392,7 +408,7 @@ public class AdminController {
                 article.setImagen(uniqueFileName);
             } catch (IOException e) {
                 msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
-                return "redirect:/user/welcome";
+                return "redirect:/admin/newarticle";
             }
         }
 
@@ -403,9 +419,10 @@ public class AdminController {
             msg.addFlashAttribute("exito", "Solicitud realizada con éxito.");
         } else {
             msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
+            return "redirect:/admin/newarticle";
         }
 
-        return "redirect:/user/welcome";
+        return "redirect:/admin/dashboard";
     }
 
     @GetMapping("/editarticle/{id}")
