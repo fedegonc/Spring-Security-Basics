@@ -23,7 +23,9 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
+            </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown language-dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -44,14 +46,17 @@
 <div class="container mt-1">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
-            <li class="breadcrumb-item"><a th:href="@{/asociacion/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/asociacion/dashboard}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.newRequest}">Revisar Solicitud</li>
         </ol>
     </nav>
 </div>
 
-<div class="container mt-4">
-    <h1 th:text="#{breadcrumb.newRequest}">Revisar Solicitud</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+    <h4 th:text="#{breadcrumb.newRequest}">Revisar Solicitud</h4>
 
     <div class="card">
         <div class="card-body">
@@ -61,6 +66,9 @@
             </div>
             <p class="card-text">Nombre: <span th:text="${solicitude.nombre}"></span></p>
             <p class="card-text">Categoría: <span th:text="${solicitude.categoria}"></span></p>
+            <p class="card-text">Barrio: <span th:text="${solicitude.barrio}"></span></p>
+            <p class="card-text">Calle: <span th:text="${solicitude.calle}"></span></p>
+            <p class="card-text">Telefono: <span th:text="${solicitude.telefono}"></span></p>
             <!-- Otros campos de la solicitud -->
         </div>
     </div>
@@ -78,6 +86,8 @@
             </div>
             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
         </form>
+    </div>
+</div>
     </div>
 </div>
 
