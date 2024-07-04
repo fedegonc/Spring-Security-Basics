@@ -1,14 +1,14 @@
 package com.example.registrationlogindemo.controller.admin;
 
-
 import com.example.registrationlogindemo.entity.Report;
-import com.example.registrationlogindemo.repository.*;
+import com.example.registrationlogindemo.entity.Role;
+import com.example.registrationlogindemo.repository.ReportRepository;
+import com.example.registrationlogindemo.repository.RoleRepository;
+import com.example.registrationlogindemo.repository.SolicitudeRepository;
+import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
-public class AReports {
+public class ARoles {
 
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
     @Autowired
@@ -41,30 +41,21 @@ public class AReports {
 
     }
 
-    @GetMapping("/reports")
-    public ModelAndView adminReports() {
-        ModelAndView mv = new ModelAndView("admin/reports");
-        // Obtener el usuario autenticado actualmente
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-            // Agregar el nombre de usuario al modelo para dar la bienvenida
-            mv.addObject("username", username);
+    @GetMapping("/roles")
+    public ModelAndView rootRoles() {
+        ModelAndView mv = new ModelAndView("admin/roles");
+        List<Role> roles = roleRepository.findAll();
+        mv.addObject("roles", roles);
 
-        }
-
-        List<Report> reports = reportRepository.findAll();
-        mv.addObject("reports", reports);
         return mv;
     }
 
-    @GetMapping("/editereport/{id}")
+    @GetMapping("/editerole/{id}")
     public ModelAndView adminEditReport(@PathVariable("id") long id) {
-        ModelAndView mv = new ModelAndView("admin/editreport");
+        ModelAndView mv = new ModelAndView("admin/editrole");
         Optional<Report> image = reportRepository.findById(id);
         if (image.isPresent()) {
-            mv.addObject("image", image.get());
+            mv.addObject("role", image.get());
         } else {
             mv.setViewName("redirect:/admin/dashboard");
         }
@@ -72,9 +63,10 @@ public class AReports {
     }
 
     // Método para eliminar un reporte
-    @GetMapping("/deletereport/{id}")
+    @GetMapping("/deleterole/{id}")
     public String adminExcluirReport(@PathVariable("id") int id) {
-        solicitudeRepository.deleteSolicitudeById((long) id);
+        roleRepository.deleteById((long) id);
         return "redirect:/admin/dashboard";
     }
+
 }

@@ -47,6 +47,18 @@
     </div>
 </nav>
 
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <!-- Elemento de inicio de las migas de pan -->
+            <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
+            <!-- Elemento activo de las migas pan-->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.viewpost}">Perfil</li>
+        </ol>
+    </nav>
+</div>
+
+
 <div class="container mt-4">
     <div class="row">
         <h3>Publicaciones</h3>

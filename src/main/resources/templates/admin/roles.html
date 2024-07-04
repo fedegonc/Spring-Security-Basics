@@ -40,8 +40,8 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" href="/root/dashboard?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" href="/root/dashboard?language=es" th:text="#{label.lang.es}">Español</a></li>
+                        <li><a class="dropdown-item" href="/admin/dashboard?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/admin/dashboard?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -78,23 +78,19 @@
         <thead class="table-dark">
         <tr>
             <th>Usuario ID</th>
-            <th>Nombre de usuario</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th></th>
+            <th>Nombre de role</th>
+            <th>acciones</th>
+
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user: ${users}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.name}"></td>
-            <td th:text="${user.email}"></td>
-            <td th:text="${user.roles}"></td>
+        <tr th:each="role: ${roles}">
+            <td th:text="${role.id}"></td>
+            <td th:text="${role.name}"></td>
+
             <td>
-                <a class="btn btn-primary" th:href="@{/root/edit/{id}(id=${user.id})}">Editar</a>
-                <a class="btn btn-danger" th:href="@{/root/delet/{id}(id=${user.id})}">Borrar</a>
+                <a class="btn btn-primary" th:href="@{/root/editerole/{id}(id=${role.id})}">Editar</a>
+                <a class="btn btn-danger" th:href="@{/root/deleterole/{id}(id=${role.id})}">Borrar</a>
             </td>
         </tr>
         </tbody>
