@@ -1,4 +1,4 @@
-package com.example.registrationlogindemo.controller.auth;
+package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.User;
@@ -25,8 +25,8 @@ public class AuthController {
     }
 
     @GetMapping("/error")
-    public String redirectToIndexOnError() {
-        return "redirect:/index";
+    public ModelAndView Error() {
+        return new ModelAndView("error");
     }
 
     @GetMapping("/register")
