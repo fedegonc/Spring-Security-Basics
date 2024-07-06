@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -22,13 +21,13 @@ public class Solicitude {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull
+    @Column(nullable = false)
     private String nombre;
 
-    @NotNull
+    @Column(nullable = false)
     private String categoria;
 
-    @NotNull
+    @Column(nullable = false)
     private boolean activo = true; // Inicializar con true por defecto
 
     @Lob
@@ -36,19 +35,19 @@ public class Solicitude {
 
     private String imagen;
 
-    @NotNull
+    @Column(nullable = false)
     private String diasDisponibles;
 
-    @NotNull
+    @Column(nullable = false)
     private String horaRecoleccion;
 
     @Transient
     private MultipartFile file;
 
-    @NotNull
+    @Column(nullable = false)
     private LocalDateTime fecha;
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Estado estado = Estado.EN_ESPERA;
 
@@ -57,25 +56,25 @@ public class Solicitude {
     private User user;
 
 
-    @NotNull
+    @Column(nullable = false)
     private String calle;
 
-    @NotNull
+    @Column(nullable = false)
     private String barrio;
 
-    @NotNull
+    @Column(nullable = false)
     private String numeroDeCasa;
 
-    @NotNull
+    @Column(nullable = false)
     private String telefono;
 
-    @NotNull
+    @Column(nullable = false)
     private String peso;
 
-    @NotNull
+    @Column(nullable = false)
     private String volumen;
 
-    @NotNull
+    @Column(nullable = false)
     private String destino;
 
     public enum Estado {

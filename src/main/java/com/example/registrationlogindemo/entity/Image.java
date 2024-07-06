@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.jetbrains.annotations.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,7 +20,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String imagen; // Ruta o URL de la imagen
-    @NotNull
+    @Column(nullable = false)
     private LocalDateTime fecha;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
