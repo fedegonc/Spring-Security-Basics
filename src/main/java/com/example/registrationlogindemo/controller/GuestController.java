@@ -35,16 +35,11 @@ public class GuestController {
     @Autowired
     ReportRepository reportRepository;
 
-    // Redirecciona a la página de inicio
-    @GetMapping({"", "/"})
-    public String redirectToIndex() {
-        return "redirect:/index";
-    }
 
     // Obtiene la página de inicio y muestra las solicitudes activas
-    @GetMapping("/index")
+    @GetMapping({"", "/", "/index"})
     public ModelAndView getIndex() {
-        ModelAndView mv = new ModelAndView("/index");
+        ModelAndView mv = new ModelAndView("index");
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Article> articles = articleRepository.findAll();
@@ -70,7 +65,7 @@ public class GuestController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/img/{img}", method = RequestMethod.GET)
+    @GetMapping("/img/{img}")
     @ResponseBody
     public byte[] getImagens(@PathVariable("img") String img) throws IOException {
         File caminho = new File("./src/main/resources/static/img/" + img);
@@ -82,7 +77,7 @@ public class GuestController {
 
     @GetMapping("/report")
     public ModelAndView newReport() {
-        ModelAndView mv = new ModelAndView("/report-problem");
+        ModelAndView mv = new ModelAndView("report-problem");
         return mv;
     }
     @PostMapping("/report")
