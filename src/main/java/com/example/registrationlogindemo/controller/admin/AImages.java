@@ -29,7 +29,7 @@ import java.util.Optional;
 @RequestMapping("/admin")
 public class AImages {
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
+    private static final String UPLOAD_DIR = "./src/main/resources/static/img/";
     @Autowired
     SolicitudeRepository solicitudeRepository;
     @Autowired
