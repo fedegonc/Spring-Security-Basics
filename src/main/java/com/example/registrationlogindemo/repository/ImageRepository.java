@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface ImageRepository extends JpaRepository<Image, Integer> {
     List<Image> findAll();
     Optional<Image> findById(Long id);
-
+    @Transactional
+    @Modifying
     void deleteById(Long Id);
 }
