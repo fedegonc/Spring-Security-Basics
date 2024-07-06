@@ -164,7 +164,7 @@ public class AImages {
 
     @GetMapping("/deletimage/{id}")
     public String deleteImage(@PathVariable("id") long id) {
-        imageService.eliminarEntidad(id);
+        imageRepository.deleteById(id);
         return "redirect:/admin/images";
     }
 }
