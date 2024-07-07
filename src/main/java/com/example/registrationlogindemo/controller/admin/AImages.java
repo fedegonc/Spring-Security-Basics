@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -85,7 +86,7 @@ public class AImages {
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
-                Path imagePath = Paths.get("src/main/resources/static/img/" + file.getOriginalFilename());
+                Path imagePath = Paths.get("./src/main/resources/static/img/" + file.getOriginalFilename());
                 Files.write(imagePath, bytes);
                 image.setImagen(file.getOriginalFilename());
             } catch (IOException e) {
@@ -160,7 +161,15 @@ public class AImages {
 
         return mv;
     }
-
+    @GetMapping("/img/{img}")
+    @ResponseBody
+    public byte[] getImagens(@PathVariable("img") String img) throws IOException {
+        File caminho = new File("./src/main/resources/static/img/" + img);
+        if (img != null || img.trim().length() > 0) {
+            return Files.readAllBytes(caminho.toPath());
+        }
+        return null;
+    }
 
     @GetMapping("/deletimage/{id}")
     public String deleteImage(@PathVariable("id") long id) {
