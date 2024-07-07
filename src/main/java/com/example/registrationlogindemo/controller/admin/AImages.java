@@ -85,7 +85,7 @@ public class AImages {
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
-                Path imagePath = Paths.get("./src/main/resources/static/img/" + file.getOriginalFilename());
+                Path imagePath = Paths.get("src/main/resources/static/img/" + file.getOriginalFilename());
                 Files.write(imagePath, bytes);
                 image.setImagen(file.getOriginalFilename());
             } catch (IOException e) {
