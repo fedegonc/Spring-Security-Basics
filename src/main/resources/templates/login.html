@@ -1,70 +1,97 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Título de la página -->
     <title th:text="#{index.title}">Frontera Sustentable</title>
     <!-- Ícono de la página -->
     <link rel="icon" href="">
     <!-- Estilos CSS personalizados -->
-    <link rel="stylesheet" href="/css/styles.css">
-    <!-- Estilos Bootstrap -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <img src="/img/logov4.png" alt="logo" width="50" height="50">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">
+            <i class="bi bi-tree"></i> Frontera Sustentable
+        </a>
 
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+                <!-- Puedes agregar más elementos aquí si lo deseas -->
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown language-dropdown">
-
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <span th:text="#{label.chooseLang}"></span>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-globe"></i> <span th:text="#{label.chooseLang}"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/login?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" href="/login?language=es" th:text="#{label.lang.es}">Español</a></li>
+                        <li><a class="dropdown-item" href="/login?language=pt" th:text="#{label.lang.pt}">
+                            <i class="bi bi-flag"></i> Português
+                        </a></li>
+                        <li><a class="dropdown-item" href="/login?language=es" th:text="#{label.lang.es}">
+                            <i class="bi bi-flag"></i> Español
+                        </a></li>
                     </ul>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logout}" th:text="#{salir}">Salir</a>
+                    <a class="nav-link" th:href="@{/logout}">
+                        <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
+                    </a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-
 <!-- Migas de pan -->
 <div class="container mt-1">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
             <!-- Elemento de inicio de las migas de pan -->
-            <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
+            <li class="breadcrumb-item">
+                <i class="bi bi-house"></i>
+                <a th:href="@{/index}" th:text="#{breadcrumb.home}">
+                    Inicio
+                </a>
+            </li>
             <!-- Elemento activo de las migas de pan -->
-            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.login}">Login</li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <i class="bi bi-person-circle"></i>
+                <span th:text="#{breadcrumb.login}">
+                        Login
+                </span>
+            </li>
         </ol>
     </nav>
 </div>
+
 
 <!-- Contenido principal -->
 <div class="container">
@@ -72,64 +99,75 @@
         <div class="col-md-6 offset-md-3">
             <!-- Manejo de errores y mensajes de éxito -->
             <div th:if="${param.error}">
-                <div class="alert alert-danger" th:text="#{error.login}">Email o Contraseña Incorrectos.</div>
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span th:text="#{error.login}">Email o Contraseña Incorrectos.</span>
+                </div>
             </div>
             <div th:if="${param.logout}">
-                <div class="alert alert-success" th:text="#{success.logout}">Sesión Finalizada con Éxito.</div>
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span th:text="#{success.logout}">Sesión Finalizada con Éxito.</span>
+                </div>
             </div>
+
+
             <div class="card">
                 <div class="card-header">
                     <!-- Título del formulario -->
-                    <h3 class="text-center" th:text="#{login.form.title}">Formulario de Inicio de Sesión</h3>
+                    <h3 class="text-center" th:text="#{login.form.title}">
+                        <i class="bi bi-box-arrow-in-right"></i> Formulario de Inicio de Sesión
+                    </h3>
                 </div>
                 <div class="card-body">
-                    <form
-                            method="post"
-                            th:action="@{/login}"
-                            class="form-horizontal"
-                            role="form"
-                    >
+                    <form method="post" th:action="@{/login}" class="form-horizontal" role="form">
                         <!-- Campo de nombre de usuario -->
-                        <div class="mb-3">
-                            <label for="username" class="control-label" th:text="#{login.form.username}">Nombre de Usuario *</label>
-                            <input type="text"
-                                   id="username"
-                                   name="username"
-                                   class="form-control"
-                                   placeholder="Nombre de Usuario"
-                            />
+                       <div class="mb-3">
+                        <i class="bi bi-person-check-fill"></i> <label for="username" class="control-label" th:text="#{login.form.username}">
+                                 Nombre de Usuario *
+                            </label>
+                            <input type="text" id="username" name="username" class="form-control" placeholder="Nombre de Usuario" />
                         </div>
 
                         <!-- Campo de contraseña -->
                         <div class="mb-3">
-                            <label for="password" class="control-label" th:text="#{login.form.password}">Contraseña *</label>
-                            <input type="password"
-                                   id="password"
-                                   name="password"
-                                   class="form-control"
-                                   placeholder="Contraseña"
-                            />
+                            <i class="bi bi-lock-fill"></i> <label for="password" class="control-label" th:text="#{login.form.password}">
+                                 Contraseña *
+                            </label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" />
                         </div>
 
                         <!-- Botón de enviar -->
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-primary" th:text="#{login.form.submit}">Iniciar Sesión</button>
+                             <button type="submit" class="btn btn-primary" th:text="#{login.form.submit}">
+                                 <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                            </button>
                             <!-- Enlace para registrarse -->
-                            <span th:text="#{login.form.register.text}"> ¿No tienes una cuenta?</span>
-                            <a th:href="@{/register}" th:text="#{login.form.register.link}"> Regístrate aquí</a>
+                            <span th:text="#{login.form.register.text}">
+         ¿No tienes una cuenta?
+    </span>
+                            <i class="bi bi-person-plus-fill"></i><a th:href="@{/register}" th:text="#{login.form.register.link}">Regístrate aquí</a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div><br>
+</div>
+
+<br>
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container text-right">
-        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
-        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
-        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
-        float-right" th:text="#{volver}">Volver atrás</button>    </div>
+        <span class="text-muted" th:text="#{footer.copy}">
+            <i class="bi bi-c-circle"></i> 2024 Frontera Sustentable. Todos los derechos reservados.
+        </span>
+        <a class="nav-link" th:href="@{/report}">
+            <i class="bi bi-exclamation-circle"></i> Reportar problema
+        </a>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">
+            <i class="bi bi-arrow-left"></i> Volver atrás
+        </button>
+    </div>
 </footer><!-- Fin del contenido principal -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
