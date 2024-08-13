@@ -157,16 +157,21 @@ public class AArticles {
                 return mv;
             }
 
+            // Actualizar los campos del artículo
+            articleEdit.setTitulo(article.getTitulo());
+            articleEdit.setDescripcion(article.getDescripcion());
+
             articleRepository.save(articleEdit);
-            msg.addFlashAttribute("exito", "Imagen editada con éxito.");
+            msg.addFlashAttribute("exito", "Artículo editado con éxito.");
             mv.setViewName("redirect:/admin/dashboard");
         } else {
-            msg.addFlashAttribute("error", "No se encontró la imagen a editar.");
-            mv.setViewName("redirect:/admin/newarticle");
+            msg.addFlashAttribute("error", "No se encontró el artículo a editar.");
+            mv.setViewName("redirect:/admin/editarticle/" + id);
         }
 
         return mv;
     }
+
     // Método para eliminar un artículo
     @GetMapping("/deletarticle/{id}")
     public String adminExcluir(@PathVariable("id") int id) {

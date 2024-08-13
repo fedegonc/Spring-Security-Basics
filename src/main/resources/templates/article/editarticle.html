@@ -14,24 +14,13 @@
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
-    <style>
-        body, html {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f8f9fa;
-        }
-        .construction-container {
-            text-align: center;
-        }
-    </style>
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <img src="/img/logov4.png" alt="logo" width="50" height="50">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -47,8 +36,8 @@
                         <span th:text="#{label.chooseLang}"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/asociacion/articles?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" href="/asociacion/articles?language=es" th:text="#{label.lang.es}">Español</a></li>
+                        <li><a class="dropdown-item" href="/admin/articles?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/admin/articles?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -59,13 +48,61 @@
     </div>
 </nav>
 
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <div class="card">
+                <div class="card-header">
+                    <!-- Título del formulario -->
+                    <h3 class="text-center">Editar Artículo</h3>
+                </div>
+                <div class="card-body">
+
+                    <form method="post" enctype="multipart/form-data" th:action="@{'/admin/editarticle/' + ${article.id}}">
+                        <div class="mb-3">
+                            <label for="file" class="form-label" th:text="#{newRequest.profileImage}">Imagen del Artículo</label>
+                            <!-- Mostrar la imagen del artículo actual si existe -->
+                            <div th:if="${article.imagen != null}">
+                                <img id="currentArticleImage" th:src="@{'/img/' + ${article.imagen}}" alt="Imagen del Artículo" class="img-thumbnail" style="max-width: 200px;">
+                                <input type="hidden" name="currentArticleImageUrl" th:value="${article.imagen}">
+                            </div>
+                            <!-- Mostrar una imagen predeterminada si no hay imagen de artículo -->
+                            <div th:if="${article.imagen == null}">
+                                <img id="defaultArticleImage" src="/img/descarga.jpeg" alt="Imagen de Artículo Predeterminada" class="img-thumbnail" style="max-width: 200px;">
+                                <input type="hidden" name="currentArticleImageUrl" value="descarga.jpeg">
+                            </div>
+                            <!-- Permitir al usuario seleccionar una nueva imagen -->
+                            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="titulo" th:text="#{label.titulo}">Título</label>
+                            <input type="text" class="form-control" name="titulo" th:value="${article.titulo}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="descripcion" th:text="#{label.descripcion}">Descripción</label>
+                            <textarea class="form-control" name="descripcion" rows="5" required th:text="${article.descripcion}"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" th:text="#{button.save}">Guardar Cambios</button>
+                        <a class="btn btn-danger" th:href="@{/admin/deletarticle/{id}(id=${article.id})}" th:text="#{button.delete}">Borrar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container text-right">
         <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
         <a class="nav-link" th:href="@{/report}">Reportar problema</a>
-        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
-        float-right" th:text="#{volver}">Volver atrás</button>    </div>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">Volver atrás</button>
+    </div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq0K/6QMGbL0O4X7+hHZqF3e1GskvZh4iwenaF3/i79pY5" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWIY2yEch5WGfaTpC8eE59wD5D44sFG5a9mgHUnzHr3Bv1bPqx0Fgy8Bwi" crossorigin="anonymous"></script>
 </body>
 </html>

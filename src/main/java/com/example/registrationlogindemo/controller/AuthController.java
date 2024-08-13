@@ -87,41 +87,41 @@ public class AuthController {
                 switch (userrole) {
                     case "[ROLE_USER]":
                         msg.addFlashAttribute("success", "message.user.welcome");
-                        return new ModelAndView("user/welcome");
+                        return new ModelAndView("redirect:user/welcome");
                     case "[ROLE_COOPERATIVA]":
                         msg.addFlashAttribute("success", "message.cooperativa.welcome");
-                        return new ModelAndView("cooperativa/dashboard");
+                        return new ModelAndView("redirect:cooperativa/dashboard");
                     case "[ROLE_ASOCIACION]":
                         msg.addFlashAttribute("success", "message.asociacion.welcome");
-                        return new ModelAndView("asociacion/dashboard");
+                        return new ModelAndView("redirect:asociacion/dashboard");
                     case "[ROLE_ADMIN]":
                         msg.addFlashAttribute("success", "message.admin.welcome");
-                        return new ModelAndView("admin/dashboard");
+                        return new ModelAndView("redirect:admin/dashboard");
                     case "[ROLE_ROOT]":
                         msg.addFlashAttribute("success", "message.root.welcome");
-                        return new ModelAndView("root/dashboard");
+                        return new ModelAndView("redirect:root/dashboard");
                     default:
                         break;
                 }
             } else {
                 switch (userrole) {
                     case "[ROLE_USER]":
-                        return new ModelAndView("user/welcome");
+                        return new ModelAndView("redirect:user/welcome");
                     case "[ROLE_COOPERATIVA]":
-                        return new ModelAndView("cooperativa/dashboard");
+                        return new ModelAndView("redirect:cooperativa/dashboard");
                     case "[ROLE_ASOCIACION]":
-                        return new ModelAndView("asociacion/dashboard");
+                        return new ModelAndView("redirect:asociacion/dashboard");
                     case "[ROLE_ADMIN]":
-                        return new ModelAndView("admin/dashboard");
+                        return new ModelAndView("redirect:admin/dashboard");
                     case "[ROLE_ROOT]":
-                        return new ModelAndView("root/dashboard");
+                        return new ModelAndView("redirect:root/dashboard");
                     default:
                         break;
                 }
             }
         }
         msg.addFlashAttribute("error", "message.auth.error");
-        return new ModelAndView("error");
+        return new ModelAndView("redirect:error");
     }
 
 
