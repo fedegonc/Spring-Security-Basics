@@ -19,6 +19,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 
 <body ><!-- Barra de navegación -->
@@ -39,10 +41,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Elementos de la barra de navegación izquierda -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- Acceder -->
                 <li class="nav-item">
-                    <a class="btn btn-primary" href="/login">
-                        <i class="bi bi-box-arrow-in-right"></i> Acceder
+                    <a class="btn btn-primary" th:if="${!isAuthenticated}" th:href="@{/login}">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </a>
+                    <a class="btn btn-primary" th:if="${isAuthenticated}" th:href="@{/init}">
+                        <i class="bi bi-box-arrow-in-right"></i>  Reingresar
                     </a>
                 </li>
             </ul>
@@ -66,11 +70,18 @@
                 </li>
 
                 <!-- Registro -->
-                <li class="nav-item">
-                    <a class="navbar-brand" href="/register">
+
+                <li class="nav-item" th:if="${!isAuthenticated}">
+                    <a class="navbar-brand" th:href="@{/register}">
                         <i class="bi bi-person-plus"></i> Registro
                     </a>
                 </li>
+                <li class="nav-item" th:if="${isAuthenticated}">
+                    <a class="nav-link" th:href="@{/logout}">
+                        <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -87,26 +98,24 @@
     <div class="banner-content" style="text-align: left;">
         <h4 th:text="#{banner.title}" style="font-size: 1.5em; margin-bottom: 10px;">Bienvenido al Proyecto Frontera Sustentable</h4>
         <p th:text="#{greeting}" style="font-size: 1.2em;"></p>
+        <br><br>
 
         <div style="margin-bottom: 20px;">
             <h4 th:text="#{banner.apoyo}" style="font-size: 1.3em; margin-bottom: 10px;">Apoyo</h4>
             <ul class="list-unstyled" style="padding-left: 0; list-style-type: none; font-size: 1.1em;">
                 <li style="margin-bottom: 10px;">
-                    <span th:text="#{link.prefeitura}" style="font-weight: bold; margin-right: 10px;"></span> -
+                    <span th:text="#{link.prefeitura}" style=" margin-right: 10px;"></span> -
                     <a href="https://www.sdolivramento.com.br/" style="text-decoration: none; color: #1da1f2;">Visitar site</a>
                 </li>
                 <li style="margin-bottom: 10px;">
-                    <span th:text="#{link.intendencia}" style="font-weight: bold; margin-right: 10px;"></span> -
+                    <span th:text="#{link.intendencia}" style=" margin-right: 10px;"></span> -
                     <a href="https://www.rivera.gub.uy/portal/" style="text-decoration: none; color: #1da1f2;">Visitar site</a>
                 </li>
                 <li style="margin-bottom: 10px;">
-                    <span th:text="#{link.asociasion}" style="font-weight: bold; margin-right: 10px;"></span> -
-                    <a href="https://www.facebook.com/catadoresnovohorizonte/?locale=es_LA" style="text-decoration: none; color: #1da1f2;">Visitar site</a>
+                    <span th:text="#{link.proyecto}" style=" margin-right: 10px;"></span> -
+                    <a href="https://www.fronteiradapazsustentavel.com.br/es/projeto/" style="text-decoration: none; color: #1da1f2;">Visitar site</a>
                 </li>
-                <li style="margin-bottom: 10px;">
-                    <span th:text="#{link.cooperativa}" style="font-weight: bold; margin-right: 10px;"></span> -
-                    <a href="https://www.inacoop.org.uy/single-post/2019/05/03/visita-al-departamento-de-rivera" style="text-decoration: none; color: #1da1f2;" >Visitar site</a>
-                </li>
+
             </ul>
         </div>
     </div>
@@ -116,12 +125,45 @@
 
 <!-- Nueva barra después del banner con el enlace para realizar solicitud -->
 <div class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="row">
-        <div class="col text-start">
-            <a class="btn btn-primary " th:href="@{/user/newsolicitude}">Realizar Solicitud</a>
+    <div class="container d-flex justify-content-center">
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-primary mx-2" th:href="@{/user/newsolicitude}">Solicitar Reciclaje</a>
+                <a class="btn btn-primary mx-2" th:href="@{/user/newsolicitude}">Educacion Ambiental</a>
+                <a class="btn btn-primary mx-2" th:href="@{/user/newsolicitude}">Noticias</a>
+                <a class="btn btn-primary mx-2" th:href="@{/user/newsolicitude}">Materiales</a>
+            </div>
         </div>
     </div>
 </div>
+<section class="container my-4">
+    <div class="row justify-content-center align-items-center text-center">
+
+        <!-- Logo 1 -->
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <img src="/img/logoprojeto.png" alt="Logo 1" class="img-fluid" style="max-height: 100px;">
+        </div>
+        <!-- Logo 2 -->
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <img src="/img/pm.jpg" alt="Logo 2" class="img-fluid" style="max-height: 100px;">
+        </div>
+        <!-- Logo 3 -->
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <img src="/img/riviera.png" alt="Logo 3" class="img-fluid" style="max-height: 100px;">
+        </div>
+
+
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <img src="/img/asc.jpg" alt="Logo 3" class="img-fluid" style="max-height: 100px;">
+        </div>
+
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <img src="/img/ds.png" alt="Logo 3" class="img-fluid" style="max-height: 100px;">
+        </div>
+
+
+    </div>
+</section>
 
 <div class="container mt-4">
     <div class="row">
@@ -145,61 +187,99 @@
 
     </div>
 </div>
-
-<!-- Eliminar el banner con el enlace "Reciclar" -->
-<!--
-<div class="banner2">
-    <div class="banner-content">
-        <h4 th:text="#{banner.solicitar}"></h4>
-        <p th:text="#{aliento}"></p><br>
-        <a class="btn btn-primary" th:href="@{/user/newsolicitude}">Reciclar</a>
-    </div>
-</div>
--->
-
-<!-- footer -->
-<footer class="footer py-2 bg-dark text-white">
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-6">
-                <h5 th:text="#{footer.contact.title}">Contacto</h5>
-                <p th:text="#{footer.contact.email}">Email: info@fronterasustentable.com</p>
-                <p th:text="#{footer.contact.phone}">Teléfono: +1234567890</p>
-                <p th:text="#{footer.contact.address}">Dirección: Av. Principal 123, Ciudad, País</p>
+<div class="container-fluid bg-dark text-light py-5">
+    <div class="container">
+        <div class="row justify-content-start">
+            <!-- Mapa -->
+            <div class="col-lg-8">
+                <div class="border rounded shadow-sm mb-4 bg-light">
+                    <div id="map" class="w-100" style="height: 300px;"></div>
+                </div>
             </div>
-            <div class="col-md-2">
-                <h5 th:text="#{footer.links.title}">Enlaces útiles</h5>
-                <ul class="list-unstyled">
-                    <li><a href="/" th:text="#{footer.links.home}">Inicio</a></li>
-                    <li><a href="/about" th:text="#{footer.links.about}">Acerca de</a></li>
-                    <li><a href="/services" th:text="#{footer.links.services}">Servicios</a></li>
-                    <li><a href="/contact" th:text="#{footer.links.contact}">Contacto</a></li>
-                </ul>
+
+            <!-- Información de Contacto -->
+            <div class="col-lg-4">
+                <div class="bg-light text-dark p-4 rounded">
+                    <h4>Associação de Catadores Novo Horizonte</h4>
+                    <h5>Información de Contacto</h5>
+                    <p><strong>Dirección:</strong> Ten. Aníbal Benévolo, 135 - Sant'Ana do Livramento - RS, Brasil</p>
+                    <p><strong>Horario:</strong> Lunes a Viernes, 9:00 AM - 4:00 PM</p>
+                </div>
             </div>
-            <div class="col-md-2">
-                <h5 th:text="#{footer.social.title}">Redes Sociales</h5>
-                <ul class="list-unstyled">
-                    <li><a href="https://facebook.com/fronterasustentable"><i class="fab fa-facebook"></i> Facebook</a>
-                    </li>
-                    <li><a href="https://twitter.com/frontera_sust"><i class="fab fa-twitter"></i> Twitter</a></li>
-                    <li><a href="https://linkedin.com/company/fronterasustentable"><i class="fab fa-linkedin"></i>
-                        LinkedIn</a></li>
-                </ul>
+        </div>
+<hr>
+
+        <div class="row justify-content-start">
+            <!-- Mapa -->
+            <div class="col-lg-8">
+                <div class="border rounded shadow-sm mb-4 bg-light">
+                    <div id="map2" class="w-100" style="height: 300px;"></div>
+                </div>
+            </div>
+
+            <!-- Información de Contacto -->
+            <div class="col-lg-4">
+                <div class="bg-light text-dark p-4 rounded">
+                    <h4>Cooperativa Renacer del Norte</h4>
+                    <h5>Información de Contacto</h5>
+                    <p><strong>Dirección:</strong> Camino Las Tunitas, S/N - Rivera - RVR, Uruguay</p>
+                    <p><strong>Horario:</strong> Lunes a Viernes, 9:00 AM - 4:00 PM</p>
+                </div>
             </div>
         </div>
     </div>
-</footer>
+</div>
+
+
 <footer>
     <div class="footer py-2 bg-dark text-white">
-        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
+       <span class="text-muted"  th:text="#{index.title}">. Todos los derechos reservados.  &copy;</span>
         <a class="nav-link" th:href="@{/report}">Reportar problema</a>
         <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">Volver atrás</button>
     </div>
 </footer>
 
+
+
 <!-- Scripts -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Espera a que el DOM esté completamente cargado
+    document.addEventListener('DOMContentLoaded', function () {
+        // Inicializa el mapa y establece las coordenadas y el nivel de zoom
+        var map = L.map('map').setView([-30.88250225738402, -55.53590209874656], 16);
+
+        // Agrega la capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Agrega un marcador en la ubicación específica
+        L.marker([-30.88250225738402, -55.53590209874656]).addTo(map)
+            .bindPopup('Associação de Catadores Novo Horizonte')
+            .openPopup();
+    });
+</script>
+<script>
+    // Espera a que el DOM esté completamente cargado
+    document.addEventListener('DOMContentLoaded', function () {
+        // Inicializa el mapa y establece las coordenadas y el nivel de zoom
+        var map = L.map('map2').setView([-30.937886022823736, -55.53291678413656], 16);
+
+        // Agrega la capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Agrega un marcador en la ubicación específica
+        L.marker([-30.937886022823736, -55.53291678413656]).addTo(map)
+            .bindPopup('Cooperativa Renacer del Norte')
+            .openPopup();
+    });
+</script>
 
 </body>
 </html>

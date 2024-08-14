@@ -41,17 +41,22 @@ public class GuestController {
     public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("index");
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // Obtener la autenticación actual
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated()
+                && !(authentication.getPrincipal() instanceof String
+                && authentication.getPrincipal().equals("anonymousUser"));
+
+        // Agregar el estado de autenticación al modelo
+        mv.addObject("isAuthenticated", isAuthenticated);
+
+        // Obtener los artículos y agregarlos al modelo
         List<Article> articles = articleRepository.findAll();
         mv.addObject("articles", articles);
 
-        if (principal instanceof UserDetails) {
-            // El usuario ya está autenticado, redirigir a la página de inicio correspondiente
-            return new ModelAndView("redirect:/init");
-        }
-
         return mv;
     }
+
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
