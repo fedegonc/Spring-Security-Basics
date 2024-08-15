@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,45 +64,66 @@
                 <div class="card-body">
                     <form id="finalForm" method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
 
+                        <!-- Texto de ayuda para campos obligatorios -->
+                        <p><strong>*</strong> Indica que el campo es obligatorio</p>
+
                         <div class="mb-3">
-                            <label for="file" class="form-label" th:text="#{newRequest.wasteImage}">Imagen del Residuo</label>
-                            <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" />
-                            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
+                            <label for="file" class="form-label" th:text="#{newRequest.wasteImage}">Imagen del Residuo *</label>
+                            <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;"  alt="img"/>
+                            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="material" class="form-label" th:text="#{newRequest.selectMaterial}">Selecciona el Tipo de Material</label>
+                            <label for="material" class="form-label" th:text="#{newRequest.selectMaterial}">Selecciona el Tipo de Material *</label>
                             <select class="form-select" id="material" name="categoria" required>
+                                <option value="" disabled selected>Seleccione el material</option>
                                 <option value="plastico">Plástico</option>
                                 <option value="carton">Cartón</option>
-                                <option value="madera">Madera</option>
-                                <option value="mixto">Mixto</option>
+                                <option value="madera">Metal</option>
+                                <option value="mixto">Eletrónicos</option>
                                 <option value="otros">Otros</option>
                             </select>
                         </div>
+                        <p th:errors="*{categoria}" class="text-danger" th:if="${#fields.hasErrors('categoria')}"></p>
                         <div class="mb-3">
-                            <label for="barrio" class="form-label" th:text="#{newRequest.neighborhood}">Barrio</label>
-                            <input type="text" class="form-control" id="barrio" name="barrio" required>
-                            <div id="error-barrio" class="error" th:text="#{newRequest.errorNeighborhood}">Barrio es obligatorio</div>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="destino" class="form-label" th:text="#{newRequest.destino}">Destino *</label>
+                                    <select class="form-select" id="destino" name="destino" required>
+                                        <option value="" disabled selected>Seleccione un destino</option>
+                                        <option value="cooperativa">Sant'Ana</option>
+                                        <option value="asociacion">Rivera</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="barrio" class="form-label" th:text="#{newRequest.neighborhood}">Barrio *</label>
+                                    <input type="text" class="form-control" id="barrio" name="barrio" required>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="mb-3">
-                            <label for="calle" class="form-label" th:text="#{newRequest.street}">Calle</label>
-                            <input type="text" class="form-control" id="calle" name="calle" required>
-                            <div id="error-calle" class="error" th:text="#{newRequest.errorStreet}">Calle es obligatorio</div>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="calle" class="form-label" th:text="#{newRequest.street}">Calle *</label>
+                                    <input type="text" class="form-control" id="calle" name="calle" required>
+                                </div>
+                                <div class="col">
+                                    <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa y Referencia *</label>
+                                    <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="mb-3">
-                            <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa</label>
-                            <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required>
-                            <div id="error-numeroDeCasa" class="error" th:text="#{newRequest.errorHouseNumber}">Número de casa es obligatorio</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label" th:text="#{newRequest.phoneNumber}">Teléfono</label>
+                            <label for="telefono" class="form-label" th:text="#{newRequest.phoneNumber}">Teléfono para contactar *</label>
                             <input type="tel" class="form-control" id="telefono" name="telefono" required>
-                            <div id="error-telefono" class="error" th:text="#{newRequest.errorPhoneNumber}">Teléfono es obligatorio</div>
                         </div>
+
                         <div class="mb-3">
-                            <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles</label>
+                            <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles *</label>
                             <select class="form-select" id="diasDisponibles" name="diasDisponibles" required onchange="updateAvailableHours()">
+                                <option value="" disabled selected>Seleccione un día</option>
                                 <option value="monday">Lunes</option>
                                 <option value="tuesday">Martes</option>
                                 <option value="wednesday">Miércoles</option>
@@ -110,42 +131,45 @@
                                 <option value="friday">Viernes</option>
                                 <option value="saturday">Sábado</option>
                             </select>
-                            <div id="error-diasDisponibles" class="error" th:text="#{newRequest.errorAvailableDays}">Días disponibles son obligatorios</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.collectionTime}">Hora de Recolección</label>
-                            <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required>
-                                <option value="" disabled selected>Seleccione la hora de recolección</option>
-                                <option value="08:00">08:00</option>
-                                <option value="09:00">09:00</option>
-                                <option value="10:00">10:00</option>
-                                <option value="11:00">11:00</option>
-                                <option value="12:00">12:00</option>
-                                <option value="13:00">13:00</option>
-                                <option value="14:00">14:00</option>
-                                <option value="15:00">15:00</option>
-                                <option value="16:00">16:00</option>
-                                <option value="17:00">17:00</option>
-                                <option value="18:00">18:00</option>
-                                <!-- Agrega más opciones si es necesario -->
-                            </select>
-                            <div id="error-horaRecoleccion" class="error" th:text="#{newRequest.errorCollectionTime}">Hora de recolección es obligatoria</div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="destino" class="form-label" th:text="#{newRequest.destino}">Destino</label>
-                            <select class="form-select" id="destino" name="destino">
-                                <option value="cooperativa">Cooperativa</option>
-                                <option value="asociacion">Asociacion</option>
-                            </select>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.collectionTime}">Hora de Recolección *</label>
+                                    <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required onchange="clearTimeInput()">
+                                        <option value="" disabled selected>Seleccione la hora de recolección</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="18:00">18:00</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="customHoraRecoleccion" class="form-label">Ingresar Hora *</label>
+                                    <input type="time" class="form-control mt-2" id="customHoraRecoleccion" name="customHoraRecoleccion" placeholder="Ingrese una hora" onchange="clearSelectInput()" min="08:00" max="18:00" required>
+                                </div>
+                            </div>
                         </div>
+
+
+
                         <div class="mb-3">
                             <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción</label>
-                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
-                            <div id="error-descripcion" class="error" th:text="#{newRequest.errorDescription}">Descripción es obligatoria</div>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
                         </div>
+
                         <button type="submit" class="btn btn-primary" th:text="#{newRequest.submit}">Enviar Solicitud</button>
                     </form>
+
+
                 </div>
             </div>
         </div>
@@ -161,6 +185,15 @@
 <!-- Fin del contenido principal -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function clearTimeInput() {
+        document.getElementById('customHoraRecoleccion').value = '';
+    }
+
+    function clearSelectInput() {
+        document.getElementById('horaRecoleccion').value = '';
+    }
+</script>
 <script>
     function previewFile() {
         const preview = document.getElementById('previewImage');
@@ -178,6 +211,30 @@
         }
     }
 </script>
+<script>
+    function updateAvailableHours() {
+        const day = document.getElementById('diasDisponibles').value;
+        const hourSelect = document.getElementById('horaRecoleccion');
 
+        // Limpiar las opciones actuales
+        hourSelect.innerHTML = '<option value="" disabled selected>Seleccione la hora de recolección</option>';
+
+        // Definir horas disponibles según el día
+        let hours = [];
+        if (day === 'saturday') {
+            hours = ['09:00', '10:00', '11:00'];
+        } else if (day) {
+            hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+        }
+
+        // Agregar las nuevas opciones
+        hours.forEach(hour => {
+            const option = document.createElement('option');
+            option.value = hour;
+            option.textContent = hour;
+            hourSelect.appendChild(option);
+        });
+    }
+</script>
 </body>
 </html>

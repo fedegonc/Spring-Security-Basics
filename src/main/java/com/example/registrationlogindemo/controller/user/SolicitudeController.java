@@ -51,7 +51,7 @@ public class SolicitudeController {
     }
 
     @PostMapping("/newsolicitude")
-    public String newSolicitudePost(@Valid Solicitude solicitud,
+    public String newSolicitudePost(@Valid @ModelAttribute("solicitud") Solicitude solicitud,
                                     BindingResult result, RedirectAttributes msg,
                                     @RequestParam("file") MultipartFile imagen,
                                     @AuthenticationPrincipal UserDetails currentUser) {
