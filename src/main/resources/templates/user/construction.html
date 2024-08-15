@@ -14,18 +14,7 @@
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
-    <style>
-        body, html {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f8f9fa;
-        }
-        .construction-container {
-            text-align: center;
-        }
-    </style>
+
 </head>
 <body>
 
@@ -70,7 +59,7 @@
 <div class="construction-container">
     <img src="/img/under-construction.png" alt="En Construcción" class="img-fluid" style="max-width: 300px;">
     <h1 th:text="#{construction.title}">Esta página está en construcción</h1>
-    <p th:text="#{construction.message}">Lo sentimos, estamos trabajando en esta página. Por favor, vuelve más tarde.</p>
+    <p th:text="#{construction.message}">Lo sentimos, estamos trabajando en esta página.</p>
     <button class="btn btn-primary" onclick="history.back()" th:text="#{construction.backButton}">Volver</button>
 </div>
 

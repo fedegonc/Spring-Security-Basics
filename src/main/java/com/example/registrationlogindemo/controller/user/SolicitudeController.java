@@ -73,16 +73,6 @@ public class SolicitudeController {
         } else {
             solicitud.setImagen(null); // O establece un valor por defecto
         }
-        try {
-            if (!imagen.isEmpty()) {
-                byte[] bytes = imagen.getBytes();
-                Path caminho = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
-                Files.write(caminho, bytes);
-                solicitud.setImagen(imagen.getOriginalFilename());
-            }
-        } catch (IOException e) {
-            System.out.println("Error al salvar imagen");
-        }
 
         User user = userRepository.findByUsername(currentUser.getUsername());
         if (user != null) {
@@ -95,6 +85,7 @@ public class SolicitudeController {
 
         return "redirect:/user/welcome";
     }
+
     // Método para manejar la solicitud GET para editar una solicitud
     @GetMapping("/editsolicitude/{id}")
     public ModelAndView showEditSolicitudeForm(@PathVariable("id") int id) {

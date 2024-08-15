@@ -101,5 +101,11 @@ public class GuestController {
         return "redirect:/init";
     }
 
+    @GetMapping("/construction")
+    public ModelAndView contruction() {
+        ModelAndView mv = new ModelAndView("user/construction");
+        return mv;
+    }
+
 }
 

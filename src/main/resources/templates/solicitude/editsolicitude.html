@@ -128,18 +128,6 @@
         </div>
 
         <div class="mb-3">
-            <label th:for="peso" class="form-label">Peso Aproximado (kg)</label>
-            <input type="number" class="form-control" id="peso" name="peso" th:value="${solicitude.peso}" required>
-            <div id="error-peso" class="error">Peso es obligatorio</div>
-        </div>
-
-        <div class="mb-3">
-            <label th:for="volumen" class="form-label">Volumen Aproximado (m³)</label>
-            <input type="number" class="form-control" id="volumen" name="volumen" th:value="${solicitude.volumen}" required>
-            <div id="error-volumen" class="error">Volumen es obligatorio</div>
-        </div>
-
-        <div class="mb-3">
             <label class="form-label" th:for="calle">Calle</label>
             <input type="text" class="form-control" name="calle" th:value="${solicitude.calle}" required>
         </div>
