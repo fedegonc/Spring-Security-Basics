@@ -45,8 +45,8 @@
                         <span th:text="#{label.chooseLang}"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">Español</a></li>
+                        <li><a class="dropdown-item" href="/user/welcome?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/user/welcome?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
                 <li class="nav-item"><a class="btn btn-primary" th:href="@{/user/profile/{id}(id=${user.id})}">Ver Perfil</a></li>
@@ -119,7 +119,7 @@
 
                     <img th:src="@{/img/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${solicitud.nombre}">Nombre de la solicitud</h5>
+
                         <p class="card-text date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
                     </div>
                     <ul class="list-group list-group-flush">

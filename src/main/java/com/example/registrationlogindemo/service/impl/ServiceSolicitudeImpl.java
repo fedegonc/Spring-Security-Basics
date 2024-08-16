@@ -39,10 +39,6 @@ public class ServiceSolicitudeImpl implements SolicitudeService {
     }
 
     // Método para encontrar solicitudes por empresa similar
-    @Override
-    public List<Solicitude> findSolicitudeByEmpresaLike(String empresa) {
-        return solicitudeRepository.findSolicitudeByNombreLike(empresa);
-    }
 
     // Método para encontrar solicitudes activas
     @Override

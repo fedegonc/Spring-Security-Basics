@@ -19,8 +19,6 @@ public interface SolicitudeRepository extends JpaRepository<Solicitude, Integer>
     // Método para buscar solicitudes por categoría que coincida con el texto proporcionado
     List<Solicitude> findSolicitudeByCategoriaLike(String descripcion);
 
-    // Método para buscar solicitudes por nombre que coincida con el texto proporcionado
-    List<Solicitude> findSolicitudeByNombreLike(String empresa);
 
     // Método para buscar solicitudes por estado activo o inactivo
     List<Solicitude> findSolicitudeByActivo(String estado);

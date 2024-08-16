@@ -103,7 +103,6 @@
         <div class="card-inner">
           <img th:src="@{/img/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
           <div class="card-body">
-            <h5 class="card-title" th:text="${solicitud.nombre}">Nombre de la solicitud</h5>
             <p class="card-text date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
           </div>
           <ul class="list-group list-group-flush">
@@ -123,7 +122,6 @@
       <thead>
       <tr>
         <th scope="col">Imagen</th>
-        <th scope="col" th:text="#{solicitudes.nombre}">Nombre</th>
         <th scope="col" th:text="#{solicitudes.fecha}">Fecha</th>
         <th scope="col" th:text="#{solicitudes.estado}">Estado</th>
         <th scope="col" th:text="#{solicitudes.accion}">Acción</th>
@@ -132,7 +130,6 @@
       <tbody>
       <tr th:each="solicitud : ${solicitudes}">
         <td><img th:src="@{/img/{img}(img=${solicitud.imagen})}" alt="Imagen de la solicitud" style="width: 50px; height: 50px;"></td>
-        <td th:text="${solicitud.nombre}">Nombre de la solicitud</td>
         <td class="date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</td>
         <td class="estado-field" th:text="${solicitud.estado}">Estado de la solicitud</td>
         <td><a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a></td>

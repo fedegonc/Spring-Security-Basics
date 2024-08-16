@@ -21,8 +21,6 @@ public class Solicitude {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private String nombre;
 
     @Column(nullable = false)
     private String categoria;
@@ -68,11 +66,6 @@ public class Solicitude {
     @Column(nullable = false)
     private String telefono;
 
-    @Column(nullable = false)
-    private String peso;
-
-    @Column(nullable = false)
-    private String volumen;
 
     @Column(nullable = false)
     private String destino;

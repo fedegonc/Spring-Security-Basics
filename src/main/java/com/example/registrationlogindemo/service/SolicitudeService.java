@@ -18,8 +18,6 @@ public interface SolicitudeService {
     // Método para encontrar solicitudes por categoría similar
     List<Solicitude> findSolicitudeByCategoriaLike(String descripcion);
 
-    // Método para encontrar solicitudes por nombre de empresa similar
-    List<Solicitude> findSolicitudeByEmpresaLike(String nombre);
 
     // Método para encontrar solicitudes activas
     List<Solicitude> findSolicitudeActivos();

@@ -115,7 +115,7 @@ public class SolicitudeController {
         Optional<Solicitude> existingSolicitudeOpt = solicitudeRepository.findById(id);
         if (existingSolicitudeOpt.isPresent()) {
             Solicitude existingSolicitude = existingSolicitudeOpt.get();
-            existingSolicitude.setNombre(solicitude.getNombre());
+
             existingSolicitude.setCategoria(solicitude.getCategoria());
             existingSolicitude.setActivo(solicitude.isActivo());
             existingSolicitude.setDescripcion(solicitude.getDescripcion());
@@ -125,8 +125,7 @@ public class SolicitudeController {
             existingSolicitude.setBarrio(solicitude.getBarrio());
             existingSolicitude.setNumeroDeCasa(solicitude.getNumeroDeCasa());
             existingSolicitude.setTelefono(solicitude.getTelefono());
-            existingSolicitude.setPeso(solicitude.getPeso());
-            existingSolicitude.setVolumen(solicitude.getVolumen());
+
 
             try {
                 if (!imagen.isEmpty()) {

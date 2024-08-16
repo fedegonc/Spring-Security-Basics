@@ -78,7 +78,7 @@ public class ASolicitudes {
         Solicitude changeSolicitude = solicitudeRepository.findById(solicitude.getId()).orElse(null);
         if (changeSolicitude != null) {
             // Actualizar los campos de la solicitud con los nuevos valores
-            changeSolicitude.setNombre(solicitude.getNombre());
+
             changeSolicitude.setCategoria(solicitude.getCategoria());
 
             changeSolicitude.setDescripcion(solicitude.getDescripcion());
