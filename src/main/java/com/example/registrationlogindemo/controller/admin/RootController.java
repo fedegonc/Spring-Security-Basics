@@ -200,13 +200,13 @@ public class RootController {
                 byte[] bytes = file.getBytes();
                 Path imagePath = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
                 Files.write(imagePath, bytes);
-                image.setImagen(file.getOriginalFilename());
+
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
                 return "redirect:/root/images"; // Cambia esta URL según la estructura de tu aplicación
             }
         } else {
-            image.setImagen(null); // O establece un valor por defecto
+
         }
 
         User user = userRepository.findByUsername(currentUser.getUsername());
@@ -257,7 +257,7 @@ public class RootController {
                     byte[] bytes = imagen.getBytes();
                     Path path = Paths.get("./src/main/resources/static/img/" + imagen.getOriginalFilename());
                     Files.write(path, bytes);
-                    imageEdit.setImagen(imagen.getOriginalFilename());
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();

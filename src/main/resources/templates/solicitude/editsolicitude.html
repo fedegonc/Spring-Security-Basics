@@ -67,96 +67,116 @@
                 </div>
                 <div class="card-body">
 
+                    <form id="editForm" method="post" enctype="multipart/form-data" th:action="@{'/user/editsolicitude/' + ${solicitude.id}}">
+                        <!-- Texto de ayuda para campos obligatorios -->
+                        <p><strong>*</strong> Indica que el campo es obligatorio</p>
+
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Imagen Actual</label>
+                            <img th:src="@{/img/{imagen}(imagen=${solicitude.imagen})}" class="img-thumbnail mb-2" style="max-width: 200px;" alt="Imagen actual"/>
+                            <label for="file" class="form-label">Nueva Imagen *</label>
+                            <input type="file" class="form-control" id="file" name="file">
+                        </div>
 
 
-    <form method="post" enctype="multipart/form-data" th:action="@{'/user/editsolicitude/' + ${solicitude.id}}">
-        <div class="mb-3">
-            <label class="form-label" th:for="file">Imagen actual</label>
-            <img th:src="@{/img/{imagen}(imagen=${solicitude.imagen})}" width="100" height="100" class="mb-2"/>
-            <label class="form-label" th:for="file">Nueva imagen</label>
-            <input class="form-control" type="file" name="file">
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label">Categoría *</label>
+                            <select class="form-select" id="categoria" name="categoria" required>
+                                <option value="" disabled selected>Seleccione la categoría</option>
+                                <option value="plastico" th:selected="${solicitude.categoria == 'plastico'}">Plástico</option>
+                                <option value="carton" th:selected="${solicitude.categoria == 'carton'}">Cartón</option>
+                                <option value="metal" th:selected="${solicitude.categoria == 'metal'}">Metal</option>
+                                <option value="eletronico" th:selected="${solicitude.categoria == 'eletronico'}">Eletronico</option>
+                                <option value="otros" th:selected="${solicitude.categoria == 'otros'}">Otros</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required th:text="${solicitude.descripcion}"></textarea>
+                        </div>
+
+                        <!-- Campo de selección de días -->
+                        <div class="mb-3">
+                            <label for="diasDisponibles" class="form-label">Días disponibles</label>
+                            <select id="diasDisponibles" class="form-select" onchange="updateAvailableHours(); clearTimeInput();">
+                                <option value="" disabled selected>Seleccione un día</option>
+                                <option value="monday">Lunes</option>
+                                <option value="tuesday">Martes</option>
+                                <option value="wednesday">Miércoles</option>
+                                <option value="thursday">Jueves</option>
+                                <option value="friday">Viernes</option>
+                                <option value="saturday">Sábado</option>
+                            </select>
+                        </div>
+
+                        <!-- Campo de selección de hora -->
+                        <div class="mb-3">
+                            <label for="horaRecoleccion" class="form-label">Hora de recolección</label>
+                            <select id="horaRecoleccion" class="form-select" onchange="clearSelectInput();">
+                                <option value="" disabled selected>Seleccione la hora de recolección</option>
+                            </select>
+                        </div>
+
+                        <!-- Campo de ingreso de hora personalizada -->
+                        <div class="mb-3">
+                            <label for="customHoraRecoleccion" class="form-label">Hora personalizada</label>
+                            <input type="time" id="customHoraRecoleccion" class="form-control" onchange="clearSelectInput();">
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="calle" class="form-label">Calle *</label>
+                                    <input type="text" class="form-control" id="calle" name="calle" th:value="${solicitude.calle}" required>
+                                </div>
+                                <div class="col">
+                                    <label for="numeroDeCasa" class="form-label">Número de Casa *</label>
+                                    <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" th:value="${solicitude.numeroDeCasa}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="barrio" class="form-label">Barrio *</label>
+                            <input type="text" class="form-control" id="barrio" name="barrio" th:value="${solicitude.barrio}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono *</label>
+                            <input type="tel" class="form-control" id="telefono" name="telefono" th:value="${solicitude.telefono}" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        <a th:href="@{'/user/deletesolicitude/' + ${solicitude.id}}" class="btn btn-danger mt-2">Borrar Solicitud</a>
+                    </form>
+
+                </div>
         </div>
-
-        <div class="mb-3">
-            <label class="form-label" th:for="nombre">Nombre</label>
-            <input type="text" class="form-control" name="nombre" th:value="${solicitude.nombre}" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" th:for="categoria">Categoría</label>
-            <select class="form-select" name="categoria" required>
-                <option value="plastico" th:selected="${solicitude.categoria == 'plastico'}">Plástico</option>
-                <option value="carton" th:selected="${solicitude.categoria == 'carton'}">Cartón</option>
-                <option value="madera" th:selected="${solicitude.categoria == 'madera'}">Madera</option>
-                <option value="mixto" th:selected="${solicitude.categoria == 'mixto'}">Mixto</option>
-                <option value="organico" th:selected="${solicitude.categoria == 'organico'}">Orgánico</option>
-                <option value="otros" th:selected="${solicitude.categoria == 'otros'}">Otros</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" th:for="descripcion">Descripción</label>
-            <textarea class="form-control" name="descripcion" required th:text="${solicitude.descripcion}"></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" th:for="diasDisponibles">Días Disponibles</label>
-            <select class="form-select" name="diasDisponibles" required>
-                <option value="monday" th:selected="${solicitude.diasDisponibles == 'monday'}">Lunes</option>
-                <option value="tuesday" th:selected="${solicitude.diasDisponibles == 'tuesday'}">Martes</option>
-                <option value="wednesday" th:selected="${solicitude.diasDisponibles == 'wednesday'}">Miércoles</option>
-                <option value="thursday" th:selected="${solicitude.diasDisponibles == 'thursday'}">Jueves</option>
-                <option value="friday" th:selected="${solicitude.diasDisponibles == 'friday'}">Viernes</option>
-                <option value="saturday" th:selected="${solicitude.diasDisponibles == 'saturday'}">Sábado</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" th:for="horaRecoleccion">Hora de Recolección</label>
-            <select class="form-select" name="horaRecoleccion" required>
-                <option value="08:00" th:selected="${solicitude.horaRecoleccion == '08:00'}">08:00</option>
-                <option value="09:00" th:selected="${solicitude.horaRecoleccion == '09:00'}">09:00</option>
-                <option value="10:00" th:selected="${solicitude.horaRecoleccion == '10:00'}">10:00</option>
-                <option value="11:00" th:selected="${solicitude.horaRecoleccion == '11:00'}">11:00</option>
-                <option value="12:00" th:selected="${solicitude.horaRecoleccion == '12:00'}">12:00</option>
-                <option value="13:00" th:selected="${solicitude.horaRecoleccion == '13:00'}">13:00</option>
-                <option value="14:00" th:selected="${solicitude.horaRecoleccion == '14:00'}">14:00</option>
-                <option value="15:00" th:selected="${solicitude.horaRecoleccion == '15:00'}">15:00</option>
-                <option value="16:00" th:selected="${solicitude.horaRecoleccion == '16:00'}">16:00</option>
-                <option value="17:00" th:selected="${solicitude.horaRecoleccion == '17:00'}">17:00</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" th:for="calle">Calle</label>
-            <input type="text" class="form-control" name="calle" th:value="${solicitude.calle}" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" th:for="barrio">Barrio</label>
-            <input type="text" class="form-control" name="barrio" th:value="${solicitude.barrio}" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" th:for="numeroDeCasa">Número de Casa</label>
-            <input type="text" class="form-control" name="numeroDeCasa" th:value="${solicitude.numeroDeCasa}" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" th:for="telefono">Teléfono</label>
-            <input type="text" class="form-control" name="telefono" th:value="${solicitude.telefono}" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>    <a th:href="@{'/user/deletesolicitude/' + ${solicitude.id}}" class="btn btn-danger mt-2">Borrar Solicitud</a>
-
-    </form>
-
-
-</div>
     </div>
 </div>
-</div>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">Comunicación</h4>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="messageInput">Escriba su mensaje:</label>
+                            <textarea class="form-control" id="messageInput" rows="3"></textarea>
+                        </div>
+                        <button class="btn btn-primary mt-2" onclick="sendMessage()">Enviar</button>
+                    </div>
+                    <div class="card-footer">
+                        <h6>Mensajes anteriores:</h6>
+                        <ul class="list-group" id="messageList">
+                            <!-- Los mensajes se agregarán aquí dinámicamente -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container text-right">
@@ -165,6 +185,38 @@
         float-right" th:text="#{volver}">Volver atrás</button>    </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function clearTimeInput() {
+        document.getElementById('customHoraRecoleccion').value = '';
+    }
 
+    function clearSelectInput() {
+        document.getElementById('horaRecoleccion').value = '';
+    }
+
+    function updateAvailableHours() {
+        const day = document.getElementById('diasDisponibles').value;
+        const hourSelect = document.getElementById('horaRecoleccion');
+
+        // Limpiar las opciones actuales
+        hourSelect.innerHTML = '<option value="" disabled selected>Seleccione la hora de recolección</option>';
+
+        // Definir horas disponibles según el día
+        let hours = [];
+        if (day === 'saturday') {
+            hours = ['09:00', '10:00', '11:00'];
+        } else if (day) {
+            hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+        }
+
+        // Agregar las nuevas opciones
+        hours.forEach(hour => {
+            const option = document.createElement('option');
+            option.value = hour;
+            option.textContent = hour;
+            hourSelect.appendChild(option);
+        });
+    }
+</script>
 </body>
 </html>

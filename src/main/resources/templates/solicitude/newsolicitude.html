@@ -136,7 +136,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.collectionTime}">Hora de Recolección *</label>
-                                    <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required onchange="clearTimeInput()">
+                                    <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" onchange="toggleTimeInputs()" required>
                                         <option value="" disabled selected>Seleccione la hora de recolección</option>
                                         <option value="08:00">08:00</option>
                                         <option value="09:00">09:00</option>
@@ -153,87 +153,80 @@
                                 </div>
                                 <div class="col">
                                     <label for="customHoraRecoleccion" class="form-label">Ingresar Hora *</label>
-                                    <input type="time" class="form-control mt-2" id="customHoraRecoleccion" name="customHoraRecoleccion" placeholder="Ingrese una hora" onchange="clearSelectInput()" min="08:00" max="18:00" required>
+                                    <input type="time" class="form-control mt-2" id="customHoraRecoleccion" name="customHoraRecoleccion" onchange="toggleTimeInputs()">
                                 </div>
                             </div>
+                            <small class="text-muted">Seleccione una hora o ingrésela manualmente.</small>
                         </div>
-
-
 
                         <div class="mb-3">
-                            <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción</label>
-                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                            <label for="message" class="form-label" th:text="#{newRequest.additionalInfo}">Información Adicional</label>
+                            <textarea class="form-control" id="message" name="message" rows="4"></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" th:text="#{newRequest.submit}">Enviar Solicitud</button>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" th:text="#{newRequest.submit}">Enviar</button>
+                        </div>
                     </form>
-
-
                 </div>
             </div>
         </div>
     </div>
 </div>
-<footer class="footer mt-auto py-3 bg-dark text-white">
-    <div class="container text-right">
-        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
-        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
-        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
-        float-right" th:text="#{volver}">Volver atrás</button>    </div>
-</footer>
-<!-- Fin del contenido principal -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    function clearTimeInput() {
-        document.getElementById('customHoraRecoleccion').value = '';
-    }
 
-    function clearSelectInput() {
-        document.getElementById('horaRecoleccion').value = '';
-    }
-</script>
 <script>
     function previewFile() {
         const preview = document.getElementById('previewImage');
         const file = document.getElementById('file').files[0];
         const reader = new FileReader();
 
-        reader.onloadend = function () {
+        reader.addEventListener("load", function () {
             preview.src = reader.result;
-        }
+        }, false);
 
         if (file) {
-            reader.readAsDataURL(file); // lee el archivo como una URL de datos
-        } else {
-            preview.src = "/img/thumbnail-default.jpg"; // imagen por defecto
+            reader.readAsDataURL(file);
         }
     }
-</script>
-<script>
+
     function updateAvailableHours() {
-        const day = document.getElementById('diasDisponibles').value;
-        const hourSelect = document.getElementById('horaRecoleccion');
+        const diasDisponibles = document.getElementById('diasDisponibles').value;
+        const horaRecoleccion = document.getElementById('horaRecoleccion');
 
-        // Limpiar las opciones actuales
-        hourSelect.innerHTML = '<option value="" disabled selected>Seleccione la hora de recolección</option>';
-
-        // Definir horas disponibles según el día
-        let hours = [];
-        if (day === 'saturday') {
-            hours = ['09:00', '10:00', '11:00'];
-        } else if (day) {
-            hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+        if (diasDisponibles === 'saturday') {
+            // Limitar la selección de horas si el día seleccionado es sábado
+            for (let i = 0; i < horaRecoleccion.options.length; i++) {
+                const optionValue = parseInt(horaRecoleccion.options[i].value.split(':')[0]);
+                horaRecoleccion.options[i].disabled = (optionValue < 8 || optionValue > 12);
+            }
+        } else {
+            // Habilitar todas las opciones si no es sábado
+            for (let i = 0; i < horaRecoleccion.options.length; i++) {
+                horaRecoleccion.options[i].disabled = false;
+            }
         }
+    }
 
-        // Agregar las nuevas opciones
-        hours.forEach(hour => {
-            const option = document.createElement('option');
-            option.value = hour;
-            option.textContent = hour;
-            hourSelect.appendChild(option);
-        });
+    function toggleTimeInputs() {
+        const horaRecoleccion = document.getElementById('horaRecoleccion');
+        const customHoraRecoleccion = document.getElementById('customHoraRecoleccion');
+
+        // Habilitar/Deshabilitar según la selección
+        if (horaRecoleccion.value) {
+            customHoraRecoleccion.disabled = true;
+            customHoraRecoleccion.value = ""; // Limpiar valor del campo manual si se selecciona de la lista
+        } else if (customHoraRecoleccion.value) {
+            horaRecoleccion.disabled = true;
+            horaRecoleccion.value = ""; // Limpiar selección de la lista si se ingresa manualmente
+        } else {
+            // Habilitar ambos si ninguno tiene valor
+            horaRecoleccion.disabled = false;
+            customHoraRecoleccion.disabled = false;
+        }
     }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXlCHrfp0LyMnbdAd3sT/A68pZmk4GeEnw7HxS1RF2z3Bz2NE6DkGh0TJf2" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhG81rGk5y7YWh/5gUmK04k5H6E9I6LTXFlgGv2f5SwE5Hf6c/7uqB5l6cF9" crossorigin="anonymous"></script>
 </body>
 </html>

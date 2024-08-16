@@ -70,8 +70,8 @@
         <!-- Filas dinámicas -->
         <tr th:each="image: ${images}">
             <td th:text="${image.id}"></td>
-            <td><img th:src="@{/img/{img}(img=${image.imagen})}" width="100" height="100"></td>
-            <td th:text="${image.imagen}"></td>
+            <td><img th:src="@{/img/{img}(img=${image.nombre})}" width="100" height="100"></td>
+            <td th:text="${image.nombre}"></td>
 
             <td>
                 <a class="btn btn-primary" th:href="@{/admin/editimage/{id}(id=${image.id})}">Editar</a>

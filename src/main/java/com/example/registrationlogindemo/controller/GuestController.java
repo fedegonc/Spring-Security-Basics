@@ -1,15 +1,20 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Article;
+import com.example.registrationlogindemo.entity.Image;
 import com.example.registrationlogindemo.entity.Report;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ArticleRepository;
+import com.example.registrationlogindemo.repository.ImageRepository;
 import com.example.registrationlogindemo.repository.ReportRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class GuestController {
@@ -34,6 +40,9 @@ public class GuestController {
     UserRepository userRepository;
     @Autowired
     ReportRepository reportRepository;
+
+    @Autowired
+    ImageRepository imageRepository;
 
 
     // Obtiene la página de inicio y muestra las solicitudes activas
@@ -72,13 +81,43 @@ public class GuestController {
 
     @GetMapping("/img/{img}")
     @ResponseBody
-    public byte[] getImagens(@PathVariable("img") String img) throws IOException {
-        File caminho = new File("./src/main/resources/static/img/" + img);
-        if (img != null || img.trim().length() > 0) {
-            return Files.readAllBytes(caminho.toPath());
+    public ResponseEntity<byte[]> getImage(@PathVariable("img") String img) {
+        // Primero intentamos obtener la imagen del directorio estático
+        File file = new File("./src/main/resources/static/img/" + img);
+        if (file.exists() && !file.isDirectory()) {
+            try {
+                byte[] imageBytes = Files.readAllBytes(file.toPath());
+                String contentType = Files.probeContentType(file.toPath());
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .body(imageBytes);
+            } catch (IOException e) {
+                // En caso de error al leer el archivo
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
         }
-        return null;
+
+        // Si la imagen no se encuentra en el directorio estático, buscar en la base de datos
+        Optional<Image> image = imageRepository.findByNombre(img);
+        if (image.isPresent()) {
+            image.get();
+            MediaType mediaType;
+            try {
+                mediaType = MediaType.parseMediaType(String.valueOf(image.get()));
+            } catch (IllegalArgumentException e) {
+                // Si el tipo de contenido no es válido, usar un tipo de contenido por defecto
+                mediaType = MediaType.APPLICATION_OCTET_STREAM;
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(mediaType)
+                    .body(image.get().getData());
+        }
+
+        // Si la imagen no se encuentra ni en el directorio estático ni en la base de datos
+        return ResponseEntity.notFound().build();
     }
+
 
     @GetMapping("/report")
     public ModelAndView newReport() {
