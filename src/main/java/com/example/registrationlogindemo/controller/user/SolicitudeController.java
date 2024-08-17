@@ -1,10 +1,14 @@
 package com.example.registrationlogindemo.controller.user;
 
 import ch.qos.logback.core.model.Model;
+import com.example.registrationlogindemo.entity.Message;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.repository.MessageRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.MessageService;
+import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -33,7 +39,20 @@ public class SolicitudeController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    MessageRepository messageRepository;
+
     private UserService userService;
+
+
+    @Autowired
+    private MessageService messageService;
+
+    @Autowired
+    private SolicitudeService solicitudeService;
+
+
+
 
     // Constructor que inyecta el servicio UserService
     public void UserController(UserService userService) {
@@ -88,14 +107,24 @@ public class SolicitudeController {
 
     // Método para manejar la solicitud GET para editar una solicitud
     @GetMapping("/editsolicitude/{id}")
-    public ModelAndView showEditSolicitudeForm(@PathVariable("id") int id) {
+    public ModelAndView showEditSolicitudeForm(@PathVariable("id") int id,
+                                               @AuthenticationPrincipal UserDetails currentUser) {
         ModelAndView mv = new ModelAndView("solicitude/editsolicitude");
+        User currentUserEntity = userService.findByUsername(currentUser.getUsername());
+
         Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
+
         if (solicitudeOpt.isPresent()) {
-            mv.addObject("solicitude", solicitudeOpt.get());
+            Solicitude solicitude = solicitudeOpt.get();
+            mv.addObject("solicitude", solicitude);
+
+            // Obtener los mensajes asociados a esta solicitud
+            List<Message> messages = messageService.findMessagesBySolicitudeAndUser(solicitude, currentUserEntity);
+            mv.addObject("messages", messages);
         } else {
             mv.setViewName("redirect:/user/welcome");
         }
+
         return mv;
     }
 
@@ -148,6 +177,45 @@ public class SolicitudeController {
 
         return mv;
     }
+
+
+
+    @PostMapping("/solicitude/{id}/messages")
+    public String sendMessage(@PathVariable("id") int id,
+                              @RequestParam("messageInput") String messageContent,
+                              @AuthenticationPrincipal UserDetails currentUser,
+                              RedirectAttributes redirectAttributes) {
+
+        // Buscar la solicitud por ID
+        Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
+        if (solicitudeOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "No se encontró la solicitud.");
+            return "redirect:/user/editsolicitude/" + id;
+        }
+
+        Solicitude solicitude = solicitudeOpt.get();
+
+        // Buscar al usuario actual
+        User user = userRepository.findByUsername(currentUser.getUsername());
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
+            return "redirect:/user/editsolicitude/" + id;
+        }
+
+        // Crear y guardar el nuevo mensaje
+        Message newMessage = new Message();
+        newMessage.setSolicitud(solicitude);
+        newMessage.setUser(user);
+        newMessage.setContenido(messageContent);
+        newMessage.setFechaEnvio(LocalDateTime.now());
+
+        messageRepository.save(newMessage);
+        redirectAttributes.addFlashAttribute("exito", "Mensaje enviado con éxito.");
+
+        // Redirigir de vuelta a la página de edición de la solicitud
+        return "redirect:/user/editsolicitude/" + id;
+    }
+
 
     @GetMapping("/deletesolicitude/{id}")
     public String deleteSolicitude(@PathVariable("id") long id) {

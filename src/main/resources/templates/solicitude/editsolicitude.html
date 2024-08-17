@@ -154,31 +154,44 @@
         </div>
     </div>
 </div>
+
+
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
                 <h4 class="text-center">Comunicación</h4>
                 <div class="card">
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="messageInput">Escriba su mensaje:</label>
-                            <textarea class="form-control" id="messageInput" rows="3"></textarea>
-                        </div>
-                        <button class="btn btn-primary mt-2" onclick="sendMessage()">Enviar</button>
+                        <form th:action="@{'/user/solicitude/' + ${solicitude.id} + '/messages'}" method="post">
+                            <div class="form-group">
+                                <label for="messageInput">Escriba su mensaje:</label>
+                                <textarea class="form-control" id="messageInput" name="messageInput" rows="3" required></textarea>
+                            </div>
+                            <button class="btn btn-primary mt-2" type="submit">Enviar</button>
+                        </form>
                     </div>
                     <div class="card-footer">
                         <h6>Mensajes anteriores:</h6>
                         <ul class="list-group" id="messageList">
-                            <!-- Los mensajes se agregarán aquí dinámicamente -->
+                            <li class="list-group-item" th:each="message : ${messages}">
+                                <strong th:text="${message.user.username}">User:</strong>
+                                <span th:text="${message.contenido}">Mensaje</span>
+                                <small class="text-muted" th:text="${#temporals.format(message.fechaEnvio, 'dd/MM/yyyy HH:mm')}">Fecha</small>
+                                <!-- Formulario para borrar el mensaje -->
+                                <form th:action="@{'/user/message/' + ${message.id} + '/delete'}" method="post" style="display:inline;">
+                                    <button class="btn btn-danger btn-sm" type="submit">Borrar</button>
+                                </form>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<footer class="footer mt-auto py-3 bg-dark text-white">
+
+
+    <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container text-right">
         <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
         <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
