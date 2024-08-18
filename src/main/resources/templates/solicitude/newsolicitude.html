@@ -69,7 +69,7 @@
 
                         <div class="mb-3">
                             <label for="file" class="form-label" th:text="#{newRequest.wasteImage}">Imagen del Residuo *</label>
-                            <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;"  alt="img"/>
+                            <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" alt="img"/>
                             <input type="file" class="form-control" id="file" name="file" onchange="previewFile()" required>
                         </div>
 
@@ -80,7 +80,7 @@
                                 <option value="plastico">Plástico</option>
                                 <option value="carton">Cartón</option>
                                 <option value="metal">Metal</option>
-                                <option value="eletronicos">Eletrónicos</option>
+                                <option value="eletronicos">Electrónicos</option>
                                 <option value="otros">Otros</option>
                             </select>
                         </div>
@@ -107,6 +107,11 @@
                         <div class="mb-3">
                             <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa y Referencia *</label>
                             <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="referenciaLocal" class="form-label" th:text="#{newRequest.localReference}">Referencia Local *</label>
+                            <input type="text" class="form-control" id="referenciaLocal" name="referenciaLocal" required>
                         </div>
 
                         <div class="mb-3">
@@ -163,9 +168,18 @@
                             <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="peso" class="form-label" th:text="#{newRequest.weight}">Peso *</label>
+                            <input type="text" class="form-control" id="peso" name="peso" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tamaño" class="form-label" th:text="#{newRequest.size}">Tamaño *</label>
+                            <input type="text" class="form-control" id="tamaño" name="tamaño" required>
+                        </div>
+
                         <button type="submit" class="btn btn-primary" th:text="#{newRequest.submit}">Enviar Solicitud</button>
                     </form>
-
                 </div>
             </div>
         </div>

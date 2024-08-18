@@ -83,7 +83,7 @@
 <hr/>
 
 <!-- Botones para alternar entre vistas -->
-<div class="container mt-4 text-center">
+<div class="container mt-4 text-end">
     <button id="view-cards-btn" class="btn btn-primary">Ver Tarjetas</button>
     <button id="view-table-btn" class="btn btn-secondary">Ver Listas</button>
 </div>
@@ -131,16 +131,14 @@
 
 <!-- Vista de listas -->
 <div id="table-view" class="container mt-4 d-none">
-    <!-- Aquí puedes colocar el contenido de la vista en lista, similar al código de las tarjetas, pero con el formato de lista -->
     <ul class="list-group">
-        <li class="list-group-item" th:each="solicitud : ${solicitude}">
-            <div class="d-flex w-100 justify-content-between">
-
-                <small class="text-muted date-field" th:text="${solicitud.fecha}">Fecha</small>
+        <li class="list-group-item d-flex align-items-center justify-content-between" th:each="solicitud : ${solicitude}">
+            <img th:src="@{/img/{img}(img=${solicitud.imagen})}" alt="Imagen de la solicitud" style="width: 50px; height: 50px; margin-right: 15px;">
+            <div class="d-flex flex-column flex-grow-1">
+                <span class="date-field" th:text="${solicitud.fecha}">Fecha</span>
+                <span class="estado-field" th:text="#{newRequest.status} + ': ' + #{${solicitud.estado}}">Estado</span>
             </div>
-            <p class="mb-1" th:text="${solicitud.descripcion}">Descripción de la solicitud</p>
-            <small class="text-muted estado-field" th:text="#{newRequest.status} + ': ' + #{${solicitud.estado}}">Estado</small>
-            <a class="btn btn-primary mt-2" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
+            <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
         </li>
     </ul>
 </div>
