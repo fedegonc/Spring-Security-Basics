@@ -26,12 +26,14 @@ public class Solicitude {
     private String categoria;
 
     @Column(nullable = false)
+    private String imagen;
+
+    @Column(nullable = false)
     private boolean activo = true; // Inicializar con true por defecto
 
     @Lob
     private String descripcion = "";
 
-    private String imagen;
 
     @Column(nullable = false)
     private String diasDisponibles;
@@ -64,12 +66,20 @@ public class Solicitude {
     private String numeroDeCasa;
 
     @Column(nullable = false)
-    private String telefono;
+    private String referenciaLocal;
 
+    @Column(nullable = false)
+    private String telefono;
 
     @Column(nullable = false)
     private String destino;
 
+    @Column(nullable = false)
+    private String peso;
+
+    @Column(nullable = false)
+    private String tamaño;
+    
     public enum Estado {
         EN_ESPERA,
         ACEPTADA,
