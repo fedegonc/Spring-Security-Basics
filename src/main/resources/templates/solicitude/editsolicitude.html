@@ -1,34 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Frontera de la Paz Sustentable</title>
+    <title>Frontera de la Paz Sustentable - Editar Solicitud</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 </head>
-
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <img src="/img/logov4.png" alt="logo" width="50" height="50">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="true" aria-label="Toggle navigation">
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown language-dropdown">
-
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span th:text="#{label.chooseLang}"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -36,7 +25,6 @@
                         <li><a class="dropdown-item" href="/user/editsolicitude?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
-
                 <li class="nav-item">
                     <a class="navbar-brand" th:href="@{/logout}" th:text="#{salir}">Salir</a>
                 </li>
@@ -49,8 +37,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
             <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
-            <!-- Elemento activo de las migas de pan -->
-            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.editRequest}">Nueva Solicitud</li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.editRequest}">Editar Solicitud</li>
         </ol>
     </nav>
 </div>
@@ -58,17 +45,15 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
-
             <div class="card">
                 <div class="card-header">
-                    <!-- Título del formulario -->
-                    <h3 class="text-center" >Editar Solicitud</h3>
+                    <h3 class="text-center">Editar Solicitud</h3>
                 </div>
                 <div class="card-body">
-
                     <form id="editForm" method="post" enctype="multipart/form-data" th:action="@{'/user/editsolicitude/' + ${solicitude.id}}">
-                        <!-- Texto de ayuda para campos obligatorios -->
                         <p><strong>*</strong> Indica que el campo es obligatorio</p>
+
+
 
                         <div class="mb-3">
                             <label for="file" class="form-label">Imagen Actual</label>
@@ -79,159 +64,143 @@
 
 
                         <div class="mb-3">
+                            <label for="destino" class="form-label" th:text="#{newRequest.destino}">Destino *</label>
+                            <select class="form-select" id="destino" name="destino" required>
+                                <option value="" disabled>Seleccione un destino</option>
+                                <option value="cooperativa" th:selected="${solicitude.destino == 'cooperativa'}">Rivera</option>
+                                <option value="asociacion" th:selected="${solicitude.destino == 'asociacion'}">Sant'Ana</option>
+                            </select>
+                        </div>
+
+
+                        <div class="mb-3">
                             <label for="categoria" class="form-label">Categoría *</label>
                             <select class="form-select" id="categoria" name="categoria" required>
-                                <option value="" disabled selected>Seleccione la categoría</option>
+                                <option value="" disabled>Seleccione la categoría</option>
                                 <option value="plastico" th:selected="${solicitude.categoria == 'plastico'}">Plástico</option>
                                 <option value="carton" th:selected="${solicitude.categoria == 'carton'}">Cartón</option>
                                 <option value="metal" th:selected="${solicitude.categoria == 'metal'}">Metal</option>
-                                <option value="eletronico" th:selected="${solicitude.categoria == 'eletronico'}">Eletronico</option>
+                                <option value="eletronico" th:selected="${solicitude.categoria == 'eletronico'}">Eletrónico</option>
                                 <option value="otros" th:selected="${solicitude.categoria == 'otros'}">Otros</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripción</label>
-                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required th:text="${solicitude.descripcion}"></textarea>
+                            <label for="descripcion" class="form-label">Descripción *</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" th:text="${solicitude.descripcion}" required></textarea>
                         </div>
 
-                        <!-- Campo de selección de días -->
                         <div class="mb-3">
-                            <label for="diasDisponibles" class="form-label">Días disponibles</label>
-                            <select id="diasDisponibles" class="form-select" onchange="updateAvailableHours(); clearTimeInput();">
-                                <option value="" disabled selected>Seleccione un día</option>
-                                <option value="monday">Lunes</option>
-                                <option value="tuesday">Martes</option>
-                                <option value="wednesday">Miércoles</option>
-                                <option value="thursday">Jueves</option>
-                                <option value="friday">Viernes</option>
-                                <option value="saturday">Sábado</option>
+                            <label for="diasDisponibles" class="form-label">Días Disponibles *</label>
+                            <select class="form-select" id="diasDisponibles" name="diasDisponibles" required onchange="updateAvailableHours()">
+                                <option value="" disabled>Seleccione un día</option>
+                                <option value="monday" th:selected="${solicitude.diasDisponibles == 'monday'}">Lunes</option>
+                                <option value="tuesday" th:selected="${solicitude.diasDisponibles == 'tuesday'}">Martes</option>
+                                <option value="wednesday" th:selected="${solicitude.diasDisponibles == 'wednesday'}">Miércoles</option>
+                                <option value="thursday" th:selected="${solicitude.diasDisponibles == 'thursday'}">Jueves</option>
+                                <option value="friday" th:selected="${solicitude.diasDisponibles == 'friday'}">Viernes</option>
+                                <option value="saturday" th:selected="${solicitude.diasDisponibles == 'saturday'}">Sábado</option>
                             </select>
                         </div>
 
-                        <!-- Campo de selección de hora -->
                         <div class="mb-3">
-                            <label for="horaRecoleccion" class="form-label">Hora de recolección</label>
-                            <select id="horaRecoleccion" class="form-select" onchange="clearSelectInput();">
-                                <option value="" disabled selected>Seleccione la hora de recolección</option>
-                            </select>
-                        </div>
-
-                        <!-- Campo de ingreso de hora personalizada -->
-                        <div class="mb-3">
-                            <label for="customHoraRecoleccion" class="form-label">Hora personalizada</label>
-                            <input type="time" id="customHoraRecoleccion" class="form-control" onchange="clearSelectInput();">
-                        </div>
-                        <div class="mb-3">
-                            <div class="row">
-                                <div class="col">
-                                    <label for="calle" class="form-label">Calle *</label>
-                                    <input type="text" class="form-control" id="calle" name="calle" th:value="${solicitude.calle}" required>
-                                </div>
-                                <div class="col">
-                                    <label for="numeroDeCasa" class="form-label">Número de Casa *</label>
-                                    <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" th:value="${solicitude.numeroDeCasa}" required>
-                                </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="manualTimeCheckbox" onchange="toggleTimeInputs()">
+                                <label class="form-check-label" for="manualTimeCheckbox">Ingresar hora manualmente</label>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="barrio" class="form-label">Barrio *</label>
-                            <input type="text" class="form-control" id="barrio" name="barrio" th:value="${solicitude.barrio}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Teléfono *</label>
-                            <input type="tel" class="form-control" id="telefono" name="telefono" th:value="${solicitude.telefono}" required>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="horaRecoleccion" class="form-label">Hora de Recolección *</label>
+                                    <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required>
+                                        <option value="" disabled>Seleccione la hora de recolección</option>
+                                        <option value="09:00" th:selected="${solicitude.horaRecoleccion == '09:00'}">09:00</option>
+                                        <option value="10:00" th:selected="${solicitude.horaRecoleccion == '10:00'}">10:00</option>
+                                        <option value="11:00" th:selected="${solicitude.horaRecoleccion == '11:00'}">11:00</option>
+                                        <option value="12:00" th:selected="${solicitude.horaRecoleccion == '12:00'}">12:00</option>
+                                        <option value="13:00" th:selected="${solicitude.horaRecoleccion == '13:00'}">13:00</option>
+                                        <option value="14:00" th:selected="${solicitude.horaRecoleccion == '14:00'}">14:00</option>
+                                        <option value="15:00" th:selected="${solicitude.horaRecoleccion == '15:00'}">15:00</option>
+                                        <option value="16:00" th:selected="${solicitude.horaRecoleccion == '16:00'}">16:00</option>
+                                        <option value="17:00" th:selected="${solicitude.horaRecoleccion == '17:00'}">17:00</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="customHoraRecoleccion" class="form-label">Ingresar Hora</label>
+                                    <input type="time" class="form-control mt-2" id="customHoraRecoleccion" name="horaRecoleccion" placeholder="Ingrese una hora" min="08:00" max="18:00">
+                                </div>
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                        <a th:href="@{'/user/deletesolicitude/' + ${solicitude.id}}" class="btn btn-danger mt-2">Borrar Solicitud</a>
                     </form>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <h4 class="text-center">Comunicación</h4>
-                <div class="card">
-                    <div class="card-body">
-                        <form th:action="@{'/user/solicitude/' + ${solicitude.id} + '/messages'}" method="post">
-                            <div class="form-group">
-                                <label for="messageInput">Escriba su mensaje:</label>
-                                <textarea class="form-control" id="messageInput" name="messageInput" rows="3" required></textarea>
-                            </div>
-                            <button class="btn btn-primary mt-2" type="submit">Enviar</button>
-                        </form>
-                    </div>
-                    <div class="card-footer">
-                        <h6>Mensajes anteriores:</h6>
-                        <ul class="list-group" id="messageList">
-                            <li class="list-group-item" th:each="message : ${messages}">
-                                <strong th:text="${message.user.username}">User:</strong>
-                                <span th:text="${message.contenido}">Mensaje</span>
-                                <small class="text-muted" th:text="${#temporals.format(message.fechaEnvio, 'dd/MM/yyyy HH:mm')}">Fecha</small>
-                            </li>
-                        </ul>
-                    </div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="text-center">Comunicación</h4>
+            <div class="card">
+                <div class="card-body">
+                    <form th:action="@{'/user/solicitude/' + ${solicitude.id} + '/messages'}" method="post">
+                        <div class="form-group">
+                            <label for="messageInput">Escriba su mensaje:</label>
+                            <textarea class="form-control" id="messageInput" name="messageInput" rows="3" required></textarea>
+                        </div>
+                        <button class="btn btn-primary mt-2" type="submit">Enviar</button>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <h6>Mensajes anteriores:</h6>
+                    <ul class="list-group" id="messageList">
+                        <li class="list-group-item" th:each="message : ${messages}">
+                            <strong th:text="${message.user.username}">User:</strong>
+                            <span th:text="${message.contenido}">Mensaje</span>
+                            <small class="text-muted" th:text="${#temporals.format(message.fechaEnvio, 'dd/MM/yyyy HH:mm')}">Fecha</small>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-right">
+        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera de la Paz Sustentable. Todos los derechos reservados.</span>
+    </div>
+</footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
 
-    <footer class="footer mt-auto py-3 bg-dark text-white">
-        <div class="container text-right">
-        <span class="text-muted" th:text="#{footer.copy}">
-            <i class="bi bi-c-circle"></i> 2024 Frontera Sustentable. Todos los derechos reservados.
-        </span>
-            <a class="nav-link" th:href="@{/report}">
-                <i class="bi bi-exclamation-circle"></i> Reportar problema
-            </a>
-            <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">
-                <i class="bi bi-arrow-left"></i> Volver atrás
-            </button>
-        </div>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function clearTimeInput() {
-            document.getElementById('customHoraRecoleccion').value = '';
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        toggleTimeInputs();
+    });
+
+    function toggleTimeInputs() {
+        var checkbox = document.getElementById('manualTimeCheckbox');
+        var selectHoraRecoleccion = document.getElementById('horaRecoleccion');
+        var inputHoraRecoleccion = document.getElementById('customHoraRecoleccion');
+
+        if (checkbox.checked) {
+            selectHoraRecoleccion.disabled = true;
+            selectHoraRecoleccion.removeAttribute('required');
+            inputHoraRecoleccion.disabled = false;
+            inputHoraRecoleccion.setAttribute('required', 'required');
+        } else {
+            selectHoraRecoleccion.disabled = false;
+            selectHoraRecoleccion.setAttribute('required', 'required');
+            inputHoraRecoleccion.disabled = true;
+            inputHoraRecoleccion.removeAttribute('required');
         }
-
-        function clearSelectInput() {
-            document.getElementById('horaRecoleccion').value = '';
-        }
-
-        function updateAvailableHours() {
-            const day = document.getElementById('diasDisponibles').value;
-            const hourSelect = document.getElementById('horaRecoleccion');
-
-            // Limpiar las opciones actuales
-            hourSelect.innerHTML = '<option value="" disabled selected>Seleccione la hora de recolección</option>';
-
-            // Definir horas disponibles según el día
-            let hours = [];
-            if (day === 'saturday') {
-                hours = ['09:00', '10:00', '11:00'];
-            } else if (day) {
-                hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
-            }
-
-            // Agregar las nuevas opciones
-            hours.forEach(hour => {
-                const option = document.createElement('option');
-                option.value = hour;
-                option.textContent = hour;
-                hourSelect.appendChild(option);
-            });
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
