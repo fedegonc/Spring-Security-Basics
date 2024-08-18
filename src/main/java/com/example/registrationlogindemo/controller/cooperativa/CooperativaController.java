@@ -1,12 +1,14 @@
 package com.example.registrationlogindemo.controller.cooperativa;
 
 import com.example.registrationlogindemo.entity.Article;
-import com.example.registrationlogindemo.entity.Image;
+import com.example.registrationlogindemo.entity.Message;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ArticleRepository;
+import com.example.registrationlogindemo.repository.MessageRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.MessageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,6 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/cooperativa")
@@ -40,6 +41,12 @@ public class CooperativaController {
     UserRepository userRepository;
     @Autowired
     ArticleRepository articleRepository;
+
+    @Autowired
+    MessageService messageService;
+
+    @Autowired
+    MessageRepository messageRepository;
     private UserService userService;
 
     // Constructor que inyecta el servicio UserService
@@ -170,15 +177,22 @@ public class CooperativaController {
 
 
     @GetMapping("/reviewsolicitude/{id}")
-    public ModelAndView reviewSolicitude(@PathVariable("id") int id) {
+    public ModelAndView showEditSolicitudeForm(@PathVariable("id") int id,
+                                               @AuthenticationPrincipal UserDetails currentUser) {
         ModelAndView mv = new ModelAndView("cooperativa/reviewsolicitude");
-        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById( id);
+        Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
 
-        if (solicitudeOptional.isPresent()) {
-            mv.addObject("solicitude", solicitudeOptional.get());
+        if (solicitudeOpt.isPresent()) {
+            Solicitude solicitude = solicitudeOpt.get();
+            mv.addObject("solicitude", solicitude);
+
+            // Obtener todos los mensajes asociados a esta solicitud
+            List<Message> messages = messageService.findMessagesBySolicitude(solicitude);
+            mv.addObject("messages", messages);
         } else {
             mv.setViewName("redirect:/cooperativa/dashboard");
         }
+
         return mv;
     }
     @PostMapping("/reviewsolicitude/{id}")
@@ -202,6 +216,42 @@ public class CooperativaController {
         }
 
         return mv;
+    }
+
+    @PostMapping("/solicitude/{id}/messages")
+    public String sendMessage(@PathVariable("id") int id,
+                              @RequestParam("messageInput") String messageContent,
+                              @AuthenticationPrincipal UserDetails currentUser,
+                              RedirectAttributes redirectAttributes) {
+
+        // Buscar la solicitud por ID
+        Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
+        if (solicitudeOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "No se encontró la solicitud.");
+            return "redirect:/cooperativa/dashboard/" + id;
+        }
+
+        Solicitude solicitude = solicitudeOpt.get();
+
+        // Buscar al usuario actual
+        User user = userRepository.findByUsername(currentUser.getUsername());
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
+            return "redirect:/cooperativa/dashboard/" + id;
+        }
+
+        // Crear y guardar el nuevo mensaje
+        Message newMessage = new Message();
+        newMessage.setSolicitud(solicitude);
+        newMessage.setUser(user);
+        newMessage.setContenido(messageContent);
+        newMessage.setFechaEnvio(LocalDateTime.now());
+
+        messageRepository.save(newMessage);
+        redirectAttributes.addFlashAttribute("exito", "Mensaje enviado con éxito.");
+
+        // Redirigir de vuelta a la página de edición de la solicitud
+        return "redirect:/cooperativa/reviewsolicitude/" + id;
     }
 
     @GetMapping("/deletesolicitude/{id}")

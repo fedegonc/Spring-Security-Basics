@@ -110,16 +110,14 @@ public class SolicitudeController {
     public ModelAndView showEditSolicitudeForm(@PathVariable("id") int id,
                                                @AuthenticationPrincipal UserDetails currentUser) {
         ModelAndView mv = new ModelAndView("solicitude/editsolicitude");
-        User currentUserEntity = userService.findByUsername(currentUser.getUsername());
-
         Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
 
         if (solicitudeOpt.isPresent()) {
             Solicitude solicitude = solicitudeOpt.get();
             mv.addObject("solicitude", solicitude);
 
-            // Obtener los mensajes asociados a esta solicitud
-            List<Message> messages = messageService.findMessagesBySolicitudeAndUser(solicitude, currentUserEntity);
+            // Obtener todos los mensajes asociados a esta solicitud
+            List<Message> messages = messageService.findMessagesBySolicitude(solicitude);
             mv.addObject("messages", messages);
         } else {
             mv.setViewName("redirect:/user/welcome");

@@ -116,9 +116,7 @@
                             <span th:text="${message.contenido}">Mensaje</span>
                             <small class="text-muted" th:text="${#temporals.format(message.fechaEnvio, 'dd/MM/yyyy HH:mm')}">Fecha</small>
                             <!-- Formulario para borrar el mensaje -->
-                            <form th:action="@{'/user/message/' + ${message.id} + '/delete'}" method="post" style="display:inline;">
-                                <button class="btn btn-danger btn-sm" type="submit">Borrar</button>
-                            </form>
+
                         </li>
                     </ul>
                 </div>

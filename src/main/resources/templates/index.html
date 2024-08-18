@@ -57,7 +57,7 @@
                 <li class="nav-item dropdown language-dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-globe"></i> <span>Elige idioma</span>
+                        <i class="bi bi-globe"></i> <span th:text="#{select.language}">Elige idioma</span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">
@@ -128,10 +128,11 @@
     <div class="container d-flex justify-content-center">
         <div class="row">
             <div class="col text-center">
-                <a class="btn btn-primary mx-2" th:href="@{/user/newsolicitude}">Solicitar Reciclaje</a>
-                <a class="btn btn-primary mx-2" th:href="@{/construction}">Educacion Ambiental</a>
-                <a class="btn btn-primary mx-2" th:href="@{/construction}">Noticias</a>
-                <a class="btn btn-primary mx-2" th:href="@{/construction}">Materiales</a>
+                <a class="btn btn-primary mx-2" th:href="@{/user/newsolicitude}" th:text="#{button.requestRecycling}"></a>
+                <a class="btn btn-primary mx-2" th:href="@{/construction}" th:text="#{button.environmentalEducation}"></a>
+                <a class="btn btn-primary mx-2" th:href="@{/construction}" th:text="#{button.news}"></a>
+                <a class="btn btn-primary mx-2" th:href="@{/construction}" th:text="#{button.materials}"></a>
+
             </div>
         </div>
     </div>
@@ -189,6 +190,11 @@
 </div>
 <div class="container-fluid bg-dark text-light py-5">
     <div class="container">
+        <div class="row">
+            <div class="card-header">
+                <h4 th:text="#{sedes}">Entregar en sedes</h4>
+            </div>
+        </div>
         <div class="row justify-content-start">
             <!-- Mapa -->
             <div class="col-lg-8">
@@ -201,9 +207,10 @@
             <div class="col-lg-4">
                 <div class="bg-light text-dark p-4 rounded">
                     <h4>Associação de Catadores Novo Horizonte</h4>
-                    <h5>Información de Contacto</h5>
-                    <p><strong>Dirección:</strong> Ten. Aníbal Benévolo, 135 - Sant'Ana do Livramento - RS, Brasil</p>
-                    <p><strong>Horario:</strong> Lunes a Viernes, 9:00 AM - 4:00 PM</p>
+                    <h5 th:text="#{asociacion.information}">Información de Contacto</h5>
+                    <p><strong th:text="#{asociacion.address}">Dirección:</strong> Ten. Aníbal Benévolo, 135 - Sant'Ana do Livramento - RS, Brasil</p>
+                    <p><strong th:text="#{asociacion.hours}">Horario:</strong> Lunes a Viernes, 9:00 AM - 4:00 PM</p>
+
                 </div>
             </div>
         </div>
@@ -220,10 +227,11 @@
             <!-- Información de Contacto -->
             <div class="col-lg-4">
                 <div class="bg-light text-dark p-4 rounded">
-                    <h4>Cooperativa Renacer del Norte</h4>
-                    <h5>Información de Contacto</h5>
-                    <p><strong>Dirección:</strong> Camino Las Tunitas, S/N - Rivera - RVR, Uruguay</p>
-                    <p><strong>Horario:</strong> Lunes a Viernes, 9:00 AM - 4:00 PM</p>
+                    <h4 th:text="#{cooperative.name}">Cooperativa Renacer del Norte</h4>
+                    <h5 th:text="#{cooperative.information}">Información de Contacto</h5>
+                    <p><strong th:text="#{cooperative.address}">Dirección:</strong> Camino Las Tunitas, S/N - Rivera - RVR, Uruguay</p>
+                    <p><strong th:text="#{cooperative.hours}">Horario:</strong> Lunes a Viernes, 9:00 AM - 4:00 PM</p>
+
                 </div>
             </div>
         </div>
@@ -231,11 +239,17 @@
 </div>
 
 
-<footer>
-    <div class="footer py-2 bg-dark text-white">
-       <span class="text-muted"  th:text="#{index.title}">. Todos los derechos reservados.  &copy;</span>
-        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
-        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">Volver atrás</button>
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-right">
+        <span class="text-muted" th:text="#{footer.copy}">
+            <i class="bi bi-c-circle"></i> 2024 Frontera Sustentable. Todos los derechos reservados.
+        </span>
+        <a class="nav-link" th:href="@{/report}">
+            <i class="bi bi-exclamation-circle"></i> Reportar problema
+        </a>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">
+            <i class="bi bi-arrow-left"></i> Volver atrás
+        </button>
     </div>
 </footer>
 

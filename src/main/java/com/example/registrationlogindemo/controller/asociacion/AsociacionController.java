@@ -226,7 +226,7 @@ public class AsociacionController {
         Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
         if (solicitudeOpt.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "No se encontró la solicitud.");
-            return "redirect:/user/editsolicitude/" + id;
+            return "redirect:/asociacion/reviewsolicitude/" + id;
         }
 
         Solicitude solicitude = solicitudeOpt.get();
@@ -235,7 +235,7 @@ public class AsociacionController {
         User user = userRepository.findByUsername(currentUser.getUsername());
         if (user == null) {
             redirectAttributes.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
-            return "redirect:/user/editsolicitude/" + id;
+            return "redirect:/asociacion/editsolicitude/" + id;
         }
 
         // Crear y guardar el nuevo mensaje
@@ -249,12 +249,12 @@ public class AsociacionController {
         redirectAttributes.addFlashAttribute("exito", "Mensaje enviado con éxito.");
 
         // Redirigir de vuelta a la página de edición de la solicitud
-        return "redirect:/user/editsolicitude/" + id;
+        return "redirect:/asociacion/reviewsolicitude/" + id;
     }
     @GetMapping("/deletesolicitude/{id}")
     public String deleteSolicitude(@PathVariable("id") long id) {
         solicitudeRepository.deleteSolicitudeById(id);
-        return "redirect:/user/welcome";
+        return "redirect:/asociacion/dashboard";
     }
     @GetMapping("/articles")
     public ModelAndView getArticles() {
