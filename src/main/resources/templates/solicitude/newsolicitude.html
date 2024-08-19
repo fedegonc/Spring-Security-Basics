@@ -187,7 +187,7 @@
                                         <option value="14:00">14:00</option>
                                         <option value="15:00">15:00</option>
                                         <option value="16:00">16:00</option>
-                                        <option value="17:00">17:00</option>
+
                                     </select>
                                 </div>
                                 <div class="col">
@@ -219,6 +219,8 @@
                                 </select>
                             </div>
                         </div>
+
+
 
                         <button type="submit" class="btn btn-primary" th:text="#{newRequest.submit}">Enviar Solicitud</button>
                     </form>
@@ -311,7 +313,7 @@
         if (day === 'saturday') {
             hours = ['09:00', '10:00', '11:00'];
         } else if (day) {
-            hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+            hours = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
         }
 
         // Agregar las nuevas opciones
