@@ -9,6 +9,8 @@
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <style>
         .error {
             color: red;
@@ -18,18 +20,25 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <img src="/img/logov4.png" alt="logo" width="50" height="50">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <div class="container-fluid d-flex align-items-center">
+        <img src="/img/logov4.png" alt="logo" width="50" height="50" class="me-2">
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
+        <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/view-requests}" th:text="#{historysolicitudes}">Solicitudes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Publicaciones</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown language-dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span th:text="#{label.chooseLang}"></span>
+                        <i class="bi bi-globe"></i> <span th:text="#{label.chooseLang}">Idioma</span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="/user/newsolicitude?language=pt" th:text="#{label.lang.pt}">Português</a></li>
@@ -37,22 +46,35 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logout}" th:text="#{salir}">Salir</a>
+                    <a class="nav-link" th:href="@{/logout}" th:text="#{salir}">
+                        <i class="bi bi-door-open"></i> Salir
+                    </a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
+
 <!-- Migas de pan -->
 <div class="container mt-1">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
+            <li class="breadcrumb-item">
+                <i class="bi bi-house"></i>
+                <a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a>
+            </li>
             <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.newRequest}">Nueva Solicitud</li>
         </ol>
     </nav>
 </div>
+
+<div class="container mt-4">
+
+    <span th:text="#{info_newsolicitude}">Información de la pagina</span>
+</div>
+<hr/>
 
 <div class="container">
     <div class="row">
@@ -65,7 +87,8 @@
                     <form id="finalForm" method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
 
                         <!-- Texto de ayuda para campos obligatorios -->
-                        <p><strong>*</strong> Indica que el campo es obligatorio</p>
+                        <p><strong>*</strong> <span th:text="#{info.requiredField}">Indica que el campo es obligatorio</span></p>
+
 
                         <div class="mb-3">
                             <label for="file" class="form-label" th:text="#{newRequest.wasteImage}">Imagen del Residuo *</label>
@@ -73,69 +96,80 @@
                             <input type="file" class="form-control" id="file" name="file" onchange="previewFile()" required>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="material" class="form-label" th:text="#{newRequest.selectMaterial}">Selecciona el Tipo de Material *</label>
-                            <select class="form-select" id="material" name="categoria" required>
-                                <option value="" disabled selected>Seleccione el material</option>
-                                <option value="plastico">Plástico</option>
-                                <option value="carton">Cartón</option>
-                                <option value="metal">Metal</option>
-                                <option value="eletronicos">Electrónicos</option>
-                                <option value="otros">Otros</option>
-                            </select>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="material" class="form-label" th:text="#{newRequest.selectMaterial}">Selecciona el Tipo de Material *</label>
+                                <select class="form-select" id="material" name="categoria" required>
+                                    <option value="" disabled selected th:text="#{newRequest.selectMaterial.defaultOption}">Seleccione el material</option>
+                                    <option value="plastico" th:text="#{newRequest.selectMaterial.plastic}">Plástico</option>
+                                    <option value="carton" th:text="#{newRequest.selectMaterial.cardboard}">Cartón</option>
+                                    <option value="metal" th:text="#{newRequest.selectMaterial.metal}">Metal</option>
+                                    <option value="eletronicos" th:text="#{newRequest.selectMaterial.electronics}">Electrónicos</option>
+                                    <option value="otros" th:text="#{newRequest.selectMaterial.others}">Otros</option>
+                                </select>
+                            </div>
+
+                            <div class="col mb-3">
+                                <label for="destino" class="form-label" th:text="#{newRequest.destino}">Destino *</label>
+                                <select class="form-select" id="destino" name="destino" required>
+                                    <option value="" disabled selected>Seleccione un destino</option>
+                                    <option value="cooperativa">Sant'Ana</option>
+                                    <option value="asociacion">Rivera</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="destino" class="form-label" th:text="#{newRequest.destino}">Destino *</label>
-                            <select class="form-select" id="destino" name="destino" required>
-                                <option value="" disabled selected>Seleccione un destino</option>
-                                <option value="cooperativa">Sant'Ana</option>
-                                <option value="asociacion">Rivera</option>
-                            </select>
+
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="barrio" class="form-label" th:text="#{newRequest.neighborhood}">Barrio *</label>
+                                <input type="text" class="form-control" id="barrio" name="barrio" required>
+                            </div>
+
+                            <div class="col mb-3">
+                                <label for="calle" class="form-label" th:text="#{newRequest.street}">Calle *</label>
+                                <input type="text" class="form-control" id="calle" name="calle" required>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="barrio" class="form-label" th:text="#{newRequest.neighborhood}">Barrio *</label>
-                            <input type="text" class="form-control" id="barrio" name="barrio" required>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa *</label>
+                                <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required>
+                            </div>
+
+                            <div class="col mb-3">
+                                <label for="referenciaLocal" class="form-label" th:text="#{newRequest.localReference}">Referencia Local *</label>
+                                <input type="text" class="form-control" id="referenciaLocal" name="referenciaLocal" required>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="calle" class="form-label" th:text="#{newRequest.street}">Calle *</label>
-                            <input type="text" class="form-control" id="calle" name="calle" required>
+
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="telefono" class="form-label" th:text="#{newRequest.phoneNumber}">Teléfono para contactar *</label>
+                                <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                            </div>
+
+                            <div class="col mb-3">
+                                <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles *</label>
+                                <select class="form-select" id="diasDisponibles" name="diasDisponibles" required onchange="updateAvailableHours()">
+                                    <option value="" disabled selected>Seleccione un día</option>
+                                    <option value="monday">Lunes</option>
+                                    <option value="tuesday">Martes</option>
+                                    <option value="wednesday">Miércoles</option>
+                                    <option value="thursday">Jueves</option>
+                                    <option value="friday">Viernes</option>
+                                    <option value="saturday">Sábado</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa y Referencia *</label>
-                            <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="referenciaLocal" class="form-label" th:text="#{newRequest.localReference}">Referencia Local *</label>
-                            <input type="text" class="form-control" id="referenciaLocal" name="referenciaLocal" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label" th:text="#{newRequest.phoneNumber}">Teléfono para contactar *</label>
-                            <input type="tel" class="form-control" id="telefono" name="telefono" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles *</label>
-                            <select class="form-select" id="diasDisponibles" name="diasDisponibles" required onchange="updateAvailableHours()">
-                                <option value="" disabled selected>Seleccione un día</option>
-                                <option value="monday">Lunes</option>
-                                <option value="tuesday">Martes</option>
-                                <option value="wednesday">Miércoles</option>
-                                <option value="thursday">Jueves</option>
-                                <option value="friday">Viernes</option>
-                                <option value="saturday">Sábado</option>
-                            </select>
-                        </div>
 
                         <div class="mb-3">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="manualTimeCheckbox" onchange="toggleTimeInputs()">
-                                <label class="form-check-label" for="manualTimeCheckbox">Ingresar hora manualmente</label>
+                                <label class="form-check-label" for="manualTimeCheckbox" th:text="#{newRequest.manualTime}">Ingresar hora manualmente</label>
                             </div>
                         </div>
 
@@ -157,9 +191,10 @@
                                     </select>
                                 </div>
                                 <div class="col">
-                                    <label for="horaRecoleccion" class="form-label">Ingresar Hora</label>
-                                    <input type="time" class="form-control mt-2" id="customHoraRecoleccion" name="horaRecoleccion" placeholder="Ingrese una hora" min="08:00" max="18:00">
+                                    <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.enterTime}">Ingresar Hora</label>
+                                    <input type="time" class="form-control mt-2" id="customHoraRecoleccion" name="horaRecoleccion" placeholder="th:text=#{newRequest.enterTimePlaceholder}" min="08:00" max="18:00">
                                 </div>
+
                             </div>
                         </div>
 
@@ -168,14 +203,21 @@
                             <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="peso" class="form-label" th:text="#{newRequest.weight}">Peso *</label>
-                            <input type="text" class="form-control" id="peso" name="peso" required>
-                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="peso" class="form-label" th:text="#{newRequest.weight}">Peso *</label>
+                                <input type="text" class="form-control" id="peso" name="peso" required>
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="tamaño" class="form-label" th:text="#{newRequest.size}">Tamaño *</label>
-                            <input type="text" class="form-control" id="tamaño" name="tamaño" required>
+                            <div class="col mb-3">
+                                <label for="tamaño" class="form-label" th:text="#{newRequest.size}">Tamaño *</label>
+                                <select class="form-select" id="tamaño" name="tamaño" required>
+                                    <option value="" disabled selected th:text="#{newRequest.selectSize.defaultOption}">Seleccione el tamaño</option>
+                                    <option value="chico" th:text="#{newRequest.selectSize.small}">Chico</option>
+                                    <option value="mediano" th:text="#{newRequest.selectSize.medium}">Mediano</option>
+                                    <option value="grande" th:text="#{newRequest.selectSize.large}">Grande</option>
+                                </select>
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary" th:text="#{newRequest.submit}">Enviar Solicitud</button>
@@ -186,11 +228,18 @@
     </div>
 </div>
 
+
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container text-right">
-        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
-        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
-        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">Volver atrás</button>
+        <span class="text-muted" th:text="#{footer.copy}">
+            <i class="bi bi-c-circle"></i> 2024 Frontera Sustentable. Todos los derechos reservados.
+        </span>
+        <a class="nav-link" th:href="@{/report}">
+            <i class="bi bi-exclamation-circle"></i> Reportar problema
+        </a>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">
+            <i class="bi bi-arrow-left"></i> Volver atrás
+        </button>
     </div>
 </footer>
 

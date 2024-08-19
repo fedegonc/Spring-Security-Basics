@@ -79,6 +79,8 @@ public class SolicitudeController {
             return "redirect:/user/welcome";
         }
 
+
+
         if (!imagen.isEmpty()) {
             try {
                 byte[] bytes = imagen.getBytes();
