@@ -20,7 +20,7 @@ public class Article {
     @Column(nullable = false)
     private String titulo;
 
-    @Lob
+    @Column(length = 1000)  // Ajusta la longitud según tus necesidades
     private String descripcion = "";
 
     private String imagen;
