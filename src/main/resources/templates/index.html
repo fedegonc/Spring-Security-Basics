@@ -95,10 +95,14 @@
 
 <!-- Contenedor banner con fondo personalizado -->
 <div class="banner">
-    <div class="banner-content" style="text-align: left;">
+    <div class="banner-content" style="text-align: left; background-color: rgba(0, 0, 0, 0.1); padding: 10px;">
+        <div style="margin-bottom: 40px; margin-top: 50px; background-color: rgba(0, 0, 0, 0.4); padding: 10px;">
         <h4 th:text="#{banner.title}" style="font-size: 1.5em; margin-bottom: 10px;">Bienvenido al Proyecto Frontera Sustentable</h4>
         <p th:text="#{greeting}" style="font-size: 1.2em;"></p>
         <br><br>
+        <p th:text="#{banner.solicitar}" style="font-size: 1.2em;"></p>
+        <p th:text="#{aliento}" style="font-size: 1.2em;"></p>
+        </div>
 
         <div style="margin-bottom: 40px; margin-top: 50px; background-color: rgba(0, 0, 0, 0.4); padding: 10px;">
             <h4 th:text="#{banner.apoyo}" style="font-size: 1.3em; margin-bottom: 10px;">Apoyo</h4>
