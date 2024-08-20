@@ -12,7 +12,9 @@ import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -66,6 +68,15 @@ public class SolicitudeController {
     @GetMapping("/newsolicitude")
     public ModelAndView newSolicitude() {
         ModelAndView mv = new ModelAndView("solicitude/newsolicitude");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+
+            // Obtener el usuario de la base de datos
+            User usuario = userRepository.findByUsername(username);
+            mv.addObject("user", usuario);
+        }
         return mv;
     }
 
@@ -78,6 +89,8 @@ public class SolicitudeController {
             msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
             return "redirect:/user/welcome";
         }
+
+
 
 
 
