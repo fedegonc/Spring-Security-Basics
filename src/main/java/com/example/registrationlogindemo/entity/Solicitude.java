@@ -74,11 +74,11 @@ public class Solicitude {
     @Column(nullable = false)
     private String destino;
 
-    @Column(nullable = false)
+    @Column
     private String peso;
 
-    @Column(nullable = false)
-    private String tamaño;
+    @Column
+    private String tamanio;
     
     public enum Estado {
         EN_ESPERA,

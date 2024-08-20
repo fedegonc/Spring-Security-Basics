@@ -206,12 +206,12 @@
                         <div class="row">
                             <div class="col mb-3">
                                 <label for="peso" class="form-label" th:text="#{newRequest.weight}">Peso *</label>
-                                <input type="text" class="form-control" id="peso" name="peso" required>
+                                <input type="text" class="form-control" id="peso" name="peso">
                             </div>
 
                             <div class="col mb-3">
-                                <label for="tamaño" class="form-label" th:text="#{newRequest.size}">Tamaño *</label>
-                                <select class="form-select" id="tamaño" name="tamaño" required>
+                                <label for="tamanio" class="form-label" th:text="#{newRequest.size}">Tamaño *</label>
+                                <select class="form-select" id="tamanio" name="tamanio">
                                     <option value="" disabled selected th:text="#{newRequest.selectSize.defaultOption}">Seleccione el tamaño</option>
                                     <option value="chico" th:text="#{newRequest.selectSize.small}">Chico</option>
                                     <option value="mediano" th:text="#{newRequest.selectSize.medium}">Mediano</option>
