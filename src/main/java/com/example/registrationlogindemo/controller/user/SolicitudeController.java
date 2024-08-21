@@ -137,6 +137,15 @@ public class SolicitudeController {
         } else {
             mv.setViewName("redirect:/user/welcome");
         }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+
+            // Obtener el usuario de la base de datos
+            User usuario = userRepository.findByUsername(username);
+            mv.addObject("user", usuario);
+        }
 
         return mv;
     }

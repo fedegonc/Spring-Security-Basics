@@ -29,21 +29,27 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/user/view-requests}" th:text="#{historysolicitudes}">Solicitudes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Publicaciones</a>
-                </li>
-            </ul>
+
             <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/view-requests}" th:text="#{historysolicitudes}">Ver Historial de Solicitudes</a>
+                </li>
+                <!-- Menú desplegable -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Menú
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="menuDropdown">
+                        <li><a class="dropdown-item" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Ver Publicaciones</a></li>
+                        <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">Ver Perfil</a></li>
+                    </ul>
+                </li>
                 <li class="nav-item dropdown language-dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-globe"></i> <span th:text="#{label.chooseLang}">Idioma</span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/user/editolicitude?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/user/editsolicitude?language=pt" th:text="#{label.lang.pt}">Português</a></li>
                         <li><a class="dropdown-item" href="/user/editsolicitude?language=es" th:text="#{label.lang.es}">Español</a></li>
                     </ul>
                 </li>
@@ -194,36 +200,37 @@
 </div>
 
 
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <h4 class="text-center">Comunicación</h4>
-                <div class="card">
-                    <div class="card-body">
-                        <form th:action="@{'/user/solicitude/' + ${solicitude.id} + '/messages'}" method="post">
-                            <div class="form-group">
-                                <label for="messageInput">Escriba su mensaje:</label>
-                                <textarea class="form-control" id="messageInput" name="messageInput" rows="3" required></textarea>
-                            </div>
-                            <button class="btn btn-primary mt-2" type="submit">Enviar</button>
-                        </form>
-                    </div>
-                    <div class="card-footer">
-                        <h6>Mensajes anteriores:</h6>
-                        <ul class="list-group" id="messageList">
-                            <li class="list-group-item" th:each="message : ${messages}">
-                                <strong th:text="${message.user.username}">User:</strong>
-                                <span th:text="${message.contenido}">Mensaje</span>
-                                <small class="text-muted" th:text="${#temporals.format(message.fechaEnvio, 'dd/MM/yyyy HH:mm')}">Fecha</small>
-                            </li>
-                        </ul>
-                    </div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="text-center" th:text="#{dialogue.box}">Caja de diálogo</h4>
+            <div class="card">
+                <div class="card-body">
+                    <form th:action="@{'/user/solicitude/' + ${solicitude.id} + '/messages'}" method="post">
+                        <div class="form-group">
+                            <label for="messageInput" th:text="#{dialogue.writeMessage}">Escriba su mensaje:</label>
+                            <textarea class="form-control" id="messageInput" name="messageInput" rows="3" required></textarea>
+                        </div>
+                        <button class="btn btn-primary mt-2" type="submit" th:text="#{dialogue.send}">Enviar</button>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <h6 th:text="#{dialogue.previousMessages}">Mensajes anteriores:</h6>
+                    <ul class="list-group" id="messageList">
+                        <li class="list-group-item" th:each="message : ${messages}">
+                            <strong th:text="${message.user.username}">User:</strong>
+                            <span th:text="${message.contenido}">Mensaje</span>
+                            <small class="text-muted" th:text="${#temporals.format(message.fechaEnvio, 'dd/MM/yyyy HH:mm')}">Fecha</small>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
+<hr>
     <footer class="footer mt-auto py-3 bg-dark text-white">
         <div class="container text-right">
         <span class="text-muted" th:text="#{footer.copy}">

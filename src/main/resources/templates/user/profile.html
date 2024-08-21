@@ -10,6 +10,8 @@
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 </head>
 
 <body>
@@ -33,6 +35,21 @@
             </ul>
             <!-- Elementos de la barra de navegación derecha -->
             <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a>
+                </li>
+                <!-- Menú desplegable -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Menú
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="menuDropdown">
+                        <li><a class="dropdown-item" th:href="@{/user/view-requests}" th:text="#{historysolicitudes}">Ver Historial de Solicitudes</a></li>
+                        <li><a class="dropdown-item" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Ver Publicaciones</a></li>
+                    </ul>
+                </li>
+
                 <!-- Menú desplegable para cambiar de idioma -->
                 <li class="nav-item dropdown language-dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -45,6 +62,11 @@
                             <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id}, language='es')}" th:text="#{label.lang.es}">Español</a></li>
                         </ul>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">
+                        <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -55,7 +77,12 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
             <!-- Elemento de inicio de las migas de pan -->
-            <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
+            <li class="breadcrumb-item">
+                <i class="bi bi-house"></i>
+                <a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a>
+            </li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
             <!-- Elemento activo de las migas pan-->
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.profile}">Perfil</li>
         </ol>
@@ -66,7 +93,11 @@
 <!-- Mensajes de error -->
 <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
 
+<div class="container mt-4">
 
+    <span th:text="#{info_profile}">Información de la pagina</span>
+</div>
+<hr/>
 
 <div class="container">
     <div class="row">
@@ -116,12 +147,21 @@
         </div>
     </div>
 </div>
+<hr/>
 <footer class="footer mt-auto py-3 bg-dark text-white">
-    <div class="container text-right">
-        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
-        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
-        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
-        float-right" th:text="#{volver}">Volver atrás</button>    </div>
+    <div class="container d-flex justify-content-between align-items-center">
+        <span class="text-muted" th:text="#{footer.copy}">
+            <i class="bi bi-c-circle"></i> 2024 Frontera Sustentable. Todos los derechos reservados.
+        </span>
+        <div class="d-flex align-items-center">
+            <a class="nav-link text-white" th:href="@{/report}" style="margin-right: 15px;">
+                <i class="bi bi-exclamation-circle"></i> Reportar problema
+            </a>
+            <button onclick="window.history.back()" class="btn btn-outline-light btn-sm" th:text="#{volver}">
+                <i class="bi bi-arrow-left"></i> Volver atrás
+            </button>
+        </div>
+    </div>
 </footer>
 <script>
     function previewFile() {
