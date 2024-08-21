@@ -195,6 +195,15 @@ public class UserController {
             List<Solicitude> solicitudes = solicitudeRepository.findByUser(usuario);
             mv.addObject("solicitudes", solicitudes);
         }
+
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+
+            // Obtener el usuario de la base de datos
+            User usuario = userRepository.findByUsername(username);
+            mv.addObject("user", usuario);
+        }
         mv.setViewName("user/view-requests");
         return mv;
     }
