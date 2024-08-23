@@ -118,44 +118,33 @@
 
                         <!-- Campo de selección de días -->
                         <div class="mb-3">
-                            <label for="diasDisponibles" class="form-label">Días disponibles</label>
-                            <select id="diasDisponibles" class="form-select" onchange="updateAvailableHours(); clearTimeInput();">
+                            <label for="diasDisponibles" class="form-label">Días disponibles *</label>
+                            <select id="diasDisponibles" class="form-select" name="diasDisponibles" required>
                                 <option value="" disabled selected>Seleccione un día</option>
-                                <option value="monday">Lunes</option>
-                                <option value="tuesday">Martes</option>
-                                <option value="wednesday">Miércoles</option>
-                                <option value="thursday">Jueves</option>
-                                <option value="friday">Viernes</option>
-                                <option value="saturday">Sábado</option>
+                                <option value="monday" th:selected="${solicitude.diasDisponibles == 'monday'}">Lunes</option>
+                                <option value="tuesday" th:selected="${solicitude.diasDisponibles == 'tuesday'}">Martes</option>
+                                <option value="wednesday" th:selected="${solicitude.diasDisponibles == 'wednesday'}">Miércoles</option>
+                                <option value="thursday" th:selected="${solicitude.diasDisponibles == 'thursday'}">Jueves</option>
+                                <option value="friday" th:selected="${solicitude.diasDisponibles == 'friday'}">Viernes</option>
+                                <option value="saturday" th:selected="${solicitude.diasDisponibles == 'saturday'}">Sábado</option>
                             </select>
                         </div>
 
                         <!-- Campo de selección de hora -->
                         <div class="mb-3">
-                            <div class="row">
-                                <div class="col">
-                                    <label for="horaRecoleccion" class="form-label">Hora de recolección</label>
-
-                                    <select id="horaRecoleccion" class="form-select" name="horaRecoleccion" onchange="clearTimeInput();" required>
-
-                                            <option value="" disabled selected>Seleccione la hora de recolección</option>
-
-                                            <option value="10:00">10:00</option>
-                                            <option value="11:00">11:00</option>
-                                            <option value="12:00">12:00</option>
-                                            <option value="13:00">13:00</option>
-                                            <option value="14:00">14:00</option>
-                                            <option value="15:00">15:00</option>
-                                            <option value="16:00">16:00</option>
-
-                                        </select>
-
-                                </div>
-                                <div class="col">
-                                    <label for="customHoraRecoleccion" class="form-label">Hora personalizada</label>
-                                    <input type="time" id="customHoraRecoleccion" class="form-control" onchange="clearSelectInput();" placeholder="Ingrese una hora" min="08:00" max="18:00">
-                                </div>
-                            </div>
+                            <label for="horaRecoleccion" class="form-label">Hora de recolección *</label>
+                            <select id="horaRecoleccion" class="form-select" name="horaRecoleccion" onchange="clearTimeInput();" required>
+                                <option value="" disabled selected>Seleccione la hora de recolección</option>
+                                <option value="09:00" th:selected="${solicitude.horaRecoleccion == '09:00'}">09:00</option>
+                                <option value="10:00" th:selected="${solicitude.horaRecoleccion == '10:00'}">10:00</option>
+                                <option value="11:00" th:selected="${solicitude.horaRecoleccion == '11:00'}">11:00</option>
+                                <option value="12:00" th:selected="${solicitude.horaRecoleccion == '12:00'}">12:00</option>
+                                <option value="13:00" th:selected="${solicitude.horaRecoleccion == '13:00'}">13:00</option>
+                                <option value="14:00" th:selected="${solicitude.horaRecoleccion == '14:00'}">14:00</option>
+                                <option value="15:00" th:selected="${solicitude.horaRecoleccion == '15:00'}">15:00</option>
+                                <option value="16:00" th:selected="${solicitude.horaRecoleccion == '16:00'}">16:00</option>
+                                <!-- Agrega más opciones según sea necesario -->
+                            </select>
                         </div>
 
                         <div class="mb-3">
@@ -182,11 +171,36 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="peso" class="form-label">Peso *</label>
-                            <input type="text" class="form-control" id="peso" name="peso" th:value="${solicitude.peso ?: ''}" required>
+                            <label for="peso" class="form-label">Peso</label>
+                            <input type="text" class="form-control" id="peso" name="peso" th:value="${solicitude.peso ?: ''}">
                         </div>
 
-
+                        <div class="mb-3">
+                            <label for="tamanio" class="form-label">Tamaño</label>
+                            <select class="form-select" id="tamanio" name="tamanio">
+                                <option value="" disabled selected>Seleccione el tamaño</option>
+                                <option value="grande" th:selected="${solicitude.tamanio == 'grande'}">Grande</option>
+                                <option value="mediano" th:selected="${solicitude.tamanio == 'mediano'}">Mediano</option>
+                                <option value="chico" th:selected="${solicitude.tamanio == 'chico'}">Chico</option>
+                            </select>
+                        </div>
+                        <!-- Campo para mostrar el estado de activación -->
+                        <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <span th:text="${solicitude.activo ? 'Activado' : 'Desactivado'}"></span>
+                        </div>
+                        <!-- Selector para cambiar el estado de activación -->
+                        <div class="mb-3">
+                            <label for="activo" class="form-label">Estado</label>
+                            <select id="activo" name="activo" class="form-select" required>
+                                <option value="0" th:text="#{desactivado}"
+                                        th:selected="${solicitude.activo == 0}">Desactivado
+                                </option>
+                                <option value="1" th:text="#{activo}"
+                                        th:selected="${solicitude.activo == 1}">Activo
+                                </option>
+                            </select>
+                        </div>
 
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                         <a th:href="@{'/user/deletesolicitude/' + ${solicitude.id}}" class="btn btn-danger mt-2">Borrar Solicitud</a>
@@ -198,7 +212,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="container mt-5">
     <div class="row">
@@ -228,6 +241,7 @@
         </div>
     </div>
 </div>
+
 
 
 <hr>
@@ -291,6 +305,36 @@
             hourSelect.appendChild(option);
         });
     }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentValue = document.querySelector('select').getAttribute('data-value'); // Asume que data-value tiene el valor del servidor
+
+        // Cambia el estado visual de los botones
+        var toggleActivo = document.getElementById('toggleActivo');
+        var toggleDesactivado = document.getElementById('toggleDesactivado');
+
+        if (currentValue === '1') {
+            toggleActivo.classList.add('active');
+            toggleDesactivado.classList.remove('active');
+        } else if (currentValue === '0') {
+            toggleActivo.classList.remove('active');
+            toggleDesactivado.classList.add('active');
+        }
+
+        // Añade evento para cambiar el estado
+        toggleActivo.addEventListener('click', function() {
+            toggleActivo.classList.add('active');
+            toggleDesactivado.classList.remove('active');
+            // Enviar valor al servidor o procesar el cambio
+        });
+
+        toggleDesactivado.addEventListener('click', function() {
+            toggleActivo.classList.remove('active');
+            toggleDesactivado.classList.add('active');
+            // Enviar valor al servidor o procesar el cambio
+        });
+    });
 </script>
 </body>
 </html>

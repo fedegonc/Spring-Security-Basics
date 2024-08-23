@@ -58,19 +58,26 @@
 
     <h4 th:text="#{breadcrumb.newRequest}">Revisar Solicitud</h4>
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Estado: <span th:text="${solicitude.estado}"></span></h5>
-            <div class="mb-3">
-                <img th:src="@{/img/{imagen}(imagen=${solicitude.imagen})}" width="100" height="100" class="mb-2"/>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Estado: <span th:text="${solicitude.activo ? 'Activado' : 'Desactivado'}"></span>
+                    </h5>
+                    <div class="mb-3">
+                        <img th:src="@{/img/{imagen}(imagen=${solicitude.imagen})}" width="100" height="100" class="mb-2"/>
+                    </div>
+                    <p class="card-text">Categoría: <span th:text="${solicitude.categoria}"></span></p>
+                    <p class="card-text">Barrio: <span th:text="${solicitude.barrio}"></span></p>
+                    <p class="card-text">Calle: <span th:text="${solicitude.calle}"></span></p>
+                    <p class="card-text">Número de Casa: <span th:text="${solicitude.numeroDeCasa}"></span></p>
+                    <p class="card-text">Teléfono: <span th:text="${solicitude.telefono}"></span></p>
+                    <p class="card-text">Descripción: <span th:text="${solicitude.descripcion}"></span></p>
+                    <p class="card-text">Días Disponibles: <span th:text="${solicitude.diasDisponibles}"></span></p>
+                    <p class="card-text">Hora de Recolección: <span th:text="${solicitude.horaRecoleccion}"></span></p>
+                    <p class="card-text">Activo: <span th:text="${solicitude.activo ? 'Sí' : 'No'}"></span></p>
+                    <!-- Otros campos adicionales que quieras mostrar -->
+                </div>
             </div>
-            <p class="card-text">Categoría: <span th:text="${solicitude.categoria}"></span></p>
-            <p class="card-text">Barrio: <span th:text="${solicitude.barrio}"></span></p>
-            <p class="card-text">Calle: <span th:text="${solicitude.calle}"></span></p>
-            <p class="card-text">Telefono: <span th:text="${solicitude.telefono}"></span></p>
-            <!-- Otros campos de la solicitud -->
-        </div>
-    </div>
 
     <!-- Formulario para cambiar el estado -->
     <div class="mt-3">

@@ -176,6 +176,9 @@ public class SolicitudeController {
             existingSolicitude.setBarrio(solicitude.getBarrio());
             existingSolicitude.setNumeroDeCasa(solicitude.getNumeroDeCasa());
             existingSolicitude.setTelefono(solicitude.getTelefono());
+            existingSolicitude.setPeso(solicitude.getPeso());
+            existingSolicitude.setTamanio(solicitude.getTamanio());
+
 
 
             try {
@@ -244,5 +247,7 @@ public class SolicitudeController {
         solicitudeRepository.deleteSolicitudeById(id);
         return "redirect:/user/welcome";
     }
+
+
 
 }
