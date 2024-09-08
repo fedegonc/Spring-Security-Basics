@@ -61,6 +61,22 @@ body {
     text-decoration: none; /* Elimina subrayado */
 }
 
+/* Asegúrate de que los elementos de la lista estén en línea */
+.navbar-nav {
+    display: flex;
+    align-items: center; /* Centra verticalmente los elementos en la misma línea */
+}
+
+/* Espaciado entre los elementos */
+.navbar-nav .nav-item {
+    margin-left: 10px; /* Ajusta el espaciado según sea necesario */
+}
+
+/* Ajusta el tamaño de las imágenes si es necesario */
+.nav-link img {
+    vertical-align: middle; /* Alinea verticalmente las imágenes con el texto */
+}
+
 .banner {
     position: relative;
     display: flex;

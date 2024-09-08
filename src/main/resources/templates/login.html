@@ -46,18 +46,16 @@
                 <!-- Puedes agregar más elementos aquí si lo deseas -->
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown language-dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-globe"></i> <span th:text="#{label.chooseLang}"></span>
+                <!-- Cambio de idioma con banderas -->
+                <li class="nav-item">
+                    <a href="/index?language=es" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/login?language=pt" th:text="#{label.lang.pt}">
-                            <i class="bi bi-flag"></i> Português
-                        </a></li>
-                        <li><a class="dropdown-item" href="/login?language=es" th:text="#{label.lang.es}">
-                            <i class="bi bi-flag"></i> Español
-                        </a></li>
-                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/index?language=pt" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
+                    </a>
                 </li>
 
                 <li class="nav-item">

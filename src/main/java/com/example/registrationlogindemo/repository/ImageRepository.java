@@ -13,4 +13,6 @@ public interface ImageRepository extends JpaRepository<Image, Integer> {
     Optional<Image> findByNombre(String img);
 
     void deleteById(Long Id);
+
+    List<Image> findByNombreIn(List<String> nombres);
 }

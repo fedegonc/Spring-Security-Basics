@@ -82,7 +82,7 @@
 <div class="container mt-4">
     <span th:text="#{info_usuario}">Información del Usuario</span>
     <div>
-        <a th:href="@{/profile/edit}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+        <a th:href="@{/user/profile/{id}(id=${user.id})}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
             <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
             <h3 th:text="${user.username}" style="margin: 0;">Nombre de Usuario</h3>
         </a>

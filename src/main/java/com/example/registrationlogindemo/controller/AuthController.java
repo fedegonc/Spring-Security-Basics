@@ -1,10 +1,13 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
+import com.example.registrationlogindemo.entity.Image;
 import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.repository.ImageRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,10 +18,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
+
 @Controller
 public class AuthController {
 
     private final UserService userService;
+
+    @Autowired
+    ImageRepository imageRepository;
 
     public AuthController(UserService userService) {
         this.userService = userService;
@@ -32,6 +40,7 @@ public class AuthController {
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         UserDto user = new UserDto();
+
         model.addAttribute("user", user);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -66,13 +75,29 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String loginForm() {
+    public ModelAndView loginForm() {
+        ModelAndView mv = new ModelAndView();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
-            return "redirect:/init";
+            mv.setViewName("redirect:/init");
+        } else {
+            // Buscar las imágenes en la base de datos
+            Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
+            Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
+
+            // Agregar imágenes al modelo si están presentes
+            if (uruguaiImage.isPresent()) {
+                mv.addObject("uruguaiImageName", uruguaiImage.get().getNombre());
+            }
+            if (brasilImage.isPresent()) {
+                mv.addObject("brasilImageName", brasilImage.get().getNombre());
+            }
+
+            mv.setViewName("login"); // Establecer la vista del formulario de login
         }
-        return "login";
+
+        return mv;
     }
 
     @GetMapping("/init")

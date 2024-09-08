@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +50,15 @@ public class GuestController {
     @GetMapping({"", "/", "/index"})
     public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("index");
+        Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
+        Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
+
+        if (uruguaiImage.isPresent()) {
+            mv.addObject("uruguaiImageName", uruguaiImage.get().getNombre()); // Cambié el nombre de la variable
+        }
+        if (brasilImage.isPresent()) {
+            mv.addObject("brasilImageName", brasilImage.get().getNombre()); // Cambié el nombre de la variable
+        }
 
         // Obtener la autenticación actual
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -65,7 +75,6 @@ public class GuestController {
 
         return mv;
     }
-
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {

@@ -40,52 +40,34 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Elementos de la barra de navegación izquierda -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="btn btn-primary" th:if="${!isAuthenticated}" th:href="@{/login}">
-                        <i class="bi bi-box-arrow-in-right"></i> Login
-                    </a>
-                    <a class="btn btn-primary" th:if="${isAuthenticated}" th:href="@{/init}">
-                        <i class="bi bi-box-arrow-in-right"></i>  Reingresar
-                    </a>
-                </li>
-            </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
 
             <!-- Elementos de la barra de navegación derecha -->
             <ul class="navbar-nav ml-auto">
-                <!-- Menú desplegable para cambiar de idioma -->
-                <li class="nav-item dropdown language-dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-globe"></i> <span th:text="#{select.language}">Elige idioma</span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/index?language=pt" th:text="#{label.lang.pt}">
-                            <i class="bi bi-flag"></i> Português
-                        </a></li>
-                        <li><a class="dropdown-item" href="/index?language=es" th:text="#{label.lang.es}">
-                            <i class="bi bi-flag"></i> Español
-                        </a></li>
-                    </ul>
-                </li>
-
-                <!-- Registro -->
-
-                <li class="nav-item" th:if="${!isAuthenticated}">
-                    <a class="navbar-brand" th:href="@{/register}">
-                        <i class="bi bi-person-plus"></i> Registro
+                <!-- Cambio de idioma con banderas -->
+                <li class="nav-item">
+                    <a href="/index?language=es" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
                     </a>
                 </li>
-                <li class="nav-item" th:if="${isAuthenticated}">
-                    <a class="nav-link" th:href="@{/logout}">
-                        <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
+                <li class="nav-item">
+                    <a href="/index?language=pt" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
                     </a>
                 </li>
 
+                <!-- Botón de Login -->
+                <li class="nav-item">
+                    <a class="btn btn-primary" th:href="@{/login}">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+
+
 
 
 <div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}"></div>
@@ -95,39 +77,97 @@
 
 <!-- Contenedor banner con fondo personalizado -->
 <div class="banner">
-    <div class="banner-content" style="text-align: left; background-color: rgba(0, 0, 0, 0.1); padding: 10px;">
-        <div style="margin-bottom: 40px; margin-top: 50px; background-color: rgba(0, 0, 0, 0.4); padding: 10px;">
-        <h4 th:text="#{banner.title}" style="font-size: 1.5em; margin-bottom: 10px;">Bienvenido al Proyecto Frontera Sustentable</h4>
-        <p th:text="#{greeting}" style="font-size: 1.2em;"></p>
-        <br><br>
-        <p th:text="#{banner.solicitar}" style="font-size: 1.2em;"></p>
-        <p th:text="#{aliento}" style="font-size: 1.2em;"></p>
-        </div>
+    <div class="container">
+        <div class="row">
+            <!-- Primera mitad de la pantalla: Contiene el primer bloque de contenido del banner -->
+            <div class="col-md-6">
+                <div style="margin-bottom: 40px; margin-top: 50px; background-color: rgba(0, 0, 0, 0.4); padding: 10px; text-align: left; color: #fff;">
+                    <h4 th:text="#{banner.title}" style="font-size: 1.5em; margin-bottom: 10px;">
+                        Bienvenido al Proyecto Frontera Sustentable
+                    </h4>
+                    <p th:text="#{greeting}" style="font-size: 1.2em;"></p>
+                    <br><br>
+                    <p th:text="#{banner.solicitar}" style="font-size: 1.2em;"></p>
+                    <p th:text="#{aliento}" style="font-size: 1.2em;"></p>
+                </div>
+            </div>
 
-        <div style="margin-bottom: 40px; margin-top: 50px; background-color: rgba(0, 0, 0, 0.4); padding: 10px;">
-            <h4 th:text="#{banner.apoyo}" style="font-size: 1.3em; margin-bottom: 10px;">Apoyo</h4>
-            <ul class="list-unstyled" style="padding-left: 0; list-style-type: none; font-size: 1.1em;">
-                <li style="margin-bottom: 10px;">
-                    <span th:text="#{link.prefeitura}" style=" margin-right: 10px;"></span> -
-                    <a href="https://www.sdolivramento.com.br/" style="text-decoration: none; color: #1da1f2;">Visitar site</a>
-                </li>
-                <li style="margin-bottom: 10px;">
-                    <span th:text="#{link.intendencia}" style=" margin-right: 10px;"></span> -
-                    <a href="https://www.rivera.gub.uy/portal/" style="text-decoration: none; color: #1da1f2;">Visitar site</a>
-                </li>
-                <li style="margin-bottom: 10px;">
-                    <span th:text="#{link.proyecto}" style=" margin-right: 10px;"></span> -
-                    <a href="https://www.fronteiradapazsustentavel.com.br/es/projeto/" style="text-decoration: none; color: #1da1f2;">Visitar site</a>
-                </li>
 
-            </ul>
+            <!-- Segunda mitad de la pantalla: Contiene dos bloques de contenido del banner, uno encima del otro -->
+            <div class="col-md-6">
+                <!-- Primer bloque de contenido del banner en la segunda mitad -->
+                <div style="margin-bottom: 40px; margin-top: 50px; background-color: rgba(0, 0, 0, 0.4); padding: 10px; color: #fff;">
+                    <h4 th:text="#{banner.apoyo}" style="font-size: 1.3em; margin-bottom: 10px;">
+                        Apoyo
+                    </h4>
+                    <ul class="list-unstyled" style="padding-left: 0; list-style-type: none; font-size: 1.1em;">
+                        <!-- Elemento de lista del apoyo 1 -->
+                        <li style="margin-bottom: 10px;">
+                            <span th:text="#{link.prefeitura}" style="margin-right: 10px;"></span> -
+                            <a href="https://www.sdolivramento.com.br/" style="text-decoration: none; color: #1da1f2;">
+                                <i class="bi bi-box-arrow-in-up-right"></i>
+                            </a>
+                        </li>
+                        <!-- Elemento de lista del apoyo 2 -->
+                        <li style="margin-bottom: 10px;">
+                            <span th:text="#{link.intendencia}" style="margin-right: 10px;"></span> -
+                            <a href="https://www.rivera.gub.uy/portal/" style="text-decoration: none; color: #1da1f2;">
+                                <i class="bi bi-box-arrow-in-up-right"></i>
+                            </a>
+                        </li>
+                        <!-- Elemento de lista del apoyo 3 -->
+                        <li style="margin-bottom: 10px;">
+                            <span th:text="#{link.proyecto}" style="margin-right: 10px;"></span> -
+                            <a href="https://www.fronteiradapazsustentavel.com.br/es/proyecto/" style="text-decoration: none; color: #1da1f2;">
+                                <i class="bi bi-box-arrow-in-up-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <!-- Segundo bloque de contenido del banner en la segunda mitad, debajo del anterior -->
+                <div style="margin-bottom: 40px; margin-top: 50px; background-color: rgba(0, 0, 0, 0.4); padding: 10px; color: #fff;">
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+                        <!-- Logo 1 -->
+                        <div style="display: flex; justify-content: center; width: 150px;">
+                            <div class="card" style="border: none; background-color: #fff; width: 100%;">
+                                <img src="/img/logoprojeto.png" alt="Logo 1" class="card-img-top" style="width: 100%; height: 100px; object-fit: contain;">
+                            </div>
+                        </div>
+                        <!-- Logo 2 -->
+                        <div style="display: flex; justify-content: center; width: 150px;">
+                            <div class="card" style="border: none; background-color: #fff; width: 100%;">
+                                <img src="/img/pm.jpg" alt="Logo 2" class="card-img-top" style="width: 100%; height: 100px; object-fit: contain;">
+                            </div>
+                        </div>
+                        <!-- Logo 3 -->
+                        <div style="display: flex; justify-content: center; width: 150px;">
+                            <div class="card" style="border: none; background-color: #fff; width: 100%;">
+                                <img src="/img/riviera.png" alt="Logo 3" class="card-img-top" style="width: 100%; height: 100px; object-fit: contain;">
+                            </div>
+                        </div>
+                        <!-- Logo 4 -->
+                        <div style="display: flex; justify-content: center; width: 150px;">
+                            <div class="card" style="border: none; background-color: #fff; width: 100%;">
+                                <img src="/img/asc.jpg" alt="Logo 4" class="card-img-top" style="width: 100%; height: 100px; object-fit: contain;">
+                            </div>
+                        </div>
+                        <!-- Logo 5 -->
+                        <div style="display: flex; justify-content: center; width: 150px;">
+                            <div class="card" style="border: none; background-color: #fff; width: 100%;">
+                                <img src="/img/ds.png" alt="Logo 5" class="card-img-top" style="width: 100%; height: 100px; object-fit: contain;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
         </div>
     </div>
 </div>
 
-
-
-<!-- Nueva barra después del banner con el enlace para realizar solicitud -->
 <div class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container d-flex justify-content-center">
         <div class="row">
@@ -143,35 +183,6 @@
         </div>
     </div>
 </div>
-<section class="container my-4">
-    <div class="row justify-content-center align-items-center text-center">
-
-        <!-- Logo 1 -->
-        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <img src="/img/logoprojeto.png" alt="Logo 1" class="img-fluid" style="max-height: 100px;">
-        </div>
-        <!-- Logo 2 -->
-        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <img src="/img/pm.jpg" alt="Logo 2" class="img-fluid" style="max-height: 100px;">
-        </div>
-        <!-- Logo 3 -->
-        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <img src="/img/riviera.png" alt="Logo 3" class="img-fluid" style="max-height: 100px;">
-        </div>
-
-
-        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <img src="/img/asc.jpg" alt="Logo 3" class="img-fluid" style="max-height: 100px;">
-        </div>
-
-        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
-            <img src="/img/ds.png" alt="Logo 3" class="img-fluid" style="max-height: 100px;">
-        </div>
-
-
-    </div>
-</section>
-<hr>
 <div class="container mt-4">
     <div class="row">
         <div class="card-header">

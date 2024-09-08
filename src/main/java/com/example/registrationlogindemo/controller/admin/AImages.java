@@ -70,20 +70,22 @@ public class AImages {
 
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos.");
-            return "redirect:/admin/dashboard"; // Cambia esta URL según la estructura de tu aplicación
+            return "redirect:/admin/dashboard";
         }
 
         if (!file.isEmpty()) {
             try {
-                // Redimensionar la imagen a 500x500 píxeles manteniendo el formato original
-                BufferedImage bufferedImage = Thumbnails.of(file.getInputStream())
+                BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+                String formatName = file.getContentType().split("/")[1]; // Obtiene el formato de la imagen
+
+                // Redimensionar la imagen manteniendo el formato original
+                bufferedImage = Thumbnails.of(bufferedImage)
                         .size(500, 500)
                         .outputQuality(0.8f)
                         .asBufferedImage();
 
-                // Convertir la BufferedImage a un arreglo de bytes
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(bufferedImage, "jpg", baos); // Usa el formato de la imagen original
+                ImageIO.write(bufferedImage, formatName, baos); // Usa el formato de la imagen original
                 baos.flush();
                 byte[] resizedImageBytes = baos.toByteArray();
                 baos.close();
@@ -91,25 +93,30 @@ public class AImages {
                 image.setData(resizedImageBytes);
                 image.setType(file.getContentType());
                 image.setNombre(file.getOriginalFilename());
+
+                // Añadir logs para depuración
+                System.out.println("Imagen tamaño: " + resizedImageBytes.length);
+                System.out.println("Tipo de contenido: " + file.getContentType());
+                System.out.println("Nombre de archivo: " + file.getOriginalFilename());
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
-                return "redirect:/admin/images"; // Cambia esta URL según la estructura de tu aplicación
+                return "redirect:/admin/images";
             }
         } else {
-            image.setData(null); // O establece un valor por defecto
+            image.setData(null);
         }
 
         User user = userRepository.findByUsername(currentUser.getUsername());
         if (user != null) {
             image.setUser(user);
-            image.setFecha(LocalDateTime.now()); // Establece la fecha actual
+            image.setFecha(LocalDateTime.now());
             imageRepository.save(image);
             redirectAttributes.addFlashAttribute("exito", "Imagen subida con éxito.");
         } else {
             redirectAttributes.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
         }
 
-        return "redirect:/admin/images"; // Cambia esta URL según la estructura de tu aplicación
+        return "redirect:/admin/images";
     }
 
     @GetMapping("/editimage/{id}")
