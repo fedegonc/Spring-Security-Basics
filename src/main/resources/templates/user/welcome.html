@@ -12,45 +12,58 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
+<!-- Barra de navegación -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
+        <!-- Logo y nombre del sitio -->
         <div class="d-flex">
             <img src="/img/logov4.png" alt="logo" width="50" height="50">
             <a class="navbar-brand ms-2" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
         </div>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
+        <!-- Contenido de la barra de navegación -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a>
-                </li>
+
                 <!-- Menú desplegable -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Menú
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="menuDropdown">
+                        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a></li>
+
                         <li><a class="dropdown-item" th:href="@{/user/view-requests}" th:text="#{historysolicitudes}">Ver Historial de Solicitudes</a></li>
                         <li><a class="dropdown-item" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Ver Publicaciones</a></li>
                         <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">Ver Perfil</a></li>
+                        <li><a class="dropdown-item" th:href="@{/logout}"><i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown language-dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-globe"></i> <span th:text="#{label.chooseLang}"></span>
+
+                <!-- Selección de idioma -->
+                <li class="nav-item">
+                    <a href="/index?language=es" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/user/welcome?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" href="/user/welcome?language=es" th:text="#{label.lang.es}">Español</a></li>
-                    </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logout}">
-                        <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
+                    <a href="/index?language=pt" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
                     </a>
                 </li>
+
+                <!-- Perfil del usuario -->
+                <li class="nav-item d-flex align-items-center">
+                    <a th:href="@{/user/profile/{id}(id=${user.id})}" class="nav-link" style="display: flex; align-items: center; ">
+                        <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                        <span th:text="${user.username}">Nombre de Usuario</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -79,25 +92,12 @@
     </nav>
 </div>
 
-<div class="container mt-4">
-    <span th:text="#{info_usuario}">Información del Usuario</span>
-    <div>
-        <a th:href="@{/user/profile/{id}(id=${user.id})}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
-            <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
-            <h3 th:text="${user.username}" style="margin: 0;">Nombre de Usuario</h3>
-        </a>
-    </div>
-    <span th:text="#{info_welcome}">Información de la página</span>
-</div>
-
-<hr/>
-
-<!-- Botones para alternar entre vistas -->
+<!-- Botones para alternar entre vistas
 <div class="container mt-4 text-end">
     <button id="view-cards-btn" class="btn btn-primary">Ver Tarjetas</button>
     <button id="view-table-btn" class="btn btn-secondary">Ver Listas</button>
 </div>
-
+-->
 <!-- Vista de tarjetas -->
 <div id="card-view" class="container mt-4">
     <!-- En caso de no tener solicitudes, se muestra una solicitud por defecto -->

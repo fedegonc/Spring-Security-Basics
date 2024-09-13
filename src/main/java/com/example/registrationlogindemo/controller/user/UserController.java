@@ -2,10 +2,7 @@ package com.example.registrationlogindemo.controller.user;
 
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.*;
-import com.example.registrationlogindemo.repository.ArticleRepository;
-import com.example.registrationlogindemo.repository.ReportRepository;
-import com.example.registrationlogindemo.repository.SolicitudeRepository;
-import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.repository.*;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +43,8 @@ public class UserController {
     @Autowired
     ArticleRepository articleRepository;
     private final UserService userService;
+    @Autowired
+    ImageRepository imageRepository;
 
     // Constructor que inyecta el servicio UserService
     public UserController(UserService userService) {
@@ -57,6 +56,7 @@ public class UserController {
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
         ModelAndView mv = new ModelAndView();
+
 
         // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -74,6 +74,17 @@ public class UserController {
             // Obtener las solicitudes realizadas por el usuario autenticado
             List<Solicitude> solicitude = solicitudeRepository.findByUser(usuario);
             mv.addObject("solicitude", solicitude);
+            // Buscar las imágenes en la base de datos
+            Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
+            Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
+
+            // Agregar imágenes al modelo si están presentes
+            if (uruguaiImage.isPresent()) {
+                mv.addObject("uruguaiImageName", uruguaiImage.get().getNombre());
+            }
+            if (brasilImage.isPresent()) {
+                mv.addObject("brasilImageName", brasilImage.get().getNombre());
+            }
         }
 
         // Establecer la vista
