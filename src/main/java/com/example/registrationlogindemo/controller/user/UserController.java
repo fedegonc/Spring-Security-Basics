@@ -3,6 +3,7 @@ package com.example.registrationlogindemo.controller.user;
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.*;
 import com.example.registrationlogindemo.repository.*;
+import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,10 @@ public class UserController {
     @Autowired
     ImageRepository imageRepository;
 
+    @Autowired
+    ImageService imageService;
+
+
     // Constructor que inyecta el servicio UserService
     public UserController(UserService userService) {
         this.userService = userService;
@@ -56,7 +61,6 @@ public class UserController {
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
         ModelAndView mv = new ModelAndView();
-
 
         // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -74,17 +78,14 @@ public class UserController {
             // Obtener las solicitudes realizadas por el usuario autenticado
             List<Solicitude> solicitude = solicitudeRepository.findByUser(usuario);
             mv.addObject("solicitude", solicitude);
+
             // Buscar las imágenes en la base de datos
             Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
             Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
 
-            // Agregar imágenes al modelo si están presentes
-            if (uruguaiImage.isPresent()) {
-                mv.addObject("uruguaiImageName", uruguaiImage.get().getNombre());
-            }
-            if (brasilImage.isPresent()) {
-                mv.addObject("brasilImageName", brasilImage.get().getNombre());
-            }
+            // Agregar imágenes de idioma al modelo usando el servicio
+            imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
+            imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
         }
 
         // Establecer la vista
@@ -112,6 +113,13 @@ public class UserController {
                 user.setProfileImage("descargas.jpeg");
             }
             mv.addObject("user", user);
+
+            // Agregar imágenes de idioma (si las hubiera)
+            Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
+            Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
+
+            imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
+            imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
         }
 
         return mv;
@@ -197,24 +205,35 @@ public class UserController {
     @GetMapping("/view-requests")
     public ModelAndView viewRequests() {
         ModelAndView mv = new ModelAndView();
+
+        // Obtener la autenticación actual
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
-            User usuario = userRepository.findByUsername(username);
 
-            List<Solicitude> solicitudes = solicitudeRepository.findByUser(usuario);
-            mv.addObject("solicitudes", solicitudes);
+            // Obtener el usuario autenticado
+            User usuario = userRepository.findByUsername(username);
+            if (usuario != null) {
+                // Cargar las solicitudes del usuario
+                List<Solicitude> solicitudes = solicitudeRepository.findByUser(usuario);
+                mv.addObject("solicitudes", solicitudes);
+
+                // Verificar y cargar la imagen de perfil
+                if (usuario.getProfileImage() == null || usuario.getProfileImage().isEmpty()) {
+                    usuario.setProfileImage("descargas.jpeg");
+                }
+                mv.addObject("user", usuario);
+
+                // Agregar imágenes de idioma (si las hubiera)
+                Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
+                Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
+
+                imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
+                imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
+            }
         }
 
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-
-            // Obtener el usuario de la base de datos
-            User usuario = userRepository.findByUsername(username);
-            mv.addObject("user", usuario);
-        }
         mv.setViewName("user/view-requests");
         return mv;
     }
