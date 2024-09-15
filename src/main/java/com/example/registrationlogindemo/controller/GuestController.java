@@ -49,32 +49,39 @@ public class GuestController {
     // Obtiene la página de inicio y muestra las solicitudes activas
     @GetMapping({"", "/", "/index"})
     public ModelAndView getIndex() {
+        // Crear una instancia de ModelAndView con la vista "index"
         ModelAndView mv = new ModelAndView("index");
+
+        // Buscar las imágenes para los idiomas
         Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
         Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
 
-        if (uruguaiImage.isPresent()) {
-            mv.addObject("uruguaiImageName", uruguaiImage.get().getNombre()); // Cambié el nombre de la variable
-        }
-        if (brasilImage.isPresent()) {
-            mv.addObject("brasilImageName", brasilImage.get().getNombre()); // Cambié el nombre de la variable
-        }
+        // Agregar el nombre de la imagen al modelo si se encuentra
+        uruguaiImage.ifPresent(image -> mv.addObject("uruguaiImageName", image.getNombre()));
+        brasilImage.ifPresent(image -> mv.addObject("brasilImageName", image.getNombre()));
 
-        // Obtener la autenticación actual
+        // Obtener la autenticación actual del usuario
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = authentication != null && authentication.isAuthenticated()
                 && !(authentication.getPrincipal() instanceof String
                 && authentication.getPrincipal().equals("anonymousUser"));
 
+        // Redirigir a /init si el usuario está autenticado
+        if (isAuthenticated) {
+            return new ModelAndView("redirect:/init");
+        }
+
         // Agregar el estado de autenticación al modelo
         mv.addObject("isAuthenticated", isAuthenticated);
 
-        // Obtener los artículos y agregarlos al modelo
+        // Obtener todos los artículos y agregarlos al modelo
         List<Article> articles = articleRepository.findAll();
         mv.addObject("articles", articles);
 
+        // Devolver el ModelAndView
         return mv;
     }
+
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {

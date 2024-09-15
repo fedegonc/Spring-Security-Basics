@@ -81,15 +81,20 @@
 <div class="container mt-1">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
-            <!-- Elemento de inicio de las migas de pan -->
-            <li class="breadcrumb-item">
-                <i class="bi bi-house"></i>
-                <a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a>
-            </li>
+
             <!-- Elemento activo de las migas de pan -->
-            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
+            <i class="bi bi-house"></i><li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
         </ol>
     </nav>
+</div>
+
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading" th:text="'Bienvenida, ' + ${user.username} + '!'"></h4>
+        <p>Nos alegra que estés aquí, <span th:text="${user.username}">Nombre del Usuario</span>. Aquí puedes encontrar un resumen de tus actividades recientes y acceder a las funciones más importantes de la aplicación.</p>
+        <hr>
+        <p class="mb-0">Para comenzar, te recomendamos que revises las últimas actualizaciones, explores las nuevas funcionalidades o realices una nueva solicitud. ¡Estamos aquí para ayudarte a aprovechar al máximo la plataforma!</p>
+    </div>
 </div>
 
 <!-- Botones para alternar entre vistas

@@ -10,6 +10,38 @@ body {
 
 
 }
+.logo-text {
+    font-size: 2vw; /* Tamaño de fuente responsivo */
+    color: #f0f6f3; /* Color del texto, un gris oscuro para mayor legibilidad */
+
+}
+
+.logo-text:hover {
+    color: #0056b3; /* Cambia el color al pasar el ratón, un azul más oscuro */
+    transform: scale(1.03); /* Aumenta ligeramente el tamaño del texto al pasar el ratón */
+}
+
+@media (max-width: 1200px) {
+    .logo-text {
+        font-size: 1.8rem; /* Tamaño de fuente para pantallas más pequeñas */
+    }
+}
+
+@media (max-width: 992px) {
+    .logo-text {
+        font-size: 1.6rem; /* Tamaño de fuente para pantallas aún más pequeñas */
+    }
+}
+.logo-text:hover {
+    color: #0056b3; /* Cambia el color al pasar el ratón */
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño del texto al pasar el ratón */
+}
+@media (max-width: 768px) {
+    .logo-text {
+        font-size: 1.4rem; /* Tamaño de fuente para dispositivos móviles */
+    }
+}
+
 .custom-card {
         border: 1px solid #e3e6ea;
         border-radius: 10px;
