@@ -42,7 +42,7 @@ public class SpringSecurity {
                         authorize.requestMatchers("/", "/register/**", "/register/save", "/index",
                                         "/favicon.ico","/login/**","/init/**",
                                         "/imagem/**", "/static/css/**", "/css/styles.css","/favicon.*",
-                                        "/error","/gracias","/article/**","/img/**","/construction"
+                                        "/error","/gracias","/article/**","/img/**","/construction","/sostenibilidad"
                  ).permitAll()
                                 .requestMatchers("/report/**","/img/**").hasAnyRole("USER", "COOPERATIVA", "ASOCIACION", "ADMIN", "ROOT")
 

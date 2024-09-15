@@ -11,66 +11,120 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
     <style>
-        body {
-            font-family: "Lato", sans-serif;
-        }
-
         .sidenav {
-    height: 100%;
-    width: 250px;
-    position: fixed;
-    z-index: 1002;
-    top: 60px; /* Separación de la navbar */
-    left: -250px;
-    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro con transparencia */
-    overflow-x: hidden;
-    transition: left 0.3s ease;
-    padding-top: 20px; /* Espacio para los enlaces */
-}
+           min-height: 300px; /* Altura mínima */
+           max-height: 80vh; /* Altura máxima */
+           width: 200px; /* Reducido en ancho */
+           position: fixed;
+           z-index: 1002;
+           top: 50%; /* Centrado vertical */
+           left: -200px;
+           background-color: rgba(0, 0, 0, 0.9); /* Fondo negro con transparencia */
+           overflow-x: hidden;
+           overflow-y: auto; /* Habilita el scroll vertical si el contenido excede la altura máxima */
+           transition: left 0.3s ease;
+           padding-top: 20px; /* Espacio para los enlaces */
+           transform: translateY(-50%); /* Ajusta el centro vertical */
+       }
 
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 18px;
-    color: #ffffff; /* Color blanco para visibilidad */
-    display: block;
-    transition: 0.3s;
-}
+       .sidenav a {
+           padding: 8px 8px 8px 16px; /* Reducido padding */
+           text-decoration: none;
+           font-size: 16px; /* Fuente más pequeña */
+           color: #ffffff; /* Color blanco para visibilidad */
+           display: block;
+           transition: 0.3s;
+       }
 
-.sidenav a:hover {
-    color: #f1f1f1; /* Color más claro al hacer hover */
-}
+       .sidenav a:hover {
+           color: #f1f1f1; /* Color más claro al hacer hover */
+       }
 
-        #main {
-            transition: margin-left 0.3s;
-            padding: 16px;
-            margin-top: 60px;
-        }
+       #main {
+           transition: margin-left 0.3s;
+           padding: 16px;
+           margin-top: 60px;
+       }
 
-        /* Botón flotante en la mitad vertical de la pantalla, pegado a la pared izquierda */
-        #sidenavToggleNav {
-            background-color: #f8f9fa;
-            color: black;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 24px;
-            text-align: center;
-            line-height: 50px;
-            cursor: pointer;
-            position: fixed;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-            z-index: 1003;
-            transition: left 0.3s ease;
-        }
+       /* Botón flotante en la mitad vertical de la pantalla, pegado a la pared izquierda */
+       #sidenavToggleNav {
+           background-color: #f8f9fa;
+           color: black;
+           border: none;
+           width: 40px; /* Reducido en ancho */
+           height: 40px; /* Reducido en alto */
+           border-radius: 50%;
+           font-size: 24px;
+           text-align: center;
+           line-height: 40px; /* Ajustado a la nueva altura */
+           cursor: pointer;
+           position: fixed;
+           top: 50%;
+           left: 0;
+           transform: translateY(-50%);
+           z-index: 1003;
+           transition: left 0.3s ease;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+       }
 
-        /* Cambia la posición del botón cuando el sidenav está abierto */
-        .sidenav.open + #sidenavToggleNav {
-            left: 250px;
-        }
+       /* Cambia la posición del botón cuando el sidenav está abierto */
+       .sidenav.open + #sidenavToggleNav {
+           left: 200px;
+       }
+
+       /* Estilos para el botón de hamburguesa y cerrar (X) */
+       .sidenav.open + #sidenavToggleNav::before {
+           content: '\00d7'; /* Símbolo de X */
+           font-size: 24px;
+       }
+
+       #sidenavToggleNav::before {
+           content: '\2630'; /* Símbolo de hamburguesa */
+           font-size: 24px;
+       }
+
+       .card-container {
+           display: flex;
+           flex-wrap: wrap; /* Permite que las tarjetas se ajusten a múltiples líneas si es necesario */
+           gap: 15px; /* Espacio entre las tarjetas */
+       }
+
+       .card {
+           flex: 1 1 auto; /* Permite que las tarjetas crezcan y se reduzcan según el espacio disponible */
+           margin-bottom: 15px;
+           border-radius: 8px;
+           padding: 10px;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+       }
+
+       .card-metric {
+           flex: 1 1 150px; /* Tamaño mínimo para tarjetas de métricas */
+           max-width: 150px; /* Tamaño máximo para tarjetas de métricas */
+           max-height: 150px;
+       }
+
+       .card-graphic {
+           flex: 1 1 300px; /* Tamaño mínimo para tarjetas de gráficas */
+           max-width: 500px; /* Tamaño máximo para tarjetas de gráficas */
+       }
+
+       .card-title {
+           font-size: 16px; /* Título más pequeño */
+           font-weight: bold;
+       }
+
+       .card-text {
+           font-size: 14px; /* Texto más pequeño */
+           color: #333;
+       }
+
+       .card img {
+           width: 100%; /* La imagen se ajusta al ancho de la tarjeta */
+           height: auto;
+           border-radius: 8px;
+       }
     </style>
 </head>
 <body class="bg-light">
@@ -108,45 +162,99 @@
 </div>
 
 <!-- Botón de apertura/cierre del sidebar -->
-<button id="sidenavToggleNav">&#9776;</button>
+<button id="sidenavToggleNav"></button>
 
 <!-- Contenido principal -->
 <div id="main" class="container mt-4">
-    <h3>Panel de Control del Sistema</h3>
-    <p>Contenido aquí...</p>
+    <div class="card-container">
+        <div class="card card-metric">
+            <h5 class="card-title">Métrica 1</h5>
+            <p class="card-text">Descripción breve de la métrica.</p>
+        </div>
+
+        <div class="card card-metric">
+            <h5 class="card-title">Métrica 2</h5>
+            <p class="card-text">Descripción breve de la métrica.</p>
+        </div>
+        <div class="card card-metric">
+            <h5 class="card-title">Métrica 3</h5>
+            <p class="card-text">Descripción breve de la métrica.</p>
+        </div>
+        <div class="card card-metric">
+            <h5 class="card-title">Métrica 4</h5>
+            <p class="card-text">Descripción breve de la métrica.</p>
+        </div>
+
+        <div class="card card-graphic">
+            <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Gráfica 1</h5>
+                <p class="card-text">Descripción breve de la gráfica.</p>
+            </div>
+        </div>
+
+        <div class="card card-graphic">
+            <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Gráfica 2</h5>
+                <p class="card-text">Descripción breve de la gráfica.</p>
+            </div>
+        </div>
+    </div>
+    <!-- Barra de navegación superior -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Panel de Control</a>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container mt-4">
+        <h3>Estadísticas del Sistema</h3>
+
+        <!-- Usuarios Activos -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Usuarios Activos</h5>
+                <p class="card-text">Número de usuarios activos en el sistema.</p>
+                <p class="card-text"><strong>25</strong></p>
+            </div>
+        </div>
+
+        <!-- Solicitudes Recibidas -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Solicitudes Recibidas</h5>
+                <p class="card-text">Número total de solicitudes recibidas.</p>
+                <p class="card-text"><strong>100</strong></p>
+            </div>
+        </div>
+
+        <!-- Solicitudes Completadas -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Solicitudes Completadas</h5>
+                <p class="card-text">Número total de solicitudes completadas.</p>
+                <p class="card-text"><strong>75</strong></p>
+            </div>
+        </div>
+    </div>
 </div>
 
-<footer class="footer mt-auto py-3 bg-dark text-white">
-    <div class="container text-right">
-        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
-        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
-        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">Volver atrás</button>
-    </div>
-</footer>
-
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz4fnFO9gybFfA7l8bP65K6I7M4f7YFz2kF39BfgjtjOd5i0JG6LrgF92M"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-csFqYXK7R+1SjtTIvcoJZetU2h4q5IO8xX+2yJdP9o6bbhE9klK4L8dT5R+m4x8x"
+        crossorigin="anonymous"></script>
 <script>
-    function openNav() {
-        document.getElementById("mySidenav").style.left = "0";
-        document.getElementById("sidenavToggleNav").style.left = "250px";
-    }
+    const sidenav = document.getElementById('mySidenav');
+    const toggleButton = document.getElementById('sidenavToggleNav');
 
-    function closeNav() {
-        document.getElementById("mySidenav").style.left = "-250px";
-        document.getElementById("sidenavToggleNav").style.left = "0";
-    }
-
-    // Event listener for the button
-    document.getElementById("sidenavToggleNav").addEventListener("click", function () {
-        const sidenav = document.getElementById("mySidenav");
-        if (sidenav.style.left === "0px") {
-            closeNav();
-        } else {
-            openNav();
-        }
+    toggleButton.addEventListener('click', () => {
+        sidenav.classList.toggle('open');
+        toggleButton.classList.toggle('open');
     });
 </script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

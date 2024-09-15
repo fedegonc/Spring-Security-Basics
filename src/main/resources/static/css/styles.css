@@ -236,3 +236,97 @@ body {
         padding: 10px; /* Añade padding para mejor visualización en móviles */
     }
 }
+.sidenav {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1002;
+    top: 80px; /* Separación de la navbar */
+    left: -250px;
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro con transparencia */
+    overflow-x: hidden;
+    transition: left 0.3s ease;
+    padding-top: 20px; /* Espacio para los enlaces */
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #ffffff; /* Color blanco para visibilidad */
+    display: block;
+    transition: 0.2s;
+}
+
+.sidenav a:hover {
+    color: #111111; /* Color más claro al hacer hover */
+}
+
+        #main {
+            transition: margin-left 0.2s;
+            padding: 16px;
+            margin-top: 60px;
+        }
+
+        /* Botón flotante en la mitad vertical de la pantalla, pegado a la pared izquierda */
+        #sidenavToggleNav {
+            background-color: withe;
+            color: black;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            z-index: 1003;
+            transition: left 0.3s ease;
+        }
+
+        /* Cambia la posición del botón cuando el sidenav está abierto */
+        .sidenav.open + #sidenavToggleNav {
+            left: 250px;
+        }
+/* Estilos básicos */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+/* Tamaño de la imagen */
+.logo-container img {
+    width: 50px; /* Tamaño inicial de la imagen */
+    height: auto;
+}
+
+/* Espaciado entre el logo y el texto */
+.logo-container .navbar-brand {
+    margin-left: 0.5rem; /* Espaciado inicial */
+}
+
+/* Media Queries para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .logo-container img {
+        width: 40px; /* Tamaño de imagen en pantallas más pequeñas */
+    }
+
+    .logo-container .navbar-brand {
+        font-size: 1.0rem; /* Tamaño de fuente reducido en pantallas más pequeñas */
+    }
+}
+
+@media (max-width: 576px) {
+    .logo-container img {
+        width: 30px; /* Tamaño de imagen en pantallas muy pequeñas */
+    }
+
+    .logo-container .navbar-brand {
+        font-size: 0.8rem; /* Tamaño de fuente aún más reducido en pantallas muy pequeñas */
+        margin-left: 1rem; /* Espaciado reducido en pantallas muy pequeñas */
+    }
+}
