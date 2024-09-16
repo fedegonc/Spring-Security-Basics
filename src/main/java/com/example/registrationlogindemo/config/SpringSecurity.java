@@ -40,27 +40,31 @@ public class SpringSecurity {
                 .authorizeHttpRequests((authorize) ->
 
                         authorize.requestMatchers("/", "/register/**", "/register/save", "/index",
-                                        "/favicon.ico","/login/**","/init/**",
-                                        "/imagem/**", "/static/css/**", "/css/styles.css","/favicon.*",
-                                        "/error","/gracias","/article/**","/img/**","/construction","/sostenibilidad"
-                 ).permitAll()
-                                .requestMatchers("/report/**","/img/**").hasAnyRole("USER", "COOPERATIVA", "ASOCIACION", "ADMIN", "ROOT")
+                                        "/favicon.ico","/login/**","/init/**","/static/**",
+                                        "/imagem/**", "/static/css/**", "/css/**","/favicon.*",
+                                        "/error","/gracias","/article/**","/img/**","/construction"
+                                        ,"/sostenibilidad","/scripts/**"
+                                                ).permitAll()
+                                .requestMatchers("/report/**","/img/**"
+
+                                                ).hasAnyRole("USER", "COOPERATIVA", "ASOCIACION", "ADMIN", "ROOT")
 
 
                                 .requestMatchers("/user/**","/index/**","/init/**","/report/**"
-                                ).hasRole("USER")
+                                                ).hasRole("USER")
 
                                 .requestMatchers("/cooperativa/**","/report/**"
-                                ).hasRole("COOPERATIVA")
+                                                ).hasRole("COOPERATIVA")
 
                                 .requestMatchers("/asociacion/**","/report/**"
-                                ).hasRole("ASOCIACION")
+                                                ).hasRole("ASOCIACION")
 
                                 .requestMatchers("/admin/**","/report/**"
-                                ).hasRole("ADMIN")
+                                                ).hasRole("ADMIN")
 
                                 .requestMatchers("/root/**","/report/**")
-                                .hasRole("ROOT")
+                                                .hasRole("ROOT")
+
 
                 )
                 // Configuración de inicio de sesión

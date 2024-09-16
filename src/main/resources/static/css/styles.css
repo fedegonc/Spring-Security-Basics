@@ -18,7 +18,7 @@ body {
 
 .logo-text:hover {
     color: #0056b3; /* Cambia el color al pasar el ratón, un azul más oscuro */
-    transform: scale(1.03); /* Aumenta ligeramente el tamaño del texto al pasar el ratón */
+
 }
 
 @media (max-width: 1200px) {
@@ -34,7 +34,6 @@ body {
 }
 .logo-text:hover {
     color: #0056b3; /* Cambia el color al pasar el ratón */
-    transform: scale(1.05); /* Aumenta ligeramente el tamaño del texto al pasar el ratón */
 }
 @media (max-width: 768px) {
     .logo-text {
@@ -236,31 +235,8 @@ body {
         padding: 10px; /* Añade padding para mejor visualización en móviles */
     }
 }
-.sidenav {
-    height: 100%;
-    width: 250px;
-    position: fixed;
-    z-index: 1002;
-    top: 80px; /* Separación de la navbar */
-    left: -250px;
-    background-color: rgba(0, 0, 0, 0.9); /* Fondo negro con transparencia */
-    overflow-x: hidden;
-    transition: left 0.3s ease;
-    padding-top: 20px; /* Espacio para los enlaces */
-}
 
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 18px;
-    color: #ffffff; /* Color blanco para visibilidad */
-    display: block;
-    transition: 0.2s;
-}
 
-.sidenav a:hover {
-    color: #111111; /* Color más claro al hacer hover */
-}
 
         #main {
             transition: margin-left 0.2s;
@@ -288,10 +264,7 @@ body {
             transition: left 0.3s ease;
         }
 
-        /* Cambia la posición del botón cuando el sidenav está abierto */
-        .sidenav.open + #sidenavToggleNav {
-            left: 250px;
-        }
+
 /* Estilos básicos */
 .logo-container {
     display: flex;

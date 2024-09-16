@@ -1,0 +1,124 @@
+
+.sidenav {
+    height: 100%;
+    width: auto; /* Elimina el ancho fijo y permite que se ajuste automáticamente */
+    position: fixed;
+    z-index: 1002;
+    top: 80px; /* Separación de la navbar */
+    left: -100%; /* Oculta la barra lateral fuera de la vista al inicio */
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo negro con transparencia */
+    overflow-x: hidden;
+    transition: left 0.3s ease;
+    padding-top: 20px; /* Espacio para los enlaces */
+    white-space: nowrap; /* Evita que los enlaces se partan en varias líneas */
+}
+
+.sidenav.open {
+    left: 0; /* Muestra el sidenav cuando está abierto */
+}
+
+.sidenav a {
+    padding: 8px 16px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #ffffff;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    background-color: rgba(255, 255, 255, 0.5); /* Fondo suave al hacer hover */
+    color: #fcfcfc; /* Color de texto gris claro */
+}
+
+/* Botón de hamburguesa */
+#sidenavToggleNav {
+    background-color: #f8f9fa;
+    color: black;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 24px;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    position: fixed;
+    top: 20px;
+    left: 0;
+    z-index: 1003;
+    transition: left 0.3s;
+}
+
+#sidenavToggleNav::before {
+    content: '\2630'; /* Símbolo de hamburguesa */
+}
+
+.sidenav.open + #sidenavToggleNav::before {
+    content: '\00d7'; /* Símbolo de cruz (X) */
+}
+
+/* Cambia la posición del botón cuando el sidenav está abierto */
+.sidenav.open + #sidenavToggleNav {
+            left: 200px;
+}
+
+
+/*  metricas  */
+/* Contenedor de las tarjetas */
+.metric-cards-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas se agrupen en varias líneas si es necesario */
+    gap: 1rem; /* Espacio entre tarjetas */
+    justify-content: center; /* Centra las tarjetas en el contenedor */
+
+}
+
+.metric-card {
+    width: auto; /* El ancho se ajusta al contenido */
+    max-width: 12rem; /* Ancho máximo para mantener el diseño responsivo */
+    background-color: #ffffff; /* Fondo blanco */
+    border: 0.1rem solid #e0e0e0;
+    border-radius: 0.1rem; /* Bordes menos redondeados */
+    font-family: Arial, sans-serif;
+    text-align: right; /* Alineación a la derecha */
+    box-shadow: 0 0 0.1rem rgba(0, 0, 0, 0.1); /* Añade una sombra suave */
+    flex: 1 1 calc(20% - 1rem); /* Ajusta el tamaño de las tarjetas en relación con el contenedor */
+
+}
+
+.metric-card .card-body {
+    color: #333;
+    margin-bottom: 0.1rem; /* Reducido para compresión */
+    padding: 0.5rem;
+}
+
+
+.card-header h3 {
+    font-size: 1.0rem; /* Tamaño de fuente reducido */
+    color: #333;
+    margin-bottom: 0.1rem; /* Reducido para compresión */
+    border: none; /* Elimina el borde inferior */
+}
+
+
+
+.metric-value {
+    font-size: 0.8rem; /* Tamaño de fuente reducido */
+    color: #000;
+    margin: 0; /* Eliminado el margen superior/inferior */
+}
+
+.metric-change {
+    font-size: 0.7rem; /* Tamaño de fuente reducido */
+    color: #666;
+    margin-top: 0.1rem; /* Reducido el espacio superior */
+}
+
+.metric-change.positive {
+    color: #4CAF50; /* Verde para incremento */
+}
+
+.metric-change.negative {
+    color: #F44336; /* Rojo para decremento */
+}
