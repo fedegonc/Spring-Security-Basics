@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitudes</title>
+    <link rel="stylesheet" href="/css/styles3.css">
     <link rel="stylesheet" href="/css/styles.css">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
@@ -15,20 +17,15 @@
 <!-- Barra de navegación -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <!-- Contenedor flexible y responsivo -->
         <div class="logo-container">
             <img src="/img/logov4.png" alt="logo">
             <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
         </div>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <!-- Contenido de la barra de navegación -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-
                 <!-- Selección de idioma -->
                 <li class="nav-item">
                     <a href="/index?language=es" class="nav-link">
@@ -40,102 +37,60 @@
                         <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
                     </a>
                 </li>
-
                 <!-- Perfil del usuario -->
                 <li class="nav-item d-flex align-items-center">
-                    <a th:href="@{/user/profile/{id}(id=${user.id})}" class="nav-link" style="display: flex; align-items: center; ">
-                        <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                    <a th:href="@{/user/profile/{id}(id=${user.id})}" class="nav-link">
+                        <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" class="profile-img">
                         <span th:text="${user.username}">Nombre de Usuario</span>
                     </a>
                 </li>
-
             </ul>
         </div>
     </div>
 </nav>
 
-
 <!-- Mensajes de éxito o error -->
 <div th:if="${rerror}" class="alert alert-danger mt-3" role="alert" th:text="${rerror}"></div>
 <div th:if="${rexito}" class="alert alert-success mt-3" role="alert" th:text="${rexito}"></div>
-<div th:if="${success}" class="alert alert-success mt-3" role="alert" th:text="#{${success}}"></div>
-<div th:if="${error}" class="alert alert-danger mt-3" role="alert" th:text="#{${error}}"></div>
-<div th:if="${exito}" class="alert alert-success mt-3" role="alert" th:text="${exito}"></div>
 
 <!-- Sidebar -->
 <div id="mySidenav" class="sidenav">
-    <ul class="nav flex-column">
 
-                <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">
-                    <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span></a>
-                </li>
-                <li><a class="dropdown-item" th:href="@{/user/view-requests}">
-                    <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span></a>
-                </li>
-                <li><a class="dropdown-item" th:href="@{/user/viewarticles}">
-                    <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span></a>
-                </li>
-                <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">
-                    <i class="bi bi-person"></i> <span>Ver Perfil</span></a>
-                </li>
-                <li><a class="dropdown-item" th:href="@{/logout}">
-                    <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a>
-                </li>
 
-    </ul>
+        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">
+            <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span></a>
+        </li>
+        <li><a class="dropdown-item" th:href="@{/user/view-requests}">
+            <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span></a>
+        </li>
+        <li><a class="dropdown-item" th:href="@{/user/viewarticles}">
+            <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span></a>
+        </li>
+        <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">
+            <i class="bi bi-person"></i> <span>Ver Perfil</span></a>
+        </li>
+        <li><a class="dropdown-item" th:href="@{/logout}">
+            <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a>
+        </li>
+
 </div>
 
 <!-- Botón de apertura/cierre del sidebar -->
-<button id="sidenavToggleNav">&#9776;</button>
+<button id="sidenavToggleNav"></button>
 
-<div class="container mt-1">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-light">
-
-            <!-- Elemento activo de las migas de pan -->
-            <i class="bi bi-house"></i><li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
-        </ol>
-    </nav>
-</div>
 
 <div class="container mt-4">
+
+
     <div class="alert alert-info" role="alert">
-        <h4 class="alert-heading" th:text="'Bienvenida, ' + ${user.username} + '!'"></h4>
-        <p>Nos alegra que estés aquí, <span th:text="${user.username}">Nombre del Usuario</span>. Aquí puedes encontrar un resumen de tus actividades recientes y acceder a las funciones más importantes de la aplicación.</p>
+        <h4 class="alert-heading" th:text="'Bienvenida, ' + <!--/* [[${user.username}]] */--> 'Usuario' + '!'"></h4>
+        <p>Nos alegra que estés aquí, <!--<span th:text="${user.username}">Nombre del Usuario</span>-->. Aquí puedes encontrar un resumen de tus actividades recientes y acceder a las funciones más importantes de la aplicación.</p>
         <hr>
         <p class="mb-0">Para comenzar, te recomendamos que revises las últimas actualizaciones, explores las nuevas funcionalidades o realices una nueva solicitud. ¡Estamos aquí para ayudarte a aprovechar al máximo la plataforma!</p>
     </div>
 </div>
-
-<!-- Botones para alternar entre vistas
-<div class="container mt-4 text-end">
-    <button id="view-cards-btn" class="btn btn-primary">Ver Tarjetas</button>
-    <button id="view-table-btn" class="btn btn-secondary">Ver Listas</button>
-</div>
--->
-<!-- Vista de tarjetas -->
+<!-- Card View -->
 <div id="card-view" class="container mt-4">
-    <!-- En caso de no tener solicitudes, se muestra una solicitud por defecto -->
-    <div class="container mt-4" th:if="${#lists.isEmpty(solicitude)}">
-        <div class="row row-cols-1 row-cols-md-3 g-3">
-            <div class="col-md-4">
-                <div class="card custom-card">
-                    <img src="/img/foto2.png" class="card-img-top" th:alt="#{defaultSolicitud.title.alt.image}">
-                    <div class="card-body">
-                        <!-- Título personalizable -->
-                        <h5 class="card-title" th:text="#{defaultSolicitud.title}">Nueva Solicitud</h5>
-                        <!-- Texto personalizable -->
-                        <p class="card-text" th:text="#{defaultSolicitud.text}">¡Sé el primero en solicitar!</p>
-                    </div>
-                    <div class="card-footer">
-                        <!-- Botón con texto personalizable -->
-                        <a class="btn btn-primary" th:href="@{/user/newsolicitude}" th:text="#{defaultSolicitud.button}">Solicitar Ahora</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Código de las cartas de solicitudes -->
     <div class="row row-cols-1 row-cols-md-3 g-3">
         <div class="col-md-4" th:each="solicitud : ${solicitude}">
             <div class="card custom-card">
@@ -144,7 +99,7 @@
                     <p class="card-text date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item estado-field" th:text="#{newRequest.status} + ': ' + #{${solicitud.estado}}">Estado de la solicitud</li>
+                    <li class="list-group-item estado-field" th:text="#{newRequest.status} + ': ' + #{${solicitud.estado}}">Estado</li>
                 </ul>
                 <div class="card-footer">
                     <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
@@ -154,20 +109,7 @@
     </div>
 </div>
 
-<!-- Vista de listas -->
-<div id="table-view" class="container mt-4 d-none">
-    <ul class="list-group">
-        <li class="list-group-item d-flex align-items-center justify-content-between" th:each="solicitud : ${solicitude}">
-            <img th:src="@{/img/{img}(img=${solicitud.imagen})}" alt="Imagen de la solicitud" style="width: 50px; height: 50px; margin-right: 15px;">
-            <div class="d-flex flex-column flex-grow-1">
-                <span class="date-field" th:text="${solicitud.fecha}">Fecha</span>
-                <span class="estado-field" th:text="#{newRequest.status} + ': ' + #{${solicitud.estado}}">Estado</span>
-            </div>
-            <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
-        </li>
-    </ul>
-</div>
-<hr/>
+<!-- Footer -->
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container d-flex justify-content-between align-items-center">
         <span class="text-muted" th:text="#{footer.copy}">
@@ -184,86 +126,7 @@
     </div>
 </footer>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const dateFields = document.querySelectorAll('.date-field');
-        const estadoFields = document.querySelectorAll('.estado-field');
-
-        const requestedText = 'Solicitado'; // Fallback in case Thymeleaf doesn't replace it
-        const estadoTranslations = {
-            'EN_ESPERA': 'En espera',
-            'ACEPTADA': 'Aceptada',
-            'RECHAZADA': 'Rechazada',
-            'EN_REVISION': 'En revisión'
-        };
-
-        dateFields.forEach(field => {
-            const rawDate = field.textContent.trim();
-            if (rawDate) {
-                const date = new Date(rawDate);
-                const day = date.getDate();
-                const month = date.getMonth() + 1;
-                const year = date.getFullYear().toString().slice(-2);
-                const hours = date.getHours().toString().padStart(2, '0');
-                const minutes = date.getMinutes().toString().padStart(2, '0');
-
-                const formattedDate = `${requestedText}: ${day}/${month}/${year} - ${hours}:${minutes} hs`;
-                field.textContent = formattedDate;
-            }
-        });
-
-        estadoFields.forEach(field => {
-            const estado = field.textContent.trim();
-            if (estadoTranslations[estado]) {
-                field.textContent = estadoTranslations[estado];
-            }
-        });
-
-        const viewCardsBtn = document.getElementById('view-cards-btn');
-        const viewTableBtn = document.getElementById('view-table-btn');
-        const cardView = document.getElementById('card-view');
-        const tableView = document.getElementById('table-view');
-
-        viewCardsBtn.addEventListener('click', () => {
-            cardView.classList.remove('d-none');
-            tableView.classList.add('d-none');
-            viewCardsBtn.classList.add('btn-primary');
-            viewCardsBtn.classList.remove('btn-secondary');
-            viewTableBtn.classList.add('btn-secondary');
-            viewTableBtn.classList.remove('btn-primary');
-        });
-
-        viewTableBtn.addEventListener('click', () => {
-            cardView.classList.add('d-none');
-            tableView.classList.remove('d-none');
-            viewTableBtn.classList.add('btn-primary');
-            viewTableBtn.classList.remove('btn-secondary');
-            viewCardsBtn.classList.add('btn-secondary');
-            viewCardsBtn.classList.remove('btn-primary');
-        });
-    });
-</script>
-<script>
-    function openNav() {
-        document.getElementById("mySidenav").style.left = "0";
-        document.getElementById("sidenavToggleNav").style.left = "250px";
-    }
-
-    function closeNav() {
-        document.getElementById("mySidenav").style.left = "-250px";
-        document.getElementById("sidenavToggleNav").style.left = "0";
-    }
-
-    // Event listener for the button
-    document.getElementById("sidenavToggleNav").addEventListener("click", function () {
-        const sidenav = document.getElementById("mySidenav");
-        if (sidenav.style.left === "0px") {
-            closeNav();
-        } else {
-            openNav();
-        }
-    });
-</script>
+<script src="/scripts/userScript.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,146 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px; /* Ajuste de tamaño de fuente base */
+    line-height: 1.5;
+}
+/* Estilos básicos */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+/* Tamaño de la imagen */
+.logo-container img {
+    width: 50px; /* Tamaño inicial de la imagen */
+    height: auto;
+}
+
+/* Espaciado entre el logo y el texto */
+.logo-container .navbar-brand {
+    margin-left: 0.5rem; /* Espaciado inicial */
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.sidenav {
+    height: 100%;
+    width: auto; /* Elimina el ancho fijo y permite que se ajuste automáticamente */
+    position: fixed;
+    z-index: 1002;
+    top: 80px; /* Separación de la navbar */
+    left: -100%; /* Oculta la barra lateral fuera de la vista al inicio */
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo negro con transparencia */
+    overflow-x: hidden;
+    transition: left 0.3s ease;
+    padding-top: 20px; /* Espacio para los enlaces */
+    white-space: nowrap; /* Evita que los enlaces se partan en varias líneas */
+}
+
+.sidenav.open {
+    left: 0; /* Muestra el sidenav cuando está abierto */
+}
+
+.sidenav a {
+    padding: 8px 16px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #ffffff;
+    display: block;
+    transition: 0.3s;
+}
+
+
+
+/* Botón de hamburguesa sin fondo */
+#sidenavToggleNav {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    color: white; /* Cambia el color del icono si es necesario */
+    font-size: 30px; /* Tamaño del icono */
+    cursor: pointer;
+}
+
+/* Al pasar el ratón por encima */
+#sidenavToggleNav:hover {
+    background-color: rgba(f, f, f, 0.5); /* Asegura que no haya fondo en el hover */
+    border: none;
+}
+#main {
+    transition: margin-left 0.2s;
+    padding: 16px;
+    margin-top: 60px;
+}
+
+
+
+#sidenavToggleNav::before {
+    content: '\2630'; /* Símbolo de hamburguesa */
+}
+
+.sidenav.open + #sidenavToggleNav::before {
+    content: '\00d7'; /* Símbolo de cruz (X) */
+}
+
+/* Cambia la posición del botón cuando el sidenav está abierto */
+.sidenav.open + #sidenavToggleNav {
+    left: 200px;
+}
+
+/* Profile Image */
+.profile-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Custom Card */
+.custom-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.card-footer {
+    text-align: center;
+}
+
+/* Footer */
+.footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: relative;
+}
+
+.footer a {
+    color: white;
+}
+
+.footer a:hover {
+    color: #ddd;
+}
+/* Estilos básicos */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+/* Tamaño de la imagen */
+.logo-container img {
+    width: 50px; /* Tamaño inicial de la imagen */
+    height: auto;
+}
+
+/* Espaciado entre el logo y el texto */
+.logo-container .navbar-brand {
+    margin-left: 0.5rem; /* Espaciado inicial */
+}

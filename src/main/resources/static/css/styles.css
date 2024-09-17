@@ -152,7 +152,6 @@ body {
   display: flex;
   justify-content: space-between;
 }
-}
 
 .footer .container > .row {
     flex: 0 1 100%;

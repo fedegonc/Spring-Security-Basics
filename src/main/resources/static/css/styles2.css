@@ -33,7 +33,7 @@
 
 /* Botón de hamburguesa */
 #sidenavToggleNav {
-    background-color: #f8f9fa;
+    background-color: white;
     color: black;
     border: none;
     width: 40px;
@@ -69,22 +69,40 @@
 .metric-cards-container {
     display: flex;
     flex-wrap: wrap; /* Permite que las tarjetas se agrupen en varias líneas si es necesario */
-    gap: 1rem; /* Espacio entre tarjetas */
-    justify-content: center; /* Centra las tarjetas en el contenedor */
+    gap: 0.1rem; /* Espacio entre tarjetas */
+    align-items: stretch; /* Alinea las tarjetas para que tengan la misma altura */
+    padding: 0.1rem; /* Agrega un poco de relleno alrededor del contenedor */
+    justify-content: space-between ;
+}
 
+
+@media (max-width: 1200px) {
+    .metric-card {
+        flex: 1 1 calc(33.333% - 1rem); /* Ajusta las tarjetas para pantallas más pequeñas */
+    }
+}
+
+@media (max-width: 800px) {
+    .metric-card {
+        flex: 1 1 calc(50% - 1rem); /* Ajusta las tarjetas para pantallas aún más pequeñas */
+    }
+}
+
+@media (max-width: 500px) {
+    .metric-card {
+        flex: 1 1 100%; /* Ajusta las tarjetas para pantallas muy pequeñas */
+    }
 }
 
 .metric-card {
     width: auto; /* El ancho se ajusta al contenido */
-    max-width: 12rem; /* Ancho máximo para mantener el diseño responsivo */
+    max-width: 8rem; /* Ancho máximo para mantener el diseño responsivo */
     background-color: #ffffff; /* Fondo blanco */
     border: 0.1rem solid #e0e0e0;
     border-radius: 0.1rem; /* Bordes menos redondeados */
     font-family: Arial, sans-serif;
     text-align: right; /* Alineación a la derecha */
     box-shadow: 0 0 0.1rem rgba(0, 0, 0, 0.1); /* Añade una sombra suave */
-    flex: 1 1 calc(20% - 1rem); /* Ajusta el tamaño de las tarjetas en relación con el contenedor */
-
 }
 
 .metric-card .card-body {
@@ -99,6 +117,7 @@
     color: #333;
     margin-bottom: 0.1rem; /* Reducido para compresión */
     border: none; /* Elimina el borde inferior */
+    padding: 0.5rem;
 }
 
 
@@ -122,3 +141,50 @@
 .metric-change.negative {
     color: #F44336; /* Rojo para decremento */
 }
+
+
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas de igual tamaño */
+    grid-template-rows: repeat(2, 1fr); /* Dos filas de igual tamaño */
+    gap: 20px; /* Espacio entre las gráficas */
+    margin-top: 20px;
+}
+
+.chart-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 1px;
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#clock-container {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+#clock {
+    font-size: 1.5rem;
+    color: #333;
+}
+.header {
+    display: flex;
+    justify-content: space-between; /* Espacio entre el título y el reloj */
+    align-items: center; /* Alinea verticalmente el título y el reloj */
+    padding: 0.1rem;
+    background-color: #f8f9fa;
+}
+
+.clock {
+    font-size: 1rem;
+    color: #333;
+}
+.container
+{padding: 0.2rem}

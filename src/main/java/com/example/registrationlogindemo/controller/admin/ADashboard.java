@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
 public class ADashboard {
 
-
+    @Autowired
+    ImageService imageService;
+    @Autowired
+    ImageRepository imageRepository;
     private UserService userService;
     public void AdminController(UserService userService, ImageService imageService) {
         this.userService = userService;
@@ -31,6 +35,12 @@ public class ADashboard {
     @GetMapping("/dashboard")
     public ModelAndView adminDashboard() {
         ModelAndView mv = new ModelAndView("admin/dashboard");
+
+        Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
+        Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
+        // Agregar imágenes de idioma al modelo usando el servicio
+        imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
+        imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         mv.addObject("principal", principal.toString());

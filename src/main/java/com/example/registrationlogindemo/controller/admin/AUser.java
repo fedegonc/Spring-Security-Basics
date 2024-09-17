@@ -23,22 +23,10 @@ import java.util.Optional;
 public class AUser {
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
     @Autowired
-    SolicitudeRepository solicitudeRepository;
-    @Autowired
     UserRepository userRepository;
     @Autowired
-    RoleRepository roleRepository;
+    UserService userService;
 
-
-
-
-    private UserService userService;
-
-
-    // Constructor que inyecta el servicio UserService
-    public void AUser(UserService userService, ImageService imageService) {
-        this.userService = userService;
-    }
     @GetMapping("/users")
     public ModelAndView rootUsers() {
         ModelAndView mv = new ModelAndView("admin/users");
