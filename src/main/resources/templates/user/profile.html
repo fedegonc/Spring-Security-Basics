@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="#{title}">Frontera Sustentable</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styles3.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
@@ -35,21 +36,6 @@
             </ul>
             <!-- Elementos de la barra de navegación derecha -->
             <ul class="navbar-nav ml-auto">
-
-
-                <!-- Menú desplegable -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Menú
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="menuDropdown">
-                        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a></li>
-                        <li><a class="dropdown-item" th:href="@{/user/view-requests}" th:text="#{historysolicitudes}">Ver Historial de Solicitudes</a></li>
-                        <li><a class="dropdown-item" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Ver Publicaciones</a></li>
-                        <li><a class="dropdown-item" th:href="@{/logout}"><i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a></li>
-                    </ul>
-                </li>
-
 
                 <!-- Selección de idioma -->
                 <li class="nav-item">
@@ -82,10 +68,8 @@
             <!-- Elemento de inicio de las migas de pan -->
             <li class="breadcrumb-item">
                 <i class="bi bi-house"></i>
-                <a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a>
-            </li>
-            <!-- Elemento activo de las migas de pan -->
             <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
+
             <!-- Elemento activo de las migas pan-->
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.profile}">Perfil</li>
         </ol>
@@ -98,9 +82,39 @@
 
 <div class="container mt-4">
 
-    <span th:text="#{info_profile}">Información de la pagina</span>
+
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading" th:text="'Bienvenida, ' + <!--/* [[${user.username}]] */--> 'Usuario' + '!'"></h4>
+        <p>Nos alegra que estés aquí, <!--<span th:text="${user.username}">Nombre del Usuario</span>-->. Aquí puedes encontrar un resumen de tus actividades recientes y acceder a las funciones más importantes de la aplicación.</p>
+        <hr>
+        <p class="mb-0">Para comenzar, te recomendamos que revises las últimas actualizaciones, explores las nuevas funcionalidades o realices una nueva solicitud. ¡Estamos aquí para ayudarte a aprovechar al máximo la plataforma!</p>
+    </div>
 </div>
-<hr/>
+
+<!-- Sidebar -->
+<div id="mySidenav" class="sidenav">
+
+
+    <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">
+        <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span></a>
+    </li>
+    <li><a class="dropdown-item" th:href="@{/user/view-requests}">
+        <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span></a>
+    </li>
+    <li><a class="dropdown-item" th:href="@{/user/viewarticles}">
+        <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span></a>
+    </li>
+    <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">
+        <i class="bi bi-person"></i> <span>Ver Perfil</span></a>
+    </li>
+    <li><a class="dropdown-item" th:href="@{/logout}">
+        <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a>
+    </li>
+
+</div>
+
+<!-- Botón de apertura/cierre del sidebar -->
+<button id="sidenavToggleNav"></button>
 
 <div class="container">
     <div class="row">
@@ -150,7 +164,7 @@
         </div>
     </div>
 </div>
-<hr/>
+
 <footer class="footer mt-auto py-3 bg-dark text-white">
     <div class="container d-flex justify-content-between align-items-center">
         <span class="text-muted" th:text="#{footer.copy}">
@@ -184,6 +198,7 @@
 <!-- Fin del contenido principal -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/scripts/userScript.js"></script>
 
 </body>
 </html>

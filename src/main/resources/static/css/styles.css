@@ -10,6 +10,10 @@ body {
 
 
 }
+li {
+    list-style: none;
+    padding: 0.1rem;
+}
 .logo-text {
     font-size: 2vw; /* Tamaño de fuente responsivo */
     color: #f0f6f3; /* Color del texto, un gris oscuro para mayor legibilidad */
