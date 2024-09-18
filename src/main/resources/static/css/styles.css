@@ -69,6 +69,11 @@ body {
     flex-wrap: wrap;
     padding: 10px 20px; /* Añade padding para mejor espacio en dispositivos móviles */
     background-color: #333; /* Color de fondo para la barra de navegación */
+    z-index: 3;
+    position: static;
+    top: 0;
+    width: 100%;
+    z-index: 3;
 }
 
 .navbar-brand img {
@@ -134,23 +139,24 @@ body {
 
 .banner-content {
     display: flex;
- align-items: left;
- flex-wrap: wrap;
+    align-items: left;
+    flex-wrap: wrap;
     color: white;
     margin: auto;
     padding: 20px;
 }
 
 .footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 3;
 }
 
 .footer .container {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .footer .container > .row {
@@ -235,33 +241,6 @@ body {
     }
 }
 
-
-
-        #main {
-            transition: margin-left 0.2s;
-            padding: 16px;
-            margin-top: 60px;
-        }
-
-        /* Botón flotante en la mitad vertical de la pantalla, pegado a la pared izquierda */
-        #sidenavToggleNav {
-            background-color: withe;
-            color: black;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 24px;
-            text-align: center;
-            line-height: 50px;
-            cursor: pointer;
-            position: fixed;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-            z-index: 1003;
-            transition: left 0.3s ease;
-        }
 
 
 /* Estilos básicos */
