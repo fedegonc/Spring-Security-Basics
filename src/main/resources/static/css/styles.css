@@ -285,3 +285,23 @@ li {
         margin-left: 1rem; /* Espaciado reducido en pantallas muy pequeñas */
     }
 }
+
+.logo-container img {
+    margin-right: 10px; /* Añade espacio entre el logo y el texto */
+}
+
+.navbar-nav .profile-img {
+    border-radius: 50%; /* Hace la imagen de perfil redonda */
+    width: 30px;
+    height: 30px;
+    margin-right: 5px; /* Añade espacio entre la imagen de perfil y el nombre de usuario */
+}
+
+.nav-link {
+    color: #fff;
+    padding: 10px 15px;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Cambia el color de fondo al pasar el cursor */
+}
