@@ -268,5 +268,16 @@ public class UserController {
 
         return mv;
     }
-    // Método para obtener imágenes
+    @GetMapping("/informaciones")
+    public ModelAndView informaciones() {
+        ModelAndView mv = new ModelAndView("user/informaciones");
+        return mv;
+    }
+
+    @GetMapping("/contacto")
+    public ModelAndView contacto() {
+        ModelAndView mv = new ModelAndView("user/noticias");
+        return mv;
+    }
+
 }

@@ -162,5 +162,34 @@ public class GuestController {
         return mv;
     }
 
+    @GetMapping("/ambiental")
+    public ModelAndView ambiental() {
+        ModelAndView mv = new ModelAndView("ambiental");
+        return mv;
+    }
+
+    @GetMapping("/noticias")
+    public ModelAndView noticias() {
+        ModelAndView mv = new ModelAndView("noticias");
+        return mv;
+    }
+
+    @GetMapping("/materiales")
+    public ModelAndView materiales() {
+        ModelAndView mv = new ModelAndView("materiales");
+        return mv;
+    }
+
+    @GetMapping("/alianzas")
+    public ModelAndView alianzas() {
+        ModelAndView mv = new ModelAndView("alianzas");
+        return mv;
+    }
+    @GetMapping("/legislacion")
+    public ModelAndView legislacion() {
+        ModelAndView mv = new ModelAndView("legislacion");
+        return mv;
+    }
+
 }
 
