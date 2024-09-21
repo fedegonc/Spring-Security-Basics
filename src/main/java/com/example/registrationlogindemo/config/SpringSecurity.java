@@ -43,7 +43,8 @@ public class SpringSecurity {
                                         "/favicon.ico","/login/**","/init/**","/static/**",
                                         "/imagem/**", "/static/css/**", "/css/**","/favicon.*",
                                         "/error","/gracias","/article/**","/img/**","/construction"
-                                        ,"/sostenibilidad","/scripts/**"
+                                        ,"/sostenibilidad","/scripts/**","/ambiental","/noticias"
+                                        ,"/materiales","/legislacion","/alianzas","/base"
                                                 ).permitAll()
                                 .requestMatchers("/report/**","/img/**"
 

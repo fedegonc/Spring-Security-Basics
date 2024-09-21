@@ -63,13 +63,26 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="titulo" class="form-label" th:text="#{newpost.titlelabel}">Titulo:</label>
+                            <label for="titulo" class="form-label" th:text="#{newpost.titlelabel}">Título:</label>
                             <input type="text" class="form-control" id="titulo" name="titulo" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="descripcion" class="form-label" th:text="#{newpost.contentlabel}">Contenido:</label>
                             <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label">Categoría:</label>
+                            <select class="form-select" id="categoria" name="categoria" required>
+                                <option value="" disabled selected>Selecciona una categoría</option>
+                                <option value="GENERICO" th:text="#{categoria.generico}">Genérico</option>
+                                <option value="NOTICIA" th:text="#{categoria.noticia}">Noticia</option>
+                                <option value="LEGISLACION" th:text="#{categoria.legislacion}">Legislación</option>
+                                <option value="EDUCACION_AMBIENTAL" th:text="#{categoria.educacion_ambiental}">Educación Ambiental</option>
+                                <option value="ALIANZAS" th:text="#{categoria.alianzas}">Alianzas</option>
+                                <option value="TIPOS_DE_MATERIALES" th:text="#{categoria.tipos_de_materiales}">Tipos de Materiales</option>
+                            </select>
                         </div>
 
                         <!-- Botón de envío -->

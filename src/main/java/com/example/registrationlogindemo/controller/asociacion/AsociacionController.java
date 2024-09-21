@@ -274,41 +274,7 @@ public class AsociacionController {
         return new ModelAndView("asociacion/newarticle");
     }
 
-    @PostMapping("/newarticle")
-    public String newArticlePost(@Valid Article article,
-                                 BindingResult result, RedirectAttributes msg,
-                                 @RequestParam("file") MultipartFile file,
-                                 @AuthenticationPrincipal UserDetails currentUser) {
-        if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos.");
-            return "redirect:/asociacion/newarticle";
-        }
 
-        if (!file.isEmpty()) {
-            try {
-                // Crear nombre de archivo único
-                String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-                Path filePath = Paths.get(UPLOAD_DIR + uniqueFileName);
-                Files.write(filePath, file.getBytes());
-                article.setImagen(uniqueFileName);
-            } catch (IOException e) {
-                msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
-                return "redirect:/asociacion/newarticle";
-            }
-        }
-
-        User user = userRepository.findByUsername(currentUser.getUsername());
-        if (user != null) {
-            article.setUser(user);
-            articleRepository.save(article);
-            msg.addFlashAttribute("exito", "Solicitud realizada con éxito.");
-        } else {
-            msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
-            return "redirect:/asociacion/newarticle";
-        }
-
-        return "redirect:/asociacion/dashboard";
-    }
     @GetMapping("/editarticle/{id}")
     public ModelAndView editArticle(@PathVariable("id") int id) {
         ModelAndView mv = new ModelAndView();

@@ -65,7 +65,7 @@ public class ArticleController {
                 String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
                 Path filePath = Paths.get(UPLOAD_DIR + uniqueFileName);
                 Files.write(filePath, file.getBytes());
-                article.setImagen(uniqueFileName);
+
             } catch (IOException e) {
                 msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
                 return "redirect:/user/welcome";

@@ -80,11 +80,7 @@ li {
     z-index: 3;
 }
 
-.navbar-brand img {
-    height: 30px;
-    width: auto;
-    margin: 15px;
-}
+
 
 .navbar-nav {
     display: flex;
@@ -304,4 +300,73 @@ li {
 
 .nav-link:hover {
     background-color: rgba(255, 255, 255, 0.1); /* Cambia el color de fondo al pasar el cursor */
+}
+
+
+
+/* Estilos para el navbar normal */
+#mainNavbar {
+    transition: padding 300ms ease, box-shadow 300ms ease, background-color 300ms ease;
+    box-shadow: none;
+    position: fixed; /* Cambia a fixed desde el principio */
+    top: 0;
+    width: 100%;
+    padding: 10px 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+/* Estilo del navbar cuando se ha hecho scroll */
+#mainNavbar.scrolled {
+    padding: 5px 10px; /* Reducción de padding */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo más oscuro */
+}
+/* Espacio que ocupa el navbar */
+.navbar-placeholder {
+    height: 70px; /* Altura inicial del navbar */
+    visibility: hidden; /* Oculto inicialmente */
+}
+
+#navbarLogo {
+    width: 3rem; /* Ajusta el tamaño del icono */
+    height: 3rem; /* Asegúrate de mantener la proporción */
+}
+
+
+/* Responsividad */
+@media (max-width: 768px) {
+    #navbarLogo {
+        width: 2.5rem; /* Tamaño más pequeño para pantallas pequeñas */
+        height: 2.5rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem; /* Tamaño más pequeño para pantallas pequeñas */
+    }
+}
+
+#navbarLogo {
+    width: 3rem; /* Tamaño deseado */
+    height: auto; /* Mantiene la proporción */
+    transition: width 300ms ease;
+}
+
+@media (max-width: 768px) {
+    #navbarLogo {
+        width: 2.5rem; /* Tamaño más pequeño para pantallas pequeñas */
+    }
+}
+
+#mainNavbar.scrolled #navbarLogo.small-logo {
+    width: 2.5rem; /* Tamaño más pequeño cuando está scrolled */
+}
+
+.navbar-brand {
+    font-size: 1.2rem; /* Tamaño normal */
+    transition: font-size 300ms ease; /* Suaviza el cambio de tamaño */
+}
+
+#mainNavbar.scrolled .navbar-brand {
+    font-size: 1.0rem; /* Tamaño más pequeño cuando está scrolled */
 }

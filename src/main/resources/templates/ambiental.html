@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base :: head">
+    <title>Educación Ambiental</title>
 </head>
 <body>
-
+<div th:replace="base :: content">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Artículos de Educación Ambiental</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <th:block th:each="article : ${articles}">
+                            <li class="list-group-item">
+                                <h5 th:text="${article.titulo}"></h5>
+                                <p th:text="${article.descripcion}"></p>
+                                <p><strong>Fecha:</strong> <span th:text="${#dates.format(article.fechaRealizado, 'dd/MM/yyyy')}"></span></p>
+                                <img th:src="@{/img/{imagen}(imagen=${article.imagen})}" alt="Imagen de artículo" class="img-fluid" />
+                            </li>
+                        </th:block>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

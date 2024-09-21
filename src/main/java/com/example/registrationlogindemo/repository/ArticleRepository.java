@@ -17,5 +17,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findByUser(User usuario);
 
+    List<Article> findByCategoria(String categoria);
+
+
 
 }

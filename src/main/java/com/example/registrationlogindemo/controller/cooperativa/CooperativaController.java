@@ -11,6 +11,7 @@ import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.MessageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -283,11 +287,11 @@ public class CooperativaController {
 
     @PostMapping("/newarticle")
     public String newArticlePost(@Valid Article article,
-                              BindingResult result,
-                              @RequestParam("file") MultipartFile file,
-                              RedirectAttributes msg) {
+                                 BindingResult result,
+                                 @RequestParam("file") MultipartFile file,
+                                 RedirectAttributes msg) {
         if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "Error al cargar la imagen. Por favor, complete todos los campos correctamente.");
+            msg.addFlashAttribute("error", "Error al cargar el artículo. Por favor, complete todos los campos correctamente.");
             return "redirect:/cooperativa/dashboard";
         }
 
@@ -297,27 +301,44 @@ public class CooperativaController {
 
         try {
             if (!file.isEmpty()) {
-                byte[] bytes = file.getBytes();
-                String modifiedFilename = file.getOriginalFilename().replace(" ", "_"); // Replace spaces in the filename
-                Path path = Paths.get(UPLOAD_DIR + modifiedFilename);
-                Files.write(path, bytes);
-                article.setImagen(modifiedFilename);
+                // Procesar la imagen y guardarla en la base de datos
+                BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+                String formatName = file.getContentType().split("/")[1]; // Obtiene el formato de la imagen
+
+                // Redimensionar la imagen
+                bufferedImage = Thumbnails.of(bufferedImage)
+                        .size(500, 500)
+                        .outputQuality(0.8f)
+                        .asBufferedImage();
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(bufferedImage, formatName, baos);
+                baos.flush();
+                byte[] resizedImageBytes = baos.toByteArray();
+                baos.close();
+
+                // Guardar los datos de la imagen en el artículo
+                article.setImagenData(resizedImageBytes); // Ajusta según tu entidad
+
+                article.setImagenNombre(file.getOriginalFilename());
             } else {
-                article.setImagen(null); // Optional: Set a default value if no image is uploaded
+                // Establecer valores predeterminados si no se carga imagen
+                article.setImagenData(null);
+
+                article.setImagenNombre(null);
             }
         } catch (IOException e) {
             msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
             return "redirect:/cooperativa/newarticles";
         }
 
-
         User currentUser = userRepository.findByUsername(username);
         article.setUser(currentUser);
 
-        // Save the image to the database or perform other necessary operations
+        // Guardar el artículo en la base de datos
         articleRepository.save(article);
 
-        msg.addFlashAttribute("success", "Imagen cargada exitosamente.");
+        msg.addFlashAttribute("success", "Artículo cargado exitosamente.");
         return "redirect:/cooperativa/newarticles";
     }
 }

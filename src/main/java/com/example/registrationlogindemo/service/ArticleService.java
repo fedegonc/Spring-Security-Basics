@@ -6,4 +6,7 @@ public interface ArticleService {
 
     @Transactional
     void eliminarEntidad(Long id);
+
+
+
 }

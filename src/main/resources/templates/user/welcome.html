@@ -14,40 +14,38 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
-<!-- Barra de navegación -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+
+<nav id="mainNavbar" th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <div class="logo-container">
-            <img src="/img/logov4.png" alt="Logo de Frontera Sustentable">
-            <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
-        </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Toggle navigation">
+        <img src="/img/logov4.png" alt="logo" id="navbarLogo" width="50" height="50">
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="true" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <!-- Selección de idioma -->
-                <li class="nav-item">
-                    <a href="/index?language=es" class="nav-link" aria-label="Cambiar idioma a Español">
-                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Bandera de Uruguay" width="30" height="20">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown language-dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{label.chooseLang}"></span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/index?language=pt" class="nav-link" aria-label="Cambiar idioma a Portugués">
-                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Bandera de Brasil" width="30" height="20">
-                    </a>
-                </li>
-                <!-- Perfil del usuario -->
-                <li class="nav-item d-flex align-items-center">
-                    <a th:href="@{/user/profile/{id}(id=${user.id})}" class="nav-link">
-                        <img th:src="@{'/img/' + ${user.profileImage}}" alt="Imagen de perfil de usuario" class="profile-img">
-                        <span th:text="${user.username}">Nombre de Usuario</span>
-                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/report?language=pt" th:text="#{label.lang.pt}">Português</a></li>
+                        <li><a class="dropdown-item" href="/report?language=es" th:text="#{label.lang.es}">Español</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
+
+
 <!-- Mensajes de éxito o error -->
 <div th:if="${rerror}" class="alert alert-danger mt-3" role="alert" th:text="${rerror}"></div>
 <div th:if="${rexito}" class="alert alert-success mt-3" role="alert" th:text="${rexito}"></div>

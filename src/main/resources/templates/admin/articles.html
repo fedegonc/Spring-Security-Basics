@@ -92,7 +92,7 @@
         <tr th:each="article: ${articles}">
             <td th:text="${article.id}"></td>
             <td th:text="${article.titulo}"></td>
-            <td><img th:src="@{/img/{img}(img=${article.imagen})}" width="100" height="100"></td>
+            <td><img th:src="@{/img/{img}(img=${article.imagenNombre})}" width="100" height="100"></td>
 
             <td>
                 <a class="btn btn-primary" th:href="@{/admin/editarticle/{id}(id=${article.id})}">Editar</a>
