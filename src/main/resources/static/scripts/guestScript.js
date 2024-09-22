@@ -1,12 +1,18 @@
-window.addEventListener('scroll', function() {
-    const navbar = document.getElementById('mainNavbar');
-    const logo = document.getElementById('navbarLogo');
+function openNav() {
+    document.getElementById("mySidenav").style.left = "0";
+    document.getElementById("sidenavToggleNav").style.left = "250px";
+}
 
-    if (window.scrollY > 10) { // Cambia el valor según necesites
-        navbar.classList.add('scrolled');
-        logo.classList.add('small-logo');
+function closeNav() {
+    document.getElementById("mySidenav").style.left = "-250px";
+    document.getElementById("sidenavToggleNav").style.left = "0";
+}
+
+document.getElementById("sidenavToggleNav").addEventListener("click", function () {
+    const sidenav = document.getElementById("mySidenav");
+    if (sidenav.style.left === "0px") {
+        closeNav();
     } else {
-        navbar.classList.remove('scrolled');
-        logo.classList.remove('small-logo');
+        openNav();
     }
 });

@@ -162,37 +162,59 @@ public class GuestController {
     @GetMapping("/construction")
     public ModelAndView contruction() {
         ModelAndView mv = new ModelAndView("user/construction");
+
         return mv;
     }
 
     @GetMapping("/ambiental")
     public ModelAndView ambiental() {
         ModelAndView mv = new ModelAndView("ambiental");
+        Article.Categoria categoriaGenerica = Article.Categoria.valueOf("EDUCACION_AMBIENTAL");
+        List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
+
+        mv.addObject("articles", articles);
         return mv;
     }
 
     @GetMapping("/noticias")
     public ModelAndView noticias() {
         ModelAndView mv = new ModelAndView("noticias");
+        Article.Categoria categoriaGenerica = Article.Categoria.valueOf("NOTICIA");
+        List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
+
+        mv.addObject("articles", articles);
         return mv;
     }
 
     @GetMapping("/materiales")
     public ModelAndView materiales() {
         ModelAndView mv = new ModelAndView("materiales");
+        Article.Categoria categoriaGenerica = Article.Categoria.valueOf("TIPOS_DE_MATERIALES");
+        List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
+
+        mv.addObject("articles", articles);
         return mv;
     }
 
     @GetMapping("/alianzas")
     public ModelAndView alianzas() {
         ModelAndView mv = new ModelAndView("alianzas");
+        Article.Categoria categoriaGenerica = Article.Categoria.valueOf("ALIANZAS");
+        List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
+
+        mv.addObject("articles", articles);
         return mv;
     }
     @GetMapping("/legislacion")
     public ModelAndView legislacion() {
         ModelAndView mv = new ModelAndView("legislacion");
+        Article.Categoria categoriaGenerica = Article.Categoria.valueOf("LEGISLACION");
+        List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
+
+        mv.addObject("articles", articles);
         return mv;
     }
 
 }
+
 
