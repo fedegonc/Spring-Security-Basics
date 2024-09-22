@@ -193,7 +193,7 @@
         <!-- Tarjetas dinámicas -->
         <div class="col" th:each="article: ${articles}">
             <div class="card h-100">
-                <img th:src="@{/img/{img}(img=${article.imagen})}" class="card-img-top" alt="Imagen de la artículo">
+                <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="card-img-top" alt="Imagen de la artículo">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${article.titulo}">Título del artículo</h5>
                 </div>

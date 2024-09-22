@@ -74,9 +74,12 @@ public class GuestController {
         // Agregar el estado de autenticación al modelo
         mv.addObject("isAuthenticated", isAuthenticated);
 
-        // Obtener todos los artículos y agregarlos al modelo
-        List<Article> articles = articleRepository.findAll();
+        // Convertir el String a Enum
+        Article.Categoria categoriaGenerica = Article.Categoria.valueOf("GENERICO");
+        List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
+
         mv.addObject("articles", articles);
+
 
         // Devolver el ModelAndView
         return mv;

@@ -33,7 +33,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     // Listar todos los artículos por categoría
     public List<ArticleDto> getArticlesByCategory(String category) { // Cambiado a Categoria
-        List<Article> articles = articleRepository.findByCategoria(category);
+        List<Article> articles = articleRepository.findByCategoria(Categoria.valueOf(category));
         return articles.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());

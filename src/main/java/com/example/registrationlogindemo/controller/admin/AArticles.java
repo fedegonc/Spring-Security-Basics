@@ -2,9 +2,8 @@ package com.example.registrationlogindemo.controller.admin;
 
 import com.example.registrationlogindemo.entity.Article;
 import com.example.registrationlogindemo.entity.User;
-import com.example.registrationlogindemo.repository.*;
-import com.example.registrationlogindemo.service.ImageService;
-import com.example.registrationlogindemo.service.UserService;
+import com.example.registrationlogindemo.repository.ArticleRepository;
+import com.example.registrationlogindemo.repository.UserRepository;
 import jakarta.validation.Valid;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +20,13 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 @Controller
 @RequestMapping("/admin")
 public class AArticles {
-
-    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     @Autowired
     UserRepository userRepository;
@@ -40,27 +34,14 @@ public class AArticles {
     @Autowired
     ArticleRepository articleRepository;
 
-
-
-    private UserService userService;
-    private ImageService imageService;
-
-    // Constructor que inyecta el servicio UserService
-    public void AUser(UserService userService, ImageService imageService) {
-        this.userService = userService;
-        this.imageService = imageService;
-    }
-
     @GetMapping("/articles")
     public ModelAndView adminViewArticles() {
         ModelAndView mv = new ModelAndView("admin/articles");
-
-
         List<Article> articles = articleRepository.findAll();
         mv.addObject("articles", articles);
-
         return mv;
     }
+
     @GetMapping("/viewarticle/{id}")
     public ModelAndView getArticle(@PathVariable("id") int id) {
         ModelAndView mv = new ModelAndView("article/viewarticle");
@@ -75,11 +56,12 @@ public class AArticles {
 
         return mv;
     }
+
     @GetMapping("/newarticle")
-    public ModelAndView newarticle() {
-        ModelAndView mv = new ModelAndView("admin/newarticle"); // Inicializa el ModelAndView
-        mv.addObject("article", new Article()); // Agrega el objeto article
-        return mv; // Retorna el ModelAndView
+    public ModelAndView newArticle() {
+        ModelAndView mv = new ModelAndView("admin/newarticle");
+        mv.addObject("article", new Article());
+        return mv;
     }
 
     @PostMapping("/newarticle")
@@ -89,42 +71,34 @@ public class AArticles {
                                  @AuthenticationPrincipal UserDetails currentUser,
                                  RedirectAttributes msg) {
 
-        // Validación de errores en el formulario
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos.");
             return "redirect:/admin/newarticle";
         }
 
-        // Procesar imagen si está presente
         if (!file.isEmpty()) {
             try {
-                // Tamaño máximo en bytes (64 KB para BLOB)
-                long MAX_SIZE = 64 * 1024;
+                long MAX_SIZE = 64 * 1024; // 64 KB
 
-                // Leer imagen original desde el archivo subido
                 BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-                String formatName = file.getContentType().split("/")[1]; // Obtener formato de la imagen
+                String formatName = file.getContentType().split("/")[1];
 
-                // Comprimir y redimensionar la imagen
                 bufferedImage = Thumbnails.of(bufferedImage)
-                        .size(300, 300)         // Reducir a 300x300 píxeles
-                        .outputQuality(0.5f)    // Comprimir calidad al 50%
+                        .size(300, 300)
+                        .outputQuality(0.5f)
                         .asBufferedImage();
 
-                // Convertir la imagen comprimida a bytes
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write(bufferedImage, formatName, baos);
                 baos.flush();
                 byte[] resizedImageBytes = baos.toByteArray();
                 baos.close();
 
-                // Validar el tamaño de la imagen después de la compresión
                 if (resizedImageBytes.length > MAX_SIZE) {
                     msg.addFlashAttribute("error", "La imagen comprimida es demasiado grande. El tamaño máximo permitido es 64KB.");
                     return "redirect:/admin/newarticle";
                 }
 
-                // Guardar los datos de la imagen en el artículo
                 article.setImagenData(resizedImageBytes);
                 article.setImagenNombre(file.getOriginalFilename());
             } catch (IOException e) {
@@ -136,11 +110,10 @@ public class AArticles {
             article.setImagenNombre(null);
         }
 
-        // Asignar el usuario actual al artículo
         User user = userRepository.findByUsername(currentUser.getUsername());
         if (user != null) {
             article.setUser(user);
-            article.setFechaRealizado(LocalDateTime.now()); // Establecer la fecha actual
+            article.setFechaRealizado(LocalDateTime.now());
             articleRepository.save(article);
             msg.addFlashAttribute("exito", "Artículo creado con éxito.");
         } else {
@@ -150,8 +123,6 @@ public class AArticles {
 
         return "redirect:/admin/dashboard";
     }
-
-
 
     @GetMapping("/editarticle/{id}")
     public ModelAndView editArticle(@PathVariable("id") int id) {
@@ -168,6 +139,7 @@ public class AArticles {
 
         return mv;
     }
+
     @PostMapping("/editarticle/{id}")
     public ModelAndView adminEditArticle(@PathVariable("id") long id,
                                          @ModelAttribute("article") @Valid Article article,
@@ -188,11 +160,9 @@ public class AArticles {
 
             try {
                 if (!imagen.isEmpty()) {
-                    // Procesar la imagen y guardarla en la base de datos
                     BufferedImage bufferedImage = ImageIO.read(imagen.getInputStream());
-                    String formatName = imagen.getContentType().split("/")[1]; // Obtiene el formato de la imagen
+                    String formatName = imagen.getContentType().split("/")[1];
 
-                    // Redimensionar la imagen
                     bufferedImage = Thumbnails.of(bufferedImage)
                             .size(500, 500)
                             .outputQuality(0.8f)
@@ -204,13 +174,10 @@ public class AArticles {
                     byte[] resizedImageBytes = baos.toByteArray();
                     baos.close();
 
-                    // Guardar los datos de la imagen en el artículo
-                    articleEdit.setImagenData(resizedImageBytes); // Ajusta según tu entidad
-
+                    articleEdit.setImagenData(resizedImageBytes);
                     articleEdit.setImagenNombre(imagen.getOriginalFilename());
                 }
 
-                // Actualizar los campos del artículo
                 articleEdit.setTitulo(article.getTitulo());
                 articleEdit.setDescripcion(article.getDescripcion());
 
@@ -230,8 +197,6 @@ public class AArticles {
         return mv;
     }
 
-
-    // Método para eliminar un artículo
     @GetMapping("/deletarticle/{id}")
     public String adminExcluir(@PathVariable("id") int id) {
         articleRepository.deleteById(id);

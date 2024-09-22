@@ -63,12 +63,12 @@
                         <div class="mb-3">
                             <label for="file" class="form-label" th:text="#{newRequest.profileImage}">Imagen del Artículo</label>
                             <!-- Mostrar la imagen del artículo actual si existe -->
-                            <div th:if="${article.imagen != null}">
-                                <img id="currentArticleImage" th:src="@{'/img/' + ${article.imagen}}" alt="Imagen del Artículo" class="img-thumbnail" style="max-width: 200px;">
-                                <input type="hidden" name="currentArticleImageUrl" th:value="${article.imagen}">
+                            <div th:if="${article.imagenNombre != null}">
+                                <img id="currentArticleImage" th:src="@{'/img/' + ${article.imagenNombre}}" alt="Imagen del Artículo" class="img-thumbnail" style="max-width: 200px;">
+                                <input type="hidden" name="currentArticleImageUrl" th:value="${article.imagenNombre}">
                             </div>
                             <!-- Mostrar una imagen predeterminada si no hay imagen de artículo -->
-                            <div th:if="${article.imagen == null}">
+                            <div th:if="${article.imagenNombre == null}">
                                 <img id="defaultArticleImage" src="/img/descarga.jpeg" alt="Imagen de Artículo Predeterminada" class="img-thumbnail" style="max-width: 200px;">
                                 <input type="hidden" name="currentArticleImageUrl" value="descarga.jpeg">
                             </div>
