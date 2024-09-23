@@ -1,0 +1,34 @@
+.custom-navbar {
+    background-color: #333; /* Color de fondo oscuro pero más suave */
+    padding: 15px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera para darle dimensión */
+}
+
+.custom-navbar .container {
+    display: flex;
+    justify-content: center;
+}
+
+.custom-btn {
+    display: inline-block;
+    background-color: #0056b3; /* Color de fondo verde suave */
+    color: white;
+    font-size: 0.9rem; /* Tamaño de fuente ligeramente más grande */
+    padding: 10px 10px;
+    margin: 0 5px;
+    border-radius: 2px; /* Bordes redondeados */
+    text-align: center;
+    text-decoration: none; /* Quitar subrayado */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+}
+
+.custom-btn:hover {
+    background-color: #002653; /* Cambiar color en hover */
+    transform: scale(1.05); /* Efecto de agrandar un poco al hacer hover */
+    color: white;
+
+}
+
+.custom-btn:active {
+    transform: scale(0.98); /* Efecto de presionado */
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="publicaciones">
+  <div class="container mt-4">
+    <div class="row">
+      <div class="card-header">
+        <h4 th:text="#{publicaciones}">Publicaciones</h4>
+      </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+      <!-- Tarjetas dinámicas -->
+      <div class="col" th:each="article: ${articles}">
+        <div class="card h-100 custom-card">
+          <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="card-img-top custom-img" alt="Imagen de la artículo">
+          <div class="card-body">
+            <h5 class="card-title custom-title" th:text="${article.titulo}">Título del artículo</h5>
+          </div>
+          <div class="card-footer">
+            <a class="custom-btn" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

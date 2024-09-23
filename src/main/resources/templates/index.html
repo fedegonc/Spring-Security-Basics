@@ -22,72 +22,35 @@
     <link rel="stylesheet" href="/css/banner.css">
     <link rel="stylesheet" href="/css/maps.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/links.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 
+
+
 <body >
 
-<!-- Barra de navegación -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<!-- Banner -->
 <div th:replace="~{fragments/banner :: banner}"></div>
 
+<div th:replace="~{fragments/navbar-custom :: navbar-custom}"></div>
 
-<div class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container d-flex justify-content-center">
-        <div class="row">
-            <div class="col text-center">
-                <a class="btn btn-primary mx-2" th:href="@{/user/newsolicitude}" th:text="#{button.requestRecycling}"></a>
-                <a class="btn btn-primary mx-2" th:href="@{/ambiental}" th:text="#{button.environmentalEducation}"></a>
-                <a class="btn btn-primary mx-2" th:href="@{/noticias}" th:text="#{button.news}"></a>
-                <a class="btn btn-primary mx-2" th:href="@{/materiales}" th:text="#{button.materials}"></a>
-                <a class="btn btn-primary mx-2" th:href="@{/alianzas}" th:text="#{button.parcerias}"></a>
-                <a class="btn btn-primary mx-2" th:href="@{/legislacion}" th:text="#{button.legislacion}"></a>
-
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container mt-4">
-    <div class="row">
-        <div class="card-header">
-            <h4 th:text="#{publicaciones}">Publicaciones</h4>
-        </div>
-    </div>
-    <div class="row row-cols-1 row-cols-md-3 g-3">
-        <!-- Tarjetas dinámicas -->
-        <div class="col" th:each="article: ${articles}">
-            <div class="card h-100">
-                <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="card-img-top" alt="Imagen de la artículo">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${article.titulo}">Título del artículo</h5>
-                </div>
-                <div class="card-footer">
-                    <a class="btn btn-primary" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
+<div th:replace="~{fragments/publicaciones :: publicaciones}"></div>
 
 <div th:replace="~{fragments/maps :: maps}"></div>
-
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 
-<!-- Scripts -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="/scripts/guestScript.js"></script>
 <script src="/scripts/maps.js"></script>
 <script src="/scripts/navbar.js"></script>
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

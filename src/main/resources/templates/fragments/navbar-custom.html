@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="navbar-custom">
+    <!-- Barra de botones personalizada -->
+    <div class="custom-navbar">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <a class="custom-btn" th:href="@{/user/newsolicitude}" th:text="#{button.requestRecycling}"></a>
+                    <a class="custom-btn" th:href="@{/ambiental}" th:text="#{button.environmentalEducation}"></a>
+                    <a class="custom-btn" th:href="@{/noticias}" th:text="#{button.news}"></a>
+                    <a class="custom-btn" th:href="@{/materiales}" th:text="#{button.materials}"></a>
+                    <a class="custom-btn" th:href="@{/alianzas}" th:text="#{button.parcerias}"></a>
+                    <a class="custom-btn" th:href="@{/legislacion}" th:text="#{button.legislacion}"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
