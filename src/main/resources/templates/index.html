@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/banner.css">
     <link rel="stylesheet" href="/css/maps.css">
+    <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
@@ -30,105 +31,9 @@
 <!-- Barra de navegación -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
+<!-- Banner -->
+<div th:replace="~{fragments/banner :: banner}"></div>
 
-
-<div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}"></div>
-<!-- Mensajes de error -->
-<div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
-
-
-<!-- Contenedor banner con fondo personalizado -->
-<div class="banner">
-    <div class="container">
-        <div class="row">
-            <!-- Primera mitad de la pantalla: Contiene el primer bloque de contenido del banner -->
-            <div class="col-md-6">
-                <div style="margin-bottom: 40px; margin-top: 50px; background-color: rgba(0, 0, 0, 0.4); padding: 10px; text-align: left; color: #fff;">
-                    <h4 th:text="#{banner.title}" style="font-size: 1.5em; margin-bottom: 10px;">
-                        Bienvenido al Proyecto Frontera Sustentable
-                    </h4>
-                    <p th:text="#{greeting}" style="font-size: 1.2em;"></p>
-                    <br><br>
-                    <p th:text="#{banner.solicitar}" style="font-size: 1.2em;"></p>
-                    <p th:text="#{aliento}" style="font-size: 1.2em;"></p>
-                </div>
-            </div>
-
-
-            <!-- Segunda mitad de la pantalla: Contiene dos bloques de contenido del banner, uno encima del otro -->
-            <div class="col-md-6">
-                <!-- Primer bloque de contenido del banner en la segunda mitad -->
-                <div style="margin-bottom: 40px; margin-top: 50px; background-color: rgba(0, 0, 0, 0.4); padding: 10px; color: #fff;">
-                    <h4 th:text="#{banner.apoyo}" style="font-size: 1.3em; margin-bottom: 10px;">
-                        Apoyo
-                    </h4>
-                    <ul class="list-unstyled" style="padding-left: 0; list-style-type: none; font-size: 1.1em;">
-                        <!-- Elemento de lista del apoyo 1 -->
-                        <li style="margin-bottom: 10px;">
-                            <span th:text="#{link.prefeitura}" style="margin-right: 10px;"></span> -
-                            <a href="https://www.sdolivramento.com.br/" style="text-decoration: none; color: #1da1f2;">
-                                <i class="bi bi-box-arrow-in-up-right"></i>
-                            </a>
-                        </li>
-                        <!-- Elemento de lista del apoyo 2 -->
-                        <li style="margin-bottom: 10px;">
-                            <span th:text="#{link.intendencia}" style="margin-right: 10px;"></span> -
-                            <a href="https://www.rivera.gub.uy/portal/" style="text-decoration: none; color: #1da1f2;">
-                                <i class="bi bi-box-arrow-in-up-right"></i>
-                            </a>
-                        </li>
-                        <!-- Elemento de lista del apoyo 3 -->
-                        <li style="margin-bottom: 10px;">
-                            <span th:text="#{link.proyecto}" style="margin-right: 10px;"></span> -
-                            <a href="https://www.fronteiradapazsustentavel.com.br/es/proyecto/" style="text-decoration: none; color: #1da1f2;">
-                                <i class="bi bi-box-arrow-in-up-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-
-                <!-- Segundo bloque de contenido del banner en la segunda mitad, debajo del anterior -->
-                <div style="margin-bottom: 40px; margin-top: 50px; background-color: rgba(0, 0, 0, 0.4); padding: 10px; color: #fff;">
-                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
-                        <!-- Logo 1 -->
-                        <div style="display: flex; justify-content: center; width: 150px;">
-                            <div class="card" style="border: none; background-color: #fff; width: 100%;">
-                                <img src="/img/logoprojeto.png" alt="Logo 1" class="card-img-top" style="width: 100%; height: 100px; object-fit: contain;">
-                            </div>
-                        </div>
-                        <!-- Logo 2 -->
-                        <div style="display: flex; justify-content: center; width: 150px;">
-                            <div class="card" style="border: none; background-color: #fff; width: 100%;">
-                                <img src="/img/pm.jpg" alt="Logo 2" class="card-img-top" style="width: 100%; height: 100px; object-fit: contain;">
-                            </div>
-                        </div>
-                        <!-- Logo 3 -->
-                        <div style="display: flex; justify-content: center; width: 150px;">
-                            <div class="card" style="border: none; background-color: #fff; width: 100%;">
-                                <img src="/img/riviera.png" alt="Logo 3" class="card-img-top" style="width: 100%; height: 100px; object-fit: contain;">
-                            </div>
-                        </div>
-                        <!-- Logo 4 -->
-                        <div style="display: flex; justify-content: center; width: 150px;">
-                            <div class="card" style="border: none; background-color: #fff; width: 100%;">
-                                <img src="/img/asc.jpg" alt="Logo 4" class="card-img-top" style="width: 100%; height: 100px; object-fit: contain;">
-                            </div>
-                        </div>
-                        <!-- Logo 5 -->
-                        <div style="display: flex; justify-content: center; width: 150px;">
-                            <div class="card" style="border: none; background-color: #fff; width: 100%;">
-                                <img src="/img/ds.png" alt="Logo 5" class="card-img-top" style="width: 100%; height: 100px; object-fit: contain;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container d-flex justify-content-center">
@@ -180,6 +85,8 @@
 
 <script src="/scripts/guestScript.js"></script>
 <script src="/scripts/maps.js"></script>
+<script src="/scripts/navbar.js"></script>
+
 
 </body>
 </html>

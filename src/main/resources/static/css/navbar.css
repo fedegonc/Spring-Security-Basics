@@ -1,0 +1,56 @@
+
+/* Estilo del logo */
+#navbarLogo {
+    width: 50px;
+    height: auto;
+}
+
+/* Reducción del tamaño del logo en pantallas pequeñas */
+@media (max-width: 768px) {
+    #navbarLogo {
+        width: 40px;
+        height: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    #navbarLogo {
+        width: 30px;
+        height: auto;
+    }
+}
+
+/* Estilo del botón de hamburguesa */
+.navbar-toggler {
+    border-color: transparent;
+}
+
+/* Ajustes de responsividad para el botón de hamburguesa */
+@media (max-width: 768px) {
+    .navbar-toggler {
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+/* Estilo de las banderas de idioma */
+.flag {
+    width: 30px;
+    height: 20px;
+}
+
+@media (max-width: 576px) {
+    .flag {
+        width: 25px;
+        height: auto;
+    }
+}
+
+/* Ajuste para reducir el padding en el navbar cuando haces scroll */
+#mainNavbar {
+    transition: padding 300ms ease, background-color 300ms ease;
+}
+
+#mainNavbar.scrolled {
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo más oscuro al hacer scroll */
+}
