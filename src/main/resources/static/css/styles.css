@@ -73,11 +73,10 @@ li {
     flex-wrap: wrap;
     padding: 10px 20px; /* Añade padding para mejor espacio en dispositivos móviles */
     background-color: #333; /* Color de fondo para la barra de navegación */
-    z-index: 3;
+    z-index: 1000;
     position: static;
     top: 0;
     width: 100%;
-    z-index: 3;
 }
 
 
@@ -113,38 +112,6 @@ li {
     vertical-align: middle; /* Alinea verticalmente las imágenes con el texto */
 }
 
-.banner {
-    position: relative;
-    display: flex;
-    align-items: left;
-    background: rgba(0, 0, 0, 0.5) url('/img/foto1.png');
-    background-size: cover;
-    background-position: center;
-    flex-grow: 1;
-    padding: 20px; /* Añade padding para mejor visualización en móviles */
-    text-align: center; /* Centra el texto en móviles */
-}
-
-.banner2 {
-    position: relative;
-    display: flex;
-    align-items: left;
-    background: rgba(0, 0, 0, 0.7) url('/img/small-child-holding-red-frisbee-in-field.jpg');
-    background-size: cover;
-    background-position: center;
-    flex-grow: 1;
-    padding: 20px; /* Añade padding para mejor visualización en móviles */
-    text-align: center; /* Centra el texto en móviles */
-}
-
-.banner-content {
-    display: flex;
-    align-items: left;
-    flex-wrap: wrap;
-    color: white;
-    margin: auto;
-    padding: 20px;
-}
 
 .footer {
     display: flex;
@@ -313,7 +280,7 @@ li {
     width: 100%;
     padding: 10px 10px;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 100;
+    z-index: 1000;
 }
 
 /* Estilo del navbar cuando se ha hecho scroll */

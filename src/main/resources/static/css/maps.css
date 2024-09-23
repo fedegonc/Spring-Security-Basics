@@ -1,0 +1,10 @@
+.container-fluid.maps-bg {
+    background-color: #343a40; /* bg-dark */
+    color: #f8f9fa; /* text-light */
+    padding: 3rem 0; /* py-5 */
+    z-index: 1;
+}
+
+.map-height {
+    height: 300px;
+}

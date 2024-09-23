@@ -19,61 +19,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/banner.css">
+    <link rel="stylesheet" href="/css/maps.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 
-<body ><!-- Barra de navegación -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <!-- Logo de la aplicación -->
-        <img src="/img/logov4.png" alt="logo" width="50" height="50">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">
-            <i class="bi bi-tree"></i> Frontera Sustentable
-        </a>
+<body >
 
-        <!-- Botón de hamburguesa para dispositivos móviles -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Elementos de la barra de navegación izquierda -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-
-            <!-- Elementos de la barra de navegación derecha -->
-            <ul class="navbar-nav ml-auto">
-                <!-- Cambio de idioma con banderas -->
-                <li class="nav-item">
-                    <a href="/index?language=es" class="nav-link">
-                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/index?language=pt" class="nav-link">
-                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
-                    </a>
-                </li>
-
-                <!-- Botón de Login -->
-                <li class="nav-item">
-                    <a class="btn btn-primary" th:href="@{/login}">
-                        <i class="bi bi-box-arrow-in-right"></i> Login
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
+<!-- Barra de navegación -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 
 
 <div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}"></div>
-
 <!-- Mensajes de error -->
 <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
 
 <!-- Contenedor banner con fondo personalizado -->
 <div class="banner">
@@ -205,108 +167,19 @@
 
     </div>
 </div>
-<hr>
 
-<div class="container-fluid bg-dark text-light py-5">
-    <div class="container">
-        <div class="row">
-            <div class="card-header">
-                <h4 th:text="#{sedes}">Entregar en sedes</h4>
-            </div>
-        </div>
-        <div class="row justify-content-start">
-            <!-- Mapa -->
-            <div class="col-lg-8">
-                <div class="border rounded shadow-sm mb-4 bg-light">
-                    <div id="map" class="w-100" style="height: 300px;"></div>
-                </div>
-            </div>
-
-            <!-- Información de Contacto -->
-            <div class="col-lg-4">
-                <div class="bg-light text-dark p-4 rounded">
-                    <h4>Associação de Catadores Novo Horizonte</h4>
-                    <h5 th:text="#{asociacion.information}">Información de Contacto</h5>
-                    <p><strong th:text="#{asociacion.address}">Dirección:</strong> Ten. Aníbal Benévolo, 135 - Sant`Ana do Livramento - RS, Brasil</p>
-                    <p><strong th:text="#{asociacion.hours}">Horario:</strong> <p th:text="#{horario.atencion}"></p></p>
-
-                </div>
-            </div>
-        </div>
-<hr>
-
-        <div class="row justify-content-start">
-            <!-- Mapa -->
-            <div class="col-lg-8">
-                <div class="border rounded shadow-sm mb-4 bg-light">
-                    <div id="map2" class="w-100" style="height: 300px;"></div>
-                </div>
-            </div>
-
-            <!-- Información de Contacto -->
-            <div class="col-lg-4">
-                <div class="bg-light text-dark p-4 rounded">
-                    <h4 th:text="#{cooperative.name}">Cooperativa Renacer del Norte</h4>
-                    <h5 th:text="#{cooperative.information}">Información de Contacto</h5>
-                    <p><strong th:text="#{cooperative.address}">Dirección:</strong> Camino Las Tunitas, S/N - Rivera - RVR, Uruguay</p>
-                    <p><strong th:text="#{cooperative.hours}">Horario:</strong> <p th:text="#{horario.atencion}"></p></p>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<div th:replace="~{fragments/maps :: maps}"></div>
 
 
-<footer class="footer mt-auto py-3 bg-dark text-white">
-    <div class="container d-flex justify-content-between align-items-center">
-        <span class="text-muted" th:text="#{footer.copy}">
-            <i class="bi bi-c-circle"></i> 2024 Frontera Sustentable. Todos los derechos reservados.
-        </span>
-    </div>
-</footer>
-
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 
 <!-- Scripts -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Espera a que el DOM esté completamente cargado
-    document.addEventListener('DOMContentLoaded', function () {
-        // Inicializa el mapa y establece las coordenadas y el nivel de zoom
-        var map = L.map('map').setView([-30.88250225738402, -55.53590209874656], 16);
 
-        // Agrega la capa de OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Agrega un marcador en la ubicación específica
-        L.marker([-30.88250225738402, -55.53590209874656]).addTo(map)
-            .bindPopup('Associação de Catadores Novo Horizonte')
-            .openPopup();
-    });
-</script>
-<script>
-    // Espera a que el DOM esté completamente cargado
-    document.addEventListener('DOMContentLoaded', function () {
-        // Inicializa el mapa y establece las coordenadas y el nivel de zoom
-        var map = L.map('map2').setView([-30.937886022823736, -55.53291678413656], 16);
-
-        // Agrega la capa de OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Agrega un marcador en la ubicación específica
-        L.marker([-30.937886022823736, -55.53291678413656]).addTo(map)
-            .bindPopup('Cooperativa Renacer del Norte')
-            .openPopup();
-    });
-</script>
+<script src="/scripts/guestScript.js"></script>
+<script src="/scripts/maps.js"></script>
 
 </body>
 </html>
