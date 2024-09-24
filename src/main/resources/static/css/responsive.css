@@ -1,44 +1,76 @@
-/* Reducción del tamaño del logo en pantallas pequeñas */
-/* ----- Estilos Responsivos ----- */
+/* ----- Estilos para Pantallas Grandes (min-width: 768px) ----- */
 
-/* Responsivo para el logo */
-@media (max-width: 768px) {
+@media (min-width: 768px) {
     #navbarLogo {
-        width: 40px; /* Cambia el tamaño del logo en pantallas pequeñas */
-    }
-}
-
-@media (max-width: 576px) {
-    #navbarLogo {
-        width: 30px; /* Cambia el tamaño del logo en pantallas más pequeñas */
+        width: 40px; /* Tamaño normal del logo */
     }
 
     .flag {
-        width: 25px; /* Ajuste para el tamaño de la bandera */
-        height: auto;
-    }
-}
-
-
-@media (max-width: 768px) {
-    #navbarLogo {
-        width: 40px;
+        width: 25px; /* Mantiene el tamaño original de la bandera */
         height: auto;
     }
 
     .navbar-toggler {
-        padding: 0.25rem 0.5rem; /* Ajustes de responsividad para el botón de hamburguesa */
+        padding: 0.4rem; /* Padding para el botón de hamburguesa */
+    }
+
+    .navbar-toggler-icon {
+        width: 1.0rem; /* Tamaño del icono */
+        height: 1.0rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.1  rem; /* Tamaño normal del texto de la marca */
     }
 }
 
-@media (max-width: 576px) {
+
+@media (max-width: 768px) {
     #navbarLogo {
-        width: 30px;
-        height: auto;
+        width: 30px; /* Tamaño reducido del logo en pantallas medianas */
     }
 
     .flag {
-        width: 25px;
-        height: auto; /* Ajustes para el tamaño de la bandera */
+        width: 20px; /* Mantiene el tamaño de la bandera */
+        height: auto;
+    }
+
+    .navbar-toggler {
+        padding: 0.25rem 0.5rem; /* Menor padding para el botón de hamburguesa */
+    }
+
+    .navbar-toggler-icon {
+        width: 0.8rem; /* Reduce el tamaño del icono del botón */
+        height: 0.8rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.0rem; /* Tamaño del texto de la marca reducido */
+    }
+}
+
+/* ----- Estilos para Pantallas Pequeñas (max-width: 576px) ----- */
+
+@media (max-width: 576px) {
+    #navbarLogo {
+        width: 20px; /* Tamaño más pequeño del logo */
+    }
+
+    .flag {
+        width: 15px; /* Reduce el tamaño de la bandera */
+        height: auto;
+    }
+
+    .navbar-toggler {
+        padding: 0.15rem 0.25rem; /* Padding ajustado */
+    }
+
+    .navbar-toggler-icon {
+        width: 0.6rem; /* Ícono más pequeño */
+        height: 0.6rem;
+    }
+
+    .navbar-brand {
+        font-size: 0.9rem; /* Tamaño más pequeño del texto de la marca */
     }
 }

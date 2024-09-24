@@ -1,0 +1,46 @@
+/* Estilo del botón toggle */
+.navbar-toggler {
+    background-color: transparent; /* Puedes cambiar el color de fondo */
+    border: none; /* Elimina el borde del botón */
+    padding: 0.5rem; /* Cambia el padding si es necesario */
+    transition: all 0.3s ease; /* Añade una animación suave */
+}
+
+/* Cambiar color o animación al hacer hover */
+.navbar-toggler:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Cambia el color de fondo al hacer hover */
+    border-radius: 5px; /* Añade un borde redondeado en hover */
+}
+
+/* Estilo del icono (hamburguesa) */
+.navbar-toggler-icon {
+    width: 1.5rem; /* Cambiar tamaño del icono */
+    height: 1.5rem;
+}
+/* Estilo cuando el menú está abierto (aria-expanded=true) */
+.navbar-toggler[aria-expanded="true"] {
+    background-color: rgba(255, 255, 255, 0.2); /* Cambia el color de fondo cuando el menú está abierto */
+    border-radius: 5px; /* Puedes añadir bordes redondeados */
+    transition: background-color 0.3s ease; /* Suaviza la transición */
+}
+
+/* Estilo del ícono de la hamburguesa */
+.navbar-toggler .navbar-toggler-icon {
+    filter: brightness(0) invert(1); /* Cambia el color del ícono de la hamburguesa */
+}
+
+/* Cambia el color del ícono cuando el menú está abierto */
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+    filter: brightness(1) invert(0); /* Cambia el color del ícono cuando el menú está abierto (ej: de blanco a negro) */
+}
+.navbar-toggler-icon {
+    width: 1.5rem; /* Ajustar el tamaño del ícono */
+    height: 1.5rem;
+    transition: transform 0.3s ease; /* Añadir una transición suave */
+}
+
+/* Cuando el menú está abierto, puedes rotar o escalar el ícono */
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+    transform: rotate(90deg); /* Gira el ícono de hamburguesa cuando está abierto */
+}
+
