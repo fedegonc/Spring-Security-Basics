@@ -247,7 +247,7 @@ li {
     }
 
     .logo-container .navbar-brand {
-        font-size: 0.8rem; /* Tamaño de fuente aún más reducido en pantallas muy pequeñas */
+        font-size: 0.6rem; /* Tamaño de fuente aún más reducido en pantallas muy pequeñas */
         margin-left: 1rem; /* Espaciado reducido en pantallas muy pequeñas */
     }
 }

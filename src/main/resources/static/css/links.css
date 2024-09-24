@@ -11,19 +11,20 @@
 
 .custom-btn {
     display: inline-block;
-    background-color: #0056b3; /* Color de fondo verde suave */
+    background-color: #0d6efd;
+    border-color: #0d6efd;
     color: white;
     font-size: 0.9rem; /* Tamaño de fuente ligeramente más grande */
     padding: 10px 10px;
-    margin: 0 5px;
-    border-radius: 2px; /* Bordes redondeados */
+    margin: 5px 5px;
+    border-radius: 5px; /* Bordes redondeados */
     text-align: center;
     text-decoration: none; /* Quitar subrayado */
     transition: background-color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
 }
 
 .custom-btn:hover {
-    background-color: #002653; /* Cambiar color en hover */
+    background-color: #0a6ecd; /* Cambiar color en hover */
     transform: scale(1.05); /* Efecto de agrandar un poco al hacer hover */
     color: white;
 

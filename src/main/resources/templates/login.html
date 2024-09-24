@@ -24,44 +24,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
+
+
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <img src="/img/logov4.png" alt="logo" width="50" height="50">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">
-            <i class="bi bi-tree"></i> Frontera Sustentable
-        </a>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- Puedes agregar más elementos aquí si lo deseas -->
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                <!-- Cambio de idioma con banderas -->
-                <li class="nav-item">
-                    <a href="/index?language=es" class="nav-link">
-                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/index?language=pt" class="nav-link">
-                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
-                    </a>
-                </li>
-
-            </ul>
-        </div>
-    </div>
-</nav>
 
 <!-- Migas de pan -->
 <div class="container mt-1">
@@ -149,19 +120,9 @@
 </div>
 
 <br>
-<footer class="footer mt-auto py-3 bg-dark text-white">
-    <div class="container text-right">
-        <span class="text-muted" th:text="#{footer.copy}">
-            <i class="bi bi-c-circle"></i> 2024 Frontera Sustentable. Todos los derechos reservados.
-        </span>
-        <a class="nav-link" th:href="@{/report}">
-            <i class="bi bi-exclamation-circle"></i> Reportar problema
-        </a>
-        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">
-            <i class="bi bi-arrow-left"></i> Volver atrás
-        </button>
-    </div>
-</footer><!-- Fin del contenido principal -->
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

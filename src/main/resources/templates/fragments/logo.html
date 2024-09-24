@@ -1,17 +1,10 @@
-<!-- resources/templates/fragments.html -->
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fragmentos</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <body>
-<!-- Fragmento del logo -->
 <div th:fragment="logo">
-    <div class="logo-container">
-        <img src="/img/logov4.png" alt="logo">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
+    <div>
+        <img id="navbarLogo" src="/img/logov4.png" alt="logo" class="navbar-logo">
     </div>
 </div>
 </body>

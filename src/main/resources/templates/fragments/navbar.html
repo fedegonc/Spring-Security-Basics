@@ -2,47 +2,42 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" href="/path/to/your/bootstrap.css"> <!-- Asegúrate de tener la ruta correcta -->
+    <link rel="stylesheet" href="/path/to/your/navbar.css"> <!-- Incluye el archivo CSS -->
 </head>
 <body>
 <div th:fragment="navbar">
     <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <!-- Logo de la aplicación -->
-            <img id="navbarLogo" src="/img/logov4.png" alt="logo" width="50" height="50">
-            <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">
-                <i class="bi bi-tree"></i> Frontera Sustentable
-            </a>
+            <div th:replace="~{fragments/logo}"></div>
 
-            <!-- Botón de hamburguesa para dispositivos móviles -->
+            <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- Elementos de la barra de navegación izquierda -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
 
-                <!-- Elementos de la barra de navegación derecha -->
-                <ul class="navbar-nav ml-auto">
-                    <!-- Cambio de idioma con banderas -->
-                    <li class="nav-item">
-                        <a href="/index?language=es" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/index?language=pt" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
-                        </a>
-                    </li>
-
-                    <!-- Botón de Login -->
-                    <li class="nav-item">
-                        <a class="btn btn-primary" th:href="@{/login}">
-                            <i class="bi bi-box-arrow-in-right"></i> Login
-                        </a>
-                    </li>
+                <ul class="navbar-nav ms-auto">
+                    <div class="d-flex align-items-center">
+                        <li class="nav-item">
+                            <a href="/index?language=es" class="nav-link">
+                                <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/index?language=pt" class="nav-link">
+                                <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary" th:href="@{/login}">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        </li>
+                    </div>
                 </ul>
             </div>
         </div>
