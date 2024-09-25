@@ -71,6 +71,39 @@
     }
 
     .navbar-brand {
-        font-size: 0.9rem; /* Tamaño más pequeño del texto de la marca */
+        font-size: 0.8rem; /* Tamaño más pequeño del texto de la marca */
+    }
+    .navbar-placeholder {
+        height: 70px; /* Altura inicial del navbar */
+        visibility: hidden; /* Oculto inicialmente */
+        background-color: rgba(0, 0, 0, 0.9); /* Fondo más oscuro */
+    }
+}
+
+@media (max-width: 375px) {
+    #navbarLogo {
+        width: 10px; /* Tamaño más pequeño del logo */
+    }
+
+    .flag {
+        width: 10px; /* Reduce el tamaño de la bandera */
+        height: auto;
+    }
+
+    .navbar-toggler {
+        padding: 0.15rem 0.25rem; /* Padding ajustado */
+    }
+
+    .navbar-toggler-icon {
+        width: 0.5rem; /* Ícono más pequeño */
+        height: 0.5rem;
+    }
+
+    .navbar-brand {
+        font-size: 0.8rem; /* Tamaño más pequeño del texto de la marca */
+    }
+    .navbar-placeholder {
+        height: 70px; /* Altura inicial del navbar */
+        background-color: rgba(0, 0, 0, 0.8); /* Fondo más oscuro al hacer scroll */
     }
 }

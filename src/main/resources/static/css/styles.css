@@ -292,11 +292,6 @@ li {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
     background-color: rgba(0, 0, 0, 0.9); /* Fondo más oscuro */
 }
-/* Espacio que ocupa el navbar */
-.navbar-placeholder {
-    height: 70px; /* Altura inicial del navbar */
-    visibility: hidden; /* Oculto inicialmente */
-}
 
 #navbarLogo {
     width: 3rem; /* Ajusta el tamaño del icono */
@@ -328,15 +323,3 @@ li {
     }
 }
 
-#mainNavbar.scrolled #navbarLogo.small-logo {
-    width: 2.5rem; /* Tamaño más pequeño cuando está scrolled */
-}
-
-.navbar-brand {
-    font-size: 1.2rem; /* Tamaño normal */
-    transition: font-size 300ms ease; /* Suaviza el cambio de tamaño */
-}
-
-#mainNavbar.scrolled .navbar-brand {
-    font-size: 1.0rem; /* Tamaño más pequeño cuando está scrolled */
-}

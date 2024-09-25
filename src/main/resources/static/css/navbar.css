@@ -49,10 +49,51 @@
 /* Estilos para alinear los elementos de la barra de navegación */
 .navbar-nav .nav-item {
     margin-right: 0.5rem; /* Margen derecho para separar elementos */
+    display: flex;
+    align-items: center;
 }
 
-/* Si necesitas algún estilo adicional para el contenedor de banderas y botón */
 .d-flex {
     display: flex; /* Asegúrate de que el contenedor sea flex */
     align-items: center; /* Alinea verticalmente los elementos */
+}
+
+.navbar-nav .nav-item img {
+    vertical-align: middle;
+    display: inline-block;
+    padding: 1px 1px;
+    margin: 1px 1px;
+}
+.navbar-nav .nav-item a {
+    vertical-align: middle;
+    display: inline-block;
+    margin: 1px 1px;
+}
+
+.btn.btn-primary {
+    margin-bottom: 0; /* Asegúrate de que no haya un margen inferior en el botón */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Espacio que ocupa el navbar */
+.navbar-placeholder {
+    height: 70px; /* Altura inicial del navbar */
+    visibility: hidden; /* Oculto inicialmente */
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo más oscuro */
+}
+
+
+#mainNavbar.scrolled #navbarLogo.small-logo {
+    width: 2.5rem; /* Tamaño más pequeño cuando está scrolled */
+}
+
+.navbar-brand {
+    font-size: 1.1rem; /* Tamaño normal */
+    transition: font-size 300ms ease; /* Suaviza el cambio de tamaño */
+}
+
+#mainNavbar.scrolled .navbar-brand {
+    font-size: 0.9rem; /* Tamaño más pequeño cuando está scrolled */
 }

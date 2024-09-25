@@ -5,9 +5,9 @@ window.addEventListener("scroll", function() {
 
     if (window.scrollY > 50) { // Cambia el valor según tu preferencia
         navbar.classList.add("scrolled");
-        logo.style.width = "40px"; // Cambia el tamaño del logo al hacer scroll
+        logo.style.width = "30px"; // Cambia el tamaño del logo al hacer scroll
     } else {
         navbar.classList.remove("scrolled");
-        logo.style.width = "50px"; // Vuelve al tamaño original
+        logo.style.width = "40px"; // Vuelve al tamaño original
     }
 });

@@ -8,6 +8,7 @@
 <div th:fragment="navbar">
     <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
+
             <div th:replace="~{fragments/logo}"></div>
 
             <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
