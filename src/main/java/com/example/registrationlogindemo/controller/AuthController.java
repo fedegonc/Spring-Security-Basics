@@ -47,6 +47,17 @@ public class AuthController {
         if (principal instanceof UserDetails) {
             return "redirect:/user/welcome";
         }
+        // Buscar las imágenes para los idiomas
+        Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
+        Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
+
+        // Agregar el nombre de la imagen al modelo si se encuentra
+        uruguaiImage.ifPresent(image -> {
+            model.addAttribute("uruguaiImageName", image.getNombre());
+        });
+        brasilImage.ifPresent(image -> {
+            model.addAttribute("brasilImageName", image.getNombre());
+        });
         return "register";
     }
 
