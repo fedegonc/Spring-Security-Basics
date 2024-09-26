@@ -160,5 +160,4 @@ public class AuthController {
         return new ModelAndView("redirect:error");
     }
 
-
 }
