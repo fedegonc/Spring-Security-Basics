@@ -323,8 +323,8 @@ li {
     }
 }
 
-.container {
-    margin: 5px;
-    padding: 5px;/* Añade espacio entre la imagen de perfil y el nombre de usuario */
+#breadcrumb{
+    margin-top: 55px;
+    padding: 15px;
 
 }

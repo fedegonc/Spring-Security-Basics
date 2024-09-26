@@ -70,7 +70,7 @@
 <div class="navbar-placeholder"></div>
 
 <!-- Migas de pan -->
-<div class="container mt-1">
+<div class="container mt-1" id="breadcrumb">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light">
             <!-- Elemento de inicio de las migas de pan -->
@@ -156,7 +156,13 @@
 
 <br>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: footer}">
+    <div class="d-flex align-items-center">
+        <a class="nav-link text-white" th:href="@{/report}" style="margin-right: 15px;">
+            <i class="bi bi-exclamation-circle"></i> Reportar problema
+        </a>
+    </div>
+</div>
 
 <script src="/scripts/guestScript.js"></script>
 <script src="/scripts/navbar.js"></script>
