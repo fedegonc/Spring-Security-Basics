@@ -271,6 +271,27 @@ public class UserController {
     @GetMapping("/informaciones")
     public ModelAndView informaciones() {
         ModelAndView mv = new ModelAndView("user/informaciones");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+
+            // Agregar el nombre de usuario al modelo para dar la bienvenida
+            mv.addObject("username", username);
+
+            // Obtener el usuario de la base de datos
+            User usuario = userRepository.findByUsername(username);
+            mv.addObject("user", usuario);
+
+            // Agregar imágenes de idioma (si las hubiera)
+            Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
+            Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
+
+            imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
+            imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
+
+        }
         return mv;
     }
 

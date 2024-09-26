@@ -1,12 +1,14 @@
 .custom-navbar {
-    background-color: #333; /* Color de fondo oscuro pero más suave */
-    padding: 15px 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera para darle dimensión */
+    background-color: #212529; /* Color de fondo oscuro pero suave */
+    padding: 10px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
 }
 
 .custom-navbar .container {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Centrar los enlaces horizontalmente */
+    align-items: center; /* Alinear verticalmente los elementos en el centro */
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan si la pantalla es pequeña */
 }
 
 .custom-btn {
@@ -14,9 +16,9 @@
     background-color: #0d6efd;
     border-color: #0d6efd;
     color: white;
-    font-size: 0.9rem; /* Tamaño de fuente ligeramente más grande */
-    padding: 10px 10px;
-    margin: 5px 5px;
+    font-size: 0.8rem; /* Tamaño de fuente */
+    padding: 5px 5px; /* Aumentar el padding horizontal para mejorar el tamaño de los botones */
+    margin: 5px;
     border-radius: 5px; /* Bordes redondeados */
     text-align: center;
     text-decoration: none; /* Quitar subrayado */
@@ -27,7 +29,6 @@
     background-color: #0a6ecd; /* Cambiar color en hover */
     transform: scale(1.05); /* Efecto de agrandar un poco al hacer hover */
     color: white;
-
 }
 
 .custom-btn:active {

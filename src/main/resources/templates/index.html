@@ -33,6 +33,34 @@
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
+<div class="navbar-placeholder" id="navbar-placeholder"></div>
+
+
+<div class="custom-navbar">
+    <div class="container">
+        <a class="custom-btn mx-2" th:href="@{/user/newsolicitude}">
+            <i class="bi bi-recycle"></i> <span th:text="#{button.requestRecycling}"></span>
+        </a>
+        <a class="custom-btn mx-2" th:href="@{/ambiental}">
+            <i class="bi bi-tree"></i> <span th:text="#{button.environmentalEducation}"></span>
+        </a>
+        <a class="custom-btn mx-2" th:href="@{/noticias}">
+            <i class="bi bi-newspaper"></i> <span th:text="#{button.news}"></span>
+        </a>
+        <a class="custom-btn mx-2" th:href="@{/materiales}">
+            <i class="bi bi-box-seam"></i> <span th:text="#{button.materials}"></span>
+        </a>
+        <a class="custom-btn mx-2" th:href="@{/alianzas}">
+            <i class="bi bi-people"></i> <span th:text="#{button.parcerias}"></span>
+        </a>
+        <a class="custom-btn mx-2" th:href="@{/legislacion}">
+            <i class="bi bi-book"></i> <span th:text="#{button.legislacion}"></span>
+        </a>
+    </div>
+</div>
+
+
+
 <div th:replace="~{fragments/banner :: banner}"></div>
 
 <div th:replace="~{fragments/publicaciones :: publicaciones}"></div>
