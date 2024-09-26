@@ -327,3 +327,21 @@ li {
     margin-top: 55px;
     padding: 15px;
 }
+
+#navbar-placeholder{
+    margin-top: 50px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo más oscuro */
+
+}
+.navbar-placeholder{
+    margin-top: 50px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo más oscuro */
+
+}
+
+#espacio{
+    margin-top: 15px;
+    padding: 15px;
+}

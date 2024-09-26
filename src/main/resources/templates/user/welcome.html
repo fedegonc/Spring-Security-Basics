@@ -58,11 +58,11 @@
             </ul>
         </div>
     </div>
-
 </nav>
 
-<div class="navbar-placeholder"></div>
-<div class="navbar-placeholder"></div>
+<div class="navbar-placeholder" id="navbar-placeholder"></div>
+<div class="navbar-placeholder" id="espacio"></div>
+
 
 <!-- Migas de pan -->
 <div class="container mt-1">
@@ -98,6 +98,9 @@
         <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">
             <i class="bi bi-person"></i> <span>Ver Perfil</span></a>
         </li>
+    <li><a class="dropdown-item" th:href="@{/user/informaciones}">
+        <i class="bi bi-book"></i> <span th:text="informaciones">Ver Publicaciones</span></a>
+    </li>
         <li><a class="dropdown-item" th:href="@{/logout}">
             <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a>
         </li>
