@@ -76,6 +76,23 @@
 <!-- Botón de apertura/cierre del sidebar -->
 <button id="sidenavToggleNav"></button>
 
+
+<!-- Migas de pan -->
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <!-- Elemento de inicio de las migas de pan -->
+            <li class="breadcrumb-item">
+                <i class="bi bi-house"></i>
+                <a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a>
+            </li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
+        </ol>
+    </nav>
+</div>
+
+
 <!-- Contenedor principal con ancho máximo -->
 <div class="container">
     <div class="articles-grid">
