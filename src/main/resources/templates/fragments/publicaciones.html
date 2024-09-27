@@ -2,23 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="publicaciones">
-  <div class="container mt-4">
-    <div class="row">
-      <div class="card-header">
-        <h4 th:text="#{publicaciones}">Publicaciones</h4>
-      </div>
+  <div class="pub-container">
+    <div class="pub-header">
+      <h4 th:text="#{publicaciones}">Publicaciones</h4>
     </div>
-    <div class="row row-cols-1 row-cols-md-3 g-3">
+
+    <div class="pub-grid">
       <!-- Tarjetas dinámicas -->
-      <div class="col" th:each="article: ${articles}">
-        <div class="card h-100 custom-card">
-          <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="card-img-top custom-img" alt="Imagen de la artículo">
-          <div class="card-body">
-            <h5 class="card-title custom-title" th:text="${article.titulo}">Título del artículo</h5>
-          </div>
-          <div class="card-footer">
-            <a class="custom-btn" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
-          </div>
+      <div class="pub-card" th:each="article: ${articles}">
+        <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="pub-img" alt="Imagen del artículo">
+        <div class="pub-body">
+          <h5 class="pub-title" th:text="${article.titulo}">Título del artículo</h5>
+        </div>
+        <div class="pub-footer">
+          <a class="pub-btn" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
         </div>
       </div>
     </div>

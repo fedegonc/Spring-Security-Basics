@@ -2,11 +2,15 @@
     background-color: #212529; /* Color de fondo oscuro pero suave */
     padding: 10px 0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    justify-content: flex-start; /* Alinea los elementos hijos a la izquierda */
+    align-items: flex-start; /* Alinea los elementos hijos verticalmente al inicio */
+
 }
 
 .custom-navbar .container {
     display: flex;
-    justify-content: center; /* Centrar los enlaces horizontalmente */
+    justify-content: flex-start; /* Alinea los elementos hijos a la izquierda */
+    align-items: flex-start; /* Alinea los elementos hijos verticalmente al inicio */
     align-items: center; /* Alinear verticalmente los elementos en el centro */
     flex-wrap: wrap; /* Permitir que los elementos se envuelvan si la pantalla es pequeña */
 }

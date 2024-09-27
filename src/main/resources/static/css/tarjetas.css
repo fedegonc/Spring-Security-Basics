@@ -1,0 +1,89 @@
+/* Contenedor principal */
+.pub-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 100%;
+    background-color: rgba(0, 0, 0, 0.05); /* Fondo ligeramente oscuro */
+    max-width: 1140px;
+}
+
+/* Cabecera */
+.pub-header {
+    text-align: left; /* Alinear el título a la izquierda */
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-left: 4px solid #007bff; /* Borde izquierdo azul */
+    background-color: #f8f9fa; /* Fondo gris claro */
+}
+
+.pub-header h4 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+}
+
+/* Grid para las tarjetas */
+.pub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Pensado para mobile */
+    gap: 1rem;
+}
+
+/* Tarjetas */
+.pub-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid transparent; /* Bordes transparentes excepto el izquierdo */
+    border-radius: 4px;
+    overflow: hidden;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo con un poco de transparencia */
+}
+
+.pub-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
+
+/* Imagen de la tarjeta */
+.pub-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    position: relative;
+}
+
+/* Título dentro de la imagen */
+.pub-title {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 1rem;
+    color: #fff;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo negro con más transparencia */
+    border-left: 4px solid transparent; /* Solo el fondo negro con transparencia */
+    margin: 0;
+    width: calc(100% - 20px);
+}
+
+/* Botón dentro de la imagen */
+.pub-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 0.4rem 0.8rem;
+    background-color: #0d6efd; /* Fondo negro con más transparencia */
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    border-radius: 3px;
+    transition: background-color 0.15s ease;
+}
+
+.pub-btn:hover {
+    background-color: #0a6ecd; /* Cambiar color en hover */
+    transform: scale(1.05); /* Efecto de agrandar un poco al hacer hover */
+    color: white;
+}
