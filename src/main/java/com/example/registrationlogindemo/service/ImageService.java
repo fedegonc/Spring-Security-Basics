@@ -13,4 +13,5 @@ public interface ImageService {
 
     void addLanguageImages(ModelAndView mv, Optional<Image> image, String imageName);
 
+    void addFlagImages(ModelAndView mv);
 }

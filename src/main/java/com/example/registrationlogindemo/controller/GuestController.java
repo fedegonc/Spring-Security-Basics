@@ -8,6 +8,7 @@ import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.ImageRepository;
 import com.example.registrationlogindemo.repository.ReportRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -45,6 +46,11 @@ public class GuestController {
     @Autowired
     ImageRepository imageRepository;
 
+    @Autowired
+    ImageService imageService;
+    // Método que agrega las banderas al ModelAndView
+
+
 
     // Obtiene la página de inicio y muestra las solicitudes activas
     @GetMapping({"", "/", "/index"})
@@ -52,13 +58,8 @@ public class GuestController {
         // Crear una instancia de ModelAndView con la vista "index"
         ModelAndView mv = new ModelAndView("index");
 
-        // Buscar las imágenes para los idiomas
-        Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
-        Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
-
-        // Agregar el nombre de la imagen al modelo si se encuentra
-        uruguaiImage.ifPresent(image -> mv.addObject("uruguaiImageName", image.getNombre()));
-        brasilImage.ifPresent(image -> mv.addObject("brasilImageName", image.getNombre()));
+        // Agregar las banderas al modelo
+        imageService.addFlagImages(mv);
 
         // Obtener la autenticación actual del usuario
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -172,6 +173,8 @@ public class GuestController {
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("EDUCACION_AMBIENTAL");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
+        imageService.addFlagImages(mv);
+
         mv.addObject("articles", articles);
         return mv;
     }
@@ -181,6 +184,9 @@ public class GuestController {
         ModelAndView mv = new ModelAndView("noticias");
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("NOTICIA");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
+
+        imageService.addFlagImages(mv);
+
 
         mv.addObject("articles", articles);
         return mv;
@@ -192,6 +198,9 @@ public class GuestController {
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("TIPOS_DE_MATERIALES");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
+        imageService.addFlagImages(mv);
+
+
         mv.addObject("articles", articles);
         return mv;
     }
@@ -202,6 +211,9 @@ public class GuestController {
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("ALIANZAS");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
+        imageService.addFlagImages(mv);
+
+
         mv.addObject("articles", articles);
         return mv;
     }
@@ -210,6 +222,9 @@ public class GuestController {
         ModelAndView mv = new ModelAndView("legislacion");
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("LEGISLACION");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
+
+        imageService.addFlagImages(mv);
+
 
         mv.addObject("articles", articles);
         return mv;
