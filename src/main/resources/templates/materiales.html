@@ -1,87 +1,92 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informaciones</title>
+    <title>Materiales</title>
+    <link rel="icon" href="">
+
+    <!-- Link al archivo CSS externo -->
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styles3.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
 </head>
 <body>
-<!-- Incluimos el fragmento del navbar -->
-<nav th:replace="base :: navbar"></nav>
 
-<!-- Incluimos el fragmento del breadcrumb -->
-<div th:replace="base :: breadcrumb"></div>
+<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
 
-<!-- Contenido específico de la página "Informaciones" -->
-<div class="container">
-    <div>
-        <h1>Informaciones</h1>
-        <p>Esta es la página de informaciones.</p>
-    </div>
-</div>
-<!-- Contenido específico de la página "Informaciones" -->
-<div class="container">
-    <div>
-        <h1>Informaciones</h1>
-        <p>Esta es la página de informaciones.</p>
-    </div>
-</div>
+        <div th:replace="~{fragments/logo}"></div>
 
-<!-- Contenido específico de la página "Informaciones" -->
-<div class="container">
-    <div>
-        <h1>Informaciones</h1>
-        <p>Esta es la página de informaciones.</p>
-    </div>
-</div>
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
 
-<!-- Contenido específico de la página "Informaciones" -->
-<div class="container">
-    <div>
-        <h1>Informaciones</h1>
-        <p>Esta es la página de informaciones.</p>
-    </div>
-</div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-<!-- Contenido específico de la página "Informaciones" -->
-<div class="container">
-    <div>
-        <h1>Informaciones</h1>
-        <p>Esta es la página de informaciones.</p>
-    </div>
-</div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
 
-<!-- Contenido específico de la página "Informaciones" -->
-<div class="container">
-    <div>
-        <h1>Informaciones</h1>
-        <p>Esta es la página de informaciones.</p>
+            <ul class="navbar-nav ms-auto">
+                <div class="d-flex align-items-center">
+                    <li class="nav-item">
+                        <a href="/materiales?language=es" class="nav-link">
+                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/materiales?language=pt" class="nav-link">
+                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
+                        </a>
+                    </li>
+                </div>
+            </ul>
+        </div>
     </div>
+
+</nav>
+<!-- Sidebar -->
+<div id="mySidenav" class="sidenav">
+    <a href="/admin/images">Imágenes del Sistema</a>
+    <a href="/admin/users">Usuarios</a>
+    <a href="/admin/solicitudes">Solicitudes</a>
+    <a href="/admin/articles">Artículos</a>
+    <a href="/admin/reports">Reportes</a>
+    <a href="/admin/roles">Roles</a>
 </div>
 
-<!-- Contenido específico de la página "Informaciones" -->
-<div class="container">
-    <div>
-        <h1>Informaciones</h1>
-        <p>Esta es la página de informaciones.</p>
-    </div>
-</div>
+<!-- Botón de apertura/cierre del sidebar -->
+<button id="sidenavToggleNav"></button>
 
-<!-- Contenido específico de la página "Informaciones" -->
-<div class="container">
-    <div>
-        <h1>Informaciones</h1>
-        <p>Esta es la página de informaciones.</p>
+<!-- Contenido principal -->
+<!-- Contenido principal -->
+<div class="row row-cols-1 row-cols-md-3 g-3">
+    <!-- Tarjetas dinámicas -->
+    <div class="col" th:each="article: ${articles}">
+        <div class="card h-100">
+            <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="card-img-top" alt="Imagen de la artículo">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${article.titulo}">Título del artículo</h5>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-primary" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
+            </div>
+        </div>
     </div>
 </div>
 
+<!-- Scripts externos -->
+<script src="/scripts/guestScript.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Incluimos el fragmento del footer -->
-<footer th:replace="base :: footer"></footer>
 </body>
 </html>
