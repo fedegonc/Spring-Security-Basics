@@ -156,21 +156,9 @@
         </div>
     </div>
 </div>
-<footer class="footer mt-auto py-3 bg-dark text-white">
-    <div class="container d-flex justify-content-between align-items-center">
-        <span class="text-muted" th:text="#{footer.copy}">
-            <i class="bi bi-c-circle"></i> 2024 Frontera Sustentable. Todos los derechos reservados.
-        </span>
-        <div class="d-flex align-items-center">
-            <a class="nav-link text-white" th:href="@{/report}" style="margin-right: 15px;">
-                <i class="bi bi-exclamation-circle"></i> Reportar problema
-            </a>
-            <button onclick="window.history.back()" class="btn btn-outline-light btn-sm" th:text="#{volver}">
-                <i class="bi bi-arrow-left"></i> Volver atrás
-            </button>
-        </div>
-    </div>
-</footer>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 <script src="/scripts/adminScript.js"></script>
 </body>
