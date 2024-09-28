@@ -42,6 +42,56 @@
 </nav>
 
 
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <div class="d-flex">
+            <img src="/img/logov4.png" alt="logo" width="50" height="50">
+            <a class="navbar-brand ms-2" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+                <!-- Menú desplegable -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Menú
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="menuDropdown">
+                        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a></li>
+                        <li><a class="dropdown-item" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Ver Publicaciones</a></li>
+                        <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">Ver Perfil</a></li>
+                        <li><a class="dropdown-item" th:href="@{/logout}"><i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a></li>
+                    </ul>
+                </li>
+
+                <!-- Selección de idioma -->
+                <li class="nav-item">
+                    <a href="/index?language=es" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/index?language=pt" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
+                    </a>
+                </li>
+
+                <!-- Perfil del usuario -->
+                <li class="nav-item d-flex align-items-center">
+                    <a th:href="@{/user/profile/{id}(id=${user.id})}" class="nav-link" style="display: flex; align-items: center; ">
+                        <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                        <span th:text="${user.username}">Nombre de Usuario</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
 
 <!-- Fragmento del breadcrumb -->
 <div th:fragment="breadcrumb">

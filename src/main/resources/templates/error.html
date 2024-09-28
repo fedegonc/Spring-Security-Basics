@@ -12,38 +12,38 @@
 
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <!-- Botón de hamburguesa para dispositivos móviles -->
-        <img src="/img/logov4.png" alt="logo" width="50" height="50">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> Frontera Sustentable</a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <div th:replace="~{fragments/logo}"></div>
+
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/logout}"> -> Cerrar Sesión</a>
-                </li>
-            </ul>
-            <!-- Botón desplegable de cambiar idioma -->
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown language-dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Idioma
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" href="/error?language=pt">Português</a></li>
-                        <li><a class="dropdown-item" href="/error?language=es">Español</a></li>
-                    </ul>
-                </li>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+
+            <ul class="navbar-nav ms-auto">
+                <div class="d-flex align-items-center">
+                    <li class="nav-item">
+                        <a href="/error?language=es" class="nav-link">
+                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/error?language=pt" class="nav-link">
+                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
+                        </a>
+                    </li>
+                </div>
             </ul>
         </div>
     </div>
+
 </nav>
 <div class="container mt-1">
     <nav aria-label="breadcrumb">

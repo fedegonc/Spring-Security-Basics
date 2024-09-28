@@ -19,36 +19,44 @@
 
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <img src="/img/logov4.png" alt="logo" width="50" height="50">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="true" aria-label="Toggle navigation">
+
+        <div th:replace="~{fragments/logo}"></div>
+
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Elementos de la barra de navegación izquierda -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-            <!-- Elementos de la barra de navegación derecha -->
+
             <ul class="navbar-nav ms-auto">
-                <!-- Menú desplegable para cambiar de idioma -->
-                <li class="nav-item dropdown language-dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span th:text="#{label.chooseLang}"></span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <!-- Opciones de idioma -->
-                        <li><a class="dropdown-item" href="/user/viewarticles?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" href="/user/viewarticles?language=es" th:text="#{label.lang.es}">Español</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logout}" th:text="#{salir}">Salir</a>
-                </li>
+                <div class="d-flex align-items-center">
+                    <li class="nav-item">
+                        <a href="/user/viewarticles?language=es" class="nav-link">
+                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/user/viewarticles?language=pt" class="nav-link">
+                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
+                        </a>
+                    </li>
+                    <!-- Perfil del usuario -->
+                    <li class="nav-item d-flex align-items-center">
+                        <a th:href="@{/user/profile/{id}(id=${user.id})}" class="nav-link" style="display: flex; align-items: center; ">
+                            <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                            <span th:text="${user.username}">Nombre de Usuario</span>
+                        </a>
+                    </li>
+                    <li><a class="nav-link" th:href="@{/logout}">
+                        <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a>
+                    </li>
+                </div>
             </ul>
         </div>
     </div>
