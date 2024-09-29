@@ -22,8 +22,8 @@
     color: white;
     font-size: 0.8rem; /* Tamaño de fuente */
     padding: 5px 5px; /* Aumentar el padding horizontal para mejorar el tamaño de los botones */
-    margin: 5px;
-    border-radius: 5px; /* Bordes redondeados */
+    margin: 10px;
+    border-radius: 3px; /* Bordes redondeados */
     text-align: center;
     text-decoration: none; /* Quitar subrayado */
     transition: background-color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */

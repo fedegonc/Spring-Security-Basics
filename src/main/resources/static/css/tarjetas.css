@@ -1,10 +1,10 @@
 /* Contenedor principal */
 .pub-container {
-    padding: 20px;
-    margin: 0 auto;
+    padding: 20px 20px 20px 80px;
+    margin: 10px;
     max-width: 100%;
     background-color: rgba(0, 0, 0, 0.05); /* Fondo ligeramente oscuro */
-    max-width: 1140px;
+
 }
 
 /* Cabecera */
@@ -64,7 +64,7 @@
     padding: 0.5rem;
     background-color: rgba(0, 0, 0, 0.6); /* Fondo negro con más transparencia */
     border-left: 4px solid transparent; /* Solo el fondo negro con transparencia */
-    margin: 0;
+    margin: 10%;
     width: calc(100% - 20px);
 }
 
@@ -86,4 +86,6 @@
     background-color: #0a6ecd; /* Cambiar color en hover */
     transform: scale(1.05); /* Efecto de agrandar un poco al hacer hover */
     color: white;
+}
+.pub-title {
 }
