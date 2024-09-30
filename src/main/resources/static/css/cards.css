@@ -10,8 +10,7 @@
 /* ====== Tarjeta Individual ====== */
 .tarjeta-personalizada {
     position: relative;
-    flex: 1 1 calc(20% - 1.5rem); /* Ajustar a 20% del contenedor */
-    max-width: 16rem; /* Limitar el ancho máximo de las tarjetas */
+    max-width: 15rem; /* Limitar el ancho máximo de las tarjetas */
     margin: 10px;
     border-radius: 1px;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
@@ -22,7 +21,7 @@
 
 /* Efecto de Hover */
 .tarjeta-personalizada:hover {
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 
 /* ====== Contenedor de la Imagen ====== */

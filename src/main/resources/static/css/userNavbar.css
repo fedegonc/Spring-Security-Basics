@@ -40,7 +40,7 @@ body {
     position: fixed;
     z-index: 1; /* Aparece detrás del navbar/footer */
     left: -100%; /* Oculta el sidebar fuera de la vista */
-    background-color: rgba(0, 0, 0, 0.8); /* Fondo negro con transparencia */
+    background-color: rgba(0, 0, 0, 0.95); /* Fondo negro con transparencia */
     overflow-x: hidden;
     transition: left 0.3s ease;
     white-space: nowrap;
