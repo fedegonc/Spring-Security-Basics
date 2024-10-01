@@ -116,3 +116,25 @@
         background-color: rgba(0, 0, 0, 0.8); /* Fondo más oscuro al hacer scroll */
     }
 }
+
+/* ====== Media Queries (Responsividad) ====== */
+@media (max-width: 1024px) {
+    .tarjeta-personalizada {
+        flex: 1 1 calc(33.33% - 1rem); /* 3 tarjetas por fila en pantallas medianas */
+        max-width: 14rem; /* Limitar el ancho en pantallas medianas */
+    }
+}
+
+@media (max-width: 768px) {
+    .tarjeta-personalizada {
+        flex: 1 1 calc(50% - 1rem); /* 2 tarjetas por fila en pantallas más pequeñas */
+        max-width: 12rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .tarjeta-personalizada {
+        flex: 1 1 100%; /* 1 tarjeta por fila en pantallas muy pequeñas */
+        max-width: 100%;
+    }
+}

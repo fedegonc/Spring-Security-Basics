@@ -72,8 +72,6 @@ public class GuestController {
             return new ModelAndView("redirect:/init");
         }
 
-        // Agregar el estado de autenticación al modelo
-        mv.addObject("isAuthenticated", isAuthenticated);
 
         // Convertir el String a Enum
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("GENERICO");
