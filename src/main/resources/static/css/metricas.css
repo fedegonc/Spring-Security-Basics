@@ -1,23 +1,22 @@
 /* Contenedor Principal - Centrado */
 .metrica-contenedor-principal {
     display: flex;
-    justify-content: center; /* Centrar horizontalmente */
     align-items: flex-start; /* Alinear las tarjetas al inicio */
     padding: 4px 40px 4px 40px;
     min-height: 10vh; /* Para que ocupe toda la pantalla verticalmente */
     background-color: withe;
     gap: 0.7rem; /* Espacio entre tarjetas */
+    margin: auto;
+    flex-direction: row;
 
 }
-.metrica-contenedor-principal{
-    margin: auto;
-}
+
 /* Contenedor de Tarjetas */
 .metrica-contenedor {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;
-    margin: 5px auto; /* Centrar el contenedor */
+    justify-content: space-between;
+    margin: 5px 5px; /* Centrar el contenedor */
 
 }
 
@@ -57,8 +56,6 @@
 /* Responsividad */
 @media (max-width: 768px) {
     .metrica-contenedor {
-        flex-direction: column; /* Las tarjetas se apilan verticalmente en pantallas pequeñas */
-        align-items: center;
     }
 
     .metrica-item {

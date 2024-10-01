@@ -7,6 +7,15 @@
     margin: auto;
 }
 
+/* ====== Contenedor Principal ====== */
+.contenedor-principal {
+    display: flex; /* Configura el contenedor como flexbox */
+    flex-wrap: wrap; /* Permite que las tarjetas se distribuyan en varias filas */
+    justify-content: space-beetwen; /* Alinea las tarjetas desde el inicio */
+    max-width: 20vh;
+    margin: auto;
+}
+
 
 /* ====== Tarjeta Individual ====== */
 .tarjeta-personalizada {
@@ -52,6 +61,7 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 10px;
+    margin: 0px;
     background-color: rgba(255, 145, 0, 0); /* Fondo claro semi-transparente */
 }
 
