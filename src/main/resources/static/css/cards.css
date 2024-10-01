@@ -2,7 +2,7 @@
 #tarjeta-contenedor {
     display: flex; /* Configura el contenedor como flexbox */
     flex-wrap: wrap; /* Permite que las tarjetas se distribuyan en varias filas */
-    justify-content: flex-start; /* Alinea las tarjetas desde el inicio */
+    justify-content: space-around; /* Alinea las tarjetas desde el inicio */
     max-width: 200vh;
     margin: auto;
 }
@@ -18,6 +18,8 @@
     transition: transform 0.1s;
     background-color: transparent; /* Fondo transparente */
     border: 1px solid rgba(0, 0, 0, 0.2);
+    justify-content: space-between; /* Distribuir con más espacio en pantallas medianas */
+
 }
 
 /* Efecto de Hover */
