@@ -48,18 +48,8 @@ li {
     }
 }
 
-.custom-card {
-        border: 1px solid #e3e6ea;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        background-color: #ffffff;
-    }
 
-    .custom-card .card-inner {
-        background-color: #f0f4f7; /* Background color for the inner card */
-        padding: 15px;
-        border-radius: 5px;
-    }
+
 
 .container-fluid {
     display: flex;

@@ -26,6 +26,9 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/breadcrumb.css">
+
 
 </head>
 
@@ -70,10 +73,9 @@
 <div class="navbar-placeholder"></div>
 
 <!-- Migas de pan -->
-<div class="container mt-1" id="breadcrumb">
+<div class="container mt-1" >
     <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-light">
-            <!-- Elemento de inicio de las migas de pan -->
+        <ol class="breadcrumb bg-light" id="breadcrumb">            <!-- Elemento de inicio de las migas de pan -->
             <li class="breadcrumb-item">
                 <i class="bi bi-house"></i>
                 <a th:href="@{/index}" th:text="#{breadcrumb.home}">
@@ -90,7 +92,6 @@
         </ol>
     </nav>
 </div>
-
 
 <!-- Contenido principal -->
 <div class="container">
@@ -110,42 +111,44 @@
                 </div>
             </div>
 
-
-            <div class="card">
-                <div class="card-header">
+            <div class="custom-card">
+                <div class="custom-card-header">
                     <!-- Título del formulario -->
-                    <h3 class="text-center" th:text="#{login.form.title}">
+                    <h3 th:text="#{login.form.title}">
                         <i class="bi bi-box-arrow-in-right"></i> Formulario de Inicio de Sesión
                     </h3>
                 </div>
-                <div class="card-body">
+                <div class="custom-card-body">
                     <form method="post" th:action="@{/login}" class="form-horizontal" role="form">
                         <!-- Campo de nombre de usuario -->
-                       <div class="mb-3">
-                        <i class="bi bi-person-check-fill"></i> <label for="username" class="control-label" th:text="#{login.form.username}">
-                                 Nombre de Usuario *
+                        <div class="mb-3">
+                            <i class="bi bi-person-check-fill"></i>
+                            <label for="username" th:text="#{login.form.username}">
+                                Nombre de Usuario *
                             </label>
-                            <input type="text" id="username" name="username" class="form-control" placeholder="Nombre de Usuario" />
+                            <input type="text" id="username" name="username" class="custom-input" placeholder="Nombre de Usuario" />
                         </div>
 
                         <!-- Campo de contraseña -->
                         <div class="mb-3">
-                            <i class="bi bi-lock-fill"></i> <label for="password" class="control-label" th:text="#{login.form.password}">
-                                 Contraseña *
+                            <i class="bi bi-lock-fill"></i>
+                            <label for="password" th:text="#{login.form.password}">
+                                Contraseña *
                             </label>
-                            <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" />
+                            <input type="password" id="password" name="password" class="custom-input" placeholder="Contraseña" />
                         </div>
 
                         <!-- Botón de enviar -->
                         <div class="mb-3">
-                             <button type="submit" class="btn btn-primary" th:text="#{login.form.submit}">
-                                 <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                            <button type="submit" class="custom-button">
+                                <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
                             </button>
                             <!-- Enlace para registrarse -->
                             <span th:text="#{login.form.register.text}">
-         ¿No tienes una cuenta?
-    </span>
-                            <i class="bi bi-person-plus-fill"></i><a th:href="@{/register}" th:text="#{login.form.register.link}">Regístrate aquí</a>
+                                ¿No tienes una cuenta?
+                            </span>
+                            <i class="bi bi-person-plus-fill"></i>
+                            <a th:href="@{/register}" th:text="#{login.form.register.link}">Regístrate aquí</a>
                         </div>
                     </form>
                 </div>
@@ -154,7 +157,7 @@
     </div>
 </div>
 
-<br>
+
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 
