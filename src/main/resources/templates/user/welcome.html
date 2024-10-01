@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="/css/cards.css">
     <link rel="stylesheet" href="/css/breadcrumb.css">
     <link rel="stylesheet" href="/css/metricas.css">
+    <link rel="stylesheet" href="/css/alert-info.css">
 
 
 
@@ -47,18 +48,18 @@
                 <div class="d-flex align-items-center">
                     <li class="nav-item">
                         <a href="/user/dashboard?language=es" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
+                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" src="">
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="/user/dashboard?language=pt" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
+                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" src="">
                         </a>
                     </li>
                     <!-- Perfil del usuario -->
                     <li class="nav-item d-flex align-items-center">
                         <a th:href="@{/user/profile/{id}(id=${user.id})}" class="nav-link" style="display: flex; align-items: center; ">
-                            <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                            <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" src="">
                             <span th:text="${user.username}">Nombre de Usuario</span>
                         </a>
                     </li>
@@ -95,39 +96,76 @@
 <div th:if="${rerror}" class="alert alert-danger mt-3" role="alert" th:text="${rerror}"></div>
 <div th:if="${rexito}" class="alert alert-success mt-3" role="alert" th:text="${rexito}"></div>
 
-<!-- Sidebar -->
 <div id="mySidenav" class="sidenav">
 
+    <!-- Dropdown para Solicitudes -->
+    <div class="dropdown">
+        <a class="dropdown-toggle" href="#" id="dropdownSolicitudes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-plus-circle"></i> <span>Solicitudes</span>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownSolicitudes">
+            <li>
+                <a class="dropdown-item" th:href="@{/user/newsolicitude}">
+                    <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span>
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" th:href="@{/user/view-requests}">
+                    <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 
-        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">
-            <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span></a>
-        </li>
-        <li><a class="dropdown-item" th:href="@{/user/view-requests}">
-            <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span></a>
-        </li>
-        <li><a class="dropdown-item" th:href="@{/user/viewarticles}">
-            <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span></a>
-        </li>
-        <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">
-            <i class="bi bi-person"></i> <span>Ver Perfil</span></a>
-        </li>
-    <li><a class="dropdown-item" th:href="@{/user/informaciones}">
-        <i class="bi bi-book"></i> <span th:text="informaciones">Ver Publicaciones</span></a>
+    <!-- Dropdown para Publicaciones -->
+    <div class="dropdown">
+        <a class="dropdown-toggle" href="#" id="dropdownPublicaciones" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-book"></i> <span>Publicaciones</span>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownPublicaciones">
+            <li>
+                <a class="dropdown-item" th:href="@{/user/viewarticles}">
+                    <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span>
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" th:href="@{/user/informaciones}">
+                    <i class="bi bi-book"></i> <span th:text="informaciones">Informaciones</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Perfil del usuario (sin dropdown) -->
+    <li>
+        <a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">
+            <i class="bi bi-person"></i> <span>Ver Perfil</span>
+        </a>
     </li>
-        <li><a class="dropdown-item" th:href="@{/logout}">
-            <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a>
-        </li>
+
+    <!-- Reportar problema (sin dropdown) -->
+    <li>
+        <a class="dropdown-item" th:href="@{/report}">
+            <i class="bi bi-exclamation-circle"></i> <span>Reportar Problema</span>
+        </a>
+    </li>
+
+    <!-- Cerrar sesión (sin dropdown) -->
+    <li>
+        <a class="dropdown-item" th:href="@{/logout}">
+            <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
+        </a>
+    </li>
 
 </div>
+
 
 <!-- Botón de apertura/cierre del sidebar -->
 <button id="sidenavToggleNav"></button>
 
 
 <div class="container mt-4">
-
-
-    <div class="alert alert-info" role="alert">
+    <div id="info" >
         <h4 class="alert-heading" th:text="'Bienvenida, ' + <!--/* [[${user.username}]] */--> 'Usuario' + '!'"></h4>
         <p>Nos alegra que estés aquí, <!--<span th:text="${user.username}">Nombre del Usuario</span>-->. Aquí puedes encontrar un resumen de tus actividades recientes y acceder a las funciones más importantes de la aplicación.</p>
         <hr>
@@ -139,6 +177,7 @@
 
 <!-- Sección de métricas del sistema -->
 <section class="container mt-4">
+    <div id="info2" >
     <div class="row">
         <!-- Explicación de las métricas -->
         <div class="col-12 mb-4">
@@ -151,31 +190,32 @@
         <!-- Tarjetas de métricas -->
         <div class="metrica-contenedor-principal">
             <div class="metrica-contenedor">
-                <!-- Tarjeta 1: Número de usuarios -->
+                <!-- Tarjeta 1: solicitudes activas -->
                 <div class="metrica-item">
-                    <h3>Cantidad de Usuarios</h3>
-                    <p>1500</p>
+                    <h3>Solicitudes Activas</h3>
+                    <p>15</p>
                 </div>
 
-                <!-- Tarjeta 2: Solicitudes completadas -->
+                <!-- Tarjeta 2: Solicitudes aceptadas -->
                 <div class="metrica-item">
-                    <h3>Solicitudes Finalizadas</h3>
-                    <p>125</p>
+                    <h3>Solicitudes Aceptadas</h3>
+                    <p>4</p>
                 </div>
 
-                <!-- Tarjeta 3: Material reciclado -->
+                <!-- Tarjeta 3: solicitudes en proceso -->
                 <div class="metrica-item">
-                    <h3>Kilos de Material Reciclado</h3>
-                    <p>3200 kg</p>
+                    <h3>Solicitudes en Proceso</h3>
+                    <p>5</p>
                 </div>
 
-                <!-- Tarjeta 4: Recolecciones activas -->
+                <!-- Tarjeta 4: Recolecciones finalizadas -->
                 <div class="metrica-item">
-                    <h3>Recolecciones en Proceso</h3>
-                    <p>30</p>
+                    <h3>Solicitudes en Finalizadas</h3>
+                    <p>10</p>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </section>
 
@@ -184,11 +224,13 @@
 
 <div class="container mt-4">
     <!-- Explicación de las métricas -->
-    <div class="col-12 mb-4">
-        <h4>Solicitudes</h4>
-        <p>
-            A continuación, te presentamos un resumen de las principales métricas del sistema. Estas estadísticas reflejan el rendimiento y la actividad del sistema en relación con las solicitudes de reciclaje, usuarios activos y el impacto en el reciclaje de materiales.
-        </p>
+    <div id="info3" >
+        <div class="col-12 mb-4">
+            <h4>Solicitudes</h4>
+            <p>
+                A continuación, te presentamos un resumen de las principales métricas del sistema. Estas estadísticas reflejan el rendimiento y la actividad del sistema en relación con las solicitudes de reciclaje, usuarios activos y el impacto en el reciclaje de materiales.
+            </p>
+        </div>
     </div>
     <div id="tarjeta-contenedor" class="contenedor-principal">
         <div th:each="solicitud : ${solicitude}">
@@ -221,10 +263,10 @@
 
 <!-- Footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
-<script>
 
-</script>
 
+<!-- Scripts necesarios para Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/scripts/userScript.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

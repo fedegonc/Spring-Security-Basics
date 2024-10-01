@@ -5,7 +5,7 @@
     align-items: flex-start; /* Alinear las tarjetas al inicio */
     padding: 4px 40px 4px 40px;
     min-height: 10vh; /* Para que ocupe toda la pantalla verticalmente */
-    background-color: #f7f7f7;
+    background-color: withe;
     gap: 0.7rem; /* Espacio entre tarjetas */
 
 }
@@ -17,25 +17,23 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    width: 100%; /* Ocupar el ancho completo */
-    margin: 0 auto; /* Centrar el contenedor */
+    margin: 5px auto; /* Centrar el contenedor */
 
 }
 
 /* Tarjetas Individuales */
 .metrica-item {
     width: auto; /* El ancho se ajusta al contenido */
-    padding: 15px;
+    padding: 0.5rem;
     max-height: 5rem; /* Ancho máximo para mantener el diseño responsivo */
-
     text-align: center;
     background-color: white;
     transition: transform 0.2s ease-in-out;
-
-
-    background-color: #ffffff; /* Fondo blanco */
-    border-radius: 0.1rem; /* Bordes menos redondeados */
+    background-color: #dfdfdf; /* Fondo blanco */
+    border-radius: 0.01rem; /* Bordes menos redondeados */
     box-shadow: 0 0 0.01rem rgba(0, 0, 0, 0.1); /* Añade una sombra suave */
+    margin:  0.5rem  0.5rem auto; /* Centrar el contenedor */
+
 }
 
 /* Títulos y textos en las tarjetas */
