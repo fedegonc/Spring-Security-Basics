@@ -17,6 +17,10 @@
     <link rel="stylesheet" href="/css/breadcrumb.css">
     <link rel="stylesheet" href="/css/metricas.css">
     <link rel="stylesheet" href="/css/alert-info.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/logo.css">
+    <link rel="stylesheet" href="/css/footer.css">
+
 
 
 
@@ -28,45 +32,81 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
+<!-- Barra de navegación -->
 
 <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-
         <div th:replace="~{fragments/logo}"></div>
-
         <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            </ul>
 
             <ul class="navbar-nav ms-auto">
-                <div class="d-flex align-items-center">
-                    <li class="nav-item">
-                        <a href="/user/dashboard?language=es" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" src="">
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/user/dashboard?language=pt" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" src="">
-                        </a>
-                    </li>
-                    <!-- Perfil del usuario -->
-                    <li class="nav-item d-flex align-items-center">
-                        <a th:href="@{/user/profile/{id}(id=${user.id})}" class="nav-link" style="display: flex; align-items: center; ">
-                            <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" src="">
-                            <span th:text="${user.username}">Nombre de Usuario</span>
-                        </a>
-                    </li>
-                    <li><a class="nav-link" th:href="@{/logout}">
-                        <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a>
-                    </li>
-                </div>
+                <!-- Dropdown para Solicitudes y Contenidos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownSolicitudesContenidos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-plus-circle"></i> <span>Solicitudes y Contenidos</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownSolicitudesContenidos">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/newsolicitude}">
+                                <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/view-requests}">
+                                <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/viewarticles}">
+                                <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/informaciones}">
+                                <i class="bi bi-book"></i> <span th:text="informaciones">Informaciones</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Dropdown para Usuario -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownUsuario" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person"></i> <span>Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownUsuario">
+                        <li>
+                            <a th:href="@{/user/profile/{id}(id=${user.id})}" class="dropdown-item" style="display: flex; align-items: center;">
+                                <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" src="">
+                                <span th:text="${user.username}">Nombre de Usuario</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/logout}">
+                                <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/user/dashboard?language=es" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" src="">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/user/dashboard?language=pt" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" src="">
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -74,94 +114,22 @@
 
 <div class="navbar-placeholder" id="navbar-placeholder"></div>
 
-
-
 <!-- Migas de pan -->
-<div class="container mt-1" >
+<div class="container mt-1">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light" id="breadcrumb">
-            <!-- Elemento de inicio de las migas de pan -->
             <li class="breadcrumb-item">
                 <i class="bi bi-house"></i>
                 <a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a>
             </li>
-            <!-- Elemento activo de las migas de pan -->
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
         </ol>
     </nav>
 </div>
 
-
 <!-- Mensajes de éxito o error -->
 <div th:if="${rerror}" class="alert alert-danger mt-3" role="alert" th:text="${rerror}"></div>
 <div th:if="${rexito}" class="alert alert-success mt-3" role="alert" th:text="${rexito}"></div>
-
-<div id="mySidenav" class="sidenav">
-
-    <!-- Dropdown para Solicitudes -->
-    <div class="dropdown">
-        <a class="dropdown-toggle" href="#" id="dropdownSolicitudes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-plus-circle"></i> <span>Solicitudes</span>
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="dropdownSolicitudes">
-            <li>
-                <a class="dropdown-item" th:href="@{/user/newsolicitude}">
-                    <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span>
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" th:href="@{/user/view-requests}">
-                    <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Dropdown para Publicaciones -->
-    <div class="dropdown">
-        <a class="dropdown-toggle" href="#" id="dropdownPublicaciones" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-book"></i> <span>Publicaciones</span>
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="dropdownPublicaciones">
-            <li>
-                <a class="dropdown-item" th:href="@{/user/viewarticles}">
-                    <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span>
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" th:href="@{/user/informaciones}">
-                    <i class="bi bi-book"></i> <span th:text="informaciones">Informaciones</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Perfil del usuario (sin dropdown) -->
-    <li>
-        <a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">
-            <i class="bi bi-person"></i> <span>Ver Perfil</span>
-        </a>
-    </li>
-
-    <!-- Reportar problema (sin dropdown) -->
-    <li>
-        <a class="dropdown-item" th:href="@{/report}">
-            <i class="bi bi-exclamation-circle"></i> <span>Reportar Problema</span>
-        </a>
-    </li>
-
-    <!-- Cerrar sesión (sin dropdown) -->
-    <li>
-        <a class="dropdown-item" th:href="@{/logout}">
-            <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
-        </a>
-    </li>
-
-</div>
-
-
-<!-- Botón de apertura/cierre del sidebar -->
-<button id="sidenavToggleNav"></button>
 
 
 <div class="container mt-4">
@@ -269,5 +237,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/scripts/userScript.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap JS y dependencias -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
 </body>
 </html>

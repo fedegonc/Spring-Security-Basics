@@ -1,5 +1,5 @@
 /* Estilo del logo */
-#navbarLogo {
+#navbarLogo, .navbar-logo {
     width: 50px;
     height: auto;
     transition: width 300ms ease; /* Añadir transición para un efecto suave */
@@ -8,15 +8,16 @@
 /* Estilo del botón de hamburguesa */
 .navbar-toggler {
     border-color: transparent;
+    padding: 0.4rem; /* Padding para el botón de hamburguesa */
 }
 
 /* Estilo de las banderas de idioma */
 .flag {
-    width: 30px;
+    width: 30px; /* Tamaño consistente */
     height: 20px;
 }
 
-/* Ajuste para reducir el padding en el navbar cuando haces scroll */
+/* Ajuste para el navbar cuando haces scroll */
 #mainNavbar {
     transition: padding 300ms ease, background-color 300ms ease;
 }
@@ -26,27 +27,6 @@
     background-color: rgba(0, 0, 0, 0.8); /* Fondo más oscuro al hacer scroll */
 }
 
-#container-fluid.scrolled {
-    padding: 5px 10px;
-    background-color: #333;
-
-}
-
-#navbar-logo.scrolled {
-    width: 25px; /* Ancho del logo */
-    height: 25px; /* Altura del logo */
-    margin-right: 0.2rem; /* Espacio a la derecha del logo */
-
-}
-
-/* Estilos para el logo de la barra de navegación */
-.navbar-logo {
-    width: 50px; /* Ancho del logo */
-    height: 50px; /* Altura del logo */
-    margin-right: 0.5rem; /* Espacio a la derecha del logo */
-}
-
-/* Estilos para alinear los elementos de la barra de navegación */
 .navbar-nav .nav-item {
     margin-right: 0.5rem; /* Margen derecho para separar elementos */
     display: flex;
@@ -58,32 +38,6 @@
     align-items: center; /* Alinea verticalmente los elementos */
 }
 
-.navbar-nav .nav-item img {
-    vertical-align: middle;
-    display: inline-block;
-    padding: 1px 1px;
-    margin: 1px 1px;
-}
-.navbar-nav .nav-item a {
-    vertical-align: middle;
-    display: inline-block;
-    margin: 1px 1px;
-}
-
-.btn.btn-primary {
-    margin-bottom: 0; /* Asegúrate de que no haya un margen inferior en el botón */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
-
-
-#mainNavbar.scrolled #navbarLogo.small-logo {
-    width: 2.5rem; /* Tamaño más pequeño cuando está scrolled */
-}
-
 .navbar-brand {
     font-size: 1.1rem; /* Tamaño normal */
     transition: font-size 300ms ease; /* Suaviza el cambio de tamaño */
@@ -91,4 +45,17 @@
 
 #mainNavbar.scrolled .navbar-brand {
     font-size: 0.9rem; /* Tamaño más pequeño cuando está scrolled */
+}
+
+/* ----- Estilos para Pantallas Grandes (min-width: 768px) ----- */
+@media (min-width: 768px) {
+    #navbarLogo {
+        width: 40px; /* Tamaño del logo */
+    }
+}
+
+/* ====== Media Queries (Responsividad) ====== */
+.tarjeta-personalizada {
+    flex: 1 1 calc(33.33% - 1rem); /* 3 tarjetas por fila en pantallas medianas */
+    max-width: 14rem; /* Limitar el ancho en pantallas medianas */
 }
