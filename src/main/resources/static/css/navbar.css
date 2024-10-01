@@ -1,61 +1,191 @@
+/* Variables para valores reutilizados */
+:root {
+    --navbar-bg-color: #333;
+    --navbar-bg-color-scrolled: rgba(0, 0, 0, 0.8);
+    --flag-width: 30px;
+    --flag-height: 20px;
+    --logo-width: 50px;
+    --transition-speed: 300ms;
+}
+
 /* Estilo del logo */
+.container-fluid, .navbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 10px 20px;
+    background-color: var(--navbar-bg-color);
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.nav-link {
+    color: white;
+    margin-right: 15px;
+    text-decoration: none;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+/* Ajusta el tamaño de las imágenes si es necesario */
+.nav-link img {
+    vertical-align: middle;
+}
+
 #navbarLogo, .navbar-logo {
-    width: 50px;
+    width: var(--logo-width);
     height: auto;
-    transition: width 300ms ease; /* Añadir transición para un efecto suave */
+    transition: width var(--transition-speed) ease;
 }
 
 /* Estilo del botón de hamburguesa */
 .navbar-toggler {
     border-color: transparent;
-    padding: 0.4rem; /* Padding para el botón de hamburguesa */
+    padding: 0.4rem;
 }
 
 /* Estilo de las banderas de idioma */
 .flag {
-    width: 30px; /* Tamaño consistente */
-    height: 20px;
+    width: var(--flag-width);
+    height: var(--flag-height);
 }
 
-/* Ajuste para el navbar cuando haces scroll */
 #mainNavbar {
-    transition: padding 300ms ease, background-color 300ms ease;
+    transition: padding var(--transition-speed) ease, background-color var(--transition-speed) ease;
 }
 
 #mainNavbar.scrolled {
     padding: 5px 10px;
-    background-color: rgba(0, 0, 0, 0.8); /* Fondo más oscuro al hacer scroll */
+    background-color: var(--navbar-bg-color-scrolled);
 }
 
 .navbar-nav .nav-item {
-    margin-right: 0.5rem; /* Margen derecho para separar elementos */
+    margin-right: 0.5rem;
     display: flex;
     align-items: center;
 }
 
 .d-flex {
-    display: flex; /* Asegúrate de que el contenedor sea flex */
-    align-items: center; /* Alinea verticalmente los elementos */
+    display: flex;
+    align-items: center;
 }
 
 .navbar-brand {
-    font-size: 1.1rem; /* Tamaño normal */
-    transition: font-size 300ms ease; /* Suaviza el cambio de tamaño */
+    font-size: 1.1rem;
+    transition: font-size var(--transition-speed) ease;
 }
 
 #mainNavbar.scrolled .navbar-brand {
-    font-size: 0.9rem; /* Tamaño más pequeño cuando está scrolled */
+    font-size: 0.9rem;
 }
 
-/* ----- Estilos para Pantallas Grandes (min-width: 768px) ----- */
+/* ====== Media Queries ====== */
+
+/* Pantallas medianas (min-width: 768px) */
 @media (min-width: 768px) {
     #navbarLogo {
-        width: 40px; /* Tamaño del logo */
+        width: 40px;
+    }
+
+    .flag {
+        width: 25px;
+        height: auto;
+    }
+
+    .navbar-toggler {
+        padding: 0.4rem;
+    }
+
+    .navbar-toggler-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+    .navbar-brand {
+        font-size: 1.0rem;
+        transition: font-size var(--transition-speed) ease;
     }
 }
 
-/* ====== Media Queries (Responsividad) ====== */
-.tarjeta-personalizada {
-    flex: 1 1 calc(33.33% - 1rem); /* 3 tarjetas por fila en pantallas medianas */
-    max-width: 14rem; /* Limitar el ancho en pantallas medianas */
+/* Pantallas pequeñas (max-width: 768px) */
+@media (max-width: 768px) {
+    #navbarLogo {
+        width: 30px;
+    }
+
+    .flag {
+        width: 20px;
+        height: auto;
+    }
+
+    .navbar-toggler {
+        padding: 0.25rem 0.5rem;
+    }
+
+    .navbar-toggler-icon {
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+
+    .navbar-brand {
+        font-size: 0.8rem;
+        transition: font-size var(--transition-speed) ease;
+    }
+}
+
+/* Pantallas muy pequeñas (max-width: 576px) */
+@media (max-width: 576px) {
+    #navbarLogo {
+        width: 20px;
+    }
+
+    .flag {
+        width: 15px;
+        height: auto;
+    }
+
+    .navbar-toggler {
+        padding: 0.15rem 0.25rem;
+    }
+
+    .navbar-toggler-icon {
+        width: 0.6rem;
+        height: 0.6rem;
+    }
+
+    .navbar-brand {
+        font-size: 0.6rem;
+        transition: font-size var(--transition-speed) ease;
+    }
+}
+
+/* Pantallas extra pequeñas (max-width: 375px) */
+@media (max-width: 375px) {
+    #navbarLogo {
+        width: 10px;
+    }
+
+    .flag {
+        width: 10px;
+        height: auto;
+    }
+
+    .navbar-toggler {
+        padding: 0.15rem 0.25rem;
+    }
+
+    .navbar-toggler-icon {
+        width: 0.5rem;
+        height: 0.5rem;
+    }
+
+    .navbar-brand {
+        font-size: 0.55rem;
+        transition: font-size var(--transition-speed) ease;
+    }
 }
