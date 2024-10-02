@@ -1,9 +1,10 @@
 
 .custom-card {
     background-color: white;
-    border: none; /* Sin borde */
+    border: 1px solid #007bff0b; /* Sin borde */
     padding: 20px; /* Espaciado interno */
-    margin-top: 50px; /* Margen superior */
+    margin-top: 30px; /* Margen superior */
+    background-color: #9fcbff0b; /* Color de fondo del botón */
 }
 
 .custom-card-header {
@@ -23,6 +24,7 @@
 .custom-input {
     padding: 10px; /* Espaciado interno */
     width: 100%; /* Ancho completo */
+    max-height: 30px; /* Ancho completo */
     box-sizing: border-box; /* Para que el padding no afecte el ancho */
     border: 1px solid transparent; /* Sin borde visible por defecto */
     background-color: white; /* Fondo blanco */

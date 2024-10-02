@@ -1,43 +1,47 @@
-#logo {
-    font-size: 2vw; /* Tamaño de fuente responsivo */
-    color: #f0f6f3; /* Color del texto, un gris oscuro para mayor legibilidad */
+.navbar-logo {
 
+    color: #f0f6f3; /* Color del texto, un gris oscuro para mayor legibilidad */
+    width: 3.0rem; /* Tamaño de fuente responsivo */;
+    height: 3.0rem;
+    margin: 5px;
+    padding: 5px;
 }
 
-#logo:hover {
+
+.navbar-logo:hover {
     color: #0056b3; /* Cambia el color al pasar el ratón, un azul más oscuro */
 
 }
 
 @media (max-width: 1200px) {
-    #logo {
-        font-size: 1.25rem;
-        transition: font-size var(--transition-speed) ease;
+    .navbar-logo {
+        width: 3.0rem; /* Tamaño de fuente responsivo */;
+        height: 3.0rem;
     }
 }
 
 @media (max-width: 992px) {
-    #logo {
-        font-size: 1.05rem;
-        transition: font-size var(--transition-speed) ease;
+    .navbar-logo {
+        width: 3.0rem; /* Tamaño de fuente responsivo */;
+        height: 3.0rem;
     }
 }
 
 @media (max-width: 768px) {
-    #logo {
-        font-size: 0.95rem;
-        transition: font-size var(--transition-speed) ease;
+    .navbar-logo {
+        width: 2.0rem; /* Tamaño de fuente responsivo */;
+        height: 2.0rem;
     }
 }
 @media (max-width: 576px) {
-    #logo {
-        ffont-size: 0.75rem;
-        transition: font-size var(--transition-speed) ease;
+    .navbar-logo {
+        width: 2.0rem; /* Tamaño de fuente responsivo */;
+        height: 2.0rem;
     }
 }
 @media (max-width: 375px) {
-    #logo {
-        font-size: 0.55rem;
-        transition: font-size var(--transition-speed) ease;
+    .navbar-logo {
+        width: 2.0rem; /* Tamaño de fuente responsivo */;
+        height: 2.0rem;
     }
 }

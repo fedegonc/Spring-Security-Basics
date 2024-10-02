@@ -21,3 +21,54 @@
         max-width: 100%;
     }
 }
+/* Para pantallas pequeñas (menos de 768px) */
+@media (max-width: 768px) {
+    .container-fluid {
+        flex-wrap: wrap;
+    }
+
+    /* Estilos del logo más pequeño en pantallas pequeñas */
+    #logo {
+        font-size: 1.2rem;
+    }
+
+    /* Ajuste del tamaño de la bandera */
+    .flag {
+        width: 20px;
+        height: 15px;
+    }
+
+    /* Botón toggle más pequeño en pantallas pequeñas */
+    .navbar-toggler {
+        padding: 0.3rem;
+    }
+
+    .navbar-toggler-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+}
+
+/* Para pantallas extra pequeñas (menos de 576px) */
+@media (max-width: 576px) {
+/* Ajuste del tamaño del logo */
+    #logo {
+        font-size: 1rem;
+    }
+
+    /* Bandera más pequeña */
+    .flag {
+        width: 15px;
+        height: 10px;
+    }
+
+    /* Botón toggle aún más pequeño */
+    .navbar-toggler {
+        padding: 0.2rem;
+    }
+
+    .navbar-toggler-icon {
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+}

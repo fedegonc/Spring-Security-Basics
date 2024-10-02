@@ -38,12 +38,6 @@
     vertical-align: middle;
 }
 
-#navbarLogo, .navbar-logo {
-    width: var(--logo-width);
-    height: auto;
-    transition: width var(--transition-speed) ease;
-}
-
 /* Estilo del botón de hamburguesa */
 .navbar-toggler {
     border-color: transparent;
@@ -56,8 +50,19 @@
     height: var(--flag-height);
 }
 
+
+/* Estilos para el navbar normal */
 #mainNavbar {
+    transition: padding 300ms ease, box-shadow 300ms ease, background-color 300ms ease;
+    box-shadow: none;
+    position: fixed; /* Cambia a fixed desde el principio */
+    top: 0;
+    width: 100%;
+    padding: 10px 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
     transition: padding var(--transition-speed) ease, background-color var(--transition-speed) ease;
+
 }
 
 #mainNavbar.scrolled {
@@ -81,17 +86,30 @@
     transition: font-size var(--transition-speed) ease;
 }
 
-#mainNavbar.scrolled .navbar-brand {
-    font-size: 0.9rem;
+
+#navbar-placeholder{
+    margin-top: 50px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo más oscuro */
+
+}
+.navbar-placeholder{
+    margin-top: 50px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.9); /* Fondo más oscuro */
+
+}
+
+#espacio{
+    margin-top: 15px;
+    padding: 15px;
 }
 
 /* ====== Media Queries ====== */
 
 /* Pantallas medianas (min-width: 768px) */
 @media (min-width: 768px) {
-    #navbarLogo {
-        width: 40px;
-    }
+
 
     .flag {
         width: 25px;
@@ -107,16 +125,13 @@
         height: 1rem;
     }
     .navbar-brand {
-        font-size: 1.0rem;
+        font-size: 1.1rem;
         transition: font-size var(--transition-speed) ease;
     }
 }
 
 /* Pantallas pequeñas (max-width: 768px) */
 @media (max-width: 768px) {
-    #navbarLogo {
-        width: 30px;
-    }
 
     .flag {
         width: 20px;
@@ -133,16 +148,15 @@
     }
 
     .navbar-brand {
-        font-size: 0.8rem;
+        font-size: 1.0rem;
         transition: font-size var(--transition-speed) ease;
     }
 }
 
+
 /* Pantallas muy pequeñas (max-width: 576px) */
 @media (max-width: 576px) {
-    #navbarLogo {
-        width: 20px;
-    }
+
 
     .flag {
         width: 15px;
@@ -159,16 +173,14 @@
     }
 
     .navbar-brand {
-        font-size: 0.6rem;
+        font-size: 0.95rem;
         transition: font-size var(--transition-speed) ease;
     }
 }
 
 /* Pantallas extra pequeñas (max-width: 375px) */
 @media (max-width: 375px) {
-    #navbarLogo {
-        width: 10px;
-    }
+
 
     .flag {
         width: 10px;
@@ -185,7 +197,25 @@
     }
 
     .navbar-brand {
-        font-size: 0.55rem;
+        font-size: 0.9rem;
         transition: font-size var(--transition-speed) ease;
     }
+
 }
+
+
+/* Asegura que el logo y el botón toggle se alineen correctamente */
+#mainNavbar .container-fluid {
+    display: flex;
+    justify-content: space-between; /* Logo a la izquierda y toggle a la derecha */
+    align-items: center; /* Alinea verticalmente */
+    flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
+}
+
+/* Alinea correctamente el navbar en pantallas más pequeñas */
+@media (max-width: 991px) { /* Bootstrap usa 'lg' (991px) como el tamaño donde se muestra el toggle */
+    .navbar-toggler {
+        margin-left: auto; /* Mueve el botón de toggle a la derecha */
+    }
+}
+
