@@ -4,27 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="#{title}">Frontera Sustentable</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/styles3.css">
+    <title>Solicitudes</title>
+
+    <!-- Estilos CSS personalizados -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/userNavbar.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/banner.css">
+    <link rel="stylesheet" href="/css/maps.css">
+    <link rel="stylesheet" href="/css/links.css">
+    <link rel="stylesheet" href="/css/toggle-button.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="/css/tarjetas.css">
+    <link rel="stylesheet" href="/css/cards.css">
+    <link rel="stylesheet" href="/css/breadcrumb.css">
+    <link rel="stylesheet" href="/css/metricas.css">
+    <link rel="stylesheet" href="/css/alert-info.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/logo.css">
+    <link rel="stylesheet" href="/css/footer.css">
+
+
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 </head>
 
 <body>
+
 <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
 
-        <div th:replace="~{fragments/logo}"></div>
+        <div id="logo" th:replace="~{fragments/logo}"></div>
 
         <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -32,32 +60,69 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
 
             <ul class="navbar-nav ms-auto">
-                <div class="d-flex align-items-center">
-                    <li class="nav-item">
-                        <a href="/user/profile?language=es" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/user/profile?language=pt" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
-                        </a>
-                    </li>
-                    <!-- Perfil del usuario -->
-                    <li class="nav-item d-flex align-items-center">
-                        <a th:href="@{/user/profile/{id}(id=${user.id})}" class="nav-link" style="display: flex; align-items: center; ">
-                            <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
-                            <span th:text="${user.username}">Nombre de Usuario</span>
-                        </a>
-                    </li>
-                    <li><a class="nav-link" th:href="@{/logout}">
-                        <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a>
-                    </li>
-                </div>
+                <!-- Dropdown para Solicitudes y Contenidos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownSolicitudesContenidos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-plus-circle"></i> <span>Solicitudes y Contenidos</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownSolicitudesContenidos">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/newsolicitude}">
+                                <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/view-requests}">
+                                <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/viewarticles}">
+                                <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/informaciones}">
+                                <i class="bi bi-book"></i> <span th:text="informaciones">Informaciones</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Dropdown para Usuario -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownUsuario" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person"></i> <span>Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownUsuario">
+                        <li>
+                            <a th:href="@{/user/profile/{id}(id=${user.id})}" class="dropdown-item" style="display: flex; align-items: center;">
+                                <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" src="">
+                                <span th:text="${user.username}">Nombre de Usuario</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/logout}">
+                                <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/user/dashboard?language=es" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" src="">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/user/dashboard?language=pt" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" src="">
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+
 
 
 
@@ -89,31 +154,6 @@
         <p class="mb-0">Para comenzar, te recomendamos que revises las últimas actualizaciones, explores las nuevas funcionalidades o realices una nueva solicitud. ¡Estamos aquí para ayudarte a aprovechar al máximo la plataforma!</p>
     </div>
 </div>
-
-<!-- Sidebar -->
-<div id="mySidenav" class="sidenav">
-
-
-    <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">
-        <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span></a>
-    </li>
-    <li><a class="dropdown-item" th:href="@{/user/view-requests}">
-        <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span></a>
-    </li>
-    <li><a class="dropdown-item" th:href="@{/user/viewarticles}">
-        <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span></a>
-    </li>
-    <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">
-        <i class="bi bi-person"></i> <span>Ver Perfil</span></a>
-    </li>
-    <li><a class="dropdown-item" th:href="@{/logout}">
-        <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a>
-    </li>
-
-</div>
-
-<!-- Botón de apertura/cierre del sidebar -->
-<button id="sidenavToggleNav"></button>
 
 <div class="container">
     <div class="row">
