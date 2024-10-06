@@ -11,48 +11,54 @@
                 <h4 th:text="#{sedes}">Entregar en sedes</h4>
             </div>
         </div>
+
         <div class="row justify-content-start">
 
             <!-- Información de Contacto -->
             <div class="col-lg-4">
-                <div class="bg-light text-dark p-4 rounded">
-                    <h4>Associação de Catadores Novo Horizonte</h4>
-                    <h5 th:text="#{asociacion.information}">Información de Contacto</h5>
+                <div class="map-height">
+                    <div class="bg-light text-dark p-4 rounded" style="height: 15rem; max-width: 100%;">
+                    <h5>Associação de Catadores Novo Horizonte</h5>
+                    <h6 th:text="#{asociacion.information}">Información de Contacto</h6>
                     <p><strong th:text="#{asociacion.address}">Dirección:</strong> Ten. Aníbal Benévolo, 135 - Sant`Ana do Livramento - RS, Brasil</p>
                     <p><strong th:text="#{asociacion.hours}">Horario:</strong> <p th:text="#{horario.atencion}"></p></p>
                 </div>
+                </div>
             </div>
 
             <!-- Mapa -->
             <div class="col-lg-8">
+                <div class="map-height">
                 <div class="border rounded shadow-sm mb-4 bg-light">
                     <div id="map" class="w-100 map-height"></div>
                 </div>
+                </div>
             </div>
-
-
         </div>
+
         <hr>
 
         <div class="row justify-content-start">
-
             <!-- Información de Contacto -->
             <div class="col-lg-4">
-                <div class="bg-light text-dark p-4 rounded">
-                    <h4 th:text="#{cooperative.name}">Cooperativa Renacer del Norte</h4>
-                    <h5 th:text="#{cooperative.information}">Información de Contacto</h5>
+                <div class="map-height">
+                    <div class="bg-light text-dark p-4 rounded" style=" height: 15rem; max-width: auto;">
+                    <h5 th:text="#{cooperative.name}">Cooperativa Renacer del Norte</h5>
+                    <h6 th:text="#{cooperative.information}">Información de Contacto</h6>
                     <p><strong th:text="#{cooperative.address}">Dirección:</strong> Camino Las Tunitas, S/N - Rivera - RVR, Uruguay</p>
                     <p><strong th:text="#{cooperative.hours}">Horario:</strong> <p th:text="#{horario.atencion}"></p></p>
                 </div>
+                </div>
+
             </div>
             <!-- Mapa -->
             <div class="col-lg-8">
+                <div class="map-height">
                 <div class="border rounded shadow-sm mb-4 bg-light">
                     <div id="map2" class="w-100 map-height"></div>
                 </div>
+                </div>
             </div>
-
-
         </div>
     </div>
 </div>
