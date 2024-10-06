@@ -4,7 +4,7 @@
     padding-left: 2rem;
     margin: 10px;
     max-width: 100%;
-    background-color: rgba(0, 0, 0, 0.05); /* Fondo ligeramente oscuro */
+    background-color: white; /* Fondo ligeramente oscuro */
 
 }
 .pub-body {
@@ -20,13 +20,13 @@
 .pub-header {
     text-align: left; /* Alinear el título a la izquierda */
     margin-bottom: 2rem;
-    padding: 1rem;
+    padding: 0.5rem;
     border-left: 4px solid #007bff; /* Borde izquierdo azul */
-    background-color: white; /* Fondo gris claro */
+    background-color: #f6f6f6ad; /* Fondo gris claro */
 }
 
 .pub-header h4 {
-    font-size: 1.5rem;
+    font-size: 1.0rem;
     color: #333;
     margin: 0;
 }
@@ -56,10 +56,12 @@
 
 /* Imagen de la tarjeta */
 .pub-img {
-    width: 100%;
+    width: auto;
     height: 180px;
     object-fit: cover;
     position: relative;
+    margin: 5px;
+    border-radius: 3px;
 }
 
 /* Título dentro de la imagen */
@@ -73,6 +75,7 @@
     background-color: withe; /* Fondo negro con más transparencia */
     margin: 10px;
     width: calc(70% - 0px);
+    border-radius: 3px;
 }
 
 /* Botón dentro de la imagen */

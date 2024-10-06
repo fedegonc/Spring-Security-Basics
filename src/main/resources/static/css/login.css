@@ -29,6 +29,8 @@
     border: 1px solid transparent; /* Sin borde visible por defecto */
     background-color: white; /* Fondo blanco */
     transition: border-color 0.3s ease, background-color 0.3s ease; /* Transición suave para el cambio de color */
+    border-radius: 3px;
+
 }
 
 .custom-input:focus {
