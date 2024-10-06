@@ -4,7 +4,7 @@
     border: 1px solid #007bff0b; /* Sin borde */
     padding: 20px; /* Espaciado interno */
     margin-top: 30px; /* Margen superior */
-    background-color: #9fcbff0b; /* Color de fondo del botón */
+    background-color: #9FCBFF0D; /* Color de fondo del botón */
 }
 
 .custom-card-header {
@@ -50,9 +50,10 @@
     background-color: #007bff; /* Color de fondo del botón */
     color: white; /* Color del texto del botón */
     border: none; /* Sin borde */
-    border-radius: 0; /* Sin bordes redondeados */
     padding: 10px 15px; /* Espaciado interno */
     cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
+    border-radius: 3px;
+
 }
 
 .custom-button:hover {
