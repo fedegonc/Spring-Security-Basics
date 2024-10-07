@@ -1,98 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.thymeleaf.org ">
+      xsi:schemaLocation="http://www.thymeleaf.org">
 <head>
+    <!-- Meta tags básicos para el correcto renderizado y compatibilidad con dispositivos móviles -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Título de la página -->
+
+    <!-- Título de la página extraído de Thymeleaf para soporte de i18n (internacionalización) -->
     <title th:text="#{index.title}">Frontera Sustentable</title>
-    <!-- Ícono de la página -->
+
+    <!-- Favicon (agregar ruta correcta para el ícono de la página) -->
     <link rel="icon" href="">
-    <!-- Estilos CSS personalizados -->
+
+    <!-- Inclusión de estilos de Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <!-- Estilos personalizados del proyecto, agrupados por áreas funcionales para mayor claridad -->
 
-    <link rel="stylesheet" href="/css/userNavbar.css">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/banner.css">
-    <link rel="stylesheet" href="/css/maps.css">
-    <link rel="stylesheet" href="/css/links.css">
-    <link rel="stylesheet" href="/css/toggle-button.css">
-    <link rel="stylesheet" href="/css/responsive.css">
-    <link rel="stylesheet" href="/css/tarjetas.css">
-    <link rel="stylesheet" href="/css/cards.css">
-    <link rel="stylesheet" href="/css/breadcrumb.css">
-    <link rel="stylesheet" href="/css/metricas.css">
-    <link rel="stylesheet" href="/css/alert-info.css">
-    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/logo.css">
+    <link rel="stylesheet" href="/css/banner.css">
+    <link rel="stylesheet" href="/css/tarjetas.css">
+    <link rel="stylesheet" href="/css/maps.css">
     <link rel="stylesheet" href="/css/footer.css">
 
-
-
+    <!-- Estilos de Leaflet para mapas -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 
-<body >
-
-<div th:replace="~{fragments/navbar :: navbar}"></div>
-
-<div class="navbar-placeholder" id="navbar-placeholder"></div>
-
-
-<div class="custom-navbar">
-    <div class="container">
-        <a class="custom-btn mx-2" th:href="@{/user/newsolicitude}">
-            <i class="bi bi-recycle"></i> <span th:text="#{button.requestRecycling}"></span>
-        </a>
-        <a class="custom-btn mx-2" th:href="@{/ambiental}">
-            <i class="bi bi-tree"></i> <span th:text="#{button.environmentalEducation}"></span>
-        </a>
-        <a class="custom-btn mx-2" th:href="@{/noticias}">
-            <i class="bi bi-newspaper"></i> <span th:text="#{button.news}"></span>
-        </a>
-        <a class="custom-btn mx-2" th:href="@{/materiales}">
-            <i class="bi bi-box-seam"></i> <span th:text="#{button.materials}"></span>
-        </a>
-        <a class="custom-btn mx-2" th:href="@{/alianzas}">
-            <i class="bi bi-people"></i> <span th:text="#{button.parcerias}"></span>
-        </a>
-        <a class="custom-btn mx-2" th:href="@{/legislacion}">
-            <i class="bi bi-book"></i> <span th:text="#{button.legislacion}"></span>
-        </a>
-    </div>
-</div>
-
-
-
+<body>
+<!-- Incluyendo los fragmentos Thymeleaf para reutilización y mantener el código modularizado -->
+<div th:replace="~{fragments/header :: header}"></div>
 <div th:replace="~{fragments/banner :: banner}"></div>
-
 <div th:replace="~{fragments/publicaciones :: publicaciones}"></div>
-
 <div th:replace="~{fragments/maps :: maps}"></div>
-
 <div th:replace="~{fragments/footer :: footer}"></div>
 
-
-<script src="/scripts/guestScript.js"></script>
+<!-- Scripts relacionados con la funcionalidad de los mapas -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="/scripts/maps.js"></script>
-<script src="/scripts/navbar.js"></script>
-<script>
-    document.querySelector('.navbar-toggler').addEventListener('click', function() {
-        document.querySelector('.navbar-collapse').classList.toggle('open');
-    });
-</script>
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
-

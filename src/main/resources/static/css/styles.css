@@ -1,0 +1,10 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px; /* Ajuste de tamaño de fuente base */
+    line-height: 1.5;
+}
