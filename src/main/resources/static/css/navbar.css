@@ -1,251 +1,86 @@
-/* Variables para valores reutilizados */
-:root {
-    --navbar-bg-color: #333;
-    --navbar-bg-color-scrolled: rgba(0, 0, 0, 0.8);
-    --flag-width: 30px;
-    --flag-height: 20px;
-    --logo-width: 50px;
-    --transition-speed: 300ms;
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 
-/* Estilo del logo */
-.container-fluid, .navbar {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 10px 20px;
-    background-color: var(--navbar-bg-color);
-    position: relative;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-}
-
-.nav-link {
-    color: white;
-    margin-right: 15px;
-    text-decoration: none;
-}
-
-.navbar-nav {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
-}
-
-/* Ajusta el tamaño de las imágenes si es necesario */
-.nav-link img {
-    vertical-align: middle;
-}
-
-/* Estilo del botón de hamburguesa */
-.navbar-toggler {
-    border-color: transparent;
-    padding: 0.4rem;
-}
-
-/* Estilo de las banderas de idioma */
-.flag {
-    width: var(--flag-width);
-    height: var(--flag-height);
-}
-
-
-/* Estilos para el navbar normal */
-#mainNavbar {
-    transition: padding 300ms ease, box-shadow 300ms ease, background-color 300ms ease;
-    box-shadow: none;
-    position: fixed; /* Cambia a fixed desde el principio */
-    top: 0;
-    width: 100%;
-    padding: 10px 10px;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    transition: padding var(--transition-speed) ease, background-color var(--transition-speed) ease;
-
-}
-
-#mainNavbar.scrolled {
-    padding: 5px 10px;
-    background-color: var(--navbar-bg-color-scrolled);
-}
-
-.navbar-nav .nav-item {
-    margin-right: 0.5rem;
-    display: flex;
-    align-items: center;
-}
-
-.d-flex {
-    display: flex;
-    align-items: center;
-}
-
-.navbar-brand {
-    font-size: 1.1rem;
-    transition: font-size var(--transition-speed) ease;
-}
-
-
-#navbar-placeholder{
-    margin-top: 50px;
-    padding: 15px;
-    background-color: rgba(0, 0, 0, 0.9); /* Fondo más oscuro */
-
-}
-.navbar-placeholder{
-    margin-top: 50px;
-    padding: 15px;
-    background-color: rgba(0, 0, 0, 0.9); /* Fondo más oscuro */
-
-}
-
-#espacio{
-    margin-top: 15px;
-    padding: 15px;
-}
-
-/* ====== Media Queries ====== */
-
-/* Pantallas medianas (min-width: 768px) */
 @media (min-width: 768px) {
-
-
-    .flag {
-        width: 25px;
-        height: auto;
-    }
-
-    .navbar-toggler {
-        padding: 0.4rem;
-    }
-
-    .navbar-toggler-icon {
-        width: 1rem;
-        height: 1rem;
-    }
-    .navbar-brand {
-        font-size: 1.1rem;
-        transition: font-size var(--transition-speed) ease;
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
     }
 }
 
-/* Pantallas pequeñas (max-width: 768px) */
-@media (max-width: 768px) {
-
-    .flag {
-        width: 20px;
-        height: auto;
-    }
-
-    .navbar-toggler {
-        padding: 0.25rem 0.5rem;
-    }
-
-    .navbar-toggler-icon {
-        width: 0.8rem;
-        height: 0.8rem;
-    }
-
-    .navbar-brand {
-        font-size: 1.0rem;
-        transition: font-size var(--transition-speed) ease;
-    }
+.b-example-divider {
+    width: 100%;
+    height: 3rem;
+    background-color: rgba(0, 0, 0, .1);
+    border: solid rgba(0, 0, 0, .15);
+    border-width: 1px 0;
+    box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
 }
 
-
-/* Pantallas muy pequeñas (max-width: 576px) */
-@media (max-width: 576px) {
-
-
-    .flag {
-        width: 15px;
-        height: auto;
-    }
-
-    .navbar-toggler {
-        padding: 0.15rem 0.25rem;
-    }
-
-    .navbar-toggler-icon {
-        width: 0.6rem;
-        height: 0.6rem;
-    }
-
-    .navbar-brand {
-        font-size: 0.95rem;
-        transition: font-size var(--transition-speed) ease;
-    }
+.b-example-vr {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 100vh;
 }
 
-/* Pantallas extra pequeñas (max-width: 375px) */
-@media (max-width: 375px) {
-
-
-    .flag {
-        width: 10px;
-        height: auto;
-    }
-
-    .navbar-toggler {
-        padding: 0.15rem 0.25rem;
-    }
-
-    .navbar-toggler-icon {
-        width: 0.5rem;
-        height: 0.5rem;
-    }
-
-    .navbar-brand {
-        font-size: 0.9rem;
-        transition: font-size var(--transition-speed) ease;
-    }
-
+.bi {
+    vertical-align: -.125em;
+    fill: currentColor;
 }
 
+.nav-scroller {
+    position: relative;
+    z-index: 2;
+    height: 2.75rem;
+    overflow-y: hidden;
+}
 
-/* Asegura que el logo y el botón toggle se alineen correctamente */
-#mainNavbar .container-fluid {
+.nav-scroller .nav {
     display: flex;
-    justify-content: space-between; /* Logo a la izquierda y toggle a la derecha */
-    align-items: center; /* Alinea verticalmente */
-    flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+    margin-top: -1px;
+    overflow-x: auto;
+    text-align: center;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Alinea correctamente el navbar en pantallas más pequeñas */
-@media (max-width: 991px) { /* Bootstrap usa 'lg' (991px) como el tamaño donde se muestra el toggle */
-    .navbar-toggler {
-        margin-left: auto; /* Mueve el botón de toggle a la derecha */
-    }
+.btn-bd-primary {
+    --bd-violet-bg: #712cf9;
+    --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: var(--bs-white);
+    --bs-btn-bg: var(--bd-violet-bg);
+    --bs-btn-border-color: var(--bd-violet-bg);
+    --bs-btn-hover-color: var(--bs-white);
+    --bs-btn-hover-bg: #6528e0;
+    --bs-btn-hover-border-color: #6528e0;
+    --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+    --bs-btn-active-color: var(--bs-btn-hover-color);
+    --bs-btn-active-bg: #5a23c8;
+    --bs-btn-active-border-color: #5a23c8;
 }
 
-/* Ajusta el logo y el botón toggle para pantallas pequeñas */
-#mainNavbar .container-fluid {
-    display: flex;
-    justify-content: space-between; /* Logo a la izquierda, toggle a la derecha */
-    align-items: center;
+.bd-mode-toggle {
+    z-index: 1500;
 }
 
-@media (max-width: 991px) {
-/* Asegúrate de que el botón toggle se alinee correctamente en pantallas pequeñas */
-    .navbar-toggler {
-        margin-left: auto; /* Mueve el botón toggle a la derecha */
-    }
+.bd-mode-toggle .dropdown-menu .active .bi {
+    display: block !important;
+}
 
-    /* Asegura que el contenido colapsado ocupe el ancho completo cuando se despliega */
-    .collapse.navbar-collapse {
-        width: 100%;
-        text-align: center;
-    }
+.btn-login {
+    background-color: #007bff; /* Color de fondo del botón */
+    color: white; /* Color del texto del botón */
+    border: none; /* Sin borde */
+    padding: 10px 15px; /* Espaciado interno */
+    cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
+    border-radius: 3px;
 
-    /* Alinea los elementos del menú uno debajo del otro cuando está colapsado */
-    .navbar-nav {
-        width: 100%;
-        display: block;
-        text-align: left;
-    }
-
-    .navbar-nav .nav-item {
-        margin-bottom: 1rem; /* Añade espacio entre los elementos en modo colapsado */
-    }
 }
