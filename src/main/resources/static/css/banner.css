@@ -7,8 +7,8 @@
     background-size: cover;
     background-position: center;
     flex-grow: 1;
-    padding: 20px; /* Añade padding para mejor visualización en móviles */
-    text-align: center; /* Centra el texto en móviles */
+    padding: 5px 5px;
+    text-align: center;
 }
 
 .banner-content {
@@ -23,7 +23,7 @@
 
 .banner-left, .banner-right, .banner-logos {
     margin-bottom: 20px;
-    margin-top: 20px;
+    margin-top: 30px;
     background-color: rgba(0, 0, 0, 0.4);
     padding: 10px;
     color: #fff;
