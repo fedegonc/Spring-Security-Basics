@@ -24,14 +24,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/toggle-button.css">
-    <link rel="stylesheet" href="/css/responsive.css">
+
+
     <link rel="stylesheet" href="/css/breadcrumb.css">
-    <link rel="stylesheet" href="/css/alert-info.css">
-    <link rel="stylesheet" href="/css/base.css">
+
+
     <link rel="stylesheet" href="/css/logo.css">
-    <link rel="stylesheet" href="/css/footer.css">
+
     <link rel="stylesheet" href="/css/login.css">
 
 
@@ -45,12 +44,13 @@
 <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
 
-        <div th:replace="~{fragments/logo}"></div>
+        <div id="logo" th:replace="~{fragments/logo}"></div>
 
         <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -58,25 +58,44 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
 
             <ul class="navbar-nav ms-auto">
-                <div class="d-flex align-items-center">
-                    <li class="nav-item">
-                        <a href="/login?language=es" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/login?language=pt" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
-                        </a>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReciclaje" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-recycle"></i> Reciclaje
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownReciclaje">
+                        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">Nueva Solicitud</a></li>
+                        <li><a class="dropdown-item" th:href="@{/ambiental}">Educación Ambiental</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRecursos" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-info-circle"></i> Recursos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownRecursos">
+                        <li><a class="dropdown-item" th:href="@{/noticias}">Noticias</a></li>
+                        <li><a class="dropdown-item" th:href="@{/materiales}">Materiales</a></li>
+                        <li><a class="dropdown-item" th:href="@{/alianzas}">Alianzas</a></li>
+                        <li><a class="dropdown-item" th:href="@{/legislacion}">Legislación</a></li>
+                    </ul>
+                </li>
+                <!-- Banderas y Botón Login -->
+                <div class="d-flex align-items-center" style="gap: 15px;">
+                    <!-- Banderas -->
+                    <a href="/login?language=es" class="nav-link p-0">
+                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
+                    </a>
+                    <a href="/login?language=pt" class="nav-link p-0">
+                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
+                    </a>
+
+
                 </div>
             </ul>
         </div>
     </div>
-
 </nav>
-
-<div class="navbar-placeholder"></div>
 
 <!-- Migas de pan -->
 <div class="container mt-1" >
