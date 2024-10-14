@@ -1,56 +1,48 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.thymeleaf.org">
 <head>
-    <!-- Meta tags básicos para el correcto renderizado y compatibilidad con dispositivos móviles -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Título de la página extraído de Thymeleaf para soporte de i18n (internacionalización) -->
     <title th:text="#{index.title}">Frontera Sustentable</title>
 
-    <!-- Favicon (agregar ruta correcta para el ícono de la página) -->
-    <link rel="icon" href="">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
 
-    <!-- Inclusión de estilos de Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.css">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200..1000&display=swap" rel="stylesheet">
 
-    <!-- Estilos personalizados del proyecto, agrupados por áreas funcionales para mayor claridad -->
-
+    <!-- CSS Personalizado -->
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/logo.css">
     <link rel="stylesheet" href="/css/banner.css">
     <link rel="stylesheet" href="/css/tarjetas.css">
     <link rel="stylesheet" href="/css/maps.css">
-    <link rel="stylesheet" href="/css/footer.css">
 
-    <!-- Estilos de Leaflet para mapas -->
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 
 <body>
-<!-- Incluyendo los fragmentos Thymeleaf para reutilización y mantener el código modularizado -->
-<div th:replace="~{fragments/header :: header}"></div>
+<!-- Fragmentos Thymeleaf -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <div th:replace="~{fragments/banner :: banner}"></div>
 <div th:replace="~{fragments/publicaciones :: publicaciones}"></div>
 <div th:replace="~{fragments/maps :: maps}"></div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 
-<!-- Scripts relacionados con la funcionalidad de los mapas -->
+<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="/scripts/maps.js"></script>
 
-
+<!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

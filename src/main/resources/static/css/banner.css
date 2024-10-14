@@ -3,7 +3,7 @@
     position: relative;
     display: flex;
     align-items: left;
-    background: rgba(0, 0, 0, 0.5) url('/img/foto1.png');
+    background: rgba(0, 0, 0, 0.8) url('/img/foto1.png');
     background-size: cover;
     background-position: center;
     flex-grow: 1;

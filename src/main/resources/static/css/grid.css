@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.col-4 {
+    flex: 0 0 33.3333%;
+}
+
+.col-6 {
+    flex: 0 0 50%;
+}
+
+.col-12 {
+    flex: 0 0 100%;
+}
