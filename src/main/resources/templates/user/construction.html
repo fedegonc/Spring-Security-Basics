@@ -10,10 +10,6 @@
 
     <link rel="stylesheet" href="/css/styles.css">
 
-    <link rel="stylesheet" href="/css/logo.css">
-    <link rel="stylesheet" href="/css/breadcrumb.css">
-    <link rel="stylesheet" href="/css/login.css">
-    <link rel="stylesheet" href="/css/footer.css">
 
 </head>
 
@@ -35,138 +31,176 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
 
             <ul class="navbar-nav ms-auto">
+                <!-- Dropdown para Solicitudes y Contenidos -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReciclaje" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-recycle"></i> Reciclaje
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownSolicitudesContenidos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-plus-circle"></i> <span>Solicitudes y Contenidos</span>
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownReciclaje">
-                        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">Nueva Solicitud</a></li>
-                        <li><a class="dropdown-item" th:href="@{/ambiental}">Educación Ambiental</a></li>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownSolicitudesContenidos">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/newsolicitude}">
+                                <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/view-requests}">
+                                <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/viewarticles}">
+                                <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/user/informaciones}">
+                                <i class="bi bi-book"></i> <span th:text="informaciones">Informaciones</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
+
+                <!-- Dropdown para Usuario -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRecursos" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-info-circle"></i> Recursos
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownUsuario" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person"></i> <span>Usuario</span>
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownRecursos">
-                        <li><a class="dropdown-item" th:href="@{/noticias}">Noticias</a></li>
-                        <li><a class="dropdown-item" th:href="@{/materiales}">Materiales</a></li>
-                        <li><a class="dropdown-item" th:href="@{/alianzas}">Alianzas</a></li>
-                        <li><a class="dropdown-item" th:href="@{/legislacion}">Legislación</a></li>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownUsuario">
+
+                        <li>
+                            <a class="dropdown-item" th:href="@{/logout}">
+                                <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                <!-- Banderas y Botón Login -->
-                <div class="d-flex align-items-center" style="gap: 15px;">
-                    <!-- Banderas -->
-                    <a href="/login?language=es" class="nav-link p-0">
-                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
+                <li class="nav-item">
+                    <a href="/user/dashboard?language=es" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" src="">
                     </a>
-                    <a href="/login?language=pt" class="nav-link p-0">
-                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
+                </li>
+                <li class="nav-item">
+                    <a href="/user/dashboard?language=pt" class="nav-link">
+                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" src="">
                     </a>
-
-
-                </div>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<!-- Contenido Principal / Main -->
-<main class="container my-5">
-    <section>
-        <h2>Bienvenido a Nuestro Sitio</h2>
-        <p>Aquí encontrarás toda la información sobre nuestros servicios.</p>
-    </section>
-
-    <article>
-        <h3>Últimas Noticias</h3>
-        <p>¡Conoce nuestras novedades más recientes!</p>
-    </article>
-</main>
 
 
-<!-- Migas de pan -->
-<div class="container mt-1" >
+
+<!-- Migas de Pan / Breadcrumb -->
+<div class="container mt-3">
     <nav aria-label="breadcrumb">
-        <ol class="breadcrumb" id="breadcrumb">
-            <li class="breadcrumb-item">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-3">
+            <li class="breadcrumb-item active text-primary d-flex align-items-center gap-2" aria-current="page">
                 <i class="bi bi-house"></i>
-                <a th:href="@{/index}" th:text="#{breadcrumb.home}">
-                    Inicio
-                </a>
-            </li>
-            <!-- Elemento activo de las migas de pan -->
-            <li class="breadcrumb-item active" aria-current="page">
-                <i class="bi bi-person-circle"></i>
-                <span th:text="#{breadcrumb.login}">
-                        Login
-                </span>
+                <span th:text="#{breadcrumb.home}">Inicio</span>
             </li>
         </ol>
     </nav>
 </div>
 
-<!-- Contenido principal -->
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <!-- Manejo de errores y mensajes de éxito -->
-            <div th:if="${param.error}">
-                <div class="alert alert-danger">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    <span th:text="#{error.login}">Email o Contraseña Incorrectos.</span>
+
+
+<!-- Mensajes de éxito o error -->
+<div th:if="${rerror}" class="alert alert-danger mt-3" role="alert" th:text="${rerror}"></div>
+<div th:if="${rexito}" class="alert alert-success mt-3" role="alert" th:text="${rexito}"></div>
+
+
+<div class="container mt-4">
+    <div id="info" >
+        <h4 class="alert-heading" th:text="'Bienvenida, ' + <!--/* [[${user.username}]] */--> 'Usuario' + '!'"></h4>
+        <p>Nos alegra que estés aquí, <!--<span th:text="${user.username}">Nombre del Usuario</span>-->. Aquí puedes encontrar un resumen de tus actividades recientes y acceder a las funciones más importantes de la aplicación.</p>
+        <hr>
+        <p class="mb-0">Para comenzar, te recomendamos que revises las últimas actualizaciones, explores las nuevas funcionalidades o realices una nueva solicitud. ¡Estamos aquí para ayudarte a aprovechar al máximo la plataforma!</p>
+    </div>
+</div>
+
+
+
+<!-- Sección de métricas del sistema -->
+<section class="container mt-4">
+    <div id="info2" >
+        <div class="row">
+            <!-- Explicación de las métricas -->
+            <div class="col-12 mb-4">
+                <h4>Métricas del Sistema</h4>
+                <p>
+                    A continuación, te presentamos un resumen de las principales métricas del sistema. Estas estadísticas reflejan el rendimiento y la actividad del sistema en relación con las solicitudes de reciclaje, usuarios activos y el impacto en el reciclaje de materiales.
+                </p>
+            </div>
+
+            <!-- Tarjetas de métricas -->
+            <div class="metrica-contenedor-principal">
+                <div class="metrica-contenedor">
+                    <!-- Tarjeta 1: solicitudes activas -->
+                    <div class="metrica-item">
+                        <h3>Solicitudes Activas</h3>
+                        <p>15</p>
+                    </div>
+
+                    <!-- Tarjeta 2: Solicitudes aceptadas -->
+                    <div class="metrica-item">
+                        <h3>Solicitudes Aceptadas</h3>
+                        <p>4</p>
+                    </div>
+
+                    <!-- Tarjeta 3: solicitudes en proceso -->
+                    <div class="metrica-item">
+                        <h3>Solicitudes en Proceso</h3>
+                        <p>5</p>
+                    </div>
+
+                    <!-- Tarjeta 4: Recolecciones finalizadas -->
+                    <div class="metrica-item">
+                        <h3>Solicitudes en Finalizadas</h3>
+                        <p>10</p>
+                    </div>
                 </div>
             </div>
-            <div th:if="${param.logout}">
-                <div class="alert alert-success">
-                    <i class="bi bi-check-circle-fill"></i>
-                    <span th:text="#{success.logout}">Sesión Finalizada con Éxito.</span>
-                </div>
-            </div>
+        </div>
+    </div>
+</section>
 
-            <div class="custom-card">
-                <div class="custom-card-header">
-                    <!-- Título del formulario -->
-                    <h4 th:text="#{login.form.title}">
-                        <i class="bi bi-box-arrow-in-right"></i> Formulario de Inicio de Sesión
-                    </h4>
-                </div>
-                <div class="custom-card-body">
-                    <form method="post" th:action="@{/login}" class="form-horizontal" role="form">
-                        <!-- Campo de nombre de usuario -->
-                        <div class="mb-3">
-                            <i class="bi bi-person-check-fill"></i>
-                            <label for="username" th:text="#{login.form.username}">
-                                Nombre de Usuario *
-                            </label>
-                            <input type="text" id="username" name="username" class="custom-input" placeholder="Nombre de Usuario" />
-                        </div>
 
-                        <!-- Campo de contraseña -->
-                        <div class="mb-3">
-                            <i class="bi bi-lock-fill"></i>
-                            <label for="password" th:text="#{login.form.password}">
-                                Contraseña *
-                            </label>
-                            <input type="password" id="password" name="password" class="custom-input" placeholder="Contraseña" />
-                        </div>
+<!-- Otros componentes de navegación y layout omitidos para brevedad -->
 
-                        <!-- Botón de enviar -->
-                        <div class="mb-3">
-                            <button type="submit" class="custom-button">
-                                <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
-                            </button>
-                            <!-- Enlace para registrarse -->
-                            <span th:text="#{login.form.register.text}">
-                                ¿No tienes una cuenta?
-                            </span>
-                            <i class="bi bi-person-plus-fill"></i>
-                            <a th:href="@{/register}" th:text="#{login.form.register.link}">Regístrate aquí</a>
+<div class="container mt-4">
+    <!-- Explicación de las métricas -->
+    <div id="info3" >
+        <div class="col-12 mb-4">
+            <h4>Solicitudes</h4>
+            <p>
+                A continuación, te presentamos un resumen de las principales métricas del sistema. Estas estadísticas reflejan el rendimiento y la actividad del sistema en relación con las solicitudes de reciclaje, usuarios activos y el impacto en el reciclaje de materiales.
+            </p>
+        </div>
+    </div>
+    <div id="tarjeta-contenedor" class="contenedor-principal">
+        <div th:each="solicitud : ${solicitude}">
+            <div class="tarjeta-personalizada">
+                <!-- Contenedor de la imagen -->
+                <div class="contenedor-imagen">
+                    <!-- Placeholder para la imagen antes de que cargue -->
+                    <img src="/img/placeholder.jpg"
+                         th:src="@{/img/{img}(img=${solicitud.imagen})}"
+                         alt="Imagen de la solicitud"
+                         class="imagen-tarjeta lazy-load"
+                         loading="lazy">
+
+                    <!-- Información superpuesta sobre la imagen -->
+                    <div class="superposicion">
+                        <div class="contenedor-info">
+                            <p class="campo-fecha" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
+                            <p class="campo-estado" th:text="#{newRequest.status} + ': ' + ${solicitud.estado}">Estado</p>
                         </div>
-                    </form>
+                        <div class="contenedor-boton">
+                            <a class="boton-revisar" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -174,15 +208,6 @@
 </div>
 
 
-
-<!-- Barra Lateral / Aside -->
-<aside class="bg-light p-3">
-    <h4>Enlaces Rápidos</h4>
-    <ul>
-        <li><a href="#">Soporte</a></li>
-        <li><a href="#">Política de Privacidad</a></li>
-    </ul>
-</aside>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 

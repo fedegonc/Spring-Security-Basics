@@ -18,26 +18,46 @@
 <div th:fragment="navbar">
 
 
+    <!--
+Navbar Principal:
+Esta barra de navegación utiliza Bootstrap para crear una estructura responsiva y estética.
+Incluye:
+  - Logo
+  - Títulos dinámicos con Thymeleaf
+  - Menú desplegable de reciclaje y recursos
+  - Iconos de banderas para seleccionar idioma
+  - Botón de inicio de sesión
+-->
     <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
 
+            <!-- Logo de la barra de navegación -->
             <div id="logo" th:replace="~{fragments/logo}"></div>
 
-            <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
+            <!-- Título de la página con enlace al inicio -->
+            <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"></a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-
+            <!-- Botón hamburguesa: Visible en pantallas pequeñas para colapsar la navbar -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
+            <!-- Contenido de la navbar que se colapsa en pantallas pequeñas -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <!-- Espaciador para empujar los elementos del menú hacia la derecha -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
 
+                <!-- Menú de Navegación (Derecha) -->
                 <ul class="navbar-nav ms-auto">
+
+                    <!-- Menú desplegable de Reciclaje -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReciclaje" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReciclaje"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-recycle"></i> Reciclaje
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownReciclaje">
@@ -45,9 +65,11 @@
                             <li><a class="dropdown-item" th:href="@{/ambiental}">Educación Ambiental</a></li>
                         </ul>
                     </li>
+
+                    <!-- Menú desplegable de Recursos -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRecursos" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRecursos"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-info-circle"></i> Recursos
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownRecursos">
@@ -57,17 +79,23 @@
                             <li><a class="dropdown-item" th:href="@{/legislacion}">Legislación</a></li>
                         </ul>
                     </li>
-                    <!-- Banderas y Botón Login -->
+
+                    <!-- Banderas para cambiar idioma y botón de inicio de sesión -->
                     <div class="d-flex align-items-center" style="gap: 15px;">
-                        <!-- Banderas -->
+
+                        <!-- Banderas de selección de idioma -->
                         <a href="/login?language=es" class="nav-link p-0">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
+                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}"
+                                 alt="Uruguay" width="30" height="20"
+                                 style="object-fit: contain;">
                         </a>
                         <a href="/login?language=pt" class="nav-link p-0">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
+                            <img th:src="@{/img/{img}(img=${brasilImageName})}"
+                                 alt="Brasil" width="30" height="20"
+                                 style="object-fit: contain;">
                         </a>
 
-                        <!-- Botón Login -->
+                        <!-- Botón de Inicio de Sesión -->
                         <a th:href="@{/login}" class="btn btn-primary d-flex align-items-center">
                             <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar Sesión
                         </a>
@@ -76,10 +104,10 @@
             </div>
         </div>
     </nav>
-</div>
 
 
-<!-- Bootstrap JS -->
+
+    <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

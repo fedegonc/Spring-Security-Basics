@@ -1,9 +1,82 @@
-
+/* ================================
+   Estructura del cuerpo principal
+================================= */
 body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
+    height: 100%;               /* Asegura que el cuerpo ocupe toda la altura disponible */
+    margin: 0;                  /* Elimina los márgenes por defecto */
+    padding: 0;                 /* Elimina el padding por defecto */
+    display: flex;              /* Hace que el body se comporte como un contenedor flexible */
+    flex-direction: column;     /* Alinea los elementos del body en columna */
 }
 
+/* ================================
+   Estilos del Logo en la Navbar
+================================= */
+.navbar-logo {
+    color: #f0f6f3;            /* Texto de color gris claro para mejor legibilidad */
+    width: 3.2rem;             /* Tamaño responsivo del logo */
+    height: 3.2rem;
+    margin: 5px;               /* Espacio alrededor del logo */
+    padding: 5px;              /* Espacio interno del logo */
+}
+
+.navbar-logo:hover {
+    color: #0056b3;            /* Cambia a azul oscuro al pasar el ratón */
+}
+
+/* ================================
+   Media Queries para Responsividad
+================================= */
+
+/* Pantallas menores a 1200px */
+@media (max-width: 1200px) {
+    .navbar-logo {
+        width: 3.2rem;
+        height: 3.2rem;
+    }
+}
+
+/* Pantallas menores a 992px */
+@media (max-width: 992px) {
+    .navbar-logo {
+        width: 3.1rem;
+        height: 3.1rem;
+    }
+}
+
+/* Pantallas menores a 768px */
+@media (max-width: 768px) {
+    .navbar-logo {
+        width: 3.0rem;
+        height: 3.0rem;
+    }
+}
+
+/* Pantallas menores a 576px */
+@media (max-width: 576px) {
+    .navbar-logo {
+        width: 3.0rem;
+        height: 3.0rem;
+    }
+}
+
+/* Pantallas menores a 375px */
+@media (max-width: 375px) {
+    .navbar-logo {
+        width: 2.9rem;
+        height: 2.9rem;
+    }
+}
+
+/* ================================
+   Estilos del Footer Personalizado
+================================= */
+.custom-footer {
+    background-color: #333;     /* Fondo oscuro */
+    color: #fff;                /* Texto blanco para contraste */
+    text-align: center;         /* Alinea el contenido al centro */
+    padding: 20px 0;            /* Espacio superior e inferior */
+    width: 100%;                /* Asegura que ocupe el 100% del ancho */
+    bottom: 0;                  /* Se adhiere a la parte inferior */
+    position: sticky;           /* Mantiene el footer visible en el fondo de la pantalla */
+}
