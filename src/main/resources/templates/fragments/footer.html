@@ -10,19 +10,19 @@
             <!-- Enlace al Inicio (Breadcrumb) -->
             <ul class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
-                    <a href="#" th:text="#{breadcrumb.home}" class="text-white-50 text-decoration-none">Inicio</a>
+                    <a href="#"  class="text-white-50 text-decoration-none">Arriba</a>
                 </li>
             </ul>
 
             <!-- Información de la App -->
             <div class="text-center">
-                <p class="mb-0">Frontera de la Paz Sustentable Residuos Sólidos - v 0.5 pruebas </p>
+                <p class="mb-0">Proyecto FPS - v0.5 </p>
             </div>
 
             <!-- Botón de Soporte (Solo si el usuario está autenticado) -->
             <div th:if="${user != null}">
-                <a th:href="@{/report}" class="btn btn-outline-light btn-sm">
-                    Soporte
+                <a th:href="@{/user/report}" class="btn btn-outline-light btn-sm">
+                    Soporte y Ayuda
                 </a>
             </div>
         </div>
