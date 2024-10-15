@@ -1,216 +1,106 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Sitio Web</title>
+    <title>Reportar Problema</title>
 
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
     <link rel="stylesheet" href="/css/styles.css">
-
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.css">
 </head>
 
 <body>
-<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+<!-- Navbar -->
+<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-fluid">
-
         <div id="logo" th:replace="~{fragments/logo}"></div>
-
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
-
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Mi Sitio</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-
             <ul class="navbar-nav ms-auto">
-                <!-- Dropdown para Solicitudes y Contenidos -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdownSolicitudesContenidos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-plus-circle"></i> <span>Solicitudes y Contenidos</span>
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownUsuario" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person"></i> Usuario
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownSolicitudesContenidos">
-                        <li>
-                            <a class="dropdown-item" th:href="@{/user/newsolicitude}">
-                                <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" th:href="@{/user/view-requests}">
-                                <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" th:href="@{/user/viewarticles}">
-                                <i class="bi bi-book"></i> <span th:text="#{publicaciones}">Ver Publicaciones</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" th:href="@{/user/informaciones}">
-                                <i class="bi bi-book"></i> <span th:text="informaciones">Informaciones</span>
-                            </a>
-                        </li>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" th:href="@{/logout}">Salir</a></li>
                     </ul>
-                </li>
-
-                <!-- Dropdown para Usuario -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdownUsuario" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person"></i> <span>Usuario</span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownUsuario">
-
-                        <li>
-                            <a class="dropdown-item" th:href="@{/logout}">
-                                <i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="/user/dashboard?language=es" class="nav-link">
-                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" src="">
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/user/dashboard?language=pt" class="nav-link">
-                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" src="">
-                    </a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-
-
-
-<!-- Migas de Pan / Breadcrumb -->
+<!-- Breadcrumb -->
 <div class="container mt-3">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light shadow-sm rounded p-3">
-            <li class="breadcrumb-item active text-primary d-flex align-items-center gap-2" aria-current="page">
-                <i class="bi bi-house"></i>
-                <span th:text="#{breadcrumb.home}">Inicio</span>
+            <li class="breadcrumb-item">
+                <a th:href="@{/index}" class="text-decoration-none">
+                    <i class="bi bi-house"></i> Inicio
+                </a>
+            </li>
+            <li class="breadcrumb-item active text-primary" aria-current="page">
+                <i class="bi bi-exclamation-triangle"></i> Reportar Problema
             </li>
         </ol>
     </nav>
 </div>
 
-
-
-<!-- Mensajes de éxito o error -->
-<div th:if="${rerror}" class="alert alert-danger mt-3" role="alert" th:text="${rerror}"></div>
-<div th:if="${rexito}" class="alert alert-success mt-3" role="alert" th:text="${rexito}"></div>
-
-
+<!-- Introducción -->
 <div class="container mt-4">
-    <div id="info" >
-        <h4 class="alert-heading" th:text="'Bienvenida, ' + <!--/* [[${user.username}]] */--> 'Usuario' + '!'"></h4>
-        <p>Nos alegra que estés aquí, <!--<span th:text="${user.username}">Nombre del Usuario</span>-->. Aquí puedes encontrar un resumen de tus actividades recientes y acceder a las funciones más importantes de la aplicación.</p>
-        <hr>
-        <p class="mb-0">Para comenzar, te recomendamos que revises las últimas actualizaciones, explores las nuevas funcionalidades o realices una nueva solicitud. ¡Estamos aquí para ayudarte a aprovechar al máximo la plataforma!</p>
+    <div class="p-4 bg-white shadow-sm rounded">
+        <h4 class="text-center">Reportar Problema</h4>
+        <p class="text-muted text-center">
+            Si encuentras algún problema con el sistema, por favor repórtalo a continuación. Nuestro equipo lo revisará lo antes posible.
+        </p>
     </div>
 </div>
 
-
-
-<!-- Sección de métricas del sistema -->
-<section class="container mt-4">
-    <div id="info2" >
-        <div class="row">
-            <!-- Explicación de las métricas -->
-            <div class="col-12 mb-4">
-                <h4>Métricas del Sistema</h4>
-                <p>
-                    A continuación, te presentamos un resumen de las principales métricas del sistema. Estas estadísticas reflejan el rendimiento y la actividad del sistema en relación con las solicitudes de reciclaje, usuarios activos y el impacto en el reciclaje de materiales.
-                </p>
-            </div>
-
-            <!-- Tarjetas de métricas -->
-            <div class="metrica-contenedor-principal">
-                <div class="metrica-contenedor">
-                    <!-- Tarjeta 1: solicitudes activas -->
-                    <div class="metrica-item">
-                        <h3>Solicitudes Activas</h3>
-                        <p>15</p>
-                    </div>
-
-                    <!-- Tarjeta 2: Solicitudes aceptadas -->
-                    <div class="metrica-item">
-                        <h3>Solicitudes Aceptadas</h3>
-                        <p>4</p>
-                    </div>
-
-                    <!-- Tarjeta 3: solicitudes en proceso -->
-                    <div class="metrica-item">
-                        <h3>Solicitudes en Proceso</h3>
-                        <p>5</p>
-                    </div>
-
-                    <!-- Tarjeta 4: Recolecciones finalizadas -->
-                    <div class="metrica-item">
-                        <h3>Solicitudes en Finalizadas</h3>
-                        <p>10</p>
-                    </div>
-                </div>
-            </div>
+<!-- Formulario de Reporte -->
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="col-12 col-md-6 col-lg-4">
+        <div th:if="${param.error}">
+            <div class="alert alert-danger" th:text="${param.error}"></div>
         </div>
-    </div>
-</section>
-
-
-<!-- Otros componentes de navegación y layout omitidos para brevedad -->
-
-<div class="container mt-4">
-    <!-- Explicación de las métricas -->
-    <div id="info3" >
-        <div class="col-12 mb-4">
-            <h4>Solicitudes</h4>
-            <p>
-                A continuación, te presentamos un resumen de las principales métricas del sistema. Estas estadísticas reflejan el rendimiento y la actividad del sistema en relación con las solicitudes de reciclaje, usuarios activos y el impacto en el reciclaje de materiales.
-            </p>
+        <div th:if="${param.exito}">
+            <div class="alert alert-success" th:text="${param.exito}"></div>
         </div>
-    </div>
-    <div id="tarjeta-contenedor" class="contenedor-principal">
-        <div th:each="solicitud : ${solicitude}">
-            <div class="tarjeta-personalizada">
-                <!-- Contenedor de la imagen -->
-                <div class="contenedor-imagen">
-                    <!-- Placeholder para la imagen antes de que cargue -->
-                    <img src="/img/placeholder.jpg"
-                         th:src="@{/img/{img}(img=${solicitud.imagen})}"
-                         alt="Imagen de la solicitud"
-                         class="imagen-tarjeta lazy-load"
-                         loading="lazy">
-
-                    <!-- Información superpuesta sobre la imagen -->
-                    <div class="superposicion">
-                        <div class="contenedor-info">
-                            <p class="campo-fecha" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
-                            <p class="campo-estado" th:text="#{newRequest.status} + ': ' + ${solicitud.estado}">Estado</p>
-                        </div>
-                        <div class="contenedor-boton">
-                            <a class="boton-revisar" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
-                        </div>
+        <div class="card shadow-sm">
+            <div class="card-body p-5">
+                <h4 class="card-title text-center mb-4">
+                    <i class="bi bi-exclamation-triangle"></i> Formulario de Reporte
+                </h4>
+                <form th:action="@{/report}" method="post">
+                    <div class="mb-3">
+                        <label for="problema" class="form-label">Problema</label>
+                        <input type="text" id="problema" name="problema" class="form-control" placeholder="Describe el problema" required>
                     </div>
-                </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" class="form-control" rows="3" placeholder="Proporcione detalles adicionales"></textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-exclamation-triangle"></i> Enviar Reporte
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-
-
+<!-- Footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
