@@ -88,46 +88,91 @@
 </main>
 
 
-<!-- Contenido Principal / Main -->
-<main class="container my-5">
-    <section>
-        <h2>Bienvenido a Nuestro Sitio</h2>
-        <p>Aquí encontrarás toda la información sobre nuestros servicios.</p>
-    </section>
+<!-- Migas de pan -->
+<div class="container mt-1" >
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb" id="breadcrumb">
+            <li class="breadcrumb-item">
+                <i class="bi bi-house"></i>
+                <a th:href="@{/index}" th:text="#{breadcrumb.home}">
+                    Inicio
+                </a>
+            </li>
+            <!-- Elemento activo de las migas de pan -->
+            <li class="breadcrumb-item active" aria-current="page">
+                <i class="bi bi-person-circle"></i>
+                <span th:text="#{breadcrumb.login}">
+                        Login
+                </span>
+            </li>
+        </ol>
+    </nav>
+</div>
 
-    <article>
-        <h3>Últimas Noticias</h3>
-        <p>¡Conoce nuestras novedades más recientes!</p>
-    </article>
-</main>
+<!-- Contenido principal -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <!-- Manejo de errores y mensajes de éxito -->
+            <div th:if="${param.error}">
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span th:text="#{error.login}">Email o Contraseña Incorrectos.</span>
+                </div>
+            </div>
+            <div th:if="${param.logout}">
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span th:text="#{success.logout}">Sesión Finalizada con Éxito.</span>
+                </div>
+            </div>
 
+            <div class="custom-card">
+                <div class="custom-card-header">
+                    <!-- Título del formulario -->
+                    <h4 th:text="#{login.form.title}">
+                        <i class="bi bi-box-arrow-in-right"></i> Formulario de Inicio de Sesión
+                    </h4>
+                </div>
+                <div class="custom-card-body">
+                    <form method="post" th:action="@{/login}" class="form-horizontal" role="form">
+                        <!-- Campo de nombre de usuario -->
+                        <div class="mb-3">
+                            <i class="bi bi-person-check-fill"></i>
+                            <label for="username" th:text="#{login.form.username}">
+                                Nombre de Usuario *
+                            </label>
+                            <input type="text" id="username" name="username" class="custom-input" placeholder="Nombre de Usuario" />
+                        </div>
 
-<!-- Contenido Principal / Main -->
-<main class="container my-5">
-    <section>
-        <h2>Bienvenido a Nuestro Sitio</h2>
-        <p>Aquí encontrarás toda la información sobre nuestros servicios.</p>
-    </section>
+                        <!-- Campo de contraseña -->
+                        <div class="mb-3">
+                            <i class="bi bi-lock-fill"></i>
+                            <label for="password" th:text="#{login.form.password}">
+                                Contraseña *
+                            </label>
+                            <input type="password" id="password" name="password" class="custom-input" placeholder="Contraseña" />
+                        </div>
 
-    <article>
-        <h3>Últimas Noticias</h3>
-        <p>¡Conoce nuestras novedades más recientes!</p>
-    </article>
-</main>
+                        <!-- Botón de enviar -->
+                        <div class="mb-3">
+                            <button type="submit" class="custom-button">
+                                <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                            </button>
+                            <!-- Enlace para registrarse -->
+                            <span th:text="#{login.form.register.text}">
+                                ¿No tienes una cuenta?
+                            </span>
+                            <i class="bi bi-person-plus-fill"></i>
+                            <a th:href="@{/register}" th:text="#{login.form.register.link}">Regístrate aquí</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-<!-- Contenido Principal / Main -->
-<main class="container my-5">
-    <section>
-        <h2>Bienvenido a Nuestro Sitio</h2>
-        <p>Aquí encontrarás toda la información sobre nuestros servicios.</p>
-    </section>
-
-    <article>
-        <h3>Últimas Noticias</h3>
-        <p>¡Conoce nuestras novedades más recientes!</p>
-    </article>
-</main>
 
 
 <!-- Barra Lateral / Aside -->
