@@ -161,7 +161,7 @@ public class GuestController {
     @GetMapping("/construction")
     public ModelAndView contruction() {
         ModelAndView mv = new ModelAndView("user/construction");
-
+        imageService.addFlagImages(mv);
         return mv;
     }
 
