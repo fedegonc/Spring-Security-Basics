@@ -7,6 +7,7 @@ body {
     padding: 0;                 /* Elimina el padding por defecto */
     display: flex;              /* Hace que el body se comporte como un contenedor flexible */
     flex-direction: column;     /* Alinea los elementos del body en columna */
+    font-family: 'Nunito', sans-serif;  /* Aplica la fuente Nunito */
 }
 
 /* ================================
