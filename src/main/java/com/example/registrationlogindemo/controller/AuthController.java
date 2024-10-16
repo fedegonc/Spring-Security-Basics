@@ -4,6 +4,7 @@ import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.Image;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ImageRepository;
+import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -28,13 +29,18 @@ public class AuthController {
     @Autowired
     ImageRepository imageRepository;
 
+    @Autowired
+    ImageService imageService;
+
     public AuthController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/error")
     public ModelAndView Error() {
-        return new ModelAndView("error");
+        ModelAndView mv = new ModelAndView("error");
+        imageService.addFlagImages(mv);
+        return mv;
     }
 
     @GetMapping("/register")
