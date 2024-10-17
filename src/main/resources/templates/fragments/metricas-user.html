@@ -8,11 +8,17 @@
 <body>
 
 <div th:fragment="metricas-user">
-    <section class="container my-5">
-        <h2 class="text-center mb-4">Estado de las Métricas</h2>
-        <p class="text-center">Aquí puedes ver un resumen de las métricas actuales del sistema.</p>
+    <section class="container my-2">
+        <div class="p-4 bg-white shadow-sm rounded"> <!-- Alineado a la derecha -->
+            <h5 class="text-start mb-4">Estado de las Métricas</h5>
+                <p class="text-start">
+                    A continuación, se muestran las solicitudes activas junto con su fecha y estado. Haz clic en "Revisar" para ver más detalles o editar la solicitud.
+                </p>
+        </div>
 
-        <div class="row g-3">
+
+
+        <div class="row g-3 my-2">
             <div class="col-6 col-md-2">
                 <div class="card text-center shadow-sm" style="font-size: 0.9rem;">
                     <div class="card-body">

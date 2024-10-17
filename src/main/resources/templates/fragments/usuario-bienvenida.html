@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenida del Usuario</title>
+</head>
+<body>
+
+<div th:fragment="usuario-bienvenida">
+    <div class="container mt-4">
+        <div class="p-4 bg-white shadow-sm rounded">
+            <h4 class="text-start mb-4" th:text="'Hola, ' + ${username} + '.'"></h4>
+            <p class="text-start">
+                Puedes revisar tus actividades recientes o realizar una nueva solicitud.
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

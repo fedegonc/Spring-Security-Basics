@@ -16,58 +16,7 @@
 <body class="bg-light">
 
 <!-- Navbar -->
-<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-    <div class="container-fluid">
-        <div id="logo" th:replace="~{fragments/logo}"></div>
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Mi Sitio</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdownSolicitudesContenidos"
-                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-plus-circle"></i> Solicitudes y Contenidos
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">Nueva Solicitud</a></li>
-                        <li><a class="dropdown-item" th:href="@{/user/view-requests}">Ver Historial</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdownUsuario" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person"></i> Usuario
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" th:href="@{/logout}">Salir</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/user/profile/{id}(id=${user.id})}">
-                        <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" class="rounded-circle" width="30" height="30">
-                        <span th:text="${user.username}">Usuario</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<!-- Breadcrumb -->
-<div class="container mt-3">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white shadow-sm rounded p-3">
-            <li class="breadcrumb-item active text-primary" aria-current="page">
-                <i class="bi bi-house"></i> Inicio
-            </li>
-        </ol>
-    </nav>
-</div>
+<div th:replace="~{fragments/navbar-user :: navbar-user}"></div>
 
 <!-- Mensajes -->
 <div class="container mt-3">
@@ -75,15 +24,23 @@
     <div th:if="${rexito}" class="alert alert-success" role="alert" th:text="${rexito}"></div>
 </div>
 
+<!-- Breadcrumb -->
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-3">
+            <li class="breadcrumb-item active text-primary" aria-current="page">
+                <i class="bi bi-house"></i> Inicio
+            </li>
+        </ol>
+    </nav>
+</div>
 
+<div th:replace="~{fragments/usuario-bienvenida :: usuario-bienvenida}"></div>
 
 <div th:replace="~{fragments/metricas-user :: metricas-user}"></div>
 
-
 <div th:replace="~{fragments/solicitudes-tarjetas :: solicitudes-tarjetas}"></div>
 
-
-<!-- Footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <!-- Bootstrap JS -->
