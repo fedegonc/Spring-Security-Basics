@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métricas</title>
+</head>
+<body>
+
+<div th:fragment="metricas-user">
+    <section class="container my-5">
+        <h2 class="text-center mb-4">Estado de las Métricas</h2>
+        <p class="text-center">Aquí puedes ver un resumen de las métricas actuales del sistema.</p>
+
+        <div class="row g-3">
+            <div class="col-6 col-md-2">
+                <div class="card text-center shadow-sm" style="font-size: 0.9rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Activas</h5>
+                        <p class="card-text">15</p>
+                        <p class="text-muted">85%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="card text-center shadow-sm" style="font-size: 0.9rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Aceptadas</h5>
+                        <p class="card-text">4</p>
+                        <p class="text-muted">22%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="card text-center shadow-sm" style="font-size: 0.9rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Rechazadas</h5>
+                        <p class="card-text">2</p>
+                        <p class="text-muted">11%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="card text-center shadow-sm" style="font-size: 0.9rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">En Proceso</h5>
+                        <p class="card-text">7</p>
+                        <p class="text-muted">40%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2">
+                <div class="card text-center shadow-sm" style="font-size: 0.9rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Completadas</h5>
+                        <p class="card-text">10</p>
+                        <p class="text-muted">58%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

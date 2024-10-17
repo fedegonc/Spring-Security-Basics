@@ -75,35 +75,10 @@
     <div th:if="${rexito}" class="alert alert-success" role="alert" th:text="${rexito}"></div>
 </div>
 
-<!-- Información del Usuario -->
-<div class="container mt-4">
-    <div class="p-4 bg-white shadow-sm rounded">
-        <h4 >Bienvenida, Usuario!</h4>
-        <p>Nos alegra que estés aquí. Revisa tus actividades recientes o realiza una nueva solicitud.</p>
-    </div>
-</div>
 
-<!-- Métricas -->
-<section class="container mt-4">
-    <div class="row g-3">
-        <div class="col-6 col-md-3">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Activas</h5>
-                    <p class="card-text">15</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Aceptadas</h5>
-                    <p class="card-text">4</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
+<div th:replace="~{fragments/metricas-user :: metricas-user}"></div>
+
 
 <div th:replace="~{fragments/solicitudes-tarjetas :: solicitudes-tarjetas}"></div>
 
