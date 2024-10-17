@@ -86,30 +86,8 @@
     </nav>
 </div>
 
-<!-- Introducción -->
-<div class="container mt-4">
-    <div class="p-4 bg-white shadow-sm rounded">
-        <h4 class="text-center">Reportar Problema</h4>
-        <p class="text-muted text-center">
-            Si encuentras algún problema con el sistema, por favor repórtalo a continuación. Nuestro equipo lo revisará lo antes posible.
-        </p>
-    </div>
-</div>
+<div th:replace="~{fragments/publicaciones :: publicaciones}"></div>
 
-<div class="row row-cols-1 row-cols-md-3 g-3">
-    <!-- Tarjetas dinámicas -->
-    <div class="col" th:each="material: ${materiales}">
-        <div class="card h-100">
-            <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="card-img-top" alt="Imagen de la artículo">
-            <div class="card-body">
-                <h5 class="card-title" th:text="${article.titulo}">Título del artículo</h5>
-            </div>
-            <div class="card-footer">
-                <a class="btn btn-primary" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 

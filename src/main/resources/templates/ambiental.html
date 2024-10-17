@@ -88,28 +88,8 @@
 </div>
 
 <!-- Introducción -->
-<div class="container mt-4">
-    <div class="p-4 bg-white shadow-sm rounded">
-        <h4 class="text-center">Reportar Problema</h4>
-        <p class="text-muted text-center">
-            Si encuentras algún problema con el sistema, por favor repórtalo a continuación. Nuestro equipo lo revisará lo antes posible.
-        </p>
-    </div>
-</div>
+<div th:replace="~{fragments/publicaciones :: publicaciones}"></div>
 
-<!-- Contenedor principal con ancho máximo -->
-<div class="container">
-    <div class="articles-grid">
-        <!-- Tarjetas dinámicas -->
-        <div class="article-card" th:each="article: ${articles}">
-            <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="article-image" alt="Imagen del artículo">
-            <div class="article-content">
-                <h5 class="article-title" th:text="${article.titulo}">Título del artículo</h5>
-                <a class="article-button" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 

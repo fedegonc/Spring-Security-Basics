@@ -2,20 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="publicaciones">
-  <div class="pub-container">
-    <div class="pub-header">
-      <h4 th:text="#{publicaciones}">Publicaciones</h4>
+  <div class="container">
+
+    <!-- Información del Usuario -->
+    <div class="row">
+      <div class="p-4 bg-white shadow-sm rounded">
+        <h4 class="fw-bold text-start" th:text="#{publicaciones}">Publicaciones</h4>
+        <p>Contenido sobre los artículos y publicaciones.</p>
+      </div>
     </div>
 
-    <div class="pub-grid">
+    <!-- Flexbox de Tarjetas -->
+    <div class="d-flex flex-wrap gap-4 justify-content-start">
       <!-- Tarjetas dinámicas -->
-      <div class="pub-card" th:each="article: ${articles}">
-        <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="pub-img" alt="Imagen del artículo">
-        <div class="pub-body">
-          <h5 class="pub-title" th:text="${article.titulo}">Título del artículo</h5>
-        </div>
-        <div class="pub-footer">
-          <a class="pub-btn" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
+      <div class="card flex-grow-1" style="max-width: 300px;" th:each="article: ${articles}">
+        <!-- Imagen del Artículo -->
+        <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="card-img-top img-fluid rounded" alt="Imagen del artículo" style="object-fit: cover; height: 200px;">
+
+        <!-- Cuerpo del Artículo -->
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title bg-primary text-white p-2 mb-3" th:text="${article.titulo}">Título del artículo</h5>
+          <p class="card-text">Descripción breve del artículo.</p>
+          <a class="btn btn-outline-primary mt-auto" th:href="@{/article/viewarticle/{id}(id=${article.id})}">
+            Leer más <i class="bi bi-box-arrow-right"></i>
+          </a>
         </div>
       </div>
     </div>

@@ -143,6 +143,9 @@ public class GuestController {
     public ModelAndView contruction() {
         ModelAndView mv = new ModelAndView("user/construction");
         imageService.addFlagImages(mv);
+        Article.Categoria categoriaGenerica = Article.Categoria.valueOf("GENERICO");
+        List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
+        mv.addObject("articles", articles);
         return mv;
     }
 
