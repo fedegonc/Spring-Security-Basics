@@ -28,19 +28,17 @@
             </ul>
 
             <!-- Botón de Soporte (Solo si el usuario está autenticado) con icono de Bootstrap -->
-            <ul class="breadcrumb mb-0">
+            <ul class="breadcrumb mb-0" th:if="${user != null}">
                 <p class="mb-0">
                     <li class="breadcrumb-item">
                         <a th:href="@{/user/report}" class="btn btn-outline-light btn-sm">
-                            <i class="bi bi-arrow-up-circle"></i> Arriba
+                            <i class="bi bi-arrow-up-circle"></i> Soporte y Ayuda
                         </a>
                     </li>
                 </p>
             </ul>
-
         </div>
     </footer>
-
 </div>
 </body>
 </html>

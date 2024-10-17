@@ -1,181 +1,118 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="#{index.title}">Frontera Sustentable</title>
-    <link rel="icon" href="/img/logov4.ico">
+    <title>Reportar Problema</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.css">
 </head>
+
 <body>
 <!-- Navbar -->
-<nav id="mainNavbar" th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <img src="/img/logov4.png" alt="logo" id="navbarLogo" width="50" height="50">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="true" aria-label="Toggle navigation">
+
+        <div id="logo" th:replace="~{fragments/logo}"></div>
+
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown language-dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span th:text="#{label.chooseLang}"></span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/report?language=pt" th:text="#{label.lang.pt}">Português</a></li>
-                        <li><a class="dropdown-item" href="/report?language=es" th:text="#{label.lang.es}">Español</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <div class="d-flex">
-            <img src="/img/logov4.png" alt="logo" width="50" height="50">
-            <a class="navbar-brand ms-2" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
-        </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-
-                <!-- Menú desplegable -->
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Menú
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReciclaje" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-recycle"></i> Reciclaje
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="menuDropdown">
-                        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}" th:text="#{solicitud}">Solicitar Recolección</a></li>
-                        <li><a class="dropdown-item" th:href="@{/user/viewarticles}" th:text="#{publicaciones}">Ver Publicaciones</a></li>
-                        <li><a class="dropdown-item" th:href="@{/user/profile/{id}(id=${user.id})}">Ver Perfil</a></li>
-                        <li><a class="dropdown-item" th:href="@{/logout}"><i class="bi bi-door-open"></i> <span th:text="#{salir}">Salir</span></a></li>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownReciclaje">
+                        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">Nueva Solicitud</a></li>
+                        <li><a class="dropdown-item" th:href="@{/ambiental}">Educación Ambiental</a></li>
                     </ul>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRecursos" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-info-circle"></i> Recursos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownRecursos">
+                        <li><a class="dropdown-item" th:href="@{/noticias}">Noticias</a></li>
+                        <li><a class="dropdown-item" th:href="@{/materiales}">Materiales</a></li>
+                        <li><a class="dropdown-item" th:href="@{/alianzas}">Alianzas</a></li>
+                        <li><a class="dropdown-item" th:href="@{/legislacion}">Legislación</a></li>
+                    </ul>
+                </li>
+                <!-- Banderas y Botón Login -->
+                <div class="d-flex align-items-center" style="gap: 15px;">
+                    <!-- Banderas -->
+                    <a href="/login?language=es" class="nav-link p-0">
+                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
+                    </a>
+                    <a href="/login?language=pt" class="nav-link p-0">
+                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
+                    </a>
 
-                <!-- Selección de idioma -->
-                <li class="nav-item">
-                    <a href="/index?language=es" class="nav-link">
-                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/index?language=pt" class="nav-link">
-                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
-                    </a>
-                </li>
 
-                <!-- Perfil del usuario -->
-                <li class="nav-item d-flex align-items-center">
-                    <a th:href="@{/user/profile/{id}(id=${user.id})}" class="nav-link" style="display: flex; align-items: center; ">
-                        <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
-                        <span th:text="${user.username}">Nombre de Usuario</span>
-                    </a>
-                </li>
+                </div>
             </ul>
         </div>
     </div>
 </nav>
-<!-- Estilos de Bootstrap 5 (integridad y cross-origin asegurados para la seguridad) -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-      crossorigin="anonymous">
 
-<!-- jQuery y Bootstrap JS para mejorar la compatibilidad de las interacciones -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Breadcrumb -->
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-3">
+            <li class="breadcrumb-item">
+                <a th:href="@{/index}" class="text-decoration-none">
+                    <i class="bi bi-house"></i> Inicio
+                </a>
+            </li>
+            <li class="breadcrumb-item active text-primary" aria-current="page">
+                <i class="bi bi-exclamation-triangle"></i> Reportar Problema
+            </li>
+        </ol>
+    </nav>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
-<!-- Fuentes personalizadas de Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
-
-
-
-<!-- Fragmento del breadcrumb -->
-<div th:fragment="breadcrumb">
-    <div class="container mt-1">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-light">
-                <li class="breadcrumb-item"><a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a></li>
-                <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.report}">Reportar problema</li>
-            </ol>
-        </nav>
+<!-- Introducción -->
+<div class="container mt-4">
+    <div class="p-4 bg-white shadow-sm rounded">
+        <h4 class="text-center">Reportar Problema</h4>
+        <p class="text-muted text-center">
+            Si encuentras algún problema con el sistema, por favor repórtalo a continuación. Nuestro equipo lo revisará lo antes posible.
+        </p>
     </div>
 </div>
 
-<!-- Contenido dinámico, que será reemplazado -->
-<div class="container">
-    <div th:fragment="content">
-        <!-- El contenido de las páginas individuales irá aquí -->
+<div class="row row-cols-1 row-cols-md-3 g-3">
+    <!-- Tarjetas dinámicas -->
+    <div class="col" th:each="material: ${materiales}">
+        <div class="card h-100">
+            <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="card-img-top" alt="Imagen de la artículo">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${article.titulo}">Título del artículo</h5>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-primary" th:href="@{/article/viewarticle/{id}(id=${article.id})}">Leer</a>
+            </div>
+        </div>
     </div>
 </div>
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
 
-<form class="d-flex" role="search">
-    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success" type="submit">Search</button>
-</form>
-
-
-<!-- Fragmento del footer -->
-<footer th:fragment="footer" class="footer mt-auto py-3 bg-dark text-white">
-    <div class="container text-right">
-        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
-        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2 float-right" th:text="#{volver}">Volver atrás</button>
-    </div>
-</footer>
-
-<footer class="footer mt-auto py-3 bg-dark text-white">
-    <div class="container text-right">
-        <span class="text-muted" th:text="#{footer.copy}">&copy; 2024 Frontera Sustentable. Todos los derechos reservados.</span>
-        <a class="nav-link" th:href="@{/report}">Reportar problema</a>
-        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm mx-2
-        float-right" th:text="#{volver}">Volver atrás</button>    </div>
-</footer>
-
-<script src="/scripts/guestScript.js">
-
-
-    function openNav() {
-        document.getElementById("mySidenav").style.left = "0";
-        document.getElementById("mySidenav").classList.add('open'); // Añade clase 'open'
-    }
-
-    function closeNav() {
-        document.getElementById("mySidenav").style.left = "-250px";
-        document.getElementById("mySidenav").classList.remove('open'); // Quita clase 'open'
-    }
-
-    // Event listener para el botón
-    document.getElementById("sidenavToggleNav").addEventListener("click", function () {
-        const sidenav = document.getElementById("mySidenav");
-        if (sidenav.classList.contains('open')) {
-            closeNav();
-        } else {
-            openNav();
-        }
-    });
-</script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

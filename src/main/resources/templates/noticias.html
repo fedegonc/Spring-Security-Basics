@@ -1,52 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sostenibilidad</title>
-    <link rel="icon" href="">
-
-    <!-- Link al archivo CSS externo -->
-    <link rel="stylesheet" href="/css/userNavbar.css">
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/banner.css">
-    <link rel="stylesheet" href="/css/maps.css">
-    <link rel="stylesheet" href="/css/links.css">
-    <link rel="stylesheet" href="/css/toggle-button.css">
-    <link rel="stylesheet" href="/css/responsive.css">
-    <link rel="stylesheet" href="/css/tarjetas.css">
-    <link rel="stylesheet" href="/css/cards.css">
-    <link rel="stylesheet" href="/css/breadcrumb.css">
-    <link rel="stylesheet" href="/css/metricas.css">
-    <link rel="stylesheet" href="/css/alert-info.css">
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/logo.css">
-    <link rel="stylesheet" href="/css/footer.css">
-
+    <title>Reportar Problema</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.css">
 </head>
+
 <body>
-
-<!-- Barra de navegación superior -->
-
+<!-- Navbar -->
 <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
 
-        <div th:replace="~{fragments/logo}"></div>
+        <div id="logo" th:replace="~{fragments/logo}"></div>
 
         <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"> </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -54,52 +30,70 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
 
             <ul class="navbar-nav ms-auto">
-                <div class="d-flex align-items-center">
-                    <li class="nav-item">
-                        <a href="/noticias?language=es" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/noticias?language=pt" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
-                        </a>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReciclaje" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-recycle"></i> Reciclaje
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownReciclaje">
+                        <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">Nueva Solicitud</a></li>
+                        <li><a class="dropdown-item" th:href="@{/ambiental}">Educación Ambiental</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRecursos" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-info-circle"></i> Recursos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownRecursos">
+                        <li><a class="dropdown-item" th:href="@{/noticias}">Noticias</a></li>
+                        <li><a class="dropdown-item" th:href="@{/materiales}">Materiales</a></li>
+                        <li><a class="dropdown-item" th:href="@{/alianzas}">Alianzas</a></li>
+                        <li><a class="dropdown-item" th:href="@{/legislacion}">Legislación</a></li>
+                    </ul>
+                </li>
+                <!-- Banderas y Botón Login -->
+                <div class="d-flex align-items-center" style="gap: 15px;">
+                    <!-- Banderas -->
+                    <a href="/login?language=es" class="nav-link p-0">
+                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
+                    </a>
+                    <a href="/login?language=pt" class="nav-link p-0">
+                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
+                    </a>
+
+
                 </div>
             </ul>
         </div>
     </div>
-
 </nav>
 
-<!-- Sidebar -->
-<div id="mySidenav" class="sidenav">
-    <a href="/admin/images">Imágenes del Sistema</a>
-    <a href="/admin/users">Usuarios</a>
-    <a href="/admin/solicitudes">Solicitudes</a>
-    <a href="/admin/articles">Artículos</a>
-    <a href="/admin/reports">Reportes</a>
-    <a href="/admin/roles">Roles</a>
-</div>
-
-<!-- Botón de apertura/cierre del sidebar -->
-<button id="sidenavToggleNav"></button>
-
-<!-- Migas de pan -->
-<div class="container mt-1">
+<!-- Breadcrumb -->
+<div class="container mt-3">
     <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-light">
-            <!-- Elemento de inicio de las migas de pan -->
+        <ol class="breadcrumb bg-light shadow-sm rounded p-3">
             <li class="breadcrumb-item">
-                <i class="bi bi-house"></i>
-                <a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a>
+                <a th:href="@{/index}" class="text-decoration-none">
+                    <i class="bi bi-house"></i> Inicio
+                </a>
             </li>
-            <!-- Elemento activo de las migas de pan -->
-            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
+            <li class="breadcrumb-item active text-primary" aria-current="page">
+                <i class="bi bi-exclamation-triangle"></i> Reportar Problema
+            </li>
         </ol>
     </nav>
 </div>
 
+<!-- Introducción -->
+<div class="container mt-4">
+    <div class="p-4 bg-white shadow-sm rounded">
+        <h4 class="text-center">Reportar Problema</h4>
+        <p class="text-muted text-center">
+            Si encuentras algún problema con el sistema, por favor repórtalo a continuación. Nuestro equipo lo revisará lo antes posible.
+        </p>
+    </div>
+</div>
 
 <div class="row row-cols-1 row-cols-md-3 g-3">
     <!-- Tarjetas dinámicas -->
@@ -115,15 +109,10 @@
         </div>
     </div>
 </div>
-
+<!-- Footer -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 
-<!-- Scripts externos -->
-<script src="/scripts/guestScript.js"></script>
-<script src="/scripts/userScript.js"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
