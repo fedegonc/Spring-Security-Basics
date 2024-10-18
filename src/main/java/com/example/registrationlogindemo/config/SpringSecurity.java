@@ -44,7 +44,7 @@ public class SpringSecurity {
                                         "/imagem/**", "/static/css/**", "/css/**","/favicon.*",
                                         "/error","/gracias","/article/**","/img/**","/construction"
                                         ,"/sostenibilidad","/scripts/**","/ambiental","/noticias"
-                                        ,"/materiales","/legislacion","/alianzas","/base"
+                                        ,"/materiales","/legislacion","/alianzas","/base","/error"
                                                 ).permitAll()
                                 .requestMatchers("/report/**","/img/**"
 

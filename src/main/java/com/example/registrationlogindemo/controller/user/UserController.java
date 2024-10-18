@@ -51,6 +51,8 @@ public class UserController {
     ImageService imageService;
 
 
+
+
     // Constructor que inyecta el servicio UserService
     public UserController(UserService userService) {
         this.userService = userService;
@@ -79,13 +81,7 @@ public class UserController {
             List<Solicitude> solicitude = solicitudeRepository.findByUser(usuario);
             mv.addObject("solicitude", solicitude);
 
-            // Buscar las imágenes en la base de datos
-            Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
-            Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
-
-            // Agregar imágenes de idioma al modelo usando el servicio
-            imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
-            imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
+            imageService.addFlagImages(mv);
         }
 
         // Establecer la vista
@@ -121,7 +117,7 @@ public class UserController {
             imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
             imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
         }
-
+        imageService.addFlagImages(mv);
         return mv;
     }
 
@@ -198,6 +194,7 @@ public class UserController {
     public ModelAndView showConstructionPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("user/construction"); // Nombre de la vista
+        imageService.addFlagImages(modelAndView);
         // Aquí puedes agregar atributos al modelo si lo necesitas
         return modelAndView;
     }
@@ -265,7 +262,7 @@ public class UserController {
 
         // Establecer la vista
         mv.setViewName("user/viewarticles");
-
+        imageService.addFlagImages(mv);
         return mv;
     }
     @GetMapping("/informaciones")
@@ -298,7 +295,9 @@ public class UserController {
     @GetMapping("/contacto")
     public ModelAndView contacto() {
         ModelAndView mv = new ModelAndView("user/noticias");
+        imageService.addFlagImages(mv);
         return mv;
+
     }
 
     @GetMapping("/report")
@@ -315,7 +314,7 @@ public class UserController {
             // Obtener el usuario de la base de datos
             User usuario = userRepository.findByUsername(username);
             mv.addObject("user", usuario);
-
+            imageService.addFlagImages(mv);
         }
         return mv;
     }

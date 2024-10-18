@@ -7,6 +7,7 @@ import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.MessageRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.MessageService;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
@@ -54,6 +55,9 @@ public class SolicitudeController {
     private SolicitudeService solicitudeService;
 
 
+    @Autowired
+    ImageService imageService;
+
 
 
     // Constructor que inyecta el servicio UserService
@@ -77,6 +81,8 @@ public class SolicitudeController {
             User usuario = userRepository.findByUsername(username);
             mv.addObject("user", usuario);
         }
+        imageService.addFlagImages(mv);
+
         return mv;
     }
 
@@ -146,6 +152,8 @@ public class SolicitudeController {
             User usuario = userRepository.findByUsername(username);
             mv.addObject("user", usuario);
         }
+        imageService.addFlagImages(mv);
+
 
         return mv;
     }
@@ -199,6 +207,7 @@ public class SolicitudeController {
             msg.addFlashAttribute("error", "No se encontró la solicitud a editar.");
             mv.setViewName("redirect:/user/welcome");
         }
+        imageService.addFlagImages(mv);
 
         return mv;
     }
@@ -246,6 +255,7 @@ public class SolicitudeController {
     public String deleteSolicitude(@PathVariable("id") long id) {
         solicitudeRepository.deleteSolicitudeById(id);
         return "redirect:/user/welcome";
+
     }
 
 
