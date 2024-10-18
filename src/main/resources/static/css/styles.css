@@ -2,11 +2,6 @@
    Estructura del cuerpo principal
 ================================= */
 body {
-    height: 100%;               /* Asegura que el cuerpo ocupe toda la altura disponible */
-    margin: 0;                  /* Elimina los márgenes por defecto */
-    padding: 0;                 /* Elimina el padding por defecto */
-    display: flex;              /* Hace que el body se comporte como un contenedor flexible */
-    flex-direction: column;     /* Alinea los elementos del body en columna */
     font-family: 'Nunito', sans-serif;  /* Aplica la fuente Nunito */
 }
 
@@ -69,15 +64,3 @@ body {
     }
 }
 
-/* ================================
-   Estilos del Footer Personalizado
-================================= */
-.custom-footer {
-    background-color: #333;     /* Fondo oscuro */
-    color: #fff;                /* Texto blanco para contraste */
-    text-align: center;         /* Alinea el contenido al centro */
-    padding: 20px 0;            /* Espacio superior e inferior */
-    width: 100%;                /* Asegura que ocupe el 100% del ancho */
-    bottom: 0;                  /* Se adhiere a la parte inferior */
-    position: sticky;           /* Mantiene el footer visible en el fondo de la pantalla */
-}
