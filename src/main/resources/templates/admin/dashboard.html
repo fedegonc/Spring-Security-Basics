@@ -18,13 +18,48 @@
 <!-- Barra de navegación superior -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <div class="logo-container">
-            <img src="/img/logov4.png" alt="logo">
-            <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
+        <!-- Logo y Título del sitio -->
+        <div class="d-flex align-items-center">
+            <div id="logo" th:replace="~{fragments/logo}"></div>
+            <a class="navbar-brand ms-2" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
         </div>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-            <ul class="navbar-nav ml-auto">
+
+        <!-- Botón para colapsar la barra de navegación en pantallas pequeñas -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAdmin" aria-controls="navbarAdmin" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Contenido colapsable de la barra de navegación -->
+        <div class="collapse navbar-collapse" id="navbarAdmin">
+            <!-- Enlaces del lado izquierdo -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <!-- Dropdown para Gestión del Sistema -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Gestión del Sistema
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="adminDropdown1">
+                        <li><a class="dropdown-item" href="/admin/images">Imágenes del Sistema</a></li>
+                        <li><a class="dropdown-item" href="/admin/users">Usuarios</a></li>
+                        <li><a class="dropdown-item" href="/admin/roles">Roles</a></li>
+                    </ul>
+                </li>
+
+                <!-- Dropdown para Gestión de Contenidos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Gestión de Contenidos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="adminDropdown2">
+                        <li><a class="dropdown-item" href="/admin/solicitudes">Solicitudes</a></li>
+                        <li><a class="dropdown-item" href="/admin/articles">Ver Todos los Artículos</a></li>
+                        <li><a class="dropdown-item" href="/admin/reports">Reportes</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Enlaces del lado derecho -->
+            <ul class="navbar-nav ms-auto">
                 <!-- Selección de idioma -->
                 <li class="nav-item">
                     <a href="/index?language=es" class="nav-link">
@@ -36,26 +71,16 @@
                         <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
                     </a>
                 </li>
+
+                <!-- Enlace para cerrar sesión -->
                 <li class="nav-item">
-                    <a class="navbar-brand" th:href="@{/logout}" th:text="#{salir}">Salir</a>
+                    <a class="nav-link" th:href="@{/logout}" th:text="#{salir}">Salir</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<!-- Sidebar -->
-<div id="mySidenav" class="sidenav">
-    <a href="/admin/images">Imágenes del Sistema</a>
-    <a href="/admin/users">Usuarios</a>
-    <a href="/admin/solicitudes">Solicitudes</a>
-    <a href="/admin/articles">Ver Todos los Artículos</a>
-    <a href="/admin/reports">Reportes</a>
-    <a href="/admin/roles">Roles</a>
-</div>
-
-<!-- Botón de apertura/cierre del sidebar -->
-<button id="sidenavToggleNav"></button>
 
 <!-- Contenido principal -->
 <div id="main" class="container mt-4">
