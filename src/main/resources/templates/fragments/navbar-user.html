@@ -88,13 +88,17 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="/user/dashboard?language=es" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" src="">
+                        <a th:href="@{${currentUrl}(language='es')}"
+
+
+
+                           class="nav-link">
+                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/user/dashboard?language=pt" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" src="">
+                        <a th:href="@{${currentUrl}(language='pt')}" class="nav-link">
+                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
                         </a>
                     </li>
                 </ul>
