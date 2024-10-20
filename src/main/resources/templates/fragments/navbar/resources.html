@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>resources</title>
+</head>
+<body>
+<div th:fragment="resources">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRecursos" role="button"
+       data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-info-circle"></i> Recursos
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdownRecursos">
+        <li><a class="dropdown-item" th:href="@{/noticias}">Noticias</a></li>
+        <li><a class="dropdown-item" th:href="@{/materiales}">Materiales</a></li>
+        <li><a class="dropdown-item" th:href="@{/alianzas}">Alianzas</a></li>
+        <li><a class="dropdown-item" th:href="@{/legislacion}">Legislación</a></li>
+    </ul>
+</div>
+</body>
+</html>
