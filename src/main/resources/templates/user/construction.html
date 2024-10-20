@@ -15,8 +15,10 @@
 
 <!-- Asegura que el body sea flex -->
 <body class="d-flex flex-column min-vh-100">
-<div th:replace="~{fragments/navbar-info :: navbar-info('/login')}"></div>
 
+<div th:replace="~{fragments/navbar-info :: navbar-info}"></div>
+
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
 
 <!-- Migas de Pan / Breadcrumb -->
 <!-- Breadcrumb -->

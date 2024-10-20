@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>alertas</title>
+</head>
+<body>
+<div th:fragment="message-alerts">
+    <div class="container mt-3">
+        <!-- Mensaje de Error -->
+        <div th:if="${rerror}" class="alert alert-danger" role="alert" th:text="${rerror}"></div>
+
+        <!-- Mensaje de Éxito -->
+        <div th:if="${rexito}" class="alert alert-success" role="alert" th:text="${rexito}"></div>
+    </div>
+</div>
+</body>
+</html>

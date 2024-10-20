@@ -19,10 +19,8 @@
 <div th:replace="~{fragments/navbar-user :: navbar-user}"></div>
 
 <!-- Mensajes -->
-<div class="container mt-3">
-    <div th:if="${rerror}" class="alert alert-danger" role="alert" th:text="${rerror}"></div>
-    <div th:if="${rexito}" class="alert alert-success" role="alert" th:text="${rexito}"></div>
-</div>
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
+
 
 <!-- Breadcrumb -->
 <div class="container">
