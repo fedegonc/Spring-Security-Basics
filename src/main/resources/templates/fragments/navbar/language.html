@@ -2,20 +2,24 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
+
 </head>
 <body>
-<div th:fragment="language">
 
-<div class="d-flex align-items-center" style="gap: 15px;">
-    <!-- Banderas -->
-    <a th:href="@{${currentUrl}(language='es')}" class="nav-link p-0">
-        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
-    </a>
-    <a th:href="@{${currentUrl}(language='pt')}" class="nav-link p-0">
-        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
-    </a>
+<!-- Fragmento de las banderas -->
+<div th:fragment="language" class="flag-container">
+
+        <a th:href="@{${currentUrl}(language='es')}" >
+            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
+        </a>
+
+        <a th:href="@{${currentUrl}(language='pt')}" >
+            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
+        </a>
+
 </div>
-</div>
+
 </body>
 </html>

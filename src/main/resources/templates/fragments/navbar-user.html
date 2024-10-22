@@ -17,9 +17,6 @@
             <!-- Logo -->
             <div id="logo" th:replace="~{fragments/logo}"></div>
 
-            <!-- Título del sitio -->
-            <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}">Mi Sitio</a>
-
             <!-- Botón para navegación colapsable en dispositivos móviles -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,9 +86,6 @@
 
                     <li class="nav-item">
                         <a th:href="@{${currentUrl}(language='es')}"
-
-
-
                            class="nav-link">
                             <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
                         </a>
