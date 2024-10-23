@@ -329,7 +329,7 @@ public class UserController {
 
     @GetMapping("/report")
     public ModelAndView newReport() {
-        ModelAndView mv = new ModelAndView("report-problem");
+        ModelAndView mv = new ModelAndView("user/report-problem");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
