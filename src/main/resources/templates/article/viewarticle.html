@@ -14,32 +14,9 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" th:href="@{/index}">
-            <img src="/img/logov4.png" alt="logo" width="40" height="40" class="me-2">
-            <span th:text="#{index.title}">Frontera Sustentable</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-globe"></i> <span th:text="#{label.chooseLang}">Elegir idioma</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logout}">
-                        <i class="bi bi-box-arrow-right"></i> <span th:text="#{salir}">Salir</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+
+<div th:replace="~{fragments/navbar-info :: navbar-info}"></div>
+
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
 

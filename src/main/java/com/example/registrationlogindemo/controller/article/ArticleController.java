@@ -4,6 +4,7 @@ import com.example.registrationlogindemo.entity.Article;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.ImageService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,6 +33,9 @@ public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    ImageService imageService;
+
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     @GetMapping("/viewarticle/{id}")
@@ -45,7 +49,7 @@ public class ArticleController {
         } else {
             mv.setViewName("redirect:/error");
         }
-
+        imageService.addFlagImages(mv);
         return mv;
     }
 
@@ -96,7 +100,7 @@ public class ArticleController {
         } else {
             mv.setViewName("redirect:/error");
         }
-
+        imageService.addFlagImages(mv);
         return mv;
     }
 }

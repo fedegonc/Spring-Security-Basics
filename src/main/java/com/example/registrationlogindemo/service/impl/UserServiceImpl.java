@@ -162,4 +162,15 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+    @Override
+    public boolean debeMostrarLogin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Verifica si el usuario está autenticado (no es null y no es 'anonymousUser')
+        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getName())) {
+            return false; // Si el usuario está autenticado, no mostrar el botón de login
+        }
+
+        return true; // Si el usuario no está autenticado, mostrar el botón de login
+    }
 }

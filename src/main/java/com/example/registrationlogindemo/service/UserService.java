@@ -43,4 +43,5 @@ public interface UserService {
     @Transactional
     void eliminarEntidad(Long id);
 
+    boolean debeMostrarLogin();
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,8 +44,9 @@
                         </a>
                     </li>
 
-                    <div th:if="${#authentication?.name == 'anonymousUser' or not (currentUrl.contains('login') or currentUrl.contains('register'))}">
-                        <div th:replace="~{fragments/navbar/auth :: auth}"></div>
+                    <div th:if="${!isAuthenticated and (currentUrl != '/login' and currentUrl != '/register')}">
+                        <div th:replace="~{fragments/navbar/auth :: auth}" >
+                        </div>
                     </div>
 
                 </ul>
