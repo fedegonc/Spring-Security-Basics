@@ -38,7 +38,7 @@ public class AuthController {
 
     @GetMapping("/error")
     public ModelAndView Error() {
-        ModelAndView mv = new ModelAndView("error");
+        ModelAndView mv = new ModelAndView("guest/error");
         imageService.addFlagImages(mv);
         return mv;
     }
@@ -99,21 +99,9 @@ public class AuthController {
         if (principal instanceof UserDetails) {
             mv.setViewName("redirect:/init");
         } else {
-            // Buscar las imágenes en la base de datos
-            Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
-            Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
-
-            // Agregar imágenes al modelo si están presentes
-            if (uruguaiImage.isPresent()) {
-                mv.addObject("uruguaiImageName", uruguaiImage.get().getNombre());
-            }
-            if (brasilImage.isPresent()) {
-                mv.addObject("brasilImageName", brasilImage.get().getNombre());
-            }
-
-            mv.setViewName("login"); // Establecer la vista del formulario de login
+            mv.setViewName("guest/login"); // Establecer la vista del formulario de login
         }
-
+        imageService.addFlagImages(mv);
         return mv;
     }
 

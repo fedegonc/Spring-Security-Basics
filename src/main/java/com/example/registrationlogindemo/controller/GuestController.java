@@ -56,7 +56,7 @@ public class GuestController {
     @GetMapping({"", "/", "/index"})
     public ModelAndView getIndex() {
         // Crear una instancia de ModelAndView con la vista "index"
-        ModelAndView mv = new ModelAndView("index");
+        ModelAndView mv = new ModelAndView("guest/index");
 
         // Agregar las banderas al modelo
         imageService.addFlagImages(mv);
@@ -151,7 +151,7 @@ public class GuestController {
 
     @GetMapping("/ambiental")
     public ModelAndView ambiental() {
-        ModelAndView mv = new ModelAndView("ambiental");
+        ModelAndView mv = new ModelAndView("guest/ambiental");
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("EDUCACION_AMBIENTAL");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
@@ -163,7 +163,7 @@ public class GuestController {
 
     @GetMapping("/noticias")
     public ModelAndView noticias() {
-        ModelAndView mv = new ModelAndView("noticias");
+        ModelAndView mv = new ModelAndView("guest/noticias");
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("NOTICIA");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
@@ -176,7 +176,7 @@ public class GuestController {
 
     @GetMapping("/materiales")
     public ModelAndView materiales() {
-        ModelAndView mv = new ModelAndView("materiales");
+        ModelAndView mv = new ModelAndView("guest/materiales");
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("TIPOS_DE_MATERIALES");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
@@ -189,7 +189,7 @@ public class GuestController {
 
     @GetMapping("/alianzas")
     public ModelAndView alianzas() {
-        ModelAndView mv = new ModelAndView("alianzas");
+        ModelAndView mv = new ModelAndView("guest/alianzas");
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("ALIANZAS");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
@@ -201,7 +201,7 @@ public class GuestController {
     }
     @GetMapping("/legislacion")
     public ModelAndView legislacion() {
-        ModelAndView mv = new ModelAndView("legislacion");
+        ModelAndView mv = new ModelAndView("guest/legislacion");
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("LEGISLACION");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
