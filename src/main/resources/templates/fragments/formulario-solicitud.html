@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Solicitud</title>
+</head>
+<body>
+
+<div th:fragment="formulario-solicitud">
+
+    <div class="container d-flex align-items-center justify-content-center min-vh-50 my-4">
+        <div class="col-12 col-md-12 col-lg-8 mx-auto" >
+            <div class="card shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h4 class="card-title mb-4" th:text="#{newRequest.title}">
+                        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                    </h4>
+
+                    <form id="finalForm" method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
+
+                        <!-- Texto de ayuda para campos obligatorios -->
+                        <p><strong>*</strong> <span th:text="#{info.requiredField}">Indica que el campo es obligatorio</span></p>
+
+                        <div class="mb-3">
+                            <label for="file" class="form-label" th:text="#{newRequest.wasteImage}">Imagen del Residuo *</label>
+                            <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" alt="img"/>
+                            <input type="file" class="form-control" id="file" name="file" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="material" class="form-label" th:text="#{newRequest.selectMaterial}">Selecciona el Tipo de Material *</label>
+                                <select class="form-select" id="material" name="categoria" required>
+                                    <option value="" disabled selected th:text="#{newRequest.selectMaterial.defaultOption}">Seleccione el material</option>
+                                    <option value="plastico" th:text="#{newRequest.selectMaterial.plastic}">Plástico</option>
+                                    <option value="carton" th:text="#{newRequest.selectMaterial.cardboard}">Cartón</option>
+                                    <option value="metal" th:text="#{newRequest.selectMaterial.metal}">Metal</option>
+                                    <option value="eletronicos" th:text="#{newRequest.selectMaterial.electronics}">Electrónicos</option>
+                                    <option value="otros" th:text="#{newRequest.selectMaterial.others}">Otros</option>
+                                </select>
+                            </div>
+
+                            <div class="col mb-3">
+                                <label for="destino" class="form-label" th:text="#{newRequest.destino}">Destino *</label>
+                                <select class="form-select" id="destino" name="destino" required>
+                                    <option value="" disabled selected>Seleccione un destino</option>
+                                    <option value="cooperativa">Sant'Ana</option>
+                                    <option value="asociacion">Rivera</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="barrio" class="form-label" th:text="#{newRequest.neighborhood}">Barrio *</label>
+                                <input type="text" class="form-control" id="barrio" name="barrio" required placeholder="Ingresa el barrio">
+                            </div>
+
+                            <div class="col mb-3">
+                                <label for="calle" class="form-label" th:text="#{newRequest.street}">Calle *</label>
+                                <input type="text" class="form-control" id="calle" name="calle" required placeholder="Ingresa la calle">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa *</label>
+                                <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required placeholder="Ingresa el número de casa">
+                            </div>
+
+                            <div class="col mb-3">
+                                <label for="referenciaLocal" class="form-label" th:text="#{newRequest.localReference}">Referencia Local *</label>
+                                <input type="text" class="form-control" id="referenciaLocal" name="referenciaLocal" required placeholder="Ingresa una referencia local">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="telefono" class="form-label" th:text="#{newRequest.phoneNumber}">Teléfono para contactar *</label>
+                                <input type="tel" class="form-control" id="telefono" name="telefono" required placeholder="Ingresa tu número de teléfono">
+                            </div>
+
+                            <div class="col mb-3">
+                                <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles *</label>
+                                <select class="form-select" id="diasDisponibles" name="diasDisponibles" required>
+                                    <option value="" disabled selected>Seleccione un día</option>
+                                    <option value="monday">Lunes</option>
+                                    <option value="tuesday">Martes</option>
+                                    <option value="wednesday">Miércoles</option>
+                                    <option value="thursday">Jueves</option>
+                                    <option value="friday">Viernes</option>
+                                    <option value="saturday">Sábado</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="manualTimeCheckbox" required>
+                                <label class="form-check-label" for="manualTimeCheckbox" th:text="#{newRequest.manualTime}">Ingresar hora manualmente</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.collectionTime}">Hora de Recolección *</label>
+                                    <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required>
+                                        <option value="" disabled selected>Seleccione la hora de recolección</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="16:00">16:00</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.enterTime}">Ingresar Hora</label>
+                                    <input type="time" class="form-control mt-2" id="customHoraRecoleccion" name="horaRecoleccion" min="08:00" max="18:00">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Descripción del residuo"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="peso" class="form-label" th:text="#{newRequest.weight}">Peso *</label>
+                                <input type="text" class="form-control" id="peso" name="peso" placeholder="Ingresa el peso">
+                            </div>
+
+                            <div class="col mb-3">
+                                <label for="tamanio" class="form-label" th:text="#{newRequest.size}">Tamaño *</label>
+                                <select class="form-select" id="tamanio" name="tamanio">
+                                    <option value="" disabled selected th:text="#{newRequest.selectSize.defaultOption}">Seleccione el tamaño</option>
+                                    <option value="chico" th:text="#{newRequest.selectSize.small}">Chico</option>
+                                    <option value="mediano" th:text="#{newRequest.selectSize.medium}">Mediano</option>
+                                    <option value="grande" th:text="#{newRequest.selectSize.large}">Grande</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

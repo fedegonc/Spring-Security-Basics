@@ -3,198 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitudes</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    <title>Formulario de Solicitud</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.css">
+    <!-- Google Fonts  -->
+
+    <link rel="stylesheet" href="/css/styles.css">
 
 </head>
-<body>
+
+
+<body class="d-flex flex-column min-vh-100">
+
+
 <div th:replace="~{fragments/navbar-user :: navbar-user}"></div>
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
 
-
-
-
 <!-- Migas de pan -->
-<div class="container mt-1">
+<div class="container">
     <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-light">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
             <li class="breadcrumb-item">
                 <i class="bi bi-house"></i>
-                <a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a>
+                <a th:href="@{/user/welcome}" th:text="#{breadcrumb.home}">Inicio</a>
             </li>
-            <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.newRequest}">Nueva Solicitud</li>
         </ol>
     </nav>
 </div>
 
 <div class="container mt-4">
-
     <span th:text="#{info_newsolicitude}">Información de la pagina</span>
 </div>
-<hr/>
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title mb-4" th:text="#{newRequest.title}">Nueva Solicitud</h3>
-                </div>
-                <div class="card-body">
-                    <form id="finalForm" method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
-
-                        <!-- Texto de ayuda para campos obligatorios -->
-                        <p><strong>*</strong> <span th:text="#{info.requiredField}">Indica que el campo es obligatorio</span></p>
-
-
-                        <div class="mb-3">
-                            <label for="file" class="form-label" th:text="#{newRequest.wasteImage}">Imagen del Residuo *</label>
-                            <img id="previewImage" src="/img/thumbnail-default.jpg" class="img-thumbnail mb-2" style="max-width: 200px;" alt="img"/>
-                            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()" required>
-                        </div>
-
-                        <div class="row">
-                            <div class="col mb-3">
-                                <label for="material" class="form-label" th:text="#{newRequest.selectMaterial}">Selecciona el Tipo de Material *</label>
-                                <select class="form-select" id="material" name="categoria" required>
-                                    <option value="" disabled selected th:text="#{newRequest.selectMaterial.defaultOption}">Seleccione el material</option>
-                                    <option value="plastico" th:text="#{newRequest.selectMaterial.plastic}">Plástico</option>
-                                    <option value="carton" th:text="#{newRequest.selectMaterial.cardboard}">Cartón</option>
-                                    <option value="metal" th:text="#{newRequest.selectMaterial.metal}">Metal</option>
-                                    <option value="eletronicos" th:text="#{newRequest.selectMaterial.electronics}">Electrónicos</option>
-                                    <option value="otros" th:text="#{newRequest.selectMaterial.others}">Otros</option>
-                                </select>
-                            </div>
-
-                            <div class="col mb-3">
-                                <label for="destino" class="form-label" th:text="#{newRequest.destino}">Destino *</label>
-                                <select class="form-select" id="destino" name="destino" required>
-                                    <option value="" disabled selected>Seleccione un destino</option>
-                                    <option value="cooperativa">Sant'Ana</option>
-                                    <option value="asociacion">Rivera</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col mb-3">
-                                <label for="barrio" class="form-label" th:text="#{newRequest.neighborhood}">Barrio *</label>
-                                <input type="text" class="form-control" id="barrio" name="barrio" required>
-                            </div>
-
-                            <div class="col mb-3">
-                                <label for="calle" class="form-label" th:text="#{newRequest.street}">Calle *</label>
-                                <input type="text" class="form-control" id="calle" name="calle" required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col mb-3">
-                                <label for="numeroDeCasa" class="form-label" th:text="#{newRequest.houseNumber}">Número de Casa *</label>
-                                <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" required>
-                            </div>
-
-                            <div class="col mb-3">
-                                <label for="referenciaLocal" class="form-label" th:text="#{newRequest.localReference}">Referencia Local *</label>
-                                <input type="text" class="form-control" id="referenciaLocal" name="referenciaLocal" required>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col mb-3">
-                                <label for="telefono" class="form-label" th:text="#{newRequest.phoneNumber}">Teléfono para contactar *</label>
-                                <input type="tel" class="form-control" id="telefono" name="telefono" required>
-                            </div>
-
-                            <div class="col mb-3">
-                                <label for="diasDisponibles" class="form-label" th:text="#{newRequest.availableDays}">Días Disponibles *</label>
-                                <select class="form-select" id="diasDisponibles" name="diasDisponibles" required onchange="updateAvailableHours()">
-                                    <option value="" disabled selected>Seleccione un día</option>
-                                    <option value="monday">Lunes</option>
-                                    <option value="tuesday">Martes</option>
-                                    <option value="wednesday">Miércoles</option>
-                                    <option value="thursday">Jueves</option>
-                                    <option value="friday">Viernes</option>
-                                    <option value="saturday">Sábado</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="manualTimeCheckbox" onchange="toggleTimeInputs()">
-                                <label class="form-check-label" for="manualTimeCheckbox" th:text="#{newRequest.manualTime}">Ingresar hora manualmente</label>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="row">
-                                <div class="col">
-                                    <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.collectionTime}">Hora de Recolección *</label>
-                                    <select class="form-select" id="horaRecoleccion" name="horaRecoleccion" required>
-                                        <option value="" disabled selected>Seleccione la hora de recolección</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="16:00">16:00</option>
-
-                                    </select>
-                                </div>
-                                <div class="col">
-                                    <label for="horaRecoleccion" class="form-label" th:text="#{newRequest.enterTime}">Ingresar Hora</label>
-                                    <input type="time" class="form-control mt-2" id="customHoraRecoleccion" name="horaRecoleccion" placeholder="th:text=#{newRequest.enterTimePlaceholder}" min="08:00" max="18:00">
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="descripcion" class="form-label" th:text="#{newRequest.description}">Descripción</label>
-                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
-                        </div>
-
-                        <div class="row">
-                            <div class="col mb-3">
-                                <label for="peso" class="form-label" th:text="#{newRequest.weight}">Peso *</label>
-                                <input type="text" class="form-control" id="peso" name="peso">
-                            </div>
-
-                            <div class="col mb-3">
-                                <label for="tamanio" class="form-label" th:text="#{newRequest.size}">Tamaño *</label>
-                                <select class="form-select" id="tamanio" name="tamanio">
-                                    <option value="" disabled selected th:text="#{newRequest.selectSize.defaultOption}">Seleccione el tamaño</option>
-                                    <option value="chico" th:text="#{newRequest.selectSize.small}">Chico</option>
-                                    <option value="mediano" th:text="#{newRequest.selectSize.medium}">Mediano</option>
-                                    <option value="grande" th:text="#{newRequest.selectSize.large}">Grande</option>
-                                </select>
-                            </div>
-                        </div>
 
 
 
-                        <button type="submit" class="btn btn-primary" th:text="#{newRequest.submit}">Enviar Solicitud</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+<div th:replace="~{fragments/formulario-solicitud :: formulario-solicitud}"></div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 

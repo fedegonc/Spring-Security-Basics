@@ -9,12 +9,15 @@
 
 <div th:fragment="login-form">
     <div class="container d-flex align-items-center justify-content-center min-vh-50 my-4">
-        <div class="col-12 col-md-6 col-lg-4 mx-auto" style="max-width: 400px;">
+        <div class="col-12 col-md-6 col-lg-4 mx-auto" >
             <div class="card shadow-sm">
+
                 <div class="card-body p-4">
+
                     <h4 class="card-title text-center mb-4">
                         <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
                     </h4>
+
                     <form method="post" th:action="@{/login}" >
                         <div class="mb-3">
                             <label for="username" class="form-label">Nombre de Usuario</label>
@@ -32,7 +35,9 @@
                             <a th:href="@{/register}" class="link-primary">Regístrate aquí</a>
                         </div>
                     </form>
+
                 </div>
+
             </div>
         </div>
     </div>
