@@ -26,11 +26,11 @@
 
 <body>
 <!-- Fragmentos Thymeleaf -->
-<div th:replace="~{fragments/navbar :: navbar}"></div>
-<div th:replace="~{fragments/banner :: banner}"></div>
-<div th:replace="~{fragments/publicaciones :: publicaciones}"></div>
-<div th:replace="~{fragments/maps :: maps}"></div>
-<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/guest/navbar :: navbar}"></div>
+<div th:replace="~{fragments/guest/banner :: banner}"></div>
+<div th:replace="~{fragments/guest/publicaciones :: publicaciones}"></div>
+<div th:replace="~{fragments/guest/maps :: maps}"></div>
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="/scripts/maps.js"></script>

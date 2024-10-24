@@ -9,6 +9,7 @@ import com.example.registrationlogindemo.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,11 +19,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Controller
-public class AuthController {
+public class AuthController implements ErrorController {
 
     private final UserService userService;
 
@@ -37,11 +40,25 @@ public class AuthController {
     }
 
     @GetMapping("/error")
-    public ModelAndView Error() {
-        ModelAndView mv = new ModelAndView("guest/error");
+    public ModelAndView handleError(HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("error"); // "error" es el nombre de la vista
         imageService.addFlagImages(mv);
+        // Capturar código de estado y mensaje de error
+        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        String errorMessage = (String) request.getAttribute("javax.servlet.error.message");
+
+        // Mensaje de error amigable
+        if (errorMessage == null) {
+            errorMessage = "Ha ocurrido un error inesperado. Por favor, vuelve a intentarlo.";
+        }
+
+        // Añadir los detalles al ModelAndView usando addObject
+        mv.addObject("status", statusCode != null ? statusCode : "Error desconocido");
+        mv.addObject("error", errorMessage);
+
         return mv;
     }
+
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {

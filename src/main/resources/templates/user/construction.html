@@ -36,32 +36,8 @@
 <div th:replace="~{fragments/login-form :: login-form}"></div>
 
 <!-- Footer -->
-<footer class="bg-dark text-white text-center py-3 mt-auto">
-    <div class="container">
-        <ul class="breadcrumb mb-0">
-            <p class="mb-0">
-                <li class="breadcrumb-item">
-                    <a href="#" class="text-white-50 text-decoration-none">
-                        <i class="bi bi-arrow-up-circle"></i> Arriba
-                    </a>
-                </li>
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
 
-                <li class="breadcrumb-item">
-                    <a href="#" class="text-white-50 text-decoration-none">
-                        <i class="bi bi-recycle"></i> Proyecto Frontera de la Paz Sustentable Residuos Sólidos
-
-                    </a>
-                </li>
-
-                <li class="breadcrumb mb-0" th:if="${user != null}">
-                    <a th:href="@{/user/report}" class="btn btn-outline-light btn-sm">
-                        <i class="bi bi-arrow-up-circle"></i> Soporte y Ayuda
-                    </a>
-                </li>
-            </p>
-        </ul>
-    </div>
-</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
