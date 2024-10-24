@@ -3,83 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="#{index.title}">Frontera Sustentable</title>
-    <link rel="stylesheet" href="/css/styles2.css">
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>Panel Administracion</title>
+
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/styles2.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body class="bg-light">
 
-<!-- Barra de navegación superior -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <!-- Logo y Título del sitio -->
-        <div class="d-flex align-items-center">
-            <div id="logo" th:replace="~{fragments/logo}"></div>
-            <a class="navbar-brand ms-2" th:href="@{/index}" th:text="#{index.title}">Frontera Sustentable</a>
-        </div>
+<div th:replace="~{fragments/admin/navbar-admin :: navbar-admin}"></div>
 
-        <!-- Botón para colapsar la barra de navegación en pantallas pequeñas -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAdmin" aria-controls="navbarAdmin" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Contenido colapsable de la barra de navegación -->
-        <div class="collapse navbar-collapse" id="navbarAdmin">
-            <!-- Enlaces del lado izquierdo -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- Dropdown para Gestión del Sistema -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Gestión del Sistema
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="adminDropdown1">
-                        <li><a class="dropdown-item" href="/admin/images">Imágenes del Sistema</a></li>
-                        <li><a class="dropdown-item" href="/admin/users">Usuarios</a></li>
-                        <li><a class="dropdown-item" href="/admin/roles">Roles</a></li>
-                    </ul>
-                </li>
-
-                <!-- Dropdown para Gestión de Contenidos -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Gestión de Contenidos
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="adminDropdown2">
-                        <li><a class="dropdown-item" href="/admin/solicitudes">Solicitudes</a></li>
-                        <li><a class="dropdown-item" href="/admin/articles">Ver Todos los Artículos</a></li>
-                        <li><a class="dropdown-item" href="/admin/reports">Reportes</a></li>
-                    </ul>
-                </li>
-            </ul>
-
-            <!-- Enlaces del lado derecho -->
-            <ul class="navbar-nav ms-auto">
-                <!-- Selección de idioma -->
-                <li class="nav-item">
-                    <a href="/index?language=es" class="nav-link">
-                        <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20">
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/index?language=pt" class="nav-link">
-                        <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20">
-                    </a>
-                </li>
-
-                <!-- Enlace para cerrar sesión -->
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logout}" th:text="#{salir}">Salir</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
 
