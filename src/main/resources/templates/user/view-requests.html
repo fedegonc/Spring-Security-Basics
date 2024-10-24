@@ -3,217 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:text="#{solicitudes.ver}">Ver Solicitudes</title>
+  <title>Panel de Usuario</title>
   <link rel="stylesheet" href="/css/styles.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-        crossorigin="anonymous">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap" rel="stylesheet">
 
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-  <style>
-    .card-inner {
-        background-color: #f8f9fa;
-        padding: 20px;
-        margin: 20px 0;
-        border-radius: 3px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .card-inner:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .card-inner h3 {
-        color: #343a40;
-    }
-
-    .view-buttons {
-        margin-bottom: 20px;
-    }
-
-    .hidden {
-        display: none;
-    }
-  </style>
 </head>
- <body class="bg-light d-flex flex-column min-vh-100">
+
+
+<body class="bg-light d-flex flex-column min-vh-100">
+
 <div th:replace="~{fragments/navbar-user :: navbar-user}"></div>
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
 
-<!-- Migas de pan -->
+
 <div class="container">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
-      <li class="breadcrumb-item">
-        <i class="bi bi-house"></i>
-        <a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a>
+      <li class="breadcrumb-item active text-primary" aria-current="page">
+        <i class="bi bi-house"></i> Inicio
       </li>
-      <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
-      <!-- Elemento activo de las migas de pan -->
       <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.historyRequest}">Historial de Solicitudes</li>
     </ol>
   </nav>
 </div>
-<!-- Contenedor para métricas -->
-<div class="container mt-4">
-  <div class="row">
-    <!-- Tarjeta para Solicitudes Activas -->
-    <div class="col-md-4">
-      <div class="card text-center">
-        <div class="card-body">
-          <h5 class="card-title">Solicitudes Activas</h5>
-          <p class="card-text" id="active-requests-count">0</p>
-        </div>
-      </div>
-    </div>
 
-    <!-- Tarjeta para Total de Solicitudes -->
-    <div class="col-md-4">
-      <div class="card text-center">
-        <div class="card-body">
-          <h5 class="card-title">Total de Solicitudes</h5>
-          <p class="card-text" id="total-requests-count">0</p>
-        </div>
-      </div>
-    </div>
+<div th:replace="~{fragments/solicitudes/metricas-solicitudes :: metricas-solicitudes}"></div>
 
-    <!-- Tarjeta para Solicitudes Completadas -->
-    <div class="col-md-4">
-      <div class="card text-center">
-        <div class="card-body">
-          <h5 class="card-title">Solicitudes Completadas</h5>
-          <p class="card-text" id="completed-requests-count">0</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="container mt-4">
-  <h2 th:text="#{solicitudes.titulo}">Solicitudes</h2>
-  <div class="container mt-4">
-
-    <span th:text="#{info_viewrequests}">Información de la pagina</span>
-  </div>
-  <hr/>
-  <div class="view-buttons">
-    <button id="view-cards-btn" class="btn btn-secondary">Vista de Tarjetas</button>
-    <button id="view-table-btn" class="btn btn-primary">Vista de Tabla</button>
-  </div>
-  <!-- Mensaje cuando no hay solicitudes -->
-  <div th:if="${#lists.isEmpty(solicitudes)}" class="col-12 text-center">
-    <p th:text="#{solicitudes.noHay}">Aún no hay solicitudes.</p>
-  </div>
-  <!-- Vista de Tarjetas -->
-  <div id="card-view" class="row row-cols-1 row-cols-md-3 g-3">
-    <div class="col-md-4" th:each="solicitud : ${solicitudes}">
-      <div class="card custom-card">
-        <div class="card-inner">
-          <img th:src="@{/img/{img}(img=${solicitud.imagen})}" class="card-img-top" alt="Imagen de la solicitud">
-          <div class="card-body">
-            <p class="card-text date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</p>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item estado-field" th:text="#{newRequest.status} + ': ' + ${solicitud.estado}">Estado de la solicitud</li>
-          </ul>
-          <div class="card-footer">
-            <a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Vista de Tabla -->
-  <div id="table-view" class="hidden">
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th scope="col">Imagen</th>
-        <th scope="col" th:text="#{solicitudes.fecha}">Fecha</th>
-        <th scope="col" th:text="#{solicitudes.estado}">Estado</th>
-        <th scope="col" th:text="#{solicitudes.accion}">Acción</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="solicitud : ${solicitudes}">
-        <td><img th:src="@{/img/{img}(img=${solicitud.imagen})}" alt="Imagen de la solicitud" style="width: 50px; height: 50px;"></td>
-        <td class="date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</td>
-        <td class="estado-field" th:text="${solicitud.estado}">Estado de la solicitud</td>
-        <td><a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
+<div th:replace="~{fragments/solicitudes/vista-solicitudes :: vista-solicitudes}"></div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-      const dateFields = document.querySelectorAll('.date-field');
-      const estadoFields = document.querySelectorAll('.estado-field');
-
-      const requestedText = /*[[${'date.requested'}]]*/ 'solicitado'; // Fallback in case Thymeleaf doesn't replace it
-      const estadoTranslations = {
-          'EN_ESPERA': /*[[#{estado.EN_ESPERA}]]*/ 'En espera',
-          'ACEPTADA': /*[[#{estado.ACEPTADA}]]*/ 'Aceptada',
-          'RECHAZADA': /*[[#{estado.RECHAZADA}]]*/ 'Rechazada',
-          'EN_REVISION': /*[[#{estado.EN_REVISION}]]*/ 'En revisión'
-      };
-
-      dateFields.forEach(field => {
-          const rawDate = field.textContent.trim();
-          if (rawDate) {
-              const date = new Date(rawDate);
-              const day = date.getDate();
-              const month = date.getMonth() + 1;
-              const year = date.getFullYear().toString().slice(-2);
-              const hours = date.getHours().toString().padStart(2, '0');
-              const minutes = date.getMinutes().toString().padStart(2, '0');
-
-              const formattedDate = `${requestedText}: ${day}/${month}/${year} - ${hours}:${minutes} hs`;
-              field.textContent = formattedDate;
-          }
-      });
-
-      estadoFields.forEach(field => {
-          const estado = field.textContent.trim();
-          if (estadoTranslations[estado]) {
-              field.textContent = estadoTranslations[estado];
-          }
-      });
-
-      const viewCardsBtn = document.getElementById('view-cards-btn');
-      const viewTableBtn = document.getElementById('view-table-btn');
-      const cardView = document.getElementById('card-view');
-      const tableView = document.getElementById('table-view');
-
-      viewCardsBtn.addEventListener('click', () => {
-          cardView.classList.remove('hidden');
-          tableView.classList.add('hidden');
-          viewCardsBtn.classList.add('btn-primary');
-          viewCardsBtn.classList.remove('btn-secondary');
-          viewTableBtn.classList.add('btn-secondary');
-          viewTableBtn.classList.remove('btn-primary');
-      });
-
-      viewTableBtn.addEventListener('click', () => {
-          cardView.classList.add('hidden');
-          tableView.classList.remove('hidden');
-          viewTableBtn.classList.add('btn-primary');
-          viewTableBtn.classList.remove('btn-secondary');
-          viewCardsBtn.classList.add('btn-secondary');
-          viewCardsBtn.classList.remove('btn-primary');
-      });
-  });
-</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="/scripts/solicitudesScript.js"></script>
+
 </body>
 </html>

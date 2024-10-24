@@ -29,15 +29,14 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
-            <!-- Elemento de inicio de las migas de pan -->
-            <li class="breadcrumb-item">
-                <i class="bi bi-house"></i>
-                <a th:href="@{/index}" th:text="#{breadcrumb.home}">Inicio</a>
+            <li class="breadcrumb-item active text-primary" aria-current="page">
+                <i class="bi bi-house"></i> Inicio
             </li>
-            <!-- Elemento activo de las migas de pan -->
-            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.posts}">Ver posts</li>        </ol>
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.posts}">Ver posts</li>
+        </ol>
     </nav>
 </div>
+
 <div class="container mt-4">
 
     <span th:text="#{info_articulos}">Información de la pagina</span>
