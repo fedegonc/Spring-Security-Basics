@@ -20,6 +20,18 @@
 </head>
 
 <body class="bg-light d-flex flex-column min-vh-100">
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
+            <li class="breadcrumb-item active text-primary" aria-current="page">
+                <i class="bi bi-house"></i> Inicio
+            </li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
+        </ol>
+    </nav>
+</div>
+
 <div th:replace="~{fragments/navbar-user :: navbar-user}"></div>
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
