@@ -41,7 +41,7 @@ public class AuthController implements ErrorController {
 
     @GetMapping("/error")
     public ModelAndView handleError(HttpServletRequest request) {
-        ModelAndView mv = new ModelAndView("error"); // "error" es el nombre de la vista
+        ModelAndView mv = new ModelAndView("guest/error"); // "error" es el nombre de la vista
         imageService.addFlagImages(mv);
         // Capturar código de estado y mensaje de error
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
@@ -81,7 +81,7 @@ public class AuthController implements ErrorController {
         brasilImage.ifPresent(image -> {
             model.addAttribute("brasilImageName", image.getNombre());
         });
-        return "register";
+        return "guest/register";
     }
 
     @PostMapping("/register/save")
