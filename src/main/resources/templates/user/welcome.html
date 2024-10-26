@@ -16,7 +16,7 @@
 <body class="bg-light d-flex flex-column min-vh-100">
 
 <!-- Navbar -->
-<div th:replace="~{fragments/navbar-user :: navbar-user}"></div>
+<div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
 
 <!-- Mensajes -->
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
@@ -34,11 +34,11 @@
 </div>
 
 
-<div th:replace="~{fragments/usuario-bienvenida :: usuario-bienvenida}"></div>
+<div th:replace="~{fragments/user/usuario-bienvenida :: usuario-bienvenida}"></div>
 
-<div th:replace="~{fragments/metricas-user :: metricas-user}"></div>
+<div th:replace="~{fragments/user/metricas-user :: metricas-user}"></div>
 
-<div th:replace="~{fragments/solicitudes-tarjetas :: solicitudes-tarjetas}"></div>
+<div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas}"></div>
 
 <div th:replace="~{fragments/layout/footer :: footer}"></div>
 

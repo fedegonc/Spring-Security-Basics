@@ -7,6 +7,7 @@ import com.example.registrationlogindemo.entity.User;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -44,4 +45,6 @@ public interface UserService {
     void eliminarEntidad(Long id);
 
     boolean debeMostrarLogin();
+
+    Optional<User> getAuthenticatedUser();
 }

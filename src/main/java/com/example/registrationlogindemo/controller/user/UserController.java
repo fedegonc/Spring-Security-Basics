@@ -4,6 +4,7 @@ import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.*;
 import com.example.registrationlogindemo.repository.*;
 import com.example.registrationlogindemo.service.ImageService;
+import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class UserController {
 
     @Autowired
     SolicitudeRepository solicitudeRepository;
+
+    @Autowired
+    SolicitudeService solicitudeService;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -62,30 +66,28 @@ public class UserController {
     // Método para la página de bienvenida del usuario
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
-        ModelAndView mv = new ModelAndView();
+        ModelAndView mv = new ModelAndView("user/welcome");
 
-        // Obtener el usuario autenticado actualmente
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
+        // Obtener el usuario autenticado
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
 
-            // Agregar el nombre de usuario al modelo para dar la bienvenida
-            mv.addObject("username", username);
-
-            // Obtener el usuario de la base de datos
-            User usuario = userRepository.findByUsername(username);
+        // Si el usuario está autenticado, cargar datos en el modelo
+        if (authenticatedUserOpt.isPresent()) {
+            User usuario = authenticatedUserOpt.get();
+            mv.addObject("username", usuario.getUsername());
             mv.addObject("user", usuario);
 
-            // Obtener las solicitudes realizadas por el usuario autenticado
-            List<Solicitude> solicitude = solicitudeRepository.findByUser(usuario);
+            // Obtener y agregar las solicitudes realizadas por el usuario
+            List<Solicitude> solicitude = solicitudeService.getSolicitudesByUser(usuario);
             mv.addObject("solicitude", solicitude);
 
+            // Agregar imágenes personalizadas al modelo
             imageService.addFlagImages(mv);
+        } else {
+            // Redirigir a una página de error si no hay usuario autenticado
+            mv.setViewName("guest/error");
+            mv.addObject("error", "No tienes acceso a esta página. Por favor, inicia sesión.");
         }
-
-        // Establecer la vista
-        mv.setViewName("user/welcome");
 
         return mv;
     }

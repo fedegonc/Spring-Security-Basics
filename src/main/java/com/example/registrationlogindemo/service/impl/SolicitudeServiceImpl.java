@@ -1,6 +1,7 @@
 package com.example.registrationlogindemo.service.impl;
 
 import com.example.registrationlogindemo.entity.Solicitude;
+import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,10 @@ public class SolicitudeServiceImpl implements SolicitudeService {
         return solicitudeRepository.findSolicitudeByCategoriaLike(categoria);
     }
 
-    // Método para encontrar solicitudes por empresa similar
 
+    public List<Solicitude> getSolicitudesByUser(User user) {
+        return solicitudeRepository.findByUser(user);
+    }
     // Método para encontrar solicitudes activas
     @Override
     public List<Solicitude> findSolicitudeActivos() {

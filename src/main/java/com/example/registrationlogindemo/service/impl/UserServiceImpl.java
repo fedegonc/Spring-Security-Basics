@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -172,5 +173,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return true; // Si el usuario no está autenticado, mostrar el botón de login
+    }
+
+    public Optional<User> getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            String username = authentication.getName();
+            return Optional.ofNullable(userRepository.findByUsername(username));
+        }
+        return Optional.empty();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.registrationlogindemo.service;
 
 import com.example.registrationlogindemo.entity.Solicitude;
+import com.example.registrationlogindemo.entity.User;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface SolicitudeService {
 
     // Método para encontrar solicitudes activas
     List<Solicitude> findSolicitudeActivos();
+
+    List<Solicitude> getSolicitudesByUser(User usuario);
 }
