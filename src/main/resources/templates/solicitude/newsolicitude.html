@@ -27,13 +27,14 @@
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
 
-<!-- Migas de pan -->
+
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
             <li class="breadcrumb-item">
                 <i class="bi bi-house"></i>
-                <a th:href="@{/user/welcome}" th:text="#{breadcrumb.home}">Inicio</a>
+                <a th:href="@{/user/welcome}"
+                   th:text="#{breadcrumb.welcome}">Bienvenida</a>
             </li>
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.newRequest}">Nueva Solicitud</li>
         </ol>

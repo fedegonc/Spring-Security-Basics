@@ -64,3 +64,14 @@ body {
     }
 }
 
+a {
+    text-decoration: none;          /* Elimina el subrayado */
+    color: #0056b3;                   /* Color inicial del enlace */
+    transition: color 0.3s ease;    /* Efecto de transición suave */
+}
+
+a:hover,
+a:focus {
+    color: #003613;                 /* Cambia el color al pasar el ratón o hacer foco */
+    outline: none;                  /* Opcional: elimina el borde de foco predeterminado */
+}

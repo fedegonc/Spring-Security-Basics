@@ -29,9 +29,12 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
             <!-- Elemento de inicio de las migas de pan -->
+
             <li class="breadcrumb-item">
                 <i class="bi bi-house"></i>
-            <li class="breadcrumb-item"><a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
+                <a th:href="@{/user/welcome}"
+                   th:text="#{breadcrumb.welcome}">Bienvenida</a>
+            </li>
 
             <!-- Elemento activo de las migas pan-->
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.profile}">Perfil</li>
@@ -44,8 +47,6 @@
 
 
 <div class="container mt-4">
-
-
     <div class="alert alert-info" role="alert">
         <h4 class="alert-heading" th:text="'Bienvenida, ' + <!--/* [[${user.username}]] */--> 'Usuario' + '!'"></h4>
         <p>Nos alegra que estés aquí, <!--<span th:text="${user.username}">Nombre del Usuario</span>-->. Aquí puedes encontrar un resumen de tus actividades recientes y acceder a las funciones más importantes de la aplicación.</p>
@@ -54,54 +55,7 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-
-            <div class="card">
-                <div class="card-header">
-                    <!-- Título del formulario -->
-                    <h3 class="text-center" >Editar Usuario</h3>
-                </div>
-                <div class="card-body">
-
-    <form method="post" enctype="multipart/form-data" th:action="@{'/user/profile/' + ${user.id}}">
-        <div class="mb-3">
-            <label for="file" class="form-label" th:text="#{newRequest.profileImage}">Imagen de Perfil</label>
-            <!-- Mostrar la imagen de perfil actual si existe -->
-            <div th:if="${user.profileImage != null}">
-                <img id="currentProfileImage" th:src="@{'/img/' + ${user.profileImage}}" alt="Imagen de Perfil" class="img-thumbnail" style="max-width: 200px;">
-                <input type="hidden" name="currentProfileImageUrl" th:value="${user.profileImage}">
-            </div>
-            <!-- Mostrar una imagen predeterminada si no hay imagen de perfil -->
-            <div th:if="${user.profileImage == null}">
-                <img id="defaultProfileImage" src="/img/descarga.jpeg" alt="Imagen de Perfil Predeterminada" class="img-thumbnail" style="max-width: 200px;">
-                <input type="hidden" name="currentProfileImageUrl" value="descarga.jpeg">
-            </div>
-            <!-- Permitir al usuario seleccionar una nueva imagen -->
-            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:for="username" th:text="#{label.username}">Username</label>
-            <input type="text" class="form-control" name="username" th:value="${user.username}" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:for="nombre" th:text="#{label.name}">Nombre</label>
-            <input type="text" class="form-control" name="name" th:value="${user.name}" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label" th:for="email" th:text="#{label.email}">Email</label>
-            <input type="text" class="form-control" name="email" th:value="${user.email}" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary" th:text="#{button.save}">Guardar Cambios</button>
-        <a class="btn btn-danger" th:href="@{/user/delet/{id}(id=${user.id})}" th:text="#{button.delete}">Borrar</a>
-    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<div th:replace="~{fragments/user/profile-form :: profile-form}"></div>
 
 <div th:replace="~{fragments/layout/footer :: footer}"></div>
 

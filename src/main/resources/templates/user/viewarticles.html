@@ -9,7 +9,6 @@
     <!-- Puedes proporcionar una URL válida o eliminar esta línea si no tienes un ícono -->
     <link rel="icon" href="/path/to/icon.ico">
     <!-- Estilos CSS personalizados -->
-    <link rel="stylesheet" href="/css/styles.css">
     <!-- Estilos Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -17,6 +16,7 @@
           crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
 
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
@@ -29,13 +29,16 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
-            <li class="breadcrumb-item active text-primary" aria-current="page">
-                <i class="bi bi-house"></i> Inicio
+            <li class="breadcrumb-item">
+                <i class="bi bi-house"></i>
+                <a th:href="@{/user/welcome}"
+                   th:text="#{breadcrumb.welcome}">Bienvenida</a>
             </li>
             <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.posts}">Ver posts</li>
         </ol>
     </nav>
 </div>
+
 
 <div class="container mt-4">
 
