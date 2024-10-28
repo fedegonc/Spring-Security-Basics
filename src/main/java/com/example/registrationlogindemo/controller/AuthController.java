@@ -2,6 +2,7 @@ package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.Image;
+import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ImageRepository;
 import com.example.registrationlogindemo.service.ImageService;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -43,6 +45,20 @@ public class AuthController implements ErrorController {
     public ModelAndView handleError(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("guest/error"); // "error" es el nombre de la vista
         imageService.addFlagImages(mv);
+        // Obtener el usuario autenticado
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
+
+        // Si el usuario está autenticado, cargar datos en el modelo
+        if (authenticatedUserOpt.isPresent()) {
+            User usuario = authenticatedUserOpt.get();
+            mv.addObject("username", usuario.getUsername());
+            mv.addObject("user", usuario);
+            // Agregar imágenes personalizadas al modelo
+        } else {
+            // Redirigir a una página de error si no hay usuario autenticado
+            mv.setViewName("guest/error");
+            mv.addObject("error", "No tienes acceso a esta página. Por favor, inicia sesión.");
+        }
         // Capturar código de estado y mensaje de error
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         String errorMessage = (String) request.getAttribute("javax.servlet.error.message");
@@ -122,53 +138,45 @@ public class AuthController implements ErrorController {
         return mv;
     }
 
+    // Método welcomePage refactorizado
     @GetMapping("/init")
     public ModelAndView welcomePage(RedirectAttributes msg, HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String userrole = userDetails.getAuthorities().toString();
+            String userRole = userDetails.getAuthorities().toString();
 
+            // Solo muestra el mensaje de bienvenida al inicio de sesión
             if (session.getAttribute("hasLoggedIn") == null) {
                 session.setAttribute("hasLoggedIn", true);
-                switch (userrole) {
-                    case "[ROLE_USER]":
-                        msg.addFlashAttribute("success", "message.user.welcome");
-                        return new ModelAndView("redirect:user/welcome");
-                    case "[ROLE_COOPERATIVA]":
-                        msg.addFlashAttribute("success", "message.cooperativa.welcome");
-                        return new ModelAndView("redirect:cooperativa/dashboard");
-                    case "[ROLE_ASOCIACION]":
-                        msg.addFlashAttribute("success", "message.asociacion.welcome");
-                        return new ModelAndView("redirect:asociacion/dashboard");
-                    case "[ROLE_ADMIN]":
-                        msg.addFlashAttribute("success", "message.admin.welcome");
-                        return new ModelAndView("redirect:admin/dashboard");
-                    case "[ROLE_ROOT]":
-                        msg.addFlashAttribute("success", "message.root.welcome");
-                        return new ModelAndView("redirect:root/dashboard");
-                    default:
-                        break;
-                }
-            } else {
-                switch (userrole) {
-                    case "[ROLE_USER]":
-                        return new ModelAndView("redirect:user/welcome");
-                    case "[ROLE_COOPERATIVA]":
-                        return new ModelAndView("redirect:cooperativa/dashboard");
-                    case "[ROLE_ASOCIACION]":
-                        return new ModelAndView("redirect:asociacion/dashboard");
-                    case "[ROLE_ADMIN]":
-                        return new ModelAndView("redirect:admin/dashboard");
-                    case "[ROLE_ROOT]":
-                        return new ModelAndView("redirect:root/dashboard");
-                    default:
-                        break;
-                }
+                msg.addFlashAttribute("success", "message.welcome");
             }
+
+            // Redirige al usuario según su rol
+            return redirectByUserRole(userRole);
         }
+
+        // Redirige a error si no hay autenticación válida
         msg.addFlashAttribute("error", "message.auth.error");
         return new ModelAndView("redirect:error");
+    }
+
+    // Redirige al usuario según su rol
+    private ModelAndView redirectByUserRole(String userRole) {
+        switch (userRole) {
+            case "[ROLE_USER]":
+                return new ModelAndView("redirect:user/welcome");
+            case "[ROLE_COOPERATIVA]":
+                return new ModelAndView("redirect:cooperativa/dashboard");
+            case "[ROLE_ASOCIACION]":
+                return new ModelAndView("redirect:asociacion/dashboard");
+            case "[ROLE_ADMIN]":
+                return new ModelAndView("redirect:admin/dashboard");
+            case "[ROLE_ROOT]":
+                return new ModelAndView("redirect:root/dashboard");
+            default:
+                return new ModelAndView("redirect:error");
+        }
     }
 
 }

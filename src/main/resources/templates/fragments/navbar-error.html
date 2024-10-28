@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barra de Navegación</title>
+    <title>Navbar Error</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+<body>
+<div th:fragment="navbar-error">
 
-<body class="pt-5">
-<div th:fragment="navbar-user">
     <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container-fluid">
 
@@ -24,39 +25,8 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto">
 
-                    <!-- Dropdown: Solicitudes -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdownSolicitudes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-clipboard-check"></i> <span>Solicitudes</span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownSolicitudes">
-                            <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">Nueva Solicitud</a></li>
-                            <li><a class="dropdown-item" th:href="@{/user/view-requests}">Ver Solicitudes</a></li>
-                            <li><a class="dropdown-item" th:href="@{/user/statistics}">Ver Solicitudes</a></li>
-                            <li><a class="dropdown-item" th:href="@{/materiales}">Materiales</a></li>
-
-
-                        </ul>
-                    </li>
-
-                    <!-- Dropdown: Contenidos -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdownContenidos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-book"></i> <span>Contenidos</span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownContenidos">
-                            <li><a class="dropdown-item" th:href="@{/user/viewarticles}">Artículos</a></li>
-                            <li><a class="dropdown-item" th:href="@{/informaciones}">Informaciones</a></li>
-                            <li><a class="dropdown-item" th:href="@{/noticias}">Noticias</a></li>
-                            <li><a class="dropdown-item" th:href="@{/ambiental}">Ed Ambiental</a></li>
-                            <li><a class="dropdown-item" th:href="@{/alianzas}">Alianzas</a></li>
-                            <li><a class="dropdown-item" th:href="@{/legislacion}">Legislación</a></li>
-
-                        </ul>
-                    </li>
-
-                    <!-- Dropdown: Usuario -->
-                    <li class="nav-item dropdown">
+                    <!-- Menú desplegable: Usuario (si está autenticado) -->
+                    <li class="nav-item dropdown" th:if="${isAuthenticated}">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="dropdownUsuario" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" class="rounded-circle me-2" width="30" height="30">
                             <span th:text="${user.username}">Usuario</span>
@@ -86,10 +56,25 @@
                             <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
                         </a>
                     </li>
+
+                    <!-- Opciones de autenticación (Iniciar Sesión/Registro) cuando no está autenticado -->
+                    <li th:if="${!isAuthenticated}" class="nav-item">
+                        <a th:href="@{/login}" class="nav-link">Iniciar Sesión</a>
+                    </li>
+                    <li th:if="${!isAuthenticated}" class="nav-item">
+                        <a th:href="@{/register}" class="nav-link">Registrarse</a>
+                    </li>
+
                 </ul>
             </div>
         </div>
     </nav>
 </div>
+
+<!-- Scripts de Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

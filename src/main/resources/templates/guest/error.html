@@ -11,10 +11,26 @@
 
 <body class="bg-light d-flex flex-column min-vh-100">
 
-<div th:replace="~{fragments/navbar-info :: navbar-info}"></div>
+<div th:replace="~{fragments/navbar-error :: navbar-error}"></div>
 
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
+            <li class="breadcrumb-item">
+                <a th:href="@{/index}" class="text-decoration-none">
+                    <i class="bi bi-house"></i>
+                    <span th:text="#{breadcrumb.home}">Inicio</span>
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <span>Error</span>
+            </li>
+        </ol>
+    </nav>
+</div>
 
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="row">
@@ -22,7 +38,6 @@
             <div class="card shadow-lg">
                 <div class="card-body text-center">
                     <!-- Título y descripción general del error -->
-                    <h1 class="display-4 text-danger" th:text="'Error ' + ${status}">Error</h1>
                     <p class="lead" th:text="${error}">Ha ocurrido un error inesperado.</p>
 
                     <!-- Botón para regresar a la página principal -->

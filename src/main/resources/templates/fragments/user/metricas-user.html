@@ -4,65 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Métricas</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
 <div th:fragment="metricas-user">
-    <section class="container my-2">
-        <div class="p-2 bg-white shadow-sm rounded"> <!-- Padding reducido -->
-            <h5 class="text-start mb-2">Estado de las Métricas</h5>
-            <p class="text-start mb-2">
+    <section class="container my-3">
+        <div class="p-3 bg-white shadow-sm rounded text-center"> <!-- Alineación centrada para consistencia -->
+            <h6 class="mb-2">Estado de las Métricas</h6>
+            <p class="small text-muted mb-2">
                 A continuación, se muestran las solicitudes activas junto con su fecha y estado. Haz clic en "Revisar" para ver más detalles o editar la solicitud.
             </p>
         </div>
 
         <!-- Tarjetas de Métricas usando Flexbox -->
-        <div class="d-flex flex-wrap justify-content-center gap-2 my-2">
-            <div class="card text-center shadow-sm" style="width: 150px; font-size: 0.8rem;">
-                <div class="card-body p-1">
+        <div class="d-flex flex-wrap justify-content-center gap-3 my-2">
+            <div class="card text-center shadow-sm" style="width: 90px; font-size: 0.55rem;">
+                <div class="card-body p-2">
                     <h6 class="card-title mb-1">Activas</h6>
-                    <p class="card-text mb-1">15</p>
-                    <p class="text-muted" style="font-size: 0.7rem;">85%</p>
+                    <p class="card-text font-weight-bold mb-1">15</p>
+                    <p class="text-muted small mb-0">85%</p>
                 </div>
             </div>
 
-            <div class="card text-center shadow-sm" style="width: 150px; font-size: 0.8rem;">
-                <div class="card-body p-1">
+            <div class="card text-center shadow-sm" style="width: 90px; font-size: 0.55rem;">
+                <div class="card-body p-2">
                     <h6 class="card-title mb-1">Aceptadas</h6>
-                    <p class="card-text mb-1">4</p>
-                    <p class="text-muted" style="font-size: 0.7rem;">22%</p>
+                    <p class="card-text font-weight-bold mb-1">4</p>
+                    <p class="text-muted small mb-0">22%</p>
                 </div>
             </div>
 
-            <div class="card text-center shadow-sm" style="width: 150px; font-size: 0.8rem;">
-                <div class="card-body p-1">
+            <div class="card text-center shadow-sm" style="width: 90px; font-size: 0.55rem;">
+                <div class="card-body p-2">
                     <h6 class="card-title mb-1">Rechazadas</h6>
-                    <p class="card-text mb-1">2</p>
-                    <p class="text-muted" style="font-size: 0.7rem;">11%</p>
+                    <p class="card-text font-weight-bold mb-1">2</p>
+                    <p class="text-muted small mb-0">11%</p>
                 </div>
             </div>
 
-            <div class="card text-center shadow-sm" style="width: 150px; font-size: 0.8rem;">
-                <div class="card-body p-1">
+            <div class="card text-center shadow-sm" style="width: 90px; font-size: 0.55rem;">
+                <div class="card-body p-2">
                     <h6 class="card-title mb-1">En Proceso</h6>
-                    <p class="card-text mb-1">7</p>
-                    <p class="text-muted" style="font-size: 0.7rem;">40%</p>
+                    <p class="card-text font-weight-bold mb-1">7</p>
+                    <p class="text-muted small mb-0">40%</p>
                 </div>
             </div>
 
-            <div class="card text-center shadow-sm" style="width: 150px; font-size: 0.8rem;">
-                <div class="card-body p-1">
+            <div class="card text-center shadow-sm" style="width: 90px; font-size: 0.55rem;">
+                <div class="card-body p-2">
                     <h6 class="card-title mb-1">Completadas</h6>
-                    <p class="card-text mb-1">10</p>
-                    <p class="text-muted" style="font-size: 0.7rem;">58%</p>
+                    <p class="card-text font-weight-bold mb-1">10</p>
+                    <p class="text-muted small mb-0">58%</p>
                 </div>
             </div>
 
             <!-- Tarjeta de navegación a la página de estadísticas -->
-            <div class="card text-center shadow-sm" style="width: 150px; font-size: 0.8rem;">
+            <div class="card text-center shadow-sm" style="width: 90px; font-size: 0.55rem;">
                 <a th:href="@{/user/statistics}" class="text-decoration-none">
-                    <div class="card-body p-1">
-                        <h6 class="card-title mb-1">Ver más Estadísticas</h6>
+                    <div class="card-body p-2">
+                        <h6 class="card-title mb-1">Más Estadísticas</h6>
                     </div>
                 </a>
             </div>
