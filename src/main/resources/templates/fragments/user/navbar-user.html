@@ -7,8 +7,9 @@
 </head>
 
 <body class="pt-5">
-<div th:fragment="navbar-user">
-    <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+<div th:fragment="navbar-user" >
+    <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm"
+         th:if="${#authentication?.principal?.username == null}">
         <div class="container-fluid">
 
             <!-- Logo -->
@@ -32,10 +33,8 @@
                         <ul class="dropdown-menu" aria-labelledby="dropdownSolicitudes">
                             <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">Nueva Solicitud</a></li>
                             <li><a class="dropdown-item" th:href="@{/user/view-requests}">Ver Solicitudes</a></li>
-                            <li><a class="dropdown-item" th:href="@{/user/statistics}">Ver Solicitudes</a></li>
+                            <li><a class="dropdown-item" th:href="@{/user/statistics}">Estadísticas</a></li>
                             <li><a class="dropdown-item" th:href="@{/materiales}">Materiales</a></li>
-
-
                         </ul>
                     </li>
 
@@ -45,12 +44,20 @@
                             <i class="bi bi-book"></i> <span>Contenidos</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownContenidos">
-                            <li><a class="dropdown-item" th:href="@{/user/viewarticles}">Artículos</a></li>
-                            <li><a class="dropdown-item" th:href="@{/informaciones}">Informaciones</a></li>
+
+                            <!-- Encabezado de Comunidad -->
+                            <li><h6 class="dropdown-header">Comunidad</h6></li>
                             <li><a class="dropdown-item" th:href="@{/noticias}">Noticias</a></li>
                             <li><a class="dropdown-item" th:href="@{/ambiental}">Ed Ambiental</a></li>
                             <li><a class="dropdown-item" th:href="@{/alianzas}">Alianzas</a></li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Encabezado de Recursos -->
+                            <li><h6 class="dropdown-header">Recursos</h6></li>
+                            <li><a class="dropdown-item" th:href="@{/user/viewarticles}">Artículos</a></li>
                             <li><a class="dropdown-item" th:href="@{/legislacion}">Legislación</a></li>
+                            <li><a class="dropdown-item" th:href="@{/informaciones}">Informaciones</a></li>
 
                         </ul>
                     </li>

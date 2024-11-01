@@ -29,22 +29,21 @@ import java.util.Optional;
 @Controller
 public class AuthController implements ErrorController {
 
-    private final UserService userService;
 
+    @Autowired
+    UserService userService;
     @Autowired
     ImageRepository imageRepository;
 
     @Autowired
     ImageService imageService;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/error")
     public ModelAndView handleError(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("guest/error"); // "error" es el nombre de la vista
         imageService.addFlagImages(mv);
+
         // Obtener el usuario autenticado
         Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
 
@@ -52,23 +51,22 @@ public class AuthController implements ErrorController {
         if (authenticatedUserOpt.isPresent()) {
             User usuario = authenticatedUserOpt.get();
             mv.addObject("username", usuario.getUsername());
-            mv.addObject("user", usuario);
-            // Agregar imágenes personalizadas al modelo
+            mv.addObject("user", usuario); // Solo se agrega si el usuario está autenticado
+            mv.addObject("isAuthenticatedUser", true); // Agregar la variable solo si el usuario está autenticado
+            System.out.println("Usuario autenticado, isAuthenticatedUser = true");
         } else {
-            // Redirigir a una página de error si no hay usuario autenticado
-            mv.setViewName("guest/error");
+            // Usuario no autenticado: agregar mensaje de error
             mv.addObject("error", "No tienes acceso a esta página. Por favor, inicia sesión.");
+            mv.addObject("isAuthenticatedUser", false); // Se asegura de que isAuthenticatedUser sea false
+            System.out.println("Usuario no autenticado, isAuthenticatedUser = false");
         }
+
         // Capturar código de estado y mensaje de error
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         String errorMessage = (String) request.getAttribute("javax.servlet.error.message");
 
         // Mensaje de error amigable
-        if (errorMessage == null) {
-            errorMessage = "Ha ocurrido un error inesperado. Por favor, vuelve a intentarlo.";
-        }
-
-        // Añadir los detalles al ModelAndView usando addObject
+        errorMessage = (errorMessage != null) ? errorMessage : "Ha ocurrido un error inesperado. Por favor, vuelve a intentarlo.";
         mv.addObject("status", statusCode != null ? statusCode : "Error desconocido");
         mv.addObject("error", errorMessage);
 

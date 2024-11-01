@@ -59,7 +59,7 @@
     }
 
     .metrica-item {
-        max-width: 90%; /* Las tarjetas ocupan casi todo el ancho en pantallas pequeñas */
+        max-width: 90%;
     }
 }
 

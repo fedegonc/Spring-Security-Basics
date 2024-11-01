@@ -6,6 +6,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -20,7 +23,15 @@ import java.util.Locale;
 public class WebConfig implements WebMvcConfigurer {
 
 
+    @ModelAttribute("isAuthenticated")
+    public boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String);
 
+        // Imprime el estado de autenticación en la consola
+
+        return isAuthenticated;
+    }
     // Bean para cargar los mensajes en diferentes idiomas
     @Bean("messageSource")
     public MessageSource messageSource() {

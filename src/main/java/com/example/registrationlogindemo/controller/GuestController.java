@@ -9,6 +9,7 @@ import com.example.registrationlogindemo.repository.ImageRepository;
 import com.example.registrationlogindemo.repository.ReportRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.ImageService;
+import com.example.registrationlogindemo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -38,6 +39,10 @@ import java.util.Optional;
 public class GuestController {
     @Autowired
     ArticleRepository articleRepository;
+
+    @Autowired
+    UserService userService;
+
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -142,6 +147,17 @@ public class GuestController {
     @GetMapping("/construction")
     public ModelAndView contruction() {
         ModelAndView mv = new ModelAndView("user/construction");
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
+
+        // Si el usuario está autenticado, cargar datos en el modelo
+        if (authenticatedUserOpt.isPresent()) {
+            User usuario = authenticatedUserOpt.get();
+            mv.addObject("username", usuario.getUsername());
+            mv.addObject("user", usuario);
+            // Agregar imágenes personalizadas al modelo
+        }
+
+
         imageService.addFlagImages(mv);
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("GENERICO");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
@@ -152,6 +168,17 @@ public class GuestController {
     @GetMapping("/ambiental")
     public ModelAndView ambiental() {
         ModelAndView mv = new ModelAndView("guest/ambiental");
+
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
+
+        // Si el usuario está autenticado, cargar datos en el modelo
+        if (authenticatedUserOpt.isPresent()) {
+            User usuario = authenticatedUserOpt.get();
+            mv.addObject("username", usuario.getUsername());
+            mv.addObject("user", usuario);
+            // Agregar imágenes personalizadas al modelo
+        }
+
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("EDUCACION_AMBIENTAL");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
@@ -164,6 +191,16 @@ public class GuestController {
     @GetMapping("/noticias")
     public ModelAndView noticias() {
         ModelAndView mv = new ModelAndView("guest/noticias");
+
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
+
+        // Si el usuario está autenticado, cargar datos en el modelo
+        if (authenticatedUserOpt.isPresent()) {
+            User usuario = authenticatedUserOpt.get();
+            mv.addObject("username", usuario.getUsername());
+            mv.addObject("user", usuario);
+            // Agregar imágenes personalizadas al modelo
+        }
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("NOTICIA");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
@@ -177,6 +214,18 @@ public class GuestController {
     @GetMapping("/materiales")
     public ModelAndView materiales() {
         ModelAndView mv = new ModelAndView("guest/materiales");
+
+
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
+
+        // Si el usuario está autenticado, cargar datos en el modelo
+        if (authenticatedUserOpt.isPresent()) {
+            User usuario = authenticatedUserOpt.get();
+            mv.addObject("username", usuario.getUsername());
+            mv.addObject("user", usuario);
+            // Agregar imágenes personalizadas al modelo
+        }
+
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("TIPOS_DE_MATERIALES");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
@@ -190,6 +239,16 @@ public class GuestController {
     @GetMapping("/alianzas")
     public ModelAndView alianzas() {
         ModelAndView mv = new ModelAndView("guest/alianzas");
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
+
+        // Si el usuario está autenticado, cargar datos en el modelo
+        if (authenticatedUserOpt.isPresent()) {
+            User usuario = authenticatedUserOpt.get();
+            mv.addObject("username", usuario.getUsername());
+            mv.addObject("user", usuario);
+            // Agregar imágenes personalizadas al modelo
+        }
+
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("ALIANZAS");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 
@@ -202,6 +261,16 @@ public class GuestController {
     @GetMapping("/legislacion")
     public ModelAndView legislacion() {
         ModelAndView mv = new ModelAndView("guest/legislacion");
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
+
+        // Si el usuario está autenticado, cargar datos en el modelo
+        if (authenticatedUserOpt.isPresent()) {
+            User usuario = authenticatedUserOpt.get();
+            mv.addObject("username", usuario.getUsername());
+            mv.addObject("user", usuario);
+            // Agregar imágenes personalizadas al modelo
+        }
+
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("LEGISLACION");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
 

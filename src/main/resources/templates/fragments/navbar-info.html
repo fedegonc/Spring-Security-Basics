@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<div th:fragment="navbar-info">
+<div th:fragment="navbar-info" >
 
     <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container-fluid">
@@ -27,14 +27,12 @@
 
                     <li class="nav-item dropdown" th:insert="~{fragments/navbar/recycle :: recycle}"></li>
 
-
                     <!-- Menú desplegable: Usuario -->
                     <li class="nav-item dropdown" th:insert="~{fragments/navbar/resources :: resources}"></li>
 
-
+                    <!-- Idiomas -->
                     <li class="nav-item">
-                        <a th:href="@{${currentUrl}(language='es')}"
-                           class="nav-link">
+                        <a th:href="@{${currentUrl}(language='es')}" class="nav-link">
                             <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
                         </a>
                     </li>
@@ -44,9 +42,9 @@
                         </a>
                     </li>
 
-                    <div th:if="${!isAuthenticated and (currentUrl != '/login' and currentUrl != '/register')}">
-                        <div th:replace="~{fragments/navbar/auth :: auth}" >
-                        </div>
+                    <div th:if="${#authentication?.principal?.username == null and (currentUrl != '/login' and currentUrl != '/register')}">
+
+                        <div th:replace="~{fragments/navbar/auth :: auth}"></div>
                     </div>
 
                 </ul>
@@ -54,7 +52,6 @@
         </div>
     </nav>
 </div>
-
 
 <!-- Scripts de Bootstrap -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
