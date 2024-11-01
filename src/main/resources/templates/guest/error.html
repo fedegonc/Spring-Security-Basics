@@ -16,9 +16,13 @@
 <body class="bg-light d-flex flex-column min-vh-100">
 
 
-<!-- Fragmento de Navbar para usuario no autenticado -->
-<div th:replace="~{fragments/navbar-info :: navbar-info}"></div>
+<div th:if="${userStatus.isAuthenticated()}">
+    <div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+</div>
 
+<div th:if="${!userStatus.isAuthenticated()}">
+    <div th:replace="~{fragments/navbar-info :: navbar-info}"></div>
+</div>
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
 
