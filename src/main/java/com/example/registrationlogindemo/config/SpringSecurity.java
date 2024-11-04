@@ -47,6 +47,7 @@ public class SpringSecurity {
                                         ,"/materiales","/legislacion","/alianzas","/base","/error",
                                         "/resources/**", "/templates/fragments/**"
                                                 ).permitAll()
+
                                 .requestMatchers("/report/**","/img/**"
 
                                                 ).hasAnyRole("USER", "COOPERATIVA", "ASOCIACION", "ADMIN", "ROOT")
@@ -86,8 +87,9 @@ public class SpringSecurity {
                 )
                 // Configuración del almacenamiento de solicitudes en caché
                 .requestCache(cache -> cache
-                        .requestCache(requestCache)
+                        .requestCache(new HttpSessionRequestCache())
                 );
+
         return http.build();
     }
 
@@ -99,8 +101,3 @@ public class SpringSecurity {
                 .passwordEncoder(passwordEncoder());
     }
 }
-
-//codigo recidual
-/* .requestMatchers("/buscarPorNombre").permitAll()
- .requestMatchers("/buscarPorCategoria").permitAll()
- */

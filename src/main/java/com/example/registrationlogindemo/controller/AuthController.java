@@ -7,13 +7,17 @@ import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ImageRepository;
 import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +41,8 @@ public class AuthController implements ErrorController {
 
     @Autowired
     ImageService imageService;
+
+    private final HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
 
 
     @GetMapping("/error")
@@ -136,44 +142,56 @@ public class AuthController implements ErrorController {
         return mv;
     }
 
-    // Método welcomePage refactorizado
+
+
     @GetMapping("/init")
-    public ModelAndView welcomePage(RedirectAttributes msg, HttpSession session) {
+    public ModelAndView welcomePage(RedirectAttributes msg, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Verifica si el usuario está autenticado
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String userRole = userDetails.getAuthorities().toString();
 
-            // Solo muestra el mensaje de bienvenida al inicio de sesión
+            // Solo muestra el mensaje de bienvenida una vez al iniciar sesión
             if (session.getAttribute("hasLoggedIn") == null) {
                 session.setAttribute("hasLoggedIn", true);
-                msg.addFlashAttribute("success", "message.welcome");
+                msg.addFlashAttribute("success", "Bienvenido/a al sistema.");
             }
 
-            // Redirige al usuario según su rol
+            // Recupera la URL solicitada antes de iniciar sesión, si existe
+            SavedRequest savedRequest = requestCache.getRequest(request, response);
+            if (savedRequest != null) {
+                // Redirige a la URL solicitada originalmente
+                requestCache.removeRequest(request, response); // Limpia el caché de URL
+                return new ModelAndView("redirect:" + savedRequest.getRedirectUrl());
+            }
+
+            // Si no hay URL guardada, redirige al usuario según su rol
             return redirectByUserRole(userRole);
         }
 
-        // Redirige a error si no hay autenticación válida
-        msg.addFlashAttribute("error", "message.auth.error");
-        return new ModelAndView("redirect:error");
+        // Si no hay autenticación válida, redirige a una página de error
+        msg.addFlashAttribute("error", "Error de autenticación.");
+        return new ModelAndView("redirect:/error");
     }
 
-    // Redirige al usuario según su rol
+
+    // Redirige al usuario a la vista correspondiente según su rol
     private ModelAndView redirectByUserRole(String userRole) {
         switch (userRole) {
             case "[ROLE_USER]":
-                return new ModelAndView("redirect:user/welcome");
+                return new ModelAndView("redirect:/user/welcome");
             case "[ROLE_COOPERATIVA]":
-                return new ModelAndView("redirect:cooperativa/dashboard");
+                return new ModelAndView("redirect:/cooperativa/dashboard");
             case "[ROLE_ASOCIACION]":
-                return new ModelAndView("redirect:asociacion/dashboard");
+                return new ModelAndView("redirect:/asociacion/dashboard");
             case "[ROLE_ADMIN]":
-                return new ModelAndView("redirect:admin/dashboard");
+                return new ModelAndView("redirect:/admin/dashboard");
             case "[ROLE_ROOT]":
-                return new ModelAndView("redirect:root/dashboard");
+                return new ModelAndView("redirect:/root/dashboard");
             default:
-                return new ModelAndView("redirect:error");
+                return new ModelAndView("redirect:/error");
         }
     }
 
