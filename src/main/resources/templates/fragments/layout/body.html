@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/components/commonHead :: commonHead}">
+<head th:replace="~{fragments/layout/head :: head}">
   <title>Login</title>
 </head>
 
-<body th:fragment="fullBodyLayout" class="d-flex flex-column min-vh-100">
+<body th:fragment="body" class="d-flex flex-column min-vh-100">
 
 
 <div th:replace="fragments/navbar-info :: navbar-info"></div>
