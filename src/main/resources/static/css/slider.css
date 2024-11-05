@@ -1,0 +1,29 @@
+/* Estilos básicos */
+.slider {
+    width: 100%; /* Ancho del slider */
+    overflow: hidden; /* Oculta el desbordamiento */
+    position: relative;
+}
+
+.slider-track {
+    display: flex;
+    animation: slide 8s linear infinite alternate; /* Animación de ida y vuelta */
+}
+
+.slider img {
+    width: 100%; /* Ajusta el ancho de las imágenes */
+    flex-shrink: 0; /* Mantiene cada imagen sin cambiar de tamaño */
+}
+
+/* Keyframes para el movimiento de izquierda a derecha y viceversa */
+@keyframes slide {
+    0% {
+        transform: translateX(0); /* Comienza desde la posición inicial */
+    }
+    50% {
+        transform: translateX(-100%); /* Mueve el track a la izquierda */
+    }
+    100% {
+        transform: translateX(0); /* Vuelve a la posición inicial */
+    }
+}
