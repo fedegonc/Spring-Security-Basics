@@ -38,8 +38,10 @@ public class AImages {
     @Autowired
     private ImageRepository imageRepository;
 
-    private UserService userService;
-    private ImageService imageService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    ImageService imageService;
 
     @Autowired
     public AImages(UserService userService, ImageService imageService) {

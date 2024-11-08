@@ -41,33 +41,17 @@ public class SolicitudeController {
     SolicitudeRepository solicitudeRepository;
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     MessageRepository messageRepository;
-
-    private UserService userService;
-
-
+    @Autowired
+    UserService userService;
+    @Autowired
+    ImageService imageService;
     @Autowired
     private MessageService messageService;
-
     @Autowired
     private SolicitudeService solicitudeService;
 
-
-    @Autowired
-    ImageService imageService;
-
-
-
-    // Constructor que inyecta el servicio UserService
-    public void UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    public SolicitudeController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/newsolicitude")
     public ModelAndView newSolicitude() {

@@ -49,14 +49,10 @@ public class RootController {
 
     @Autowired
     ImageRepository imageRepository;
-    private final UserService userService;
-    private final ImageService imageService;
-
-    // Constructor que inyecta el servicio UserService
-    public RootController(UserService userService, ImageService imageService) {
-        this.userService = userService;
-        this.imageService = imageService;
-    }
+    @Autowired
+    UserService userService;
+    @Autowired
+    ImageService imageService;
 
     @GetMapping("/dashboard")
     public ModelAndView rootDashboard() {

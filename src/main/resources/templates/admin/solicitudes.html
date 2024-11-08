@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Bienvenida</title>
 </head>
-<body class="bg-light d-flex flex-column min-vh-100">
+
+
+<body class="d-flex flex-column min-vh-100">
 
 <div th:replace="~{fragments/admin/navbar-admin :: navbar-admin}"></div>
 

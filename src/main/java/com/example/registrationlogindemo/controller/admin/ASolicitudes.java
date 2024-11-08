@@ -31,18 +31,12 @@ public class ASolicitudes {
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    UserService userService;
+    @Autowired
+    ImageService imageService;
 
 
-
-
-    private UserService userService;
-
-
-    // Constructor que inyecta el servicio UserService
-    public void ASolicitudes(UserService userService, ImageService imageService) {
-        this.userService = userService;
-
-    }
     @GetMapping("/solicitudes")
     public ModelAndView adminSolicitudes() {
         ModelAndView mv = new ModelAndView("root/solicitudes");

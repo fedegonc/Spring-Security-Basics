@@ -5,6 +5,7 @@ import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.ImageService;
+import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,12 +30,14 @@ public class ArticleController {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ArticleRepository articleRepository;
-
+    @Autowired
+    UserService userService;
     @Autowired
     ImageService imageService;
+
+
 
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 

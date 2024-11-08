@@ -8,6 +8,7 @@ import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.MessageRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.MessageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
@@ -45,22 +46,15 @@ public class CooperativaController {
     UserRepository userRepository;
     @Autowired
     ArticleRepository articleRepository;
-
     @Autowired
     MessageService messageService;
-
     @Autowired
     MessageRepository messageRepository;
-    private UserService userService;
+    @Autowired
+    ImageService imageService;
+    @Autowired
+    UserService userService;
 
-    // Constructor que inyecta el servicio UserService
-    public void UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    public CooperativaController(UserService userService) {
-        this.userService = userService;
-    }
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     @GetMapping("/dashboard")
@@ -76,6 +70,8 @@ public class CooperativaController {
             mv.addObject("user", usuario);
 
         }
+
+        imageService.addFlagImages(mv);
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         mv.addObject("principal", principal.toString());
@@ -115,6 +111,8 @@ public class CooperativaController {
             }
             mv.addObject("user", user);
         }
+
+        imageService.addFlagImages(mv);
 
         return mv;
     }
@@ -176,6 +174,9 @@ public class CooperativaController {
 
         List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("cooperativa");
         mv.addObject("solicitudes", solicitudes);
+
+        imageService.addFlagImages(mv);
+
         return mv;
     }
 
@@ -196,6 +197,8 @@ public class CooperativaController {
         } else {
             mv.setViewName("redirect:/cooperativa/dashboard");
         }
+
+        imageService.addFlagImages(mv);
 
         return mv;
     }
@@ -261,6 +264,7 @@ public class CooperativaController {
     @GetMapping("/deletesolicitude/{id}")
     public String deleteSolicitude(@PathVariable("id") long id) {
         solicitudeRepository.deleteSolicitudeById(id);
+
         return "redirect:/cooperativa/dashboard";
     }
 
@@ -269,6 +273,7 @@ public class CooperativaController {
         ModelAndView mv = new ModelAndView("cooperativa/articles");
 
         List<Article> articles = articleRepository.findAll();
+        imageService.addFlagImages(mv);
         mv.addObject("articles", articles);
 
         return mv;
@@ -277,6 +282,7 @@ public class CooperativaController {
     @GetMapping("/deletearticle/{id}")
     public String deleteArticle(@PathVariable("id") long id) {
         articleRepository.deleteById(id);
+
         return "redirect:/cooperativa/dashboard";
     }
 

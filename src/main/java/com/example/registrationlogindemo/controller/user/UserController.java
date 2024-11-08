@@ -38,7 +38,6 @@ public class UserController {
 
     @Autowired
     SolicitudeRepository solicitudeRepository;
-
     @Autowired
     SolicitudeService solicitudeService;
     @Autowired
@@ -50,7 +49,6 @@ public class UserController {
     private final UserService userService;
     @Autowired
     ImageRepository imageRepository;
-
     @Autowired
     ImageService imageService;
 

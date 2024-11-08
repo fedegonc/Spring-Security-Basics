@@ -37,33 +37,25 @@ import java.util.Optional;
 
 @Controller
 public class GuestController {
+
     @Autowired
     ArticleRepository articleRepository;
-
     @Autowired
     UserService userService;
-
     @Autowired
     UserRepository userRepository;
     @Autowired
     ReportRepository reportRepository;
-
     @Autowired
     ImageRepository imageRepository;
-
     @Autowired
     ImageService imageService;
-    // Método que agrega las banderas al ModelAndView
 
 
 
-    // Obtiene la página de inicio y muestra las solicitudes activas
     @GetMapping({"", "/", "/index"})
     public ModelAndView getIndex() {
-        // Crear una instancia de ModelAndView con la vista "index"
         ModelAndView mv = new ModelAndView("guest/index");
-
-        // Agregar las banderas al modelo
         imageService.addFlagImages(mv);
 
         // Obtener la autenticación actual del usuario
@@ -81,11 +73,8 @@ public class GuestController {
         // Convertir el String a Enum
         Article.Categoria categoriaGenerica = Article.Categoria.valueOf("GENERICO");
         List<Article> articles = articleRepository.findByCategoria(categoriaGenerica);
-
         mv.addObject("articles", articles);
 
-
-        // Devolver el ModelAndView
         return mv;
     }
 
@@ -98,14 +87,13 @@ public class GuestController {
             // Invalida la sesión actual
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
-        // Redirige a la página de inicio después de cerrar sesión
         return "redirect:/";
     }
 
     @GetMapping("/img/{img}")
     @ResponseBody
     public ResponseEntity<byte[]> getImage(@PathVariable("img") String img) {
-        // Primero intentamos obtener la imagen del directorio estático
+
         File file = new File("./src/main/resources/static/img/" + img);
         if (file.exists() && !file.isDirectory()) {
             try {

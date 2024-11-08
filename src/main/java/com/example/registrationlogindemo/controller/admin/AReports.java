@@ -29,17 +29,14 @@ public class AReports {
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
-
-
     @Autowired
     ReportRepository reportRepository;
+    @Autowired
+    UserService userService;
+    @Autowired
+    ImageService imageService;
 
 
-    private UserService userService;
-    public void AdminController(UserService userService, ImageService imageService) {
-        this.userService = userService;
-
-    }
 
     @GetMapping("/reports")
     public ModelAndView adminReports() {

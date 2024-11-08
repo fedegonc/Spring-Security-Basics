@@ -21,15 +21,9 @@ public class ADashboard {
     ImageService imageService;
     @Autowired
     ImageRepository imageRepository;
-    private UserService userService;
-    public void AdminController(UserService userService, ImageService imageService) {
-        this.userService = userService;
+    @Autowired
+    UserService userService;
 
-    }
-    public ADashboard(UserService userService, ImageService imageService) {
-        this.userService = userService;
-
-    }
 
     // Método para mostrar el dashboard
     @GetMapping("/dashboard")

@@ -4,6 +4,7 @@ import com.example.registrationlogindemo.entity.Article;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.ImageService;
 import jakarta.validation.Valid;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,11 @@ public class AArticles {
 
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     ArticleRepository articleRepository;
+    @Autowired
+    ImageService imageService;
+
 
     @GetMapping("/articles")
     public ModelAndView adminViewArticles() {

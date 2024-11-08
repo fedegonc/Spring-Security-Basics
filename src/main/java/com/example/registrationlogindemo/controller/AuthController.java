@@ -38,7 +38,6 @@ public class AuthController implements ErrorController {
     UserService userService;
     @Autowired
     ImageRepository imageRepository;
-
     @Autowired
     ImageService imageService;
 

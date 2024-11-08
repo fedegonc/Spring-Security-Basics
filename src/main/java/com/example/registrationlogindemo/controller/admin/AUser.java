@@ -26,6 +26,8 @@ public class AUser {
     UserRepository userRepository;
     @Autowired
     UserService userService;
+    @Autowired
+    ImageService imageService;
 
     @GetMapping("/users")
     public ModelAndView rootUsers() {

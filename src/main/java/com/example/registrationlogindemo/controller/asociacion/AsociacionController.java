@@ -8,6 +8,7 @@ import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.MessageRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.MessageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
@@ -42,22 +43,14 @@ public class AsociacionController {
     UserRepository userRepository;
     @Autowired
     ArticleRepository articleRepository;
-
     @Autowired
     MessageRepository messageRepository;
-
     @Autowired
     MessageService messageService;
-    private UserService userService;
-
-    // Constructor que inyecta el servicio UserService
-    public void UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    public AsociacionController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    UserService userService;
+    @Autowired
+    ImageService imageService;
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     @GetMapping("/dashboard")
@@ -84,7 +77,7 @@ public class AsociacionController {
             List<User> users = userRepository.findAll();
             mv.addObject("users", users);
         }
-
+        imageService.addFlagImages(mv);
         return mv;
     }
 
@@ -108,7 +101,7 @@ public class AsociacionController {
             }
             mv.addObject("user", user);
         }
-
+        imageService.addFlagImages(mv);
         return mv;
     }
 
@@ -189,7 +182,7 @@ public class AsociacionController {
         } else {
             mv.setViewName("redirect:/asociacion/dashboard");
         }
-
+        imageService.addFlagImages(mv);
         return mv;
     }
 
@@ -260,6 +253,7 @@ public class AsociacionController {
     public ModelAndView getArticles() {
         ModelAndView mv = new ModelAndView("asociacion/articles");
         List<Article> articles = articleRepository.findAll();
+        imageService.addFlagImages(mv);
         mv.addObject("articles", articles);
         return mv;
     }
@@ -286,7 +280,7 @@ public class AsociacionController {
         } else {
             mv.setViewName("redirect:/error");
         }
-
+        imageService.addFlagImages(mv);
         return mv;
     }
     @GetMapping("/deletearticle/{id}")
