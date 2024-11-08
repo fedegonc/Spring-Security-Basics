@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Bienvenida</title>
+</head>
+
+<body class="pt-5">
+<div th:fragment="solicitudes-table">
+
+    <div class="container mt-4">
+        <h2>Solicitudes</h2>
+        <table id="solicitudesTable" class="table-sm table-striped table-bordered table-hover table-sm">
+            <thead class="table-dark">
+            <tr>
+                <th>Descripción</th>
+                <th>Imagen</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="solicitude : ${solicitudes}">
+                <td th:text="${solicitude.categoria}"></td>
+                <!-- Contenedor de imagen para efecto de zoom controlado -->
+                <td>
+                    <div class="img-thumbnail-container">
+                        <img th:src="@{/img/{img}(img=${solicitude.imagen})}" class="img-thumbnail-table" alt="Imagen de solicitud">
+                    </div>
+                </td>
+                <td th:text="#{${solicitude.estado}}"></td>
+                <td>
+                    <a class="btn btn-info btn-sm" th:href="@{/cooperativa/reviewsolicitude/{id}(id=${solicitude.id})}">Revisar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

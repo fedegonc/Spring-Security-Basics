@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Bienvenida</title>
+</head>
+
+<body class="pt-5">
+<div th:fragment="info-cooperativa">
+    <div class="container mt-4">
+        <span th:text="#{info_usuario}">Información del Usuario</span>
+        <h3 th:text="${username}">Nombre de Usuario</h3>
+    </div>
+</div>
+</body>
+</html>
