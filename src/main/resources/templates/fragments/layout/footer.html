@@ -17,7 +17,7 @@
 
                 <!-- Soporte y Ayuda (si el usuario está autenticado) -->
                 <div th:if="${#authentication?.principal?.username == null}" class="mb-2">
-                    <a th:href="@{/user/report}" class="btn btn-outline-light btn-sm">
+                    <a th:href="@{/report}" class="btn btn-outline-light btn-sm">
                         <i class="bi bi-question-circle"></i> Soporte y Ayuda
                     </a>
                 </div>

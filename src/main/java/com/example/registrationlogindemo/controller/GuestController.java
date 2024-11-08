@@ -268,8 +268,39 @@ public class GuestController {
         mv.addObject("articles", articles);
         return mv;
     }
+    @GetMapping("/report")
+    public ModelAndView newReport() {
+        ModelAndView mv = new ModelAndView("user/report-problem");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
 
+            // Agregar el nombre de usuario al modelo para dar la bienvenida
+            mv.addObject("username", username);
 
+            // Obtener el usuario de la base de datos
+            User usuario = userRepository.findByUsername(username);
+            mv.addObject("user", usuario);
+            imageService.addFlagImages(mv);
+        }
+        return mv;
+    }
+    @PostMapping("/report")
+    public String newReportPost(@Valid Report report,
+                                BindingResult result, RedirectAttributes msg,
+                                @AuthenticationPrincipal UserDetails currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername());
+        if (user != null) {
+            report.setUser(user);
+            reportRepository.save(report);
+            msg.addFlashAttribute("exito", "report realizada con éxito.");
+        } else {
+            msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
+        }
+
+        return "redirect:/init";
+    }
 
 }
 
