@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ES">
 
-<head th:replace="~{fragments/layout/head :: head}">
-    <title>Bienvenida</title>
-</head>
-
-<body class="pt-5">
 <div th:fragment="navbar-cooperativa">
 
     <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container-fluid">
 
             <!-- Logo -->
-            <div id="logo" th:replace="~{fragments/logo}"></div>
+            <div id="logo" th:replace="~{fragments/logo :: logo}"></div>
 
             <!-- Botón para navegación colapsable en dispositivos móviles -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -43,21 +38,15 @@
                             <i class="bi bi-book"></i> <span>Contenidos</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownContenidos">
-
-                            <!-- Encabezado de Comunidad -->
                             <li><h6 class="dropdown-header">Comunidad</h6></li>
                             <li><a class="dropdown-item" th:href="@{/noticias}">Noticias</a></li>
                             <li><a class="dropdown-item" th:href="@{/ambiental}">Ed Ambiental</a></li>
                             <li><a class="dropdown-item" th:href="@{/alianzas}">Alianzas</a></li>
-
                             <li><hr class="dropdown-divider"></li>
-
-                            <!-- Encabezado de Recursos -->
                             <li><h6 class="dropdown-header">Recursos</h6></li>
                             <li><a class="dropdown-item" th:href="@{/user/viewarticles}">Artículos</a></li>
                             <li><a class="dropdown-item" th:href="@{/legislacion}">Legislación</a></li>
                             <li><a class="dropdown-item" th:href="@{/informaciones}">Informaciones</a></li>
-
                         </ul>
                     </li>
 
@@ -69,7 +58,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownUsuario">
                             <li>
-                                <a th:href="@{/user/profile/{id}(id=${user.id})}" class="dropdown-item">
+                                <a th:href="@{/cooperativa/profile/{id}(id=${user.id})}" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i> Editar Perfil
                                 </a>
                             </li>
@@ -97,5 +86,4 @@
         </div>
     </nav>
 </div>
-</body>
 </html>
