@@ -186,7 +186,16 @@ public class CooperativaController {
                                                @AuthenticationPrincipal UserDetails currentUser) {
         ModelAndView mv = new ModelAndView("cooperativa/reviewsolicitude");
         Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            // Agregar el nombre de usuario al modelo para dar la bienvenida
+            mv.addObject("username", username);
+            User usuario = userRepository.findByUsername(username);
+            mv.addObject("user", usuario);
 
+        }
         if (solicitudeOpt.isPresent()) {
             Solicitude solicitude = solicitudeOpt.get();
             mv.addObject("solicitude", solicitude);

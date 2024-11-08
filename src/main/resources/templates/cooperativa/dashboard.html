@@ -3,33 +3,6 @@
 
 <head th:replace="~{fragments/layout/head :: head}">
     <title>Bienvenida</title>
-    <style>
-        /* Contenedor de la imagen con un tamaño fijo */
-        .img-thumbnail-container {
-            width: 40px; /* Tamaño más pequeño para la vista normal */
-            height: 40px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Imagen con efecto de zoom */
-        .img-thumbnail-table {
-            width: 5%;
-            height: 5%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        /* Ampliar la imagen al hacer hover */
-        .img-thumbnail-container:hover .img-thumbnail-table {
-            transform: scale(2); /* Aumenta la imagen al hacer hover */
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Añade sombra para el efecto visual */
-        }
-    </style>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -53,25 +26,58 @@
 <div th:replace="~{fragments/cooperativa/info-cooperativa :: info-cooperativa}"></div>
 
 
-<div th:replace="~{fragments/cooperativa/solicitudes-table :: solicitudes-table}"></div>
+<div class="container mt-4">
+    <h2>Solicitudes</h2>
+    <div class="table-responsive shadow-lg rounded bg-white">
+        <table id="solicitudesTable" class="table table-striped table-bordered table-hover table-sm align-middle">
+            <thead class="table-dark text-center">
+            <tr>
+                <th>Descripción</th>
+                <th>Imagen</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="solicitude : ${solicitudes}">
+                <td th:text="${solicitude.categoria}" class="text-secondary"></td>
+                <td class="text-center">
+                    <div class="img-thumbnail-container d-inline-block border border-secondary rounded">
+                        <img th:src="@{/img/{img}(img=${solicitude.imagen})}" alt="Imagen de solicitud"
+                             style="width: 40px; height: 40px; object-fit: cover;">
+                    </div>
+                </td>
+                <td th:text="#{${solicitude.estado}}" class="text-center"></td>
+                <td class="text-center">
+                    <a class="btn btn-outline-info btn-sm" th:href="@{/cooperativa/reviewsolicitude/{id}(id=${solicitude.id})}">
+                        Revisar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<!-- Script de inicialización de DataTables -->
+
+<!-- DataTables y Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <script>
     $(document).ready(function () {
         $('#solicitudesTable').DataTable({
-            paging: true,
-            searching: true,
-            ordering: true,
-            responsive: true,
+            paging: true,          // Activa la paginación
+            searching: true,       // Activa el cuadro de búsqueda
+            ordering: true,        // Activa la ordenación de columnas
+            responsive: true,      // Hace la tabla responsiva
+            pageLength: 2,         // Número de filas por página
+            lengthChange: true,    // Permite cambiar el número de filas por página
             language: {
-                url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es_es.json'
+                url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es_es.json' // Traducción al español
             }
         });
     });
 </script>
-
-<!-- Dependencias de DataTables -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<!-- jQuery y DataTables JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
