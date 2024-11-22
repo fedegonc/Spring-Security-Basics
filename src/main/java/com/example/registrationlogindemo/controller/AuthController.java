@@ -120,7 +120,7 @@ public class AuthController implements ErrorController {
 
         if (result.hasErrors()) {
             model.addAttribute("user", userDto);
-            return "/register";
+            return "/guest/register";
         }
 
         userService.saveUser(userDto);

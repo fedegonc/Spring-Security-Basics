@@ -33,11 +33,7 @@
                             <i class="bi bi-plus-circle"></i> <span>Solicitudes y Contenidos</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownSolicitudesContenidos">
-                            <li>
-                                <a class="dropdown-item" th:href="@{/user/newsolicitude}">
-                                    <i class="bi bi-plus-circle"></i> <span th:text="#{solicitud}">Solicitar Recolección</span>
-                                </a>
-                            </li>
+
                             <li>
                                 <a class="dropdown-item" th:href="@{/user/view-requests}">
                                     <i class="bi bi-file-earmark-text"></i> <span th:text="#{historysolicitudes}">Ver Historial de Solicitudes</span>
@@ -78,7 +74,7 @@
 
                     <!-- Perfil de Usuario con Imagen -->
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/user/profile/{id}(id=${user.id})}">
+                        <a class="nav-link" th:href="@{/admin/profile/{id}(id=${user.id})}">
                             <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" class="rounded-circle" width="30" height="30">
                             <span th:text="${user.username}">Usuario</span>
                         </a>
