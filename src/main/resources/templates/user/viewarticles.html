@@ -29,34 +29,10 @@
 
     <span th:text="#{info_articulos}">Información de la pagina</span>
 </div>
-<hr/>
-<div class="container mt-4">
-    <div class="row">
-        <h3 th:text="#{publicaciones.titulo}">Publicaciones</h3>
-    </div>
-    <div class="row row-cols-1 row-cols-md-3 g-3">
-        <!-- Tarjetas dinámicas -->
-        <div class="col" th:each="article: ${articles}">
-            <div class="card h-100">
-                <img th:src="@{/img/{img}(img=${article.imagenNombre})}" class="card-img-top" alt="Imagen del artículo"/>
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${article.titulo}">Título del artículo</h5>
-                </div>
-                <div class="card-footer">
-                    <a class="btn btn-primary" th:href="@{/article/viewarticle/{id}(id=${article.id})}" th:text="#{boton.leer}">Leer</a>
-                </div>
-            </div>
-        </div>
-        <!-- Mensaje cuando no hay artículos -->
-        <div th:if="${#lists.isEmpty(articles)}" class="col-12 text-center">
-            <p th:text="#{mensaje.sinArticulos}">Aún no hay artículos.</p>
-        </div>
-    </div>
-</div>
 
-<hr/>
+<div th:replace="~{fragments/user/publicaciones-user :: publicaciones-user}"></div>
+
 <div th:replace="~{fragments/layout/footer :: footer}"></div>
-
 
 <!-- Scripts -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
