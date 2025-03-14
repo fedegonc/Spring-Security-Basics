@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
 
-<head th:replace="~{fragments/layout/head :: head}">
-    <title>Login</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Yarami</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body th:replace="fragments/layout/body :: body">
-
-<!-- Contenido específico para el login -->
-<th:block th:fragment="content">
-    <!-- Breadcrumb -->
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-light shadow-sm rounded p-1.5">
-                <li class="breadcrumb-item">
-                    <a th:href="@{/index}" class="text-decoration-none">
-                        <i class="bi bi-house"></i>
-                        <span th:text="#{breadcrumb.home}">Inicio</span>
-                    </a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    <i class="bi bi-person-circle"></i>
-                    <span th:text="#{breadcrumb.login}">Login</span>
-                </li>
-            </ol>
-        </nav>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+<div class="bg-white p-8 rounded-lg shadow-lg w-96 text-center">
+    <header class="text-2xl font-bold text-green-700">Iniciar Sesión</header>
+    <nav class="mt-2">
+        <ol class="flex justify-center space-x-2 text-gray-600 text-sm">
+            <li>
+                <a th:href="@{/index}" class="hover:text-green-700">
+                    <i class="bi bi-house"></i> Inicio
+                </a>
+            </li>
+            <li>/</li>
+            <li class="text-green-700">
+                <i class="bi bi-person-circle"></i> Login
+            </li>
+        </ol>
+    </nav>
+    <div class="mt-4">
+        <div th:replace="fragments/guest/login-form :: login-form"></div>
     </div>
-
-    <div th:replace="fragments/guest/login-form :: login-form"></div>
-</th:block>
+    <footer class="text-gray-500 text-sm mt-4">&copy; 2025 Yarami</footer>
+</div>
 </body>
 </html>

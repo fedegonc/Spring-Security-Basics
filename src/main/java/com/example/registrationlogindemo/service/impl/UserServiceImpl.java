@@ -13,7 +13,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -169,5 +174,32 @@ public class UserServiceImpl implements UserService {
             return Optional.ofNullable(userRepository.findByUsername(username));
         }
         return Optional.empty();
+    }
+
+    private static final String IMAGE_UPLOAD_DIR = "./src/main/resources/static/img/";
+
+
+    @Override
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+
+    public void updateUserProfile(User user, MultipartFile fileImage, String currentProfileImageUrl) throws IOException, IOException {
+        if (!fileImage.isEmpty()) {
+            String originalFilename = fileImage.getOriginalFilename();
+            if (originalFilename != null) {
+                String modifiedFilename = originalFilename.replace(" ", "_");
+                byte[] bytes = fileImage.getBytes();
+                Path path = Paths.get(IMAGE_UPLOAD_DIR + modifiedFilename);
+                Files.write(path, bytes);
+                user.setProfileImage(modifiedFilename);
+            }
+        } else {
+            // Mantener la imagen de perfil actual si no se proporciona una nueva
+            user.setProfileImage(currentProfileImageUrl);
+        }
+
+        userRepository.save(user);
     }
 }

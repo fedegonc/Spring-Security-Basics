@@ -44,21 +44,13 @@ public class UserController {
     UserRepository userRepository;
     @Autowired
     ReportRepository reportRepository;
+
     @Autowired
-    ArticleRepository articleRepository;
-    private final UserService userService;
+    UserService userService;
     @Autowired
     ImageRepository imageRepository;
     @Autowired
     ImageService imageService;
-
-
-
-
-    // Constructor que inyecta el servicio UserService
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
 
     // Método para la página de bienvenida del usuario
@@ -237,7 +229,7 @@ public class UserController {
 
 
 
-    @GetMapping("/viewarticles")
+  /*  @GetMapping("/viewarticles")
     public ModelAndView getArticles() {
 
         ModelAndView mv = new ModelAndView();
@@ -264,7 +256,7 @@ public class UserController {
         mv.setViewName("user/viewarticles");
         imageService.addFlagImages(mv);
         return mv;
-    }
+    }*/
     @GetMapping("/informaciones")
     public ModelAndView informaciones() {
         ModelAndView mv = new ModelAndView("user/informaciones");

@@ -1,3 +1,4 @@
+/*
 package com.example.registrationlogindemo.controller.admin;
 
 import com.example.registrationlogindemo.entity.Article;
@@ -206,3 +207,4 @@ public class AArticles {
         return "redirect:/admin/dashboard";
     }
 }
+*/
