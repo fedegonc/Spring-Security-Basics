@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:fragment="footer" class="bg-dark text-white text-center py-3 mt-auto">
+    <footer>
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center text-muted small flex-wrap">
+
+
+                <!-- Proyecto -->
+                <div class="mb-2">
+                    <a href="#" class="text-light text-decoration-none">
+                        <i class="bi bi-recycle"></i> Proyecto Frontera de la Paz Sustentable Residuos Sólidos
+                    </a>
+                </div>
+
+                <!-- Soporte y Ayuda (si el usuario está autenticado) -->
+                <div th:if="${#authentication?.principal?.username == null}" class="mb-2">
+                    <a th:href="@{/report}" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-question-circle"></i> Soporte y Ayuda
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

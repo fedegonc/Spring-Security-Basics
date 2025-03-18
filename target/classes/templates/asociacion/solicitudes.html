@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Bienvenida</title>
+</head>
+
+<body class="bg-light d-flex flex-column min-vh-100">
+
+
+<div th:replace="~{fragments/asociacion/navbar-asociacion :: navbar-asociacion}"></div>
+
+
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+
+
+<div class="container mt-1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light">
+            <li class="breadcrumb-item"><a th:href="@{/asociacion/dashboard}" th:text="#{breadcrumb.welcome}">Bienvenida</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.newRequest}">Revisar Solicitud</li>
+        </ol>
+    </nav>
+</div>
+
+
+<div class="container mt-4">
+    <div class="row text-left">
+        <div class="col-md-6 offset-md-3">
+            <h2>Solicitudes</h2>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-primary" id="toggleViewBtn" onclick="toggleView()">Ver en tarjetas</button>
+        </div>
+    </div>
+
+    <div class="mt-4" th:if="${solicitudes == null or #lists.isEmpty(solicitudes)}">
+        <div class="alert alert-info" role="alert">
+            Aún no has recibido solicitudes.
+        </div>
+    </div>
+
+    <div id="tableView" class="mt-4" th:if="${solicitudes != null and !#lists.isEmpty(solicitudes)}">
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+
+                <th>Solicitud</th>
+                <th>Categoría</th>
+                <th>Descripción</th>
+                <th>Imagen</th>
+                <th>Dia</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="solicitude : ${solicitudes}">
+
+                <td th:text="${solicitude.nombre}"></td>
+                <td th:text="${solicitude.categoria}"></td>
+
+                <td th:text="${solicitude.descripcion}"></td>
+                <td><img th:src="@{/img/{img}(img=${solicitude.imagen})}" width="100" height="100"></td>
+                <td th:text="${solicitude.diasDisponibles}"></td>
+                <td th:text="${solicitude.horaRecoleccion}"></td>
+
+                <td th:text="${solicitude.estado}"></td>
+                <td>
+                    <a class="btn btn-info" th:href="@{/asociacion/reviewsolicitude/{id}(id=${solicitude.id})}">Revisar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="cardView" class="row row-cols-1 row-cols-md-3 g-4 mt-4 d-none" th:if="${solicitudes != null and !#lists.isEmpty(solicitudes)}">
+        <div class="col" th:each="solicitude : ${solicitudes}">
+            <div class="card h-100">
+                <img th:src="@{/img/{img}(img=${solicitude.imagen})}" class="card-img-top" alt="..." width="100" height="200">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${solicitude.nombre}"></h5>
+                    <p class="card-text" th:text="${solicitude.descripcion}"></p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Categoría: <span th:text="${solicitude.categoria}"></span></li>
+                        <li class="list-group-item">Activo: <span th:text="${solicitude.activo}"></span></li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-info" th:href="@{/asociacion/reviewsilicitude/{id}(id=${solicitude.id})}">Revisar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Bienvenida</title>
+</head>
+
+<body class="bg-light d-flex flex-column min-vh-100">
+
+
+<div th:if="${userStatus.isAuthenticated()}">
+    <div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+</div>
+
+<div th:if="${!userStatus.isAuthenticated()}">
+    <div th:replace="~{fragments/navbar-info :: navbar-info}"></div>
+</div>
+
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
+            <li class="breadcrumb-item">
+                <a th:href="@{/index}" class="text-decoration-none">
+                    <i class="bi bi-house"></i>
+                    <span th:text="#{breadcrumb.home}">Inicio</span>
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <span>Error</span>
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="container d-flex justify-content-center align-items-center ">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <!-- Título y descripción general del error -->
+                    <p class="lead" th:text="${error}">Ha ocurrido un error inesperado.</p>
+
+                    <!-- Botón para regresar a la página principal -->
+                    <a href="/" class="btn btn-primary mt-3">
+                        Volver a la Página Principal
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

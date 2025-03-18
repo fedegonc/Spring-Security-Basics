@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Estadisticas</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
+            <li class="breadcrumb-item">
+                <i class="bi bi-house"></i>
+                <a th:href="@{/user/welcome}"
+                   th:text="#{breadcrumb.welcome}">Bienvenida</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.historyRequest}">Historial de Solicitudes</li>
+        </ol>
+    </nav>
+</div>
+
+
+<!-- Contenedor de Estadísticas -->
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Estadísticas del Donador</h2>
+
+    <!-- Botones de Filtros -->
+    <div class="d-flex justify-content-center mb-4">
+        <button class="btn btn-primary me-2">Filtrar por Material</button>
+        <button class="btn btn-secondary me-2">Filtrar por Mes</button>
+        <button class="btn btn-success me-2">Filtrar por Año</button>
+        <button class="btn btn-warning">Generar Reporte</button>
+    </div>
+
+    <!-- Tarjetas de estadísticas -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Total Donaciones</h5>
+                    <p class="h4">324</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Material Donado (kg)</h5>
+                    <p class="h4">1,250</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos con JavaScript -->
+    <div class="mt-5">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h6>Donaciones por Material</h6>
+                        <canvas id="chartMaterial" width="75" height="75"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h6>Donaciones Mensuales</h6>
+                        <canvas id="chartMensual" width="75" height="75"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+<!-- Scripts de JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Gráfico de Donaciones por Material
+    var ctxMaterial = document.getElementById('chartMaterial').getContext('2d');
+    var chartMaterial = new Chart(ctxMaterial, {
+        type: 'pie',
+        data: {
+            labels: ['Plástico', 'Vidrio', 'Papel', 'Metal'],
+            datasets: [{
+                label: 'Donaciones por Material',
+                data: [30, 20, 25, 25],
+                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545']
+            }]
+        }
+    });
+
+    // Gráfico de Donaciones Mensuales
+    var ctxMensual = document.getElementById('chartMensual').getContext('2d');
+    var chartMensual = new Chart(ctxMensual, {
+        type: 'bar',
+        data: {
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+            datasets: [{
+                label: 'Donaciones Mensuales',
+                data: [10, 15, 30, 25, 20],
+                backgroundColor: '#007bff'
+            }]
+        }
+    });
+</script>
+
+</body>
+</html>

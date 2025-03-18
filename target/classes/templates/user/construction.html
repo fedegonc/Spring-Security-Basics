@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Bienvenida</title>
+</head>
+
+<!-- Asegura que el body sea flex -->
+<body class="d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
+            <li class="breadcrumb-item">
+                <i class="bi bi-house"></i>
+                <a th:href="@{/user/welcome}"
+                   th:text="#{breadcrumb.welcome}">Bienvenida</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
+        </ol>
+    </nav>
+</div>
+
+
+<div th:replace="~{fragments/login-form :: login-form}"></div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

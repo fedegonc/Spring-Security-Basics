@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:fragment="logo">
+    <div>
+        <img src="/img/logov4.png" alt="logo" class="navbar-logo">
+        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"></a>
+    </div>
+</div>
+</body>
+</html>

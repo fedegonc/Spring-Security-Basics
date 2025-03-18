@@ -161,9 +161,19 @@ public class AuthController implements ErrorController {
             // Recupera la URL solicitada antes de iniciar sesión, si existe
             SavedRequest savedRequest = requestCache.getRequest(request, response);
             if (savedRequest != null) {
-                // Redirige a la URL solicitada originalmente
-                requestCache.removeRequest(request, response); // Limpia el caché de URL
-                return new ModelAndView("redirect:" + savedRequest.getRedirectUrl());
+                String redirectUrl = savedRequest.getRedirectUrl();
+                
+                // Verificar si la URL contiene parámetros duplicados
+                if (redirectUrl.contains("?continue")) {
+                    // Limpiar URL con parámetros duplicados
+                    redirectUrl = redirectUrl.split("\\?continue")[0];
+                }
+                
+                // Limpiar el caché de URL
+                requestCache.removeRequest(request, response);
+                
+                // Redirige a la URL solicitada originalmente (limpia)
+                return new ModelAndView("redirect:" + redirectUrl);
             }
 
             // Si no hay URL guardada, redirige al usuario según su rol

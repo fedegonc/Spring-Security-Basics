@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="es">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Bienvenida</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+
+
+
+<div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
+            <li class="breadcrumb-item">
+                <i class="bi bi-house"></i>
+                <a th:href="@{/user/welcome}"
+                   th:text="#{breadcrumb.welcome}">Bienvenida</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.editRequest}">Nueva Solicitud</li>
+        </ol>
+    </nav>
+</div>
+
+
+<div th:replace="~{fragments/solicitudes/dialogo :: dialogo}"></div>
+
+<div th:replace="~{fragments/solicitudes/edit-solicitud :: edit-solicitud}"></div>
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="/scripts/solicitudEditScript.js"></script>
+
+</body>
+</html>

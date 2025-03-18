@@ -1,0 +1,77 @@
+/* ================================
+   Estructura del cuerpo principal
+================================= */
+body {
+    font-family: 'Nunito', sans-serif;  /* Aplica la fuente Nunito */
+}
+
+/* ================================
+   Estilos del Logo en la Navbar
+================================= */
+.navbar-logo {
+    color: #f0f6f3;            /* Texto de color gris claro para mejor legibilidad */
+    width: 3.2rem;             /* Tamaño responsivo del logo */
+    height: 3.2rem;
+    margin: 5px;               /* Espacio alrededor del logo */
+    padding: 5px;              /* Espacio interno del logo */
+}
+
+.navbar-logo:hover {
+    color: #0056b3;            /* Cambia a azul oscuro al pasar el ratón */
+}
+
+/* ================================
+   Media Queries para Responsividad
+================================= */
+
+/* Pantallas menores a 1200px */
+@media (max-width: 1200px) {
+    .navbar-logo {
+        width: 3.2rem;
+        height: 3.2rem;
+    }
+}
+
+/* Pantallas menores a 992px */
+@media (max-width: 992px) {
+    .navbar-logo {
+        width: 3.1rem;
+        height: 3.1rem;
+    }
+}
+
+/* Pantallas menores a 768px */
+@media (max-width: 768px) {
+    .navbar-logo {
+        width: 3.0rem;
+        height: 3.0rem;
+    }
+}
+
+/* Pantallas menores a 576px */
+@media (max-width: 576px) {
+    .navbar-logo {
+        width: 3.0rem;
+        height: 3.0rem;
+    }
+}
+
+/* Pantallas menores a 375px */
+@media (max-width: 375px) {
+    .navbar-logo {
+        width: 2.9rem;
+        height: 2.9rem;
+    }
+}
+
+a {
+    text-decoration: none;          /* Elimina el subrayado */
+    color: #0056b3;                   /* Color inicial del enlace */
+    transition: color 0.3s ease;    /* Efecto de transición suave */
+}
+
+a:hover,
+a:focus {
+    color: #003613;                 /* Cambia el color al pasar el ratón o hacer foco */
+    outline: none;                  /* Opcional: elimina el borde de foco predeterminado */
+}

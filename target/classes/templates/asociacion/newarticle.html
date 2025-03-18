@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Bienvenida</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/asociacion/navbar-asociacion :: navbar-asociacion}"></div>
+
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <!-- Formulario para subir nueva publicación -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center" th:text="#{newpost.title}">Subir Nueva Publicación</h3>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/asociacion/newarticle}" method="post" enctype="multipart/form-data" th:object="${article}">
+                        <!-- Campos para ingresar datos de la imagen -->
+                        <div class="mb-3">
+                            <label for="fileInput" class="form-label" th:text="#{newpost.select}">Seleccionar Imagen:</label>
+                            <input type="file" class="form-control" id="fileInput" name="file" required>
+                            <small class="form-text text-muted" th:text="#{newpost.allowedformats}">Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 5MB.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label" th:text="#{newpost.titlelabel}">Titulo:</label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label" th:text="#{newpost.contentlabel}">Contenido:</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                        </div>
+
+                        <!-- Botón de envío -->
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary" th:text="#{newpost.submit}">Postear Publicación</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Mensajes de éxito o error -->
+            <div th:if="${param.error}" class="alert alert-danger mt-3" role="alert">
+                <span th:text="${param.error}"></span>
+            </div>
+            <div th:if="${param.exito}" class="alert alert-success mt-3" role="alert">
+                <span th:text="${param.exito}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+</body>
+</html>

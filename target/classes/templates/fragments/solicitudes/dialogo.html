@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ES-uy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métricas</title>
+</head>
+<body>
+
+<div th:fragment="dialogo">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <h4 class="text-center mb-4" th:text="#{dialogue.box}">Caja de diálogo</h4>
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <form th:action="@{'/user/solicitude/' + ${solicitude.id} + '/messages'}" method="post">
+                            <div class="form-group mb-3">
+                                <label for="messageInput" class="form-label" th:text="#{dialogue.writeMessage}">Escriba su mensaje:</label>
+                                <textarea class="form-control" id="messageInput" name="messageInput" rows="4" required></textarea>
+                            </div>
+                            <div class="d-grid">
+                                <button class="btn btn-primary" type="submit" th:text="#{dialogue.send}">Enviar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <h6 class="mb-3" th:text="#{dialogue.previousMessages}">Mensajes anteriores:</h6>
+                        <ul class="list-group" id="messageList">
+                            <li class="list-group-item" th:each="message : ${messages}">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong th:text="${message.user.username}">User:</strong>
+                                        <span th:text="${message.contenido}">Mensaje</span>
+                                    </div>
+                                    <small class="text-muted" th:text="${#temporals.format(message.fechaEnvio, 'dd/MM/yyyy HH:mm')}">Fecha</small>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

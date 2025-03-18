@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Bienvenida</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/navbar-info :: navbar-info}"></div>
+
+
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <div class="card">
+                <div class="card-header">
+                    <!-- Título del formulario -->
+                    <h3 class="text-center">Editar Artículo</h3>
+                </div>
+                <div class="card-body">
+
+                    <form method="post" enctype="multipart/form-data" th:action="@{'/admin/editarticle/' + ${article.id}}">
+                        <div class="mb-3">
+                            <label for="file" class="form-label" th:text="#{newRequest.profileImage}">Imagen del Artículo</label>
+                            <!-- Mostrar la imagen del artículo actual si existe -->
+                            <div th:if="${article.imagenNombre != null}">
+                                <img id="currentArticleImage" th:src="@{'/img/' + ${article.imagenNombre}}" alt="Imagen del Artículo" class="img-thumbnail" style="max-width: 200px;">
+                                <input type="hidden" name="currentArticleImageUrl" th:value="${article.imagenNombre}">
+                            </div>
+                            <!-- Mostrar una imagen predeterminada si no hay imagen de artículo -->
+                            <div th:if="${article.imagenNombre == null}">
+                                <img id="defaultArticleImage" src="/img/descarga.jpeg" alt="Imagen de Artículo Predeterminada" class="img-thumbnail" style="max-width: 200px;">
+                                <input type="hidden" name="currentArticleImageUrl" value="descarga.jpeg">
+                            </div>
+                            <!-- Permitir al usuario seleccionar una nueva imagen -->
+                            <input type="file" class="form-control" id="file" name="file" onchange="previewFile()">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="titulo" th:text="#{label.titulo}">Título</label>
+                            <input type="text" class="form-control" name="titulo" th:value="${article.titulo}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" th:for="descripcion" th:text="#{label.descripcion}">Descripción</label>
+                            <textarea class="form-control" name="descripcion" rows="5" required th:text="${article.descripcion}"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" th:text="#{button.save}">Guardar Cambios</button>
+                        <a class="btn btn-danger" th:href="@{/admin/deletarticle/{id}(id=${article.id})}" th:text="#{button.delete}">Borrar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq0K/6QMGbL0O4X7+hHZqF3e1GskvZh4iwenaF3/i79pY5" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWIY2yEch5WGfaTpC8eE59wD5D44sFG5a9mgHUnzHr3Bv1bPqx0Fgy8Bwi" crossorigin="anonymous"></script>
+</body>
+</html>

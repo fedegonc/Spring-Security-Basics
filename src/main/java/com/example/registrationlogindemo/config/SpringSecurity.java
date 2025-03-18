@@ -33,6 +33,7 @@ public class SpringSecurity {
         // Configuración del almacenamiento de solicitudes en caché
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
         requestCache.setMatchingRequestParameterName(null);
+        requestCache.setCreateSessionAllowed(false);
 
         http.csrf().disable()
                 // Configuración de las autorizaciones de las solicitudes HTTP
@@ -87,7 +88,7 @@ public class SpringSecurity {
                 )
                 // Configuración del almacenamiento de solicitudes en caché
                 .requestCache(cache -> cache
-                        .requestCache(new HttpSessionRequestCache())
+                        .requestCache(requestCache)
                 );
 
         return http.build();

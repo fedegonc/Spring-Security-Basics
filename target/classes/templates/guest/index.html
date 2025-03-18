@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Reciclaje Sólido</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex items-center justify-center min-h-screen bg-gray-100" style="background: url('/img/fondo__app.jpg') center center / cover no-repeat;">
+<div class="w-full max-w-5xl flex shadow-lg rounded-lg overflow-hidden">
+
+    <!-- Sección Izquierda -->
+    <div class="hidden md:flex md:w-2/5 bg-green-900 text-white flex-col justify-center items-center p-8">
+        <h1 class="text-3xl font-bold">Reciclaje Sólido</h1>
+        <p class="mt-2 text-sm text-gray-300 text-center">Un proyecto para la gestión de residuos reciclables</p>
+        <footer class="absolute bottom-4 text-gray-500 text-sm">&copy; 2025 Reciclaje Sólido</footer>
+    </div>
+
+    <!-- Sección Derecha - Login -->
+    <div class="w-full md:w-3/5 bg-white p-6 md:p-10 flex flex-col justify-center">
+        <header class="text-2xl font-bold text-gray-700 text-center">Iniciar Sesión</header>
+
+        <nav class="mt-4 text-center">
+            <ol class="flex justify-center space-x-2 text-gray-600 text-sm">
+                <li>
+                    <a th:href="@{/index}" class="hover:text-blue-700">
+                        <i class="bi bi-house"></i> Inicio
+                    </a>
+                </li>
+                <li>/</li>
+                <li class="text-blue-700">
+                    <i class="bi bi-person-circle"></i> Login
+                </li>
+            </ol>
+        </nav>
+
+        <div class="mt-6 text-center">
+            <a th:href="@{/dashboard}" class="bg-green-700 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-800">Entrar</a>
+        </div>
+
+        <div class="mt-6 text-center text-gray-600 text-sm">
+            <p>¿No tienes una cuenta? <a href="#" class="text-blue-700 font-bold">Regístrate</a></p>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ES-uy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métricas</title>
+</head>
+<body>
+
+<div th:fragment="metricas-solicitudes">
+    <!-- Contenedor para métricas -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Tarjeta para Solicitudes Activas -->
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Solicitudes Activas</h5>
+                        <p class="card-text" id="active-requests-count">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta para Total de Solicitudes -->
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Solicitudes</h5>
+                        <p class="card-text" id="total-requests-count">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta para Solicitudes Completadas -->
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Solicitudes Completadas</h5>
+                        <p class="card-text" id="completed-requests-count">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

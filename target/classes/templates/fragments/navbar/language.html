@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+
+</head>
+<body>
+
+<!-- Fragmento de las banderas -->
+<div th:fragment="language" class="flag-container">
+
+        <a th:href="@{${currentUrl}(language='es')}" >
+            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
+        </a>
+
+        <a th:href="@{${currentUrl}(language='pt')}" >
+            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
+        </a>
+
+</div>
+
+</body>
+</html>

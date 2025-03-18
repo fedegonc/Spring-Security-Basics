@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Bienvenida</title>
+</head>
+
+
+<body class="d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/admin/navbar-admin :: navbar-admin}"></div>
+
+
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+
+<!-- Contenido principal -->
+<div id="main" class="container mt-4">
+    <div class="header">
+        <h2 >Panel de control</h2>
+        <div id="clock" class="clock"></div>
+    </div>
+    <div class="container mt-4">
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading" th:text="'Bienvenida, ' + <!--/* [[${user.username}]] */--> 'Usuario' + '!'"></h4>
+            <p>Nos alegra que estés aquí, <!--<span th:text="${user.username}">Nombre del Usuario</span>-->. Aquí puedes encontrar un resumen de tus actividades recientes y acceder a las funciones más importantes de la aplicación.</p>
+            <hr>
+            <p class="mb-0">Para comenzar, te recomendamos que revises las últimas actualizaciones, explores las nuevas funcionalidades o realices una nueva solicitud. ¡Estamos aquí para ayudarte a aprovechar al máximo la plataforma!</p>
+        </div>
+    </div>
+
+    <!-- Contenedor de las tarjetas -->
+    <div class="metric-cards-container">
+        <div class="metric-card">
+            <div class="card-header">
+                <h3>Usuarios Registrados</h3>
+            </div>
+            <div class="card-body">
+                <p class="metric-value">120</p>
+                <p class="metric-change positive">+10 desde ayer</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta para Nuevas Solicitudes -->
+        <div class="metric-card">
+            <div class="card-header">
+                <h3>Nuevas Solicitudes</h3>
+            </div>
+            <div class="card-body">
+                <p class="metric-value">15</p>
+                <p class="metric-change positive">+5 desde ayer</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta para Problemas Reportados -->
+        <div class="metric-card">
+            <div class="card-header">
+                <h3>Problemas Reportados</h3>
+            </div>
+            <div class="card-body">
+                <p class="metric-value">8</p>
+                <p class="metric-change negative">-2 desde ayer</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta para Solicitudes Aceptadas -->
+        <div class="metric-card">
+            <div class="card-header">
+                <h3>Solicitudes Aceptadas</h3>
+            </div>
+            <div class="card-body">
+                <p class="metric-value">30</p>
+                <p class="metric-change positive">+7 desde ayer</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta para Usuarios Online -->
+        <div class="metric-card">
+            <div class="card-header">
+                <h3>Usuarios Online</h3>
+            </div>
+            <div class="card-body">
+                <p class="metric-value">25</p>
+                <p class="metric-change negative">-3 desde ayer</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor de Gráficos -->
+    <div class="charts-container">
+        <!-- Gráfico de Barras -->
+        <div class="chart-container">
+            <h2>Usuarios Activos por Mes</h2>
+            <canvas id="usersChart"></canvas>
+        </div>
+
+        <!-- Gráfico de Solicitudes en Torta -->
+        <div class="chart-container">
+            <h3>Estado de Solicitudes</h3>
+            <canvas id="solicitudesPieChart"></canvas>
+        </div>
+
+        <!-- Gráfico de Barras para Solicitudes -->
+        <div class="chart-container">
+            <h3>Resumen de Solicitudes</h3>
+            <canvas id="solicitudesBarChart"></canvas>
+        </div>
+
+        <!-- Gráfico Combinado -->
+        <div class="chart-container">
+            <h2>Tendencias de Usuarios y Solicitudes</h2>
+            <canvas id="combinedChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script src="/scripts/adminScript.js"></script>
+</body>
+</html>

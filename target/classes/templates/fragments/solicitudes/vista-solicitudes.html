@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ES-uy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métricas</title>
+</head>
+<body>
+
+<div th:fragment="vista-solicitudes">
+
+
+    <div class="container mt-4">
+        <h2 th:text="#{solicitudes.titulo}">Solicitudes</h2>
+        <div class="container mt-4">
+
+            <span th:text="#{info_viewrequests}">Información de la pagina</span>
+        </div>
+
+        <!-- Vista de Tabla -->
+        <div id="table-view" class="hidden">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Imagen</th>
+                    <th scope="col" th:text="#{solicitudes.fecha}">Fecha</th>
+                    <th scope="col" th:text="#{solicitudes.estado}">Estado</th>
+                    <th scope="col" th:text="#{solicitudes.accion}">Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="solicitud : ${solicitudes}">
+                    <td><img th:src="@{/img/{img}(img=${solicitud.imagen})}" alt="Imagen de la solicitud" style="width: 50px; height: 50px;"></td>
+                    <td class="date-field" th:text="${solicitud.fecha}">Fecha de la solicitud</td>
+                    <td class="estado-field" th:text="${solicitud.estado}">Estado de la solicitud</td>
+                    <td><a class="btn btn-primary" th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" th:text="#{revisar}">Revisar</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
