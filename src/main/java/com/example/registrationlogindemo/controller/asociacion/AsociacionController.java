@@ -3,6 +3,7 @@ package com.example.registrationlogindemo.controller.asociacion;
 import com.example.registrationlogindemo.entity.Article;
 import com.example.registrationlogindemo.entity.Message;
 import com.example.registrationlogindemo.entity.Solicitude;
+import com.example.registrationlogindemo.entity.Estado;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.MessageRepository;
@@ -196,7 +197,7 @@ public class AsociacionController {
         Optional<Solicitude> existingSolicitudeOpt = solicitudeRepository.findById(id);
         if (existingSolicitudeOpt.isPresent()) {
             Solicitude existingSolicitude = existingSolicitudeOpt.get();
-            existingSolicitude.setEstado(Solicitude.Estado.valueOf(estado));
+            existingSolicitude.setEstado(Estado.valueOf(estado));
 
             solicitudeRepository.save(existingSolicitude);
             msg.addFlashAttribute("exito", "Estado de la solicitud editado con éxito.");

@@ -1,50 +1,228 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Reciclaje Sólido</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="Página principal de la aplicación de Reciclaje Sólido">
+    <title>Inicio - Reciclaje Sólido</title>
+    
+    <!-- Estilos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
-
-<body class="flex items-center justify-center min-h-screen bg-gray-100" style="background: url('/img/fondo__app.jpg') center center / cover no-repeat;">
-<div class="w-full max-w-5xl flex shadow-lg rounded-lg overflow-hidden">
-
-    <!-- Sección Izquierda -->
-    <div class="hidden md:flex md:w-2/5 bg-green-900 text-white flex-col justify-center items-center p-8">
-        <h1 class="text-3xl font-bold">Reciclaje Sólido</h1>
-        <p class="mt-2 text-sm text-gray-300 text-center">Un proyecto para la gestión de residuos reciclables</p>
-        <footer class="absolute bottom-4 text-gray-500 text-sm">&copy; 2025 Reciclaje Sólido</footer>
-    </div>
-
-    <!-- Sección Derecha - Login -->
-    <div class="w-full md:w-3/5 bg-white p-6 md:p-10 flex flex-col justify-center">
-        <header class="text-2xl font-bold text-gray-700 text-center">Iniciar Sesión</header>
-
-        <nav class="mt-4 text-center">
-            <ol class="flex justify-center space-x-2 text-gray-600 text-sm">
-                <li>
-                    <a th:href="@{/index}" class="hover:text-blue-700">
-                        <i class="bi bi-house"></i> Inicio
+<body class="app-background">
+    <!-- Skip link para accesibilidad -->
+    <a href="#main-content" class="sr-only-focusable bg-primary text-white px-4 py-2 rounded-md z-50">
+        Saltar al contenido principal
+    </a>
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="bi bi-recycle navbar-logo me-2"></i>
+                <span>Reciclaje Sólido</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" 
+                    aria-controls="navbarMain" aria-expanded="false" aria-label="Alternar navegación">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">
+                            <i class="bi bi-house"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#nosotros">
+                            <i class="bi bi-info-circle"></i> Nosotros
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#servicios">
+                            <i class="bi bi-gear"></i> Servicios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto">
+                            <i class="bi bi-envelope"></i> Contacto
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/login}">
+                            <i class="bi bi-person-circle"></i> Iniciar Sesión
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/register}">
+                            <i class="bi bi-person-plus"></i> Registrarse
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Contenido Principal -->
+    <main id="main-content" class="content-container">
+        <div class="container">
+            <!-- Banner Principal -->
+            <section class="mb-5">
+                <div class="glass-card">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h1 class="display-5 fw-bold mb-3">Proyecto Frontera de la Paz Sustentable</h1>
+                            <p class="lead">Trabajamos juntos por un futuro más limpio y sostenible a través de la gestión eficiente de residuos sólidos.</p>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+                                <a th:href="@{/register}" class="btn btn-primary btn-lg px-4 me-md-2">Únete Ahora</a>
+                                <a href="#nosotros" class="btn btn-outline-secondary btn-lg px-4">Conoce Más</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-4 mt-lg-0">
+                            <img src="/img/banner-principal.jpg" alt="Imagen de reciclaje y sostenibilidad" class="img-fluid rounded">
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sección Nosotros -->
+            <section id="nosotros" class="mb-5">
+                <div class="glass-card">
+                    <h2 class="fs-1 fw-bold mb-4">Sobre Nosotros</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>El Proyecto Frontera de la Paz Sustentable es una iniciativa que busca promover la gestión adecuada de residuos sólidos en comunidades urbanas y rurales, fomentando prácticas sostenibles y la economía circular.</p>
+                            <p>Nuestro equipo está formado por profesionales comprometidos con el medio ambiente y el desarrollo sostenible, trabajando en colaboración con comunidades, empresas y gobiernos locales.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="ratio ratio-16x9">
+                                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                                        title="Video sobre nuestra misión" 
+                                        allowfullscreen
+                                        loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sección Servicios -->
+            <section id="servicios" class="mb-5">
+                <div class="glass-card">
+                    <h2 class="fs-1 fw-bold mb-4">Nuestros Servicios</h2>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-recycle text-primary" style="font-size: 2.5rem;"></i>
+                                    <h3 class="card-title fs-4 mt-3">Reciclaje</h3>
+                                    <p class="card-text">Implementamos sistemas eficientes de reciclaje adaptados a las necesidades de cada comunidad.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-lightbulb text-primary" style="font-size: 2.5rem;"></i>
+                                    <h3 class="card-title fs-4 mt-3">Educación Ambiental</h3>
+                                    <p class="card-text">Ofrecemos programas educativos para concientizar sobre la importancia del manejo adecuado de residuos.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-graph-up text-primary" style="font-size: 2.5rem;"></i>
+                                    <h3 class="card-title fs-4 mt-3">Consultoría</h3>
+                                    <p class="card-text">Asesoramos a empresas y gobiernos en la implementación de políticas y prácticas sostenibles.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sección Contacto -->
+            <section id="contacto" class="mb-5">
+                <div class="glass-card">
+                    <h2 class="fs-1 fw-bold mb-4">Contacto</h2>
+                    <div class="row">
+                        <div class="col-md-6 mb-4 mb-md-0">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="nombre" placeholder="Tu nombre">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="email" placeholder="tu@email.com">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="mensaje" class="form-label">Mensaje</label>
+                                    <textarea class="form-control" id="mensaje" rows="4" placeholder="¿Cómo podemos ayudarte?"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <h3 class="fs-4 mb-3">Información de Contacto</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="bi bi-geo-alt text-primary me-2"></i> Av. Principal 123, Lima, Perú
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-envelope text-primary me-2"></i> info@reciclajesolido.com
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-telephone text-primary me-2"></i> +51 123 456 789
+                                </li>
+                            </ul>
+                            <div class="mt-4">
+                                <h4 class="fs-5 mb-3">Síguenos en redes sociales</h4>
+                                <div class="d-flex gap-3">
+                                    <a href="#" class="text-primary fs-4" aria-label="Facebook">
+                                        <i class="bi bi-facebook"></i>
+                                    </a>
+                                    <a href="#" class="text-primary fs-4" aria-label="Twitter">
+                                        <i class="bi bi-twitter"></i>
+                                    </a>
+                                    <a href="#" class="text-primary fs-4" aria-label="Instagram">
+                                        <i class="bi bi-instagram"></i>
+                                    </a>
+                                    <a href="#" class="text-primary fs-4" aria-label="LinkedIn">
+                                        <i class="bi bi-linkedin"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <div class="bg-dark text-white text-center py-3 mt-auto">
+        <footer>
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center text-muted small flex-wrap">
+                    <a href="#" class="text-light text-decoration-none">
+                        <i class="bi bi-recycle"></i> Proyecto Frontera de la Paz Sustentable Residuos Sólidos
                     </a>
-                </li>
-                <li>/</li>
-                <li class="text-blue-700">
-                    <i class="bi bi-person-circle"></i> Login
-                </li>
-            </ol>
-        </nav>
-
-        <div class="mt-6 text-center">
-            <a th:href="@{/dashboard}" class="bg-green-700 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-800">Entrar</a>
-        </div>
-
-        <div class="mt-6 text-center text-gray-600 text-sm">
-            <p>¿No tienes una cuenta? <a href="#" class="text-blue-700 font-bold">Regístrate</a></p>
-        </div>
+                    <div>
+                        <a href="#" class="text-light me-2" aria-label="Política de privacidad">Privacidad</a>
+                        <a href="#" class="text-light me-2" aria-label="Términos de servicio">Términos</a>
+                        <a href="#" class="text-light" aria-label="Contacto">Contacto</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
-
-</div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

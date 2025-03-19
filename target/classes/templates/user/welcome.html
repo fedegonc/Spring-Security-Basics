@@ -1,42 +1,106 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
-<head th:replace="~{fragments/layout/head :: head}">
-    <title>Bienvenida</title>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Página de bienvenida de usuario en la aplicación de Reciclaje Sólido">
+    <title>Bienvenida - Reciclaje Sólido</title>
+    
+    <!-- Estilos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
-
-<body class="d-flex flex-column min-vh-100">
-
-<!-- Navbar -->
-<div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
-
-<!-- Mensajes -->
-<div th:replace="~{fragments/messages :: message-alerts}"></div>
-
-
-<!-- Breadcrumb -->
-<div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
-            <li class="breadcrumb-item">
-                    <i class="bi bi-house"></i>
-                    <span th:text="#{breadcrumb.home}">Inicio</span>
-            </li>
-        </ol>
-    </nav>
-</div>
-
-
-
-
-<div th:replace="~{fragments/user/usuario-bienvenida :: usuario-bienvenida}"></div>
-
-<div th:replace="~{fragments/user/metricas-user :: metricas-user}"></div>
-
-<div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas}"></div>
-
-<div th:replace="~{fragments/layout/footer :: footer}"></div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<body class="app-background">
+    <!-- Skip link para accesibilidad -->
+    <a href="#main-content" class="sr-only-focusable bg-primary text-white px-4 py-2 rounded-md z-50">
+        Saltar al contenido principal
+    </a>
+    
+    <!-- Contenido principal -->
+    <main id="main-content" class="content-container">
+        <div class="container">
+            <!-- Sección de bienvenida -->
+            <section class="mb-5">
+                <div class="glass-card">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h1 class="display-5 fw-bold mb-3" th:text="'¡Bienvenido, ' + ${username} + '!'">¡Bienvenido, Usuario!</h1>
+                            <p class="lead">Gestiona todas tus solicitudes de reciclaje desde un solo lugar.</p>
+                            
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+                                <a th:href="@{/user/solicitudes/nueva}" class="btn btn-primary btn-lg px-4 me-md-2">
+                                    <i class="bi bi-plus-circle me-2"></i>Nueva Solicitud
+                                </a>
+                                <a th:href="@{/user/solicitudes}" class="btn btn-outline-secondary btn-lg px-4">
+                                    <i class="bi bi-list-check me-2"></i>Mis Solicitudes
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mt-4 mt-lg-0 text-center">
+                            <i class="bi bi-recycle text-primary" style="font-size: 8rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Acciones rápidas -->
+            <section class="mb-5">
+                <div class="glass-card">
+                    <h2 class="fs-1 fw-bold mb-4">Acciones Rápidas</h2>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-bar-chart-line text-primary" style="font-size: 2.5rem;"></i>
+                                    <h3 class="card-title fs-4 mt-3">Mis Estadísticas</h3>
+                                    <p class="card-text">Revisa el resumen y estado de tus solicitudes de reciclaje.</p>
+                                    <a href="#" class="btn btn-outline-primary mt-3">Ver estadísticas</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-book text-primary" style="font-size: 2.5rem;"></i>
+                                    <h3 class="card-title fs-4 mt-3">Recursos</h3>
+                                    <p class="card-text">Consulta guías y consejos para un reciclaje más efectivo.</p>
+                                    <a href="#" class="btn btn-outline-primary mt-3">Ver recursos</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-geo-alt text-primary" style="font-size: 2.5rem;"></i>
+                                    <h3 class="card-title fs-4 mt-3">Puntos de Reciclaje</h3>
+                                    <p class="card-text">Encuentra puntos de reciclaje cercanos a tu ubicación.</p>
+                                    <a href="#" class="btn btn-outline-primary mt-3">Ver mapa</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <div class="container">
+            <p class="mb-1">&copy; 2025 Reciclaje Sólido. Todos los derechos reservados.</p>
+            <p class="mb-0">
+                <a href="#" class="text-white text-decoration-none mx-2">Términos de servicio</a> | 
+                <a href="#" class="text-white text-decoration-none mx-2">Política de privacidad</a>
+            </p>
+        </div>
+    </footer>
+    
+    <!-- JavaScript de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

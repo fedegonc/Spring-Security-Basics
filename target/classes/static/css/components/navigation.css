@@ -1,0 +1,177 @@
+/* ====================================================================
+   COMPONENTES DE NAVEGACIÓN - SISTEMA UNIFICADO
+   Este archivo centraliza todos los estilos relacionados con navegación,
+   menús y barras de la aplicación.
+===================================================================== */
+
+/* ==== ESTILOS DE NAVBAR ==== */
+.navbar {
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-dark {
+    background-color: #1e3a8a;
+    color: white;
+}
+
+.navbar-logo {
+    color: #f0f6f3;
+    width: 3.2rem;
+    height: 3.2rem;
+    margin: 5px;
+    padding: 5px;
+}
+
+.navbar-logo:hover {
+    color: #0056b3;
+}
+
+/* ==== NAVEGACIÓN PRINCIPAL ==== */
+.nav-item {
+    margin: 0 0.25rem;
+}
+
+.nav-link {
+    display: inline-block;
+    padding: 0.5rem 0.75rem;
+    color: rgba(255, 255, 255, 0.85);
+    transition: color 0.15s ease, background-color 0.15s ease;
+    border-radius: 4px;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ==== DROPDOWN MENUS ==== */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 0.5rem 0;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    transition: background-color 0.15s ease;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0;
+    opacity: 0.1;
+}
+
+.dropdown-header {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+/* ==== NAVEGACIÓN MÓVIL ==== */
+.mobile-nav-toggle {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 0.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.mobile-nav-menu {
+    background-color: #1e3a8a;
+    width: 100%;
+    padding: 0.5rem 0;
+}
+
+.mobile-nav-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: white;
+    border-radius: 0;
+}
+
+.mobile-nav-dropdown {
+    padding: 0.5rem 1rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin-top: 2px;
+}
+
+/* ==== ENLACES Y BOTONES DE NAVEGACIÓN ==== */
+a {
+    text-decoration: none;
+    color: #0056b3;
+    transition: color 0.3s ease;
+}
+
+a:hover,
+a:focus {
+    color: #003613;
+    outline: none;
+}
+
+.btn-nav {
+    padding: 0.375rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.btn-nav-primary {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+.btn-nav-primary:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+/* ==== RESPONSIVIDAD ==== */
+@media (max-width: 1200px) {
+    .navbar-logo {
+        width: 3.1rem;
+        height: 3.1rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .navbar-logo {
+        width: 3rem;
+        height: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-logo {
+        width: 2.9rem;
+        height: 2.9rem;
+    }
+    
+    .nav-item {
+        margin: 0;
+    }
+    
+    .nav-link {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar {
+        padding: 0.375rem 0.75rem;
+    }
+    
+    .navbar-logo {
+        width: 2.8rem;
+        height: 2.8rem;
+    }
+}

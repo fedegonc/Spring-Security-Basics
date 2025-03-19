@@ -1,95 +1,303 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 
 <div th:fragment="navbar-user">
-
-    <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div class="container-fluid">
-
-            <!-- Logo -->
-            <div id="logo" th:replace="~{fragments/logo}"></div>
-
-            <!-- Botón para navegación colapsable en dispositivos móviles -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Contenido del navbar -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto">
-
-                    <!-- Dropdown: Solicitudes -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdownSolicitudes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-clipboard-check"></i> <span>Solicitudes</span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownSolicitudes">
-                            <li><a class="dropdown-item" th:href="@{/user/newsolicitude}">Nueva Solicitud</a></li>
-                            <li><a class="dropdown-item" th:href="@{/user/view-requests}">Ver Solicitudes</a></li>
-                            <li><a class="dropdown-item" th:href="@{/user/statistics}">Estadísticas</a></li>
-                            <li><a class="dropdown-item" th:href="@{/materiales}">Materiales</a></li>
-                        </ul>
-                    </li>
-
-                    <!-- Dropdown: Contenidos -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdownContenidos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-book"></i> <span>Contenidos</span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownContenidos">
-
-                            <!-- Encabezado de Comunidad -->
-                            <li><h6 class="dropdown-header">Comunidad</h6></li>
-                            <li><a class="dropdown-item" th:href="@{/noticias}">Noticias</a></li>
-                            <li><a class="dropdown-item" th:href="@{/ambiental}">Ed Ambiental</a></li>
-                            <li><a class="dropdown-item" th:href="@{/alianzas}">Alianzas</a></li>
-
-                            <li><hr class="dropdown-divider"></li>
-
-                            <!-- Encabezado de Recursos -->
-                            <li><h6 class="dropdown-header">Recursos</h6></li>
-                            <li><a class="dropdown-item" th:href="@{/user/viewarticles}">Artículos</a></li>
-                            <li><a class="dropdown-item" th:href="@{/legislacion}">Legislación</a></li>
-                            <li><a class="dropdown-item" th:href="@{/informaciones}">Informaciones</a></li>
-
-                        </ul>
-                    </li>
-
-                    <!-- Dropdown: Usuario -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="dropdownUsuario" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" class="rounded-circle me-2" width="30" height="30">
+    <nav class="bg-green-800 text-white shadow-md" aria-label="Navegación principal">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="#" class="text-xl font-bold focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800 rounded px-2" aria-label="Inicio de Reciclaje Sólido">Reciclaje Sólido</a>
+                
+                <!-- Menú móvil -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" 
+                            class="text-white p-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800" 
+                            aria-expanded="false" 
+                            aria-controls="mobile-menu"
+                            aria-label="Abrir menú de navegación">
+                        <i class="bi bi-list text-2xl" aria-hidden="true"></i>
+                    </button>
+                </div>
+                
+                <!-- Menú desktop -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <div class="relative group">
+                        <button class="flex items-center space-x-1 hover:text-green-300 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800"
+                                aria-expanded="false"
+                                aria-haspopup="true"
+                                aria-controls="solicitudes-menu">
+                            <i class="bi bi-clipboard-check" aria-hidden="true"></i>
+                            <span>Solicitudes</span>
+                            <i class="bi bi-chevron-down text-xs" aria-hidden="true"></i>
+                        </button>
+                        <div id="solicitudes-menu" 
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block"
+                             role="menu"
+                             aria-orientation="vertical"
+                             aria-labelledby="solicitudes-button">
+                            <a th:href="@{/user/newsolicitude}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">Nueva Solicitud</a>
+                            <a th:href="@{/user/view-requests}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">Ver Solicitudes</a>
+                            <a th:href="@{/user/statistics}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">Estadísticas</a>
+                            <a th:href="@{/materiales}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">Materiales</a>
+                        </div>
+                    </div>
+                    
+                    <div class="relative group">
+                        <button class="flex items-center space-x-1 hover:text-green-300 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800"
+                                aria-expanded="false"
+                                aria-haspopup="true"
+                                aria-controls="contenidos-menu">
+                            <i class="bi bi-book" aria-hidden="true"></i>
+                            <span>Contenidos</span>
+                            <i class="bi bi-chevron-down text-xs" aria-hidden="true"></i>
+                        </button>
+                        <div id="contenidos-menu" 
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block"
+                             role="menu"
+                             aria-orientation="vertical"
+                             aria-labelledby="contenidos-button">
+                            <h6 class="px-4 py-1 text-xs font-semibold text-gray-500" role="presentation">Comunidad</h6>
+                            <a th:href="@{/user/viewarticles}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">Artículos</a>
+                            <a th:href="@{/legislacion}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">Legislación</a>
+                            <a th:href="@{/informaciones}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">Informaciones</a>
+                            
+                            <h6 class="px-4 py-1 text-xs font-semibold text-gray-500 mt-2" role="presentation">Recursos</h6>
+                            <a th:href="@{/user/viewarticles}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">Artículos</a>
+                            <a th:href="@{/legislacion}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">Legislación</a>
+                            <a th:href="@{/informaciones}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">Informaciones</a>
+                        </div>
+                    </div>
+                    
+                    <div class="relative group">
+                        <button class="flex items-center space-x-1 hover:text-green-300 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800"
+                                aria-expanded="false"
+                                aria-haspopup="true"
+                                aria-controls="usuario-menu">
+                            <img th:src="@{'/img/' + ${user.profileImage}}" alt="" class="rounded-full w-6 h-6" aria-hidden="true">
                             <span th:text="${user.username}">Usuario</span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownUsuario">
-                            <li>
-                                <a th:href="@{/user/profile/{id}(id=${user.id})}" class="dropdown-item">
-                                    <i class="bi bi-pencil-square"></i> Editar Perfil
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" th:href="@{/logout}">
-                                    <i class="bi bi-door-open"></i> Salir
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
+                            <i class="bi bi-chevron-down text-xs" aria-hidden="true"></i>
+                        </button>
+                        <div id="usuario-menu" 
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block"
+                             role="menu"
+                             aria-orientation="vertical"
+                             aria-labelledby="usuario-button">
+                            <a th:href="@{/user/profile/{id}(id=${user.id})}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">
+                                <i class="bi bi-pencil-square" aria-hidden="true"></i> Editar Perfil
+                            </a>
+                            <a th:href="@{/logout}" 
+                               class="block px-4 py-2 text-gray-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 focus:text-green-800"
+                               role="menuitem">
+                                <i class="bi bi-door-open" aria-hidden="true"></i> Salir
+                            </a>
+                        </div>
+                    </div>
+                    
                     <!-- Idiomas -->
-                    <li class="nav-item">
-                        <a th:href="@{${currentUrl}(language='es')}" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
+                    <div class="flex items-center space-x-2" role="group" aria-label="Selección de idioma">
+                        <a th:href="@{${currentUrl}(language='es')}" 
+                           class="hover:text-green-300 p-1 rounded focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800"
+                           aria-label="Cambiar a español">
+                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" class="w-6 h-4 object-contain">
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a th:href="@{${currentUrl}(language='pt')}" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
+                        <a th:href="@{${currentUrl}(language='pt')}" 
+                           class="hover:text-green-300 p-1 rounded focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800"
+                           aria-label="Cambiar a portugués">
+                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" class="w-6 h-4 object-contain">
                         </a>
-                    </li>
-                </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Menú móvil expandido -->
+            <div id="mobile-menu" class="md:hidden hidden mt-2 pb-2" aria-labelledby="mobile-menu-button">
+                <div class="space-y-2">
+                    <!-- Solicitudes -->
+                    <div class="mobile-dropdown">
+                        <button class="w-full flex justify-between items-center py-2 px-3 text-white hover:bg-green-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800"
+                                aria-expanded="false"
+                                aria-controls="mobile-solicitudes">
+                            <span><i class="bi bi-clipboard-check mr-2" aria-hidden="true"></i> Solicitudes</span>
+                            <i class="bi bi-chevron-down transition-transform" aria-hidden="true"></i>
+                        </button>
+                        <div id="mobile-solicitudes" class="mobile-dropdown-content hidden bg-green-700 pl-4 py-2 space-y-2 rounded-md mt-1">
+                            <a th:href="@{/user/newsolicitude}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">Nueva Solicitud</a>
+                            <a th:href="@{/user/view-requests}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">Ver Solicitudes</a>
+                            <a th:href="@{/user/statistics}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">Estadísticas</a>
+                            <a th:href="@{/materiales}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">Materiales</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Contenidos -->
+                    <div class="mobile-dropdown">
+                        <button class="w-full flex justify-between items-center py-2 px-3 text-white hover:bg-green-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800"
+                                aria-expanded="false"
+                                aria-controls="mobile-contenidos">
+                            <span><i class="bi bi-book mr-2" aria-hidden="true"></i> Contenidos</span>
+                            <i class="bi bi-chevron-down transition-transform" aria-hidden="true"></i>
+                        </button>
+                        <div id="mobile-contenidos" class="mobile-dropdown-content hidden bg-green-700 pl-4 py-2 space-y-2 rounded-md mt-1">
+                            <p class="text-xs font-semibold text-green-300 px-3">Comunidad</p>
+                            <a th:href="@{/user/viewarticles}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">Artículos</a>
+                            <a th:href="@{/legislacion}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">Legislación</a>
+                            <a th:href="@{/informaciones}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">Informaciones</a>
+                            
+                            <p class="text-xs font-semibold text-green-300 px-3 mt-2">Recursos</p>
+                            <a th:href="@{/user/viewarticles}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">Artículos</a>
+                            <a th:href="@{/legislacion}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">Legislación</a>
+                            <a th:href="@{/informaciones}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">Informaciones</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Usuario -->
+                    <div class="mobile-dropdown">
+                        <button class="w-full flex justify-between items-center py-2 px-3 text-white hover:bg-green-700 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800"
+                                aria-expanded="false"
+                                aria-controls="mobile-usuario">
+                            <span class="flex items-center">
+                                <img th:src="@{'/img/' + ${user.profileImage}}" alt="" class="rounded-full w-6 h-6 mr-2" aria-hidden="true">
+                                <span th:text="${user.username}">Usuario</span>
+                            </span>
+                            <i class="bi bi-chevron-down transition-transform" aria-hidden="true"></i>
+                        </button>
+                        <div id="mobile-usuario" class="mobile-dropdown-content hidden bg-green-700 pl-4 py-2 space-y-2 rounded-md mt-1">
+                            <a th:href="@{/user/profile/{id}(id=${user.id})}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">
+                                <i class="bi bi-pencil-square mr-1" aria-hidden="true"></i> Editar Perfil
+                            </a>
+                            <a th:href="@{/logout}" 
+                               class="block text-white hover:text-green-300 py-2 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-700">
+                                <i class="bi bi-door-open mr-1" aria-hidden="true"></i> Salir
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Idiomas en móvil -->
+                    <div class="flex space-x-4 py-2 px-3" role="group" aria-label="Selección de idioma">
+                        <a th:href="@{${currentUrl}(language='es')}" 
+                           class="text-white hover:text-green-300 p-1 rounded focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800"
+                           aria-label="Cambiar a español">
+                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" class="w-6 h-4 object-contain">
+                        </a>
+                        <a th:href="@{${currentUrl}(language='pt')}" 
+                           class="text-white hover:text-green-300 p-1 rounded focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-green-800"
+                           aria-label="Cambiar a portugués">
+                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" class="w-6 h-4 object-contain">
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
+    
+    <script>
+        // Toggle menú móvil
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    const expanded = mobileMenu.classList.contains('hidden') ? false : true;
+                    mobileMenu.classList.toggle('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', !expanded);
+                });
+            }
+
+            // Toggle dropdowns en móvil
+            document.querySelectorAll('.mobile-dropdown button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const expanded = content.classList.contains('hidden') ? false : true;
+                    content.classList.toggle('hidden');
+                    this.setAttribute('aria-expanded', !expanded);
+                    
+                    const icon = this.querySelector('.bi-chevron-down');
+                    if (icon) {
+                        icon.classList.toggle('rotate-180');
+                    }
+                });
+            });
+            
+            // Soporte para navegación por teclado en menús desplegables
+            const dropdownButtons = document.querySelectorAll('[aria-haspopup="true"]');
+            dropdownButtons.forEach(button => {
+                button.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        const menuId = this.getAttribute('aria-controls');
+                        const menu = document.getElementById(menuId);
+                        if (menu) {
+                            const isHidden = menu.classList.contains('hidden');
+                            if (isHidden) {
+                                menu.classList.remove('hidden');
+                                this.setAttribute('aria-expanded', 'true');
+                                const firstMenuItem = menu.querySelector('[role="menuitem"]');
+                                if (firstMenuItem) firstMenuItem.focus();
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // Navegación por teclado dentro de los menús
+            document.querySelectorAll('[role="menu"]').forEach(menu => {
+                const menuItems = menu.querySelectorAll('[role="menuitem"]');
+                menuItems.forEach((item, index) => {
+                    item.addEventListener('keydown', function(e) {
+                        if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            const nextItem = menuItems[index + 1] || menuItems[0];
+                            nextItem.focus();
+                        } else if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            const prevItem = menuItems[index - 1] || menuItems[menuItems.length - 1];
+                            prevItem.focus();
+                        } else if (e.key === 'Escape') {
+                            e.preventDefault();
+                            const button = document.querySelector(`[aria-controls="${menu.id}"]`);
+                            menu.classList.add('hidden');
+                            if (button) {
+                                button.setAttribute('aria-expanded', 'false');
+                                button.focus();
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </div>
 </html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - Reciclaje Sólido'">Reciclaje Sólido</title>
+    
+    <!-- Preconexiones para mejorar el rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    
+    <!-- Estilos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <!-- Configuración de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        },
+                        secondary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                            950: '#172554',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- Slot para contenido adicional en el head -->
+    <th:block th:replace="${headContent} ?: ~{}"></th:block>
+</head>
+
+<body th:fragment="body(content, navbarFragment, footerFragment)" 
+      class="bg-gray-100 min-h-screen flex flex-col font-sans"
+      th:classappend="${bodyClass} ?: ''"
+      th:style="${bodyStyle} ?: ''">
+    
+    <!-- Skip link para accesibilidad -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-md z-50">
+        Saltar al contenido principal
+    </a>
+    
+    <!-- Navbar -->
+    <th:block th:replace="${navbarFragment} ?: ~{}"></th:block>
+    
+    <!-- Contenido principal -->
+    <main id="main-content" class="container mx-auto px-4 py-6 flex-grow">
+        <!-- Mensajes de alerta -->
+        <div th:if="${success != null}" class="bg-green-100 border-l-4 border-green-500 text-green-800 p-4 mb-4 rounded shadow-sm" role="alert" aria-live="polite">
+            <p class="text-base" th:text="${success}">Mensaje de éxito</p>
+        </div>
+        <div th:if="${info != null}" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-4 rounded shadow-sm" role="alert" aria-live="polite">
+            <p class="text-base" th:text="${info}">Mensaje informativo</p>
+        </div>
+        <div th:if="${warning != null}" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-4 rounded shadow-sm" role="alert" aria-live="polite">
+            <p class="text-base" th:text="${warning}">Mensaje de advertencia</p>
+        </div>
+        <div th:if="${error != null}" class="bg-red-100 border-l-4 border-red-500 text-red-800 p-4 mb-4 rounded shadow-sm" role="alert" aria-live="assertive">
+            <p class="text-base" th:text="${error}">Mensaje de error</p>
+        </div>
+        
+        <!-- Contenido específico de la página -->
+        <th:block th:replace="${content}"></th:block>
+    </main>
+    
+    <!-- Footer -->
+    <th:block th:replace="${footerFragment} ?: ~{fragments/layout/footer :: footer}"></th:block>
+    
+    <!-- Scripts comunes -->
+    <script>
+        // Script común para todas las páginas
+        document.addEventListener('DOMContentLoaded', function() {
+            // Código común aquí
+        });
+    </script>
+    
+    <!-- Slot para scripts adicionales -->
+    <th:block th:replace="${scripts} ?: ~{}"></th:block>
+</body>
+</html>

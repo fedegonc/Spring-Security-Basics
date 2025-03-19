@@ -1,5 +1,6 @@
 package com.example.registrationlogindemo.entity;
 
+import com.example.registrationlogindemo.entity.Estado;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -80,12 +81,7 @@ public class Solicitude {
     @Column
     private String tamanio;
     
-    public enum Estado {
-        EN_ESPERA,
-        ACEPTADA,
-        RECHAZADA,
-        EN_REVISION
-    }
+    // Eliminamos la enumeración anidada ya que ahora existe como clase separada
 
     @PrePersist
     @PreUpdate
