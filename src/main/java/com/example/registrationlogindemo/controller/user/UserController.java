@@ -220,6 +220,9 @@ public class UserController {
 
                 imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
                 imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
+                
+                // Agregar imágenes de flags
+                imageService.addFlagImages(mv);
             }
         }
 
@@ -319,7 +322,20 @@ public class UserController {
 
     }
 
-
-
+    // Método para redireccionar a la página de perfil del usuario actual
+    @GetMapping("/editprofile")
+    public String editProfileRedirect() {
+        // Obtener el usuario autenticado
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
+        
+        // Si el usuario está autenticado, redirigir a su página de perfil
+        if (authenticatedUserOpt.isPresent()) {
+            User usuario = authenticatedUserOpt.get();
+            return "redirect:/user/profile/" + usuario.getId();
+        } else {
+            // Si no hay usuario autenticado, redirigir a la página de login
+            return "redirect:/login";
+        }
+    }
 
 }

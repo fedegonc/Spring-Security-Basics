@@ -103,6 +103,35 @@ a:focus {
     margin-bottom: 1.5rem;
 }
 
+/* Estilos para las tarjetas de solicitudes */
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    margin-bottom: 2rem;
+}
+
+.solicitud-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.solicitud-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-status-indicator {
+    width: 100%;
+}
+
+/* Mensaje cuando no hay solicitudes */
+.text-muted i.bi-inbox {
+    opacity: 0.6;
+}
+
 /* Estilos para la página de login */
 .login-container {
     width: 100%;

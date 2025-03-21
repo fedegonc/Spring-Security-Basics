@@ -65,6 +65,7 @@ public class SolicitudeController {
             User usuario = userRepository.findByUsername(username);
             mv.addObject("user", usuario);
         }
+        mv.addObject("solicitud", new Solicitude());
         imageService.addFlagImages(mv);
 
         return mv;
@@ -77,12 +78,17 @@ public class SolicitudeController {
                                     @AuthenticationPrincipal UserDetails currentUser) {
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
-            return "redirect:/user/welcome";
+            return "redirect:/user/newsolicitude";
         }
 
-
-
-
+        // Establecer la fecha actual
+        solicitud.setFecha(LocalDateTime.now());
+        
+        // Estado inicial
+        solicitud.setEstado(Estado.EN_ESPERA);
+        
+        // Establecer activo como true
+        solicitud.setActivo(true);
 
         if (!imagen.isEmpty()) {
             try {
@@ -92,10 +98,11 @@ public class SolicitudeController {
                 solicitud.setImagen(imagen.getOriginalFilename());
             } catch (IOException e) {
                 msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
-                return "redirect:/user/welcome";
+                return "redirect:/user/newsolicitude";
             }
         } else {
-            solicitud.setImagen(null); // O establece un valor por defecto
+            msg.addFlashAttribute("error", "Debe seleccionar una imagen.");
+            return "redirect:/user/newsolicitude";
         }
 
         User user = userRepository.findByUsername(currentUser.getUsername());
@@ -105,9 +112,10 @@ public class SolicitudeController {
             msg.addFlashAttribute("exito", "Solicitud realizada con éxito.");
         } else {
             msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
+            return "redirect:/user/newsolicitude";
         }
 
-        return "redirect:/user/welcome";
+        return "redirect:/user/view-requests";
     }
 
     // Método para manejar la solicitud GET para editar una solicitud

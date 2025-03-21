@@ -13,6 +13,9 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body class="app-background">
+    <!-- Incluir la barra de navegación -->
+    <div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+    
     <!-- Skip link para accesibilidad -->
     <a href="#main-content" class="sr-only-focusable bg-primary text-white px-4 py-2 rounded-md z-50">
         Saltar al contenido principal
@@ -30,10 +33,10 @@
                             <p class="lead">Gestiona todas tus solicitudes de reciclaje desde un solo lugar.</p>
                             
                             <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
-                                <a th:href="@{/user/solicitudes/nueva}" class="btn btn-primary btn-lg px-4 me-md-2">
+                                <a th:href="@{/user/newsolicitude}" class="btn btn-primary btn-lg px-4 me-md-2">
                                     <i class="bi bi-plus-circle me-2"></i>Nueva Solicitud
                                 </a>
-                                <a th:href="@{/user/solicitudes}" class="btn btn-outline-secondary btn-lg px-4">
+                                <a th:href="@{/user/view-requests}" class="btn btn-outline-secondary btn-lg px-4">
                                     <i class="bi bi-list-check me-2"></i>Mis Solicitudes
                                 </a>
                             </div>
