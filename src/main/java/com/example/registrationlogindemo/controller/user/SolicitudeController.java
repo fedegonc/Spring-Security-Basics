@@ -127,25 +127,43 @@ public class SolicitudeController {
     public ModelAndView showEditSolicitudeForm(@PathVariable("id") int id,
                                                @AuthenticationPrincipal UserDetails currentUser) {
         ModelAndView mv = new ModelAndView("solicitude/editsolicitude");
-        Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
-
-        if (solicitudeOpt.isPresent()) {
-            Solicitude solicitude = solicitudeOpt.get();
-            mv.addObject("solicitude", solicitude);
-
-            // Obtener todos los mensajes asociados a esta solicitud
-            List<Message> messages = messageService.findMessagesBySolicitude(solicitude);
-            mv.addObject("messages", messages);
+        
+        try {
+            // Verificar que la solicitud existe
+            Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
             
-            // Agregar usuario actual para manejo de mensajes
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String username = auth.getName();
-            Optional<User> userOpt = userRepository.findByEmail(username);
-            userOpt.ifPresent(user -> mv.addObject("user", user));
-            
-            return mv;
-        } else {
+            if (solicitudeOpt.isPresent()) {
+                Solicitude solicitude = solicitudeOpt.get();
+                mv.addObject("solicitude", solicitude);
+                
+                // Agregar atributos de accesibilidad
+                mv.addObject("pageTitle", "Editar Solicitud #" + id);
+                mv.addObject("pageDescription", "Formulario para editar los detalles de la solicitud");
+                
+                // Obtener todos los mensajes asociados a esta solicitud
+                List<Message> messages = messageService.findMessagesBySolicitude(solicitude);
+                mv.addObject("messages", messages);
+                
+                // Usar el UserDetails proporcionado por Spring Security
+                String username = currentUser.getUsername();
+                User user = userRepository.findByUsername(username);
+                if (user != null) {
+                    mv.addObject("user", user);
+                }
+                
+                return mv;
+            } else {
+                // Solicitud no encontrada - redirigir con mensaje informativo
+                mv.setViewName("redirect:/user/welcome");
+                mv.addObject("message", "La solicitud #" + id + " no fue encontrada");
+                mv.addObject("alertClass", "alert-warning");
+                return mv;
+            }
+        } catch (Exception e) {
+            // Manejo de errores inesperados
             mv.setViewName("redirect:/user/welcome");
+            mv.addObject("message", "Ocurrió un error al procesar la solicitud: " + e.getMessage());
+            mv.addObject("alertClass", "alert-danger");
             return mv;
         }
     }

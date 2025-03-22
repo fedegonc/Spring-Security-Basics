@@ -9,7 +9,6 @@ import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -19,20 +18,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @Controller
 @RequestMapping("/user")
@@ -51,10 +45,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
-    @Autowired
-    ImageRepository imageRepository;
-    @Autowired
-    ImageService imageService;
+   
+
 
 
     // Método para la página de bienvenida del usuario
@@ -104,11 +96,7 @@ public class UserController {
             mv.addObject("user", user);
 
             // Agregar imágenes de idioma (si las hubiera)
-            Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
-            Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
-
-            imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
-            imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
+          
         }
         return mv;
     }
@@ -213,12 +201,7 @@ public class UserController {
                 }
                 mv.addObject("user", usuario);
 
-                // Agregar imágenes de idioma (si las hubiera)
-                Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
-                Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
-
-                imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
-                imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
+              
             }
         }
 
@@ -227,34 +210,6 @@ public class UserController {
     }
 
 
-
-  /*  @GetMapping("/viewarticles")
-    public ModelAndView getArticles() {
-
-        ModelAndView mv = new ModelAndView();
-
-        // Obtener el usuario autenticado actualmente
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-
-            // Agregar el nombre de usuario al modelo para dar la bienvenida
-            mv.addObject("username", username);
-
-            // Obtener el usuario de la base de datos
-            User usuario = userRepository.findByUsername(username);
-            mv.addObject("user", usuario);
-
-            // Obtener las solicitudes realizadas por el usuario autenticado
-            List<Article> articles = articleRepository.findAll();
-            mv.addObject("articles", articles);
-        }
-
-        // Establecer la vista
-        mv.setViewName("user/viewarticles");
-        return mv;
-    }*/
     @GetMapping("/informaciones")
     public ModelAndView informaciones() {
         ModelAndView mv = new ModelAndView("user/informaciones");
@@ -271,13 +226,7 @@ public class UserController {
             User usuario = userRepository.findByUsername(username);
             mv.addObject("user", usuario);
 
-            // Agregar imágenes de idioma (si las hubiera)
-            Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
-            Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
-
-            imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
-            imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
-
+          
         }
         return mv;
     }
@@ -317,21 +266,7 @@ public class UserController {
         return mv;
     }
 
-    // Método para redireccionar a la página de perfil del usuario actual
-    @GetMapping("/editprofile")
-    public String editProfileRedirect() {
-        // Obtener el usuario autenticado
-        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
-        
-        // Si el usuario está autenticado, redirigir a su página de perfil
-        if (authenticatedUserOpt.isPresent()) {
-            User usuario = authenticatedUserOpt.get();
-            return "redirect:/user/profile/" + usuario.getId();
-        } else {
-            // Si no hay usuario autenticado, redirigir a la página de login
-            return "redirect:/login";
-        }
-    }
+   
 
     @PostMapping("/updatesolicitude/{id}")
     public ModelAndView updateSolicitude(@PathVariable("id") int id,
@@ -417,88 +352,5 @@ public class UserController {
         return mv;
     }
 
-    @GetMapping("/informaciones-recursos")
-    public ModelAndView informacionesRecursos() {
-        ModelAndView mv = new ModelAndView("user/informaciones-recursos");
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                String username = userDetails.getUsername();
-
-                // Obtener el usuario
-                User usuario = userRepository.findByUsername(username);
-                mv.addObject("user", usuario);
-            }
-            
-            // Agregar puntos de reciclaje para el mapa
-            List<Map<String, Object>> puntosReciclaje = new ArrayList<>();
-            
-            // Punto 1 - Centro de reciclaje principal
-            Map<String, Object> punto1 = new HashMap<>();
-            punto1.put("id", 1);
-            punto1.put("nombre", "Centro de Reciclaje Municipal");
-            punto1.put("direccion", "Av. Italia 3242, Montevideo");
-            punto1.put("lat", -34.882759);
-            punto1.put("lng", -56.156124);
-            punto1.put("horario", "Lunes a Viernes: 8:00 - 18:00, Sábados: 9:00 - 13:00");
-            punto1.put("telefono", "+598 2345 6789");
-            punto1.put("materiales", "Plástico, papel, cartón, vidrio, metal");
-            puntosReciclaje.add(punto1);
-            
-            // Punto 2 - Centro comunitario
-            Map<String, Object> punto2 = new HashMap<>();
-            punto2.put("id", 2);
-            punto2.put("nombre", "Centro Comunitario de Reciclaje");
-            punto2.put("direccion", "Bulevar Artigas 1825, Montevideo");
-            punto2.put("lat", -34.902591);
-            punto2.put("lng", -56.184623);
-            punto2.put("horario", "Lunes a Viernes: 9:00 - 17:00");
-            punto2.put("telefono", "+598 2467 8901");
-            punto2.put("materiales", "Plástico, papel, pilas, electrónicos pequeños");
-            puntosReciclaje.add(punto2);
-            
-            // Punto 3 - Punto de recolección de electrónicos
-            Map<String, Object> punto3 = new HashMap<>();
-            punto3.put("id", 3);
-            punto3.put("nombre", "Punto Verde - Electrónicos");
-            punto3.put("direccion", "Av. 18 de Julio 1453, Montevideo");
-            punto3.put("lat", -34.906287);
-            punto3.put("lng", -56.179257);
-            punto3.put("horario", "Miércoles y Sábados: 10:00 - 16:00");
-            punto3.put("telefono", "+598 2589 0123");
-            punto3.put("materiales", "Electrónicos, baterías, pilas");
-            puntosReciclaje.add(punto3);
-            
-            // Punto 4 - Punto de reciclaje en centro comercial
-            Map<String, Object> punto4 = new HashMap<>();
-            punto4.put("id", 4);
-            punto4.put("nombre", "Punto de Reciclaje Montevideo Shopping");
-            punto4.put("direccion", "Luis Alberto de Herrera 1290, Montevideo");
-            punto4.put("lat", -34.905302);
-            punto4.put("lng", -56.143389);
-            punto4.put("horario", "Todos los días: 10:00 - 22:00");
-            punto4.put("telefono", "+598 2623 4567");
-            punto4.put("materiales", "Plástico, papel, cartón, tetra pak");
-            puntosReciclaje.add(punto4);
-            
-            // Punto 5 - Cooperativa de reciclaje
-            Map<String, Object> punto5 = new HashMap<>();
-            punto5.put("id", 5);
-            punto5.put("nombre", "Cooperativa ReciclaUY");
-            punto5.put("direccion", "Av. General Rivera 3456, Montevideo");
-            punto5.put("lat", -34.900923);
-            punto5.put("lng", -56.161849);
-            punto5.put("horario", "Lunes a Viernes: 8:30 - 16:30");
-            punto5.put("telefono", "+598 2789 0123");
-            punto5.put("materiales", "Todo tipo de materiales reciclables");
-            puntosReciclaje.add(punto5);
-            
-            mv.addObject("puntosReciclaje", puntosReciclaje);
-            
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar la información: " + e.getMessage());
-        }
-        return mv;
-    }
+   
 }

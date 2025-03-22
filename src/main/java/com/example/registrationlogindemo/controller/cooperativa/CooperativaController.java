@@ -61,31 +61,50 @@ public class CooperativaController {
     @GetMapping("/dashboard")
     public ModelAndView getDashboardCooperativa() {
         ModelAndView mv = new ModelAndView("cooperativa/dashboard");
+        
+        // Obtener información del usuario autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
-            // Agregar el nombre de usuario al modelo para dar la bienvenida
-            mv.addObject("username", username);
             User usuario = userRepository.findByUsername(username);
+            mv.addObject("username", username);
             mv.addObject("user", usuario);
-
         }
 
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        mv.addObject("principal", principal.toString());
-
+        // Obtener solicitudes dirigidas a cooperativa
         List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("cooperativa");
         mv.addObject("solicitudes", solicitudes);
+        
+        // Estadísticas de solicitudes con manejo seguro
+        long totalSolicitudes = solicitudes != null ? solicitudes.size() : 0;
+        long pendientes = 0;
+        long aceptadas = 0;
+        long rechazadas = 0;
+        
+        if (solicitudes != null) {
+            pendientes = solicitudes.stream()
+                    .filter(s -> s.getEstado() != null && s.getEstado() == Estado.EN_ESPERA)
+                    .count();
+            aceptadas = solicitudes.stream()
+                    .filter(s -> s.getEstado() != null && s.getEstado() == Estado.ACEPTADA)
+                    .count();
+            rechazadas = solicitudes.stream()
+                    .filter(s -> s.getEstado() != null && s.getEstado() == Estado.RECHAZADA)
+                    .count();
+        }
+        
+        mv.addObject("totalSolicitudes", totalSolicitudes);
+        mv.addObject("pendientes", pendientes);
+        mv.addObject("aceptadas", aceptadas);
+        mv.addObject("rechazadas", rechazadas);
 
-
-
+        // Obtener usuarios y artículos
         List<User> users = userRepository.findAll();
         mv.addObject("users", users);
 
-        List<Article> articles = articleRepository.findAll(); // Obtener la lista de artículos
-        mv.addObject("articles", articles); // Agr
+        List<Article> articles = articleRepository.findAll(); 
+        mv.addObject("articles", articles);
 
         return mv;
     }

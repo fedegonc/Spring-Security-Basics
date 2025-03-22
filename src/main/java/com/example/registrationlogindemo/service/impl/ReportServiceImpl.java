@@ -3,7 +3,6 @@ package com.example.registrationlogindemo.service.impl;
 import com.example.registrationlogindemo.entity.Report;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ReportRepository;
-import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.ReportService;
 import com.example.registrationlogindemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,15 +1,11 @@
 package com.example.registrationlogindemo.service.impl;
-import com.example.registrationlogindemo.dto.ArticleDto;
 import com.example.registrationlogindemo.entity.Article;
-import com.example.registrationlogindemo.entity.Article.Categoria; // Asegúrate de importar el enum
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.ArticleService;
 import com.example.registrationlogindemo.service.ImageService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,7 +52,6 @@ public class DashboardService {
         List<User> users = userRepository.findAll();
         mv.addObject("users", users);
 
-        imageService.addFlagImages(mv);
 
         return mv;
     }

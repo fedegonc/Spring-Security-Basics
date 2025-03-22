@@ -1,8 +1,6 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
-import com.example.registrationlogindemo.entity.Image;
-import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ImageRepository;
 import com.example.registrationlogindemo.service.UserService;
@@ -10,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,8 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -34,8 +29,6 @@ public class AuthController implements ErrorController {
 
     @Autowired
     UserService userService;
-    @Autowired
-    ImageRepository imageRepository;
     private final HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
 
     @GetMapping("/error")
@@ -81,17 +74,6 @@ public class AuthController implements ErrorController {
         if (principal instanceof UserDetails) {
             return "redirect:/user/welcome";
         }
-        // Buscar las imágenes para los idiomas
-        Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
-        Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
-
-        // Agregar el nombre de la imagen al modelo si se encuentra
-        uruguaiImage.ifPresent(image -> {
-            model.addAttribute("uruguaiImageName", image.getNombre());
-        });
-        brasilImage.ifPresent(image -> {
-            model.addAttribute("brasilImageName", image.getNombre());
-        });
         return "guest/register";
     }
 
