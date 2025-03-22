@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Mis Organizaciones</title>
+</head>
+
+<body class="app-background d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+
+<!-- Contenido principal -->
+<div id="main" class="container mt-4 flex-grow-1">
+    
+    <div class="row g-4">
+        <!-- Panel lateral (33%) -->
+        <div class="col-12 col-md-4">
+            <div class="glass-card h-100 d-flex flex-column">
+                <h2 class="fs-4 fw-bold mb-4">Mis Organizaciones</h2>
+                
+                <div class="d-grid gap-2 mb-4">
+                    <a th:href="@{/org/register}" class="btn btn-primary">
+                        <i class="bi bi-building-add me-1"></i> Registrar Nueva Organización
+                    </a>
+                </div>
+                
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">Información</h4>
+                    <p>Desde aquí puedes gestionar tus organizaciones registradas y ver su estado actual.</p>
+                    <hr>
+                    <p class="mb-0">Una vez que tu organización sea aprobada, podrás acceder a todas las funcionalidades adicionales.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenido principal (66%) -->
+        <div class="col-12 col-md-8">
+            <div class="glass-card mb-4">
+                <h3 class="fs-5 fw-bold mb-3">Organizaciones que administro</h3>
+                
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${success}">Operación exitosa</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+                
+                <div class="alert alert-warning" th:if="${ownedOrganizations == null || ownedOrganizations.isEmpty()}">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    No has registrado ninguna organización aún. Puedes crear una nueva usando el botón "Registrar Nueva Organización".
+                </div>
+                
+                <div class="row g-3" th:if="${ownedOrganizations != null && !ownedOrganizations.isEmpty()}">
+                    <div class="col-12" th:each="org : ${ownedOrganizations}">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="card-title mb-0" th:text="${org.name}">Nombre de la Organización</h5>
+                                    <span class="badge" th:classappend="${org.status == 'APPROVED' ? 'bg-success' : (org.status == 'REJECTED' ? 'bg-danger' : 'bg-warning')}" 
+                                          th:text="${org.status == 'APPROVED' ? 'Aprobada' : (org.status == 'REJECTED' ? 'Rechazada' : 'Pendiente')}">Estado</span>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted" th:text="${org.type}">Tipo</h6>
+                                <p class="card-text" th:text="${org.description}">Descripción</p>
+                                <div class="d-flex justify-content-end mt-3">
+                                    <a th:href="@{/org/details/{id}(id=${org.id})}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye me-1"></i> Ver detalles
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card" th:if="${memberOrganizations != null && !memberOrganizations.isEmpty()}">
+                <h3 class="fs-5 fw-bold mb-3">Organizaciones a las que pertenezco</h3>
+                
+                <div class="row g-3">
+                    <div class="col-12" th:each="org : ${memberOrganizations}">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="card-title mb-0" th:text="${org.name}">Nombre de la Organización</h5>
+                                    <span class="badge bg-success">Miembro</span>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted" th:text="${org.type}">Tipo</h6>
+                                <p class="card-text" th:text="${org.description}">Descripción</p>
+                                <div class="d-flex justify-content-end mt-3">
+                                    <a th:href="@{/org/details/{id}(id=${org.id})}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye me-1"></i> Ver detalles
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+</body>
+</html>

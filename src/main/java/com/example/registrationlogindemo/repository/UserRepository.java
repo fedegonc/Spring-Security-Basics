@@ -27,6 +27,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByUsername(String username);
 
+    // Método para contar usuarios por rol
+    @Query("SELECT COUNT(u) FROM User u JOIN u.roles r WHERE r.id = :roleId")
+    int countByRolesId(@Param("roleId") Long roleId);
+
     @Transactional
     @Modifying
     @Query("DELETE FROM User u WHERE u.id = :userId")

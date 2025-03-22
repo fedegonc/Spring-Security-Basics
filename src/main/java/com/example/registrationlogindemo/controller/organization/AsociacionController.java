@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/asociacion")
+@RequestMapping("/org")
 public class AsociacionController {
 
     @Autowired
@@ -238,11 +238,6 @@ public class AsociacionController {
         return "redirect:/asociacion/dashboard";
     }
 
-
-    @GetMapping("/newarticle")
-    public ModelAndView newarticle() {
-        return new ModelAndView("asociacion/newarticle");
-    }
 
 
 

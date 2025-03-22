@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Solicitudes de Organizaciones</title>
+</head>
+
+<body class="app-background d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/admin/navbar-admin :: navbar-admin}"></div>
+
+<div class="container mt-4 flex-grow-1">
+    <div class="row g-4">
+        <!-- Panel lateral (33%) -->
+        <div class="col-12 col-md-4">
+            <div class="glass-card h-100">
+                <h2 class="fs-4 fw-bold mb-4">Solicitudes Pendientes</h2>
+                
+                <div class="alert alert-info" role="alert">
+                    <h5 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Información</h5>
+                    <p>Revise cuidadosamente cada solicitud y verifique los documentos adjuntos antes de aprobar.</p>
+                    <hr>
+                    <p class="mb-0">Al aprobar una organización, su propietario recibirá automáticamente el rol ORGANIZATION.</p>
+                </div>
+                
+                <div class="card border-0 shadow-sm mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title fs-5">Resumen</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="text-center">
+                                <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                                <p class="mb-0 mt-2">Pendientes</p>
+                                <p class="fs-5 fw-bold" th:text="${organizations != null ? organizations.size() : '0'}">5</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="bi bi-check-circle fs-2 text-success"></i>
+                                <p class="mb-0 mt-2">Aprobadas</p>
+                                <p class="fs-5 fw-bold">12</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="bi bi-x-circle fs-2 text-danger"></i>
+                                <p class="mb-0 mt-2">Rechazadas</p>
+                                <p class="fs-5 fw-bold">3</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenido principal (66%) -->
+        <div class="col-12 col-md-8">
+            <div class="glass-card">
+                <h3 class="fs-5 fw-bold mb-4">Lista de Solicitudes Pendientes</h3>
+                
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${success}">Operación exitosa</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+                
+                <div class="alert alert-warning" th:if="${organizations == null || organizations.isEmpty()}">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No hay solicitudes pendientes de revisión.
+                </div>
+                
+                <div class="table-responsive" th:if="${organizations != null && !organizations.isEmpty()}">
+                    <table class="table table-hover border-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Propietario</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="org : ${organizations}">
+                                <td th:text="${org.id}">1</td>
+                                <td th:text="${org.name}">Nombre Organización</td>
+                                <td th:text="${org.type}">ASOCIACION</td>
+                                <td th:text="${org.owner.name}">Nombre Propietario</td>
+                                <td th:text="${#temporals.format(org.createdAt, 'dd/MM/yyyy')}">01/01/2025</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a th:href="@{/org/details/{id}(id=${org.id})}" class="btn btn-sm btn-outline-primary" title="Ver detalles">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a th:href="@{/admin/organizations/approve/{id}(id=${org.id})}" class="btn btn-sm btn-outline-success" title="Aprobar"
+                                           onclick="return confirm('¿Estás seguro de que deseas aprobar esta organización?');">
+                                            <i class="bi bi-check-lg"></i>
+                                        </a>
+                                        <a th:href="@{/admin/organizations/reject/{id}(id=${org.id})}" class="btn btn-sm btn-outline-danger" title="Rechazar"
+                                           onclick="return confirm('¿Estás seguro de que deseas rechazar esta organización?');">
+                                            <i class="bi bi-x-lg"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+</body>
+</html>

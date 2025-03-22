@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Detalles de Organización</title>
+</head>
+
+<body class="app-background d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+
+<div class="container mt-4 flex-grow-1">
+    <div class="row g-4">
+        <!-- Panel lateral (33%) -->
+        <div class="col-12 col-md-4">
+            <div class="glass-card h-100">
+                <div class="text-center mb-4">
+                    <img th:if="${organization.logo != null}" th:src="${organization.logo}" alt="Logo" class="img-fluid rounded" style="max-height: 150px;">
+                    <img th:unless="${organization.logo != null}" src="/img/default-org-logo.jpg" alt="Logo por defecto" class="img-fluid rounded" style="max-height: 150px;">
+                    
+                    <h2 class="fs-4 fw-bold mt-3" th:text="${organization.name}">Nombre de la Organización</h2>
+                    <span class="badge mb-2" th:classappend="${organization.status == 'APPROVED' ? 'bg-success' : (organization.status == 'REJECTED' ? 'bg-danger' : 'bg-warning')}" 
+                          th:text="${organization.status == 'APPROVED' ? 'Aprobada' : (organization.status == 'REJECTED' ? 'Rechazada' : 'Pendiente')}">Estado</span>
+                </div>
+                
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title fs-6">Información de contacto</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item bg-transparent px-0">
+                                <i class="bi bi-geo-alt text-primary me-2"></i>
+                                <span th:text="${organization.address}">Dirección</span>
+                            </li>
+                            <li class="list-group-item bg-transparent px-0" th:if="${organization.phoneNumber != null && !organization.phoneNumber.isEmpty()}">
+                                <i class="bi bi-telephone text-primary me-2"></i>
+                                <span th:text="${organization.phoneNumber}">Teléfono</span>
+                            </li>
+                            <li class="list-group-item bg-transparent px-0" th:if="${organization.email != null && !organization.email.isEmpty()}">
+                                <i class="bi bi-envelope text-primary me-2"></i>
+                                <span th:text="${organization.email}">Email</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <a th:href="@{/org/dashboard}" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left me-1"></i> Volver al dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenido principal (66%) -->
+        <div class="col-12 col-md-8">
+            <div class="glass-card mb-4">
+                <h3 class="fs-5 fw-bold mb-3">Acerca de la Organización</h3>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <p class="fw-bold mb-1">Tipo:</p>
+                        <p th:text="${organization.type}">Tipo de organización</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fw-bold mb-1">Propietario:</p>
+                        <p th:text="${organization.owner.name}">Nombre del propietario</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fw-bold mb-1">Fecha de registro:</p>
+                        <p th:text="${#temporals.format(organization.createdAt, 'dd/MM/yyyy')}">01/01/2025</p>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title fs-6 mb-3">Descripción</h5>
+                        <p class="card-text" th:text="${organization.description}">Descripción de la organización...</p>
+                    </div>
+                </div>
+                
+                <div th:if="${organization.verificationDocuments != null && !organization.verificationDocuments.isEmpty()}" class="mb-4">
+                    <h5 class="fs-6 mb-2">Documentos de verificación</h5>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-file-earmark-text fs-1 text-primary me-3"></i>
+                        <div>
+                            <p class="mb-1">Documento adjunto</p>
+                            <a th:href="${organization.verificationDocuments}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye me-1"></i> Ver documento
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div th:if="${organization.status == 'PENDING'}" class="alert alert-warning" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Esta organización está pendiente de aprobación por un administrador. Te notificaremos cuando sea revisada.
+                </div>
+                
+                <div th:if="${organization.status == 'REJECTED'}" class="alert alert-danger" role="alert">
+                    <i class="bi bi-x-circle-fill me-2"></i>
+                    Esta organización ha sido rechazada. Por favor, contacta con un administrador para más información.
+                </div>
+            </div>
+            
+            <div class="glass-card" th:if="${organization.status == 'APPROVED'}">
+                <h3 class="fs-5 fw-bold mb-3">Miembros de la Organización</h3>
+                
+                <div class="alert alert-info" th:if="${organization.members.isEmpty()}">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No hay miembros registrados en esta organización.
+                </div>
+                
+                <div class="table-responsive" th:if="${!organization.members.isEmpty()}">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="member : ${organization.members}">
+                                <td th:text="${member.name}">Nombre del miembro</td>
+                                <td th:text="${member.email}">Email del miembro</td>
+                                <td>Miembro</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+</body>
+</html>

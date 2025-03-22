@@ -1,4 +1,6 @@
 package com.example.registrationlogindemo.controller.admin;
+
+import com.example.registrationlogindemo.entity.Organization;
 import com.example.registrationlogindemo.entity.Report;
 import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.Solicitude;
@@ -7,6 +9,7 @@ import com.example.registrationlogindemo.repository.ReportRepository;
 import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.OrganizationService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +27,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -132,9 +137,8 @@ public class AdministradorController {
     ReportRepository reportRepository;
     @Autowired
     UserService userService;
-
-
-
+    @Autowired
+    private OrganizationService organizationService;
 
     @GetMapping("/reports")
     public ModelAndView adminReports() {
@@ -172,30 +176,110 @@ public class AdministradorController {
     public ModelAndView rootRoles() {
         ModelAndView mv = new ModelAndView("admin/roles");
         List<Role> roles = roleRepository.findAll();
+        
+        // Agregar conteo de usuarios por rol
+        Map<Long, Integer> roleUserCounts = new HashMap<>();
+        for (Role role : roles) {
+            // Consultar cuántos usuarios tienen este rol
+            int userCount = userRepository.countByRolesId(role.getId());
+            roleUserCounts.put(role.getId(), userCount);
+        }
+        
         mv.addObject("roles", roles);
+        mv.addObject("roleUserCounts", roleUserCounts);
 
         return mv;
     }
 
-    @GetMapping("/editerole/{id}")
+    @GetMapping("/editrole/{id}")
     public ModelAndView adminEditReportrole(@PathVariable("id") long id) {
-        ModelAndView mv = new ModelAndView("admin/editrole");
-        Optional<Report> image = reportRepository.findById(id);
-        if (image.isPresent()) {
-            mv.addObject("role", image.get());
+        ModelAndView mv = new ModelAndView("admin/roles");
+        Optional<Role> role = roleRepository.findById(id);
+        if (role.isPresent()) {
+            // Obtener el conteo de usuarios por rol para mantener la consistencia
+            List<Role> roles = roleRepository.findAll();
+            Map<Long, Integer> roleUserCounts = new HashMap<>();
+            for (Role r : roles) {
+                int userCount = userRepository.countByRolesId(r.getId());
+                roleUserCounts.put(r.getId(), userCount);
+            }
+            
+            mv.addObject("roles", roles);
+            mv.addObject("roleUserCounts", roleUserCounts);
+            mv.addObject("editingRole", role.get());
+            mv.addObject("isEditing", true);
         } else {
-            mv.setViewName("redirect:/admin/dashboard");
+            mv.setViewName("redirect:/admin/roles");
+            mv.addObject("error", "El rol que intenta editar no existe.");
         }
         return mv;
     }
 
-    // Método para eliminar un reporte
-    @GetMapping("/deleterole/{id}")
-    public String adminExcluirReport(@PathVariable("id") int id) {
-        roleRepository.deleteById((long) id);
-        return "redirect:/admin/dashboard";
+    // Método para procesar la actualización de un rol
+    @PostMapping("/updaterole")
+    public String updateRole(@RequestParam("id") Long id, 
+                             @RequestParam("roleName") String roleName,
+                             RedirectAttributes redirectAttributes) {
+        Optional<Role> roleOpt = roleRepository.findById(id);
+        if (roleOpt.isPresent()) {
+            Role role = roleOpt.get();
+            
+            // Verificar si el nombre ya existe en otro rol
+            Role existingRole = roleRepository.findByName(roleName);
+            if (existingRole != null && !existingRole.getId().equals(id)) {
+                redirectAttributes.addFlashAttribute("error", "Ya existe un rol con el nombre '" + roleName + "'.");
+                return "redirect:/admin/roles";
+            }
+            
+            // Actualizar el rol
+            role.setName(roleName);
+            roleRepository.save(role);
+            redirectAttributes.addFlashAttribute("success", "Rol actualizado correctamente.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "No se encontró el rol para actualizar.");
+        }
+        
+        return "redirect:/admin/roles";
     }
 
+    // Método para eliminar un rol
+    @GetMapping("/deleterole/{id}")
+    public String deleteRole(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+        // Verificar si hay usuarios con este rol antes de eliminarlo
+        int userCount = userRepository.countByRolesId(id);
+        if (userCount > 0) {
+            redirectAttributes.addFlashAttribute("error", "No se puede eliminar este rol porque hay " + userCount + " usuario(s) asociado(s) a él.");
+            return "redirect:/admin/roles";
+        }
+        
+        try {
+            roleRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("success", "Rol eliminado correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar el rol: " + e.getMessage());
+        }
+        
+        return "redirect:/admin/roles";
+    }
+
+    // Método para crear un nuevo rol desde la lista desplegable
+    @PostMapping("/newrole")
+    public String createNewRole(@RequestParam("roleName") String roleName, RedirectAttributes redirectAttributes) {
+        // Verificar si el rol ya existe
+        Role existingRole = roleRepository.findByName(roleName);
+        if (existingRole != null) {
+            redirectAttributes.addFlashAttribute("error", "El rol '" + roleName + "' ya existe.");
+            return "redirect:/admin/roles";
+        }
+        
+        // Crear y guardar el nuevo rol
+        Role newRole = new Role();
+        newRole.setName(roleName);
+        roleRepository.save(newRole);
+        
+        redirectAttributes.addFlashAttribute("success", "Rol '" + roleName + "' creado exitosamente.");
+        return "redirect:/admin/roles";
+    }
 
     @GetMapping("/solicitudes")
     public ModelAndView adminSolicitudes() {
@@ -332,5 +416,47 @@ public class AdministradorController {
     public String adminExcluirUser(@PathVariable("id") int id) {
         userService.deleteUserById((long) id);
         return "redirect:/admin/dashboard";
+    }
+
+    // Método para mostrar las solicitudes de organizaciones pendientes de aprobación
+    @GetMapping("/organizations/pending")
+    public ModelAndView pendingOrganizations() {
+        ModelAndView mv = new ModelAndView("admin/pending-organizations");
+        List<Organization> organizations = organizationService.getOrganizationsByStatus("PENDING");
+        mv.addObject("organizations", organizations);
+        return mv;
+    }
+
+    // Método para aprobar una organización
+    @GetMapping("/organizations/approve/{id}")
+    public String approveOrganization(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        // Actualizar estado de la organización a APPROVED
+        organizationService.updateOrganizationStatus(id, "APPROVED");
+        
+        // Obtener la organización actualizada
+        Optional<Organization> orgOptional = organizationService.getOrganizationById(id);
+        if (orgOptional.isPresent()) {
+            // Obtener el propietario y añadir rol de ORGANIZATION
+            Organization org = orgOptional.get();
+            User owner = org.getOwner();
+            Role organizationRole = roleRepository.findByName("ROLE_ORGANIZATION");
+            
+            if (organizationRole != null && !owner.getRoles().contains(organizationRole)) {
+                owner.getRoles().add(organizationRole);
+                userRepository.save(owner);
+            }
+        }
+        
+        redirectAttributes.addFlashAttribute("success", "Organización aprobada exitosamente");
+        return "redirect:/admin/organizations/pending";
+    }
+
+    // Método para rechazar una organización
+    @GetMapping("/organizations/reject/{id}")
+    public String rejectOrganization(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        // Actualizar estado de la organización a REJECTED
+        organizationService.updateOrganizationStatus(id, "REJECTED");
+        redirectAttributes.addFlashAttribute("success", "Organización rechazada");
+        return "redirect:/admin/organizations/pending";
     }
 }

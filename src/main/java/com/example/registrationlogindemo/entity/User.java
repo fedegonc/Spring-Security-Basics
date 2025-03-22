@@ -50,6 +50,14 @@ public class User {
             inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ID")})
     private List<Role> roles = new ArrayList<>();
 
+    // Organizaciones que posee el usuario
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<Organization> ownedOrganizations = new ArrayList<>();
+
+    // Organizaciones a las que pertenece el usuario
+    @ManyToMany(mappedBy = "members")
+    private List<Organization> memberOrganizations = new ArrayList<>();
+
     // Método para pasar los roles
     public List<String> getUserRoles() {
         List<String> userRoles = new ArrayList<>();
@@ -62,6 +70,5 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={ CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Solicitude> solicitudes = new ArrayList<>();
-
 
 }

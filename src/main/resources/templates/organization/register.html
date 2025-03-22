@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Registrar Organización</title>
+</head>
+
+<body class="app-background d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+
+<div class="container mt-4 flex-grow-1">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="glass-card">
+                <h2 class="mb-4">Registrar Organización</h2>
+                
+                <form th:action="@{/org/register}" method="post" enctype="multipart/form-data" th:object="${organization}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre de la Organización</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Tipo de Organización</label>
+                        <select class="form-select" id="type" th:field="*{type}" required>
+                            <option value="">Seleccione un tipo</option>
+                            <option value="ASOCIACION">Asociación</option>
+                            <option value="COOPERATIVA">Cooperativa</option>
+                            <option value="FUNDACION">Fundación</option>
+                            <option value="EMPRESA">Empresa de Reciclaje</option>
+                            <option value="OTROS">Otros</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="address" th:field="*{address}" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="phoneNumber" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email de contacto</label>
+                            <input type="email" class="form-control" id="email" th:field="*{email}">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="description" rows="3" th:field="*{description}" 
+                                  placeholder="Describe la misión y actividades de tu organización..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="document" class="form-label">Documento de verificación</label>
+                        <input type="file" class="form-control" id="document" name="document" 
+                               accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                        <div class="form-text">Sube un documento que acredite la existencia legal de tu organización (RUT, acta de constitución, etc.)</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="logo" class="form-label">Logo (opcional)</label>
+                        <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+                        <div class="form-text">Formatos recomendados: JPG, PNG. Tamaño máximo: 2MB</div>
+                    </div>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Tu solicitud será revisada por un administrador. Una vez aprobada, podrás acceder a todas las funcionalidades para organizaciones.
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a th:href="@{/org/dashboard}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Registrar Organización</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+</body>
+</html>

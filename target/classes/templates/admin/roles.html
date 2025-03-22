@@ -54,9 +54,96 @@
             <div class="glass-card">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 class="fs-5 fw-bold mb-0">Lista de Roles</h3>
-                    <a th:href="@{/root/newrole}" class="btn btn-sm btn-primary">
-                        <i class="bi bi-plus-circle me-1"></i> Nuevo Rol
-                    </a>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#nuevoRolModal" aria-label="Agregar nuevo rol">
+                        <i class="bi bi-plus-circle me-1" aria-hidden="true"></i> Nuevo Rol
+                    </button>
+                </div>
+                
+                <!-- Mensajes de notificación -->
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-2" aria-hidden="true"></i>
+                    <span th:text="${success}">Operación exitosa</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+                
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>
+                    <span th:text="${error}">Ha ocurrido un error</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+                
+                <!-- Sección de edición de roles - aparece solo cuando estamos editando -->
+                <div th:if="${isEditing}" class="card mb-4 border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Editar Rol</h5>
+                            <a th:href="@{/admin/roles}" class="btn btn-sm btn-light">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/updaterole}" method="post">
+                            <input type="hidden" name="id" th:value="${editingRole.id}">
+                            <div class="mb-3">
+                                <label for="editRoleTipo" class="form-label fw-bold">Tipo de Rol:</label>
+                                <select id="editRoleTipo" name="roleName" class="form-select" required aria-describedby="editRoleHelp" aria-required="true">
+                                    <option value="">Seleccione un tipo de rol</option>
+                                    <option value="ROLE_ADMIN" th:selected="${editingRole.name == 'ROLE_ADMIN'}">Administrador</option>
+                                    <option value="ROLE_USER" th:selected="${editingRole.name == 'ROLE_USER'}">Usuario común</option>
+                                    <option value="ROLE_ORGANIZATION" th:selected="${editingRole.name == 'ROLE_ORGANIZATION'}">Institución de acopio</option>
+                                    <option value="ROLE_BUSINESS" th:selected="${editingRole.name == 'ROLE_BUSINESS'}">Empresa</option>
+                                    <option value="ROLE_RECYCLING" th:selected="${editingRole.name == 'ROLE_RECYCLING'}">Empresa de reciclaje</option>
+                                </select>
+                                <div id="editRoleHelp" class="form-text">
+                                    Este rol determinará los permisos y acciones que el usuario podrá realizar.
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-1"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Modal para crear un nuevo rol -->
+                <div class="modal fade" id="nuevoRolModal" tabindex="-1" aria-labelledby="nuevoRolModalLabel" aria-hidden="true" data-bs-backdrop="static">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="nuevoRolModalLabel">Crear Nuevo Rol</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" title="Cerrar ventana"></button>
+                            </div>
+                            <form th:action="@{/admin/newrole}" method="post">
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="rolTipo" class="form-label fw-bold">Tipo de Rol:</label>
+                                        <select id="rolTipo" name="roleName" class="form-select" required aria-describedby="roleHelp" aria-required="true">
+                                            <option value="">Seleccione un tipo de rol</option>
+                                            <option value="ROLE_ADMIN">Administrador</option>
+                                            <option value="ROLE_USER">Usuario común</option>
+                                            <option value="ROLE_ORGANIZATION">Institución de acopio</option>
+                                            <option value="ROLE_BUSINESS">Empresa</option>
+                                            <option value="ROLE_RECYCLING">Empresa de reciclaje</option>
+                                        </select>
+                                        <div id="roleHelp" class="form-text">
+                                            Este rol determinará los permisos y acciones que el usuario podrá realizar.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <i class="bi bi-x-circle me-1" aria-hidden="true"></i> Cancelar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-1" aria-hidden="true"></i> Guardar Rol
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Tabla de roles mejorada -->
@@ -66,6 +153,7 @@
                             <tr>
                                 <th scope="col" class="rounded-start">ID</th>
                                 <th scope="col">Nombre del Rol</th>
+                                <th scope="col">Usuarios</th>
                                 <th scope="col" class="rounded-end text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -80,11 +168,15 @@
                                         <span th:text="${role.name}"></span>
                                     </div>
                                 </td>
+                                <td>
+                                    <span class="badge bg-primary rounded-pill" th:text="${roleUserCounts.get(role.id)}">0</span>
+                                    <span class="ms-1">usuario(s)</span>
+                                </td>
                                 <td class="text-center">
-                                    <a class="btn btn-sm btn-outline-primary me-1" th:href="@{/root/editerole/{id}(id=${role.id})}">
+                                    <a class="btn btn-sm btn-outline-primary me-1" th:href="@{/admin/editrole/{id}(id=${role.id})}">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a class="btn btn-sm btn-outline-danger" th:href="@{/root/deleterole/{id}(id=${role.id})}" 
+                                    <a class="btn btn-sm btn-outline-danger" th:href="@{/admin/deleterole/{id}(id=${role.id})}"
                                        onclick="return confirm('¿Estás seguro de que deseas eliminar este rol?');">
                                         <i class="bi bi-trash"></i>
                                     </a>
