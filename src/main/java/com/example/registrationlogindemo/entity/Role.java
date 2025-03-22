@@ -41,8 +41,6 @@ public class Role {
                 return "Asociacion";
             case "ROLE_ADMIN":
                 return "Admin";
-            case "ROLE_ROOT":
-                return "Root";
             default:
                 return this.name;
         }

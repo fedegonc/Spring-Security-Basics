@@ -1,6 +1,5 @@
 package com.example.registrationlogindemo.entity;
 
-import com.example.registrationlogindemo.entity.Estado;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,9 +47,6 @@ public class Solicitude {
     @Column(nullable = false)
     private LocalDateTime fecha;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Estado estado = Estado.EN_ESPERA; // Estado por defecto
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

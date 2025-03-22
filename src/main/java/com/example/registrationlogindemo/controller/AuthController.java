@@ -2,7 +2,6 @@ package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.User;
-import com.example.registrationlogindemo.repository.ImageRepository;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -159,8 +158,6 @@ public class AuthController implements ErrorController {
                 return new ModelAndView("redirect:/asociacion/dashboard");
             case "[ROLE_ADMIN]":
                 return new ModelAndView("redirect:/admin/dashboard");
-            case "[ROLE_ROOT]":
-                return new ModelAndView("redirect:/root/dashboard");
             default:
                 return new ModelAndView("redirect:/error");
         }

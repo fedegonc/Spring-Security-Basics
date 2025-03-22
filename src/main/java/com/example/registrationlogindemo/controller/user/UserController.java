@@ -3,7 +3,6 @@ package com.example.registrationlogindemo.controller.user;
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.*;
 import com.example.registrationlogindemo.repository.*;
-import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
@@ -251,14 +250,7 @@ public class UserController {
                 User usuario = userRepository.findByUsername(username);
                 List<Solicitude> solicitudes = solicitudeService.getSolicitudesByUser(usuario);
 
-                // Calcular estadísticas básicas
-                mv.addObject("totalSolicitudes", solicitudes.size());
-                mv.addObject("completadas", solicitudes.stream()
-                    .filter(s -> s.getEstado() == Estado.ACEPTADA)
-                    .count());
-                mv.addObject("pendientes", solicitudes.stream()
-                    .filter(s -> s.getEstado() == Estado.EN_ESPERA)
-                    .count());
+
             }
         } catch (Exception e) {
             mv.addObject("error", "Error al cargar las estadísticas: " + e.getMessage());

@@ -1,9 +1,7 @@
 package com.example.registrationlogindemo.controller;
 
-import com.example.registrationlogindemo.entity.Article;
 import com.example.registrationlogindemo.entity.Report;
 import com.example.registrationlogindemo.entity.User;
-import com.example.registrationlogindemo.service.ArticleService;
 import com.example.registrationlogindemo.service.ReportService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
@@ -24,8 +22,7 @@ import java.util.Optional;
 @Controller
 public class GuestController {
 
-    @Autowired
-    private ArticleService articleService;
+
     @Autowired
     private ReportService reportService;
 
@@ -45,8 +42,7 @@ public class GuestController {
             return new ModelAndView("redirect:/init");
         }
 
-        List<Article> articles = articleService.getArticlesByCategory(Article.Categoria.GENERICO);
-        mv.addObject("articles", articles);
+
 
         return mv;
     }
@@ -55,51 +51,17 @@ public class GuestController {
     public ModelAndView ambiental() {
         ModelAndView mv = new ModelAndView("guest/ambiental");
 
-        List<Article> articles = articleService.getArticlesByCategory(Article.Categoria.EDUCACION_AMBIENTAL);
-        mv.addObject("articles", articles);
+
 
         return mv;
     }
 
-    @GetMapping("/noticias")
-    public ModelAndView noticias() {
-        ModelAndView mv = new ModelAndView("guest/noticias");
 
-        List<Article> articles = articleService.getArticlesByCategory(Article.Categoria.NOTICIA);
-        mv.addObject("articles", articles);
 
-        return mv;
-    }
 
-    @GetMapping("/materiales")
-    public ModelAndView materiales() {
-        ModelAndView mv = new ModelAndView("guest/materiales");
 
-        List<Article> articles = articleService.getArticlesByCategory(Article.Categoria.TIPOS_DE_MATERIALES);
-        mv.addObject("articles", articles);
 
-        return mv;
-    }
 
-    @GetMapping("/alianzas")
-    public ModelAndView alianzas() {
-        ModelAndView mv = new ModelAndView("guest/alianzas");
-
-        List<Article> articles = articleService.getArticlesByCategory(Article.Categoria.ALIANZAS);
-        mv.addObject("articles", articles);
-
-        return mv;
-    }
-
-    @GetMapping("/legislacion")
-    public ModelAndView legislacion() {
-        ModelAndView mv = new ModelAndView("guest/legislacion");
-
-        List<Article> articles = articleService.getArticlesByCategory(Article.Categoria.LEGISLACION);
-        mv.addObject("articles", articles);
-
-        return mv;
-    }
 
     @GetMapping("/report")
     public ModelAndView newReport() {

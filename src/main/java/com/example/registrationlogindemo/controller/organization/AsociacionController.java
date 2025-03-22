@@ -1,19 +1,14 @@
-package com.example.registrationlogindemo.controller.cooperativa;
+package com.example.registrationlogindemo.controller.organization;
 
-import com.example.registrationlogindemo.entity.Article;
 import com.example.registrationlogindemo.entity.Message;
 import com.example.registrationlogindemo.entity.Solicitude;
-import com.example.registrationlogindemo.entity.Estado;
 import com.example.registrationlogindemo.entity.User;
-import com.example.registrationlogindemo.repository.ArticleRepository;
 import com.example.registrationlogindemo.repository.MessageRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.MessageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
-import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,9 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,77 +30,47 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/cooperativa")
-public class CooperativaController {
+@RequestMapping("/asociacion")
+public class AsociacionController {
 
     @Autowired
     SolicitudeRepository solicitudeRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
-    ArticleRepository articleRepository;
-    @Autowired
-    MessageService messageService;
-    @Autowired
     MessageRepository messageRepository;
     @Autowired
-    ImageService imageService;
+    MessageService messageService;
     @Autowired
     UserService userService;
 
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     @GetMapping("/dashboard")
-    public ModelAndView getDashboardCooperativa() {
-        ModelAndView mv = new ModelAndView("cooperativa/dashboard");
-        
-        // Obtener información del usuario autenticado
+    public ModelAndView getDashboardAsociacion() {
+        ModelAndView mv = new ModelAndView("asociacion/dashboard");
+
+        // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
+
+            // Obtener el usuario de la base de datos
             User usuario = userRepository.findByUsername(username);
-            mv.addObject("username", username);
             mv.addObject("user", usuario);
+            // Obtener los artículos del usuario actual
+
+            // Otros datos que puedan ser útiles para el dashboard
+            mv.addObject("username", username);
+            mv.addObject("principal", authentication.getPrincipal().toString());
+            List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("asociacion");
+            mv.addObject("solicitudes", solicitudes);
+            List<User> users = userRepository.findAll();
+            mv.addObject("users", users);
         }
-
-        // Obtener solicitudes dirigidas a cooperativa
-        List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("cooperativa");
-        mv.addObject("solicitudes", solicitudes);
-        
-        // Estadísticas de solicitudes con manejo seguro
-        long totalSolicitudes = solicitudes != null ? solicitudes.size() : 0;
-        long pendientes = 0;
-        long aceptadas = 0;
-        long rechazadas = 0;
-        
-        if (solicitudes != null) {
-            pendientes = solicitudes.stream()
-                    .filter(s -> s.getEstado() != null && s.getEstado() == Estado.EN_ESPERA)
-                    .count();
-            aceptadas = solicitudes.stream()
-                    .filter(s -> s.getEstado() != null && s.getEstado() == Estado.ACEPTADA)
-                    .count();
-            rechazadas = solicitudes.stream()
-                    .filter(s -> s.getEstado() != null && s.getEstado() == Estado.RECHAZADA)
-                    .count();
-        }
-        
-        mv.addObject("totalSolicitudes", totalSolicitudes);
-        mv.addObject("pendientes", pendientes);
-        mv.addObject("aceptadas", aceptadas);
-        mv.addObject("rechazadas", rechazadas);
-
-        // Obtener usuarios y artículos
-        List<User> users = userRepository.findAll();
-        mv.addObject("users", users);
-
-        List<Article> articles = articleRepository.findAll(); 
-        mv.addObject("articles", articles);
-
         return mv;
     }
-
 
     @GetMapping("/profile/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
@@ -118,11 +80,11 @@ public class CooperativaController {
         User currentUser = userRepository.findByUsername(username);
 
         if (currentUser != null && currentUser.getId() != id) {
-            return new ModelAndView("redirect:/cooperativa/profile/" + currentUser.getId());
+            return new ModelAndView("redirect:/asociacion/profile/" + currentUser.getId());
         }
 
         Optional<User> userOptional = userRepository.findById(id);
-        ModelAndView mv = new ModelAndView("cooperativa/profile");
+        ModelAndView mv = new ModelAndView("asociacion/profile");
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
@@ -130,7 +92,6 @@ public class CooperativaController {
             }
             mv.addObject("user", user);
         }
-
         return mv;
     }
 
@@ -145,7 +106,7 @@ public class CooperativaController {
 
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");
-            mv.setViewName("redirect:/cooperativa/profile/" + id);
+            mv.setViewName("redirect:/asociacion/profile/" + id);
             return mv;
         }
 
@@ -177,7 +138,7 @@ public class CooperativaController {
 
             userRepository.save(userEdit);
             msg.addFlashAttribute("success", "Usuario editado exitosamente.");
-            mv.setViewName("redirect:/cooperativa/profile/" + user.getId());
+            mv.setViewName("redirect:/asociacion/profile/" + user.getId());
         } else {
             mv.setViewName("redirect:/error");
         }
@@ -187,31 +148,20 @@ public class CooperativaController {
 
     @GetMapping("/solicitudes")
     public ModelAndView Solicitudes() {
-        ModelAndView mv = new ModelAndView("cooperativa/solicitudes");
+        ModelAndView mv = new ModelAndView("asociacion/solicitudes");
 
-        List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("cooperativa");
+        List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("asociacion");
         mv.addObject("solicitudes", solicitudes);
-
-
         return mv;
-    }
 
+    }
 
     @GetMapping("/reviewsolicitude/{id}")
     public ModelAndView showEditSolicitudeForm(@PathVariable("id") int id,
                                                @AuthenticationPrincipal UserDetails currentUser) {
-        ModelAndView mv = new ModelAndView("cooperativa/reviewsolicitude");
+        ModelAndView mv = new ModelAndView("asociacion/reviewsolicitude");
         Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-            // Agregar el nombre de usuario al modelo para dar la bienvenida
-            mv.addObject("username", username);
-            User usuario = userRepository.findByUsername(username);
-            mv.addObject("user", usuario);
 
-        }
         if (solicitudeOpt.isPresent()) {
             Solicitude solicitude = solicitudeOpt.get();
             mv.addObject("solicitude", solicitude);
@@ -220,12 +170,11 @@ public class CooperativaController {
             List<Message> messages = messageService.findMessagesBySolicitude(solicitude);
             mv.addObject("messages", messages);
         } else {
-            mv.setViewName("redirect:/cooperativa/dashboard");
+            mv.setViewName("redirect:/asociacion/dashboard");
         }
-
-
         return mv;
     }
+
     @PostMapping("/reviewsolicitude/{id}")
     public ModelAndView editSolicitude(@PathVariable("id") int id,
                                        @ModelAttribute("solicitude") @Valid Solicitude solicitude,
@@ -236,14 +185,13 @@ public class CooperativaController {
         Optional<Solicitude> existingSolicitudeOpt = solicitudeRepository.findById(id);
         if (existingSolicitudeOpt.isPresent()) {
             Solicitude existingSolicitude = existingSolicitudeOpt.get();
-            existingSolicitude.setEstado(Estado.valueOf(estado));
 
             solicitudeRepository.save(existingSolicitude);
             msg.addFlashAttribute("exito", "Estado de la solicitud editado con éxito.");
-            mv.setViewName("redirect:/cooperativa/dashboard");
+            mv.setViewName("redirect:/asociacion/dashboard");
         } else {
             msg.addFlashAttribute("error", "No se encontró la solicitud a editar.");
-            mv.setViewName("redirect:/cooperativa/dashboard");
+            mv.setViewName("redirect:/asociacion/dashboard");
         }
 
         return mv;
@@ -259,7 +207,7 @@ public class CooperativaController {
         Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
         if (solicitudeOpt.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "No se encontró la solicitud.");
-            return "redirect:/cooperativa/dashboard/" + id;
+            return "redirect:/asociacion/reviewsolicitude/" + id;
         }
 
         Solicitude solicitude = solicitudeOpt.get();
@@ -268,7 +216,7 @@ public class CooperativaController {
         User user = userRepository.findByUsername(currentUser.getUsername());
         if (user == null) {
             redirectAttributes.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
-            return "redirect:/cooperativa/dashboard/" + id;
+            return "redirect:/asociacion/editsolicitude/" + id;
         }
 
         // Crear y guardar el nuevo mensaje
@@ -282,92 +230,21 @@ public class CooperativaController {
         redirectAttributes.addFlashAttribute("exito", "Mensaje enviado con éxito.");
 
         // Redirigir de vuelta a la página de edición de la solicitud
-        return "redirect:/cooperativa/reviewsolicitude/" + id;
+        return "redirect:/asociacion/reviewsolicitude/" + id;
     }
-
     @GetMapping("/deletesolicitude/{id}")
     public String deleteSolicitude(@PathVariable("id") long id) {
         solicitudeRepository.deleteSolicitudeById(id);
-
-        return "redirect:/cooperativa/dashboard";
+        return "redirect:/asociacion/dashboard";
     }
 
-    @GetMapping("/articles")
-    public ModelAndView getArticles() {
-        ModelAndView mv = new ModelAndView("cooperativa/articles");
-
-        List<Article> articles = articleRepository.findAll();
-        mv.addObject("articles", articles);
-
-        return mv;
-    }
-
-    @GetMapping("/deletearticle/{id}")
-    public String deleteArticle(@PathVariable("id") long id) {
-        articleRepository.deleteById(id);
-
-        return "redirect:/cooperativa/dashboard";
-    }
 
     @GetMapping("/newarticle")
     public ModelAndView newarticle() {
-        return new ModelAndView("cooperativa/newarticle");
+        return new ModelAndView("asociacion/newarticle");
     }
 
-    @PostMapping("/newarticle")
-    public String newArticlePost(@Valid Article article,
-                                 BindingResult result,
-                                 @RequestParam("file") MultipartFile file,
-                                 RedirectAttributes msg) {
-        if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "Error al cargar el artículo. Por favor, complete todos los campos correctamente.");
-            return "redirect:/cooperativa/dashboard";
-        }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
 
-        try {
-            if (!file.isEmpty()) {
-                // Procesar la imagen y guardarla en la base de datos
-                BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-                String formatName = file.getContentType().split("/")[1]; // Obtiene el formato de la imagen
 
-                // Redimensionar la imagen
-                bufferedImage = Thumbnails.of(bufferedImage)
-                        .size(500, 500)
-                        .outputQuality(0.8f)
-                        .asBufferedImage();
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(bufferedImage, formatName, baos);
-                baos.flush();
-                byte[] resizedImageBytes = baos.toByteArray();
-                baos.close();
-
-                // Guardar los datos de la imagen en el artículo
-                article.setImagenData(resizedImageBytes); // Ajusta según tu entidad
-
-                article.setImagenNombre(file.getOriginalFilename());
-            } else {
-                // Establecer valores predeterminados si no se carga imagen
-                article.setImagenData(null);
-
-                article.setImagenNombre(null);
-            }
-        } catch (IOException e) {
-            msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
-            return "redirect:/cooperativa/newarticles";
-        }
-
-        User currentUser = userRepository.findByUsername(username);
-        article.setUser(currentUser);
-
-        // Guardar el artículo en la base de datos
-        articleRepository.save(article);
-
-        msg.addFlashAttribute("success", "Artículo cargado exitosamente.");
-        return "redirect:/cooperativa/newarticles";
-    }
 }

@@ -1,14 +1,11 @@
 package com.example.registrationlogindemo.controller.user;
 
-import ch.qos.logback.core.model.Model;
-import com.example.registrationlogindemo.entity.Estado;
 import com.example.registrationlogindemo.entity.Message;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.MessageRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.MessageService;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
@@ -46,8 +43,7 @@ public class SolicitudeController {
     MessageRepository messageRepository;
     @Autowired
     UserService userService;
-    @Autowired
-    ImageService imageService;
+
     @Autowired
     private MessageService messageService;
     @Autowired
@@ -87,9 +83,7 @@ public class SolicitudeController {
 
         // Establecer la fecha actual
         solicitud.setFecha(LocalDateTime.now());
-        
-        // Estado inicial
-        solicitud.setEstado(Estado.EN_ESPERA);
+
         
         // Establecer activo como true
         solicitud.setActivo(true);
