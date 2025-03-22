@@ -45,7 +45,7 @@ public class OrganizationController {
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     // Dashboard principal para organizaciones
-    @GetMapping("/dashboard")
+    @GetMapping("/organization-dashboard")
     public ModelAndView dashboard() {
         ModelAndView mv = new ModelAndView("organization/dashboard");
 
@@ -107,7 +107,7 @@ public class OrganizationController {
         organizationService.saveOrganization(organization);
         
         redirectAttributes.addFlashAttribute("success", "Tu organización ha sido registrada y está pendiente de aprobación.");
-        return "redirect:/org/dashboard";
+        return "redirect:/org/organization-dashboard";
     }
     
     // Ver detalles de una organización
