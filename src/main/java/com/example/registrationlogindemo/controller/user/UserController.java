@@ -351,4 +351,64 @@ public class UserController {
         }
     }
 
+    @PostMapping("/updatesolicitude/{id}")
+    public ModelAndView updateSolicitude(@PathVariable("id") int id,
+                                       @RequestParam("categoria") String categoria,
+                                       @RequestParam("barrio") String barrio,
+                                       @RequestParam("calle") String calle,
+                                       @RequestParam("numeroDeCasa") String numeroDeCasa,
+                                       @RequestParam("file") MultipartFile file,
+                                       @RequestParam("currentImageUrl") String currentImageUrl,
+                                       RedirectAttributes msg) {
+        
+        // Obtener el usuario autenticado
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
+        
+        if (authenticatedUserOpt.isPresent()) {
+            User usuario = authenticatedUserOpt.get();
+            
+            // Obtener la solicitud
+            Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
+            
+            if (solicitudeOpt.isPresent()) {
+                Solicitude solicitude = solicitudeOpt.get();
+                
+                // Verificar que la solicitud pertenece al usuario actual
+                if (solicitude.getUser().getId() == usuario.getId()) {
+                    // Actualizar datos
+                    solicitude.setCategoria(categoria);
+                    solicitude.setBarrio(barrio);
+                    solicitude.setCalle(calle);
+                    solicitude.setNumeroDeCasa(numeroDeCasa);
+                    
+                    // Manejar la imagen
+                    try {
+                        if (!file.isEmpty()) {
+                            String originalFilename = file.getOriginalFilename();
+                            String modifiedFilename = originalFilename.replace(" ", "_");
+                            
+                            byte[] bytes = file.getBytes();
+                            Path path = Paths.get(UPLOAD_DIR + modifiedFilename);
+                            Files.write(path, bytes);
+                            
+                            solicitude.setImagen(modifiedFilename);
+                        } else {
+                            solicitude.setImagen(currentImageUrl);
+                        }
+                    } catch (IOException e) {
+                        msg.addFlashAttribute("error", "Error al procesar la imagen");
+                        return new ModelAndView("redirect:/user/editsolicitude/" + id);
+                    }
+                    
+                    // Guardar cambios
+                    solicitudeRepository.save(solicitude);
+                    msg.addFlashAttribute("success", "Solicitud actualizada exitosamente");
+                    return new ModelAndView("redirect:/user/view-requests");
+                }
+            }
+        }
+        
+        msg.addFlashAttribute("error", "No se pudo actualizar la solicitud");
+        return new ModelAndView("redirect:/user/view-requests");
+    }
 }
