@@ -298,28 +298,41 @@ public class UserController {
     @GetMapping("/statistics")
     public ModelAndView estadisticas() {
         ModelAndView mv = new ModelAndView("user/statistics");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                String username = userDetails.getUsername();
 
-            // Agregar el nombre de usuario al modelo para dar la bienvenida
-            mv.addObject("username", username);
+                // Agregar el nombre de usuario al modelo para dar la bienvenida
+                mv.addObject("username", username);
 
-            // Obtener el usuario de la base de datos
-            User usuario = userRepository.findByUsername(username);
-            mv.addObject("user", usuario);
+                // Obtener el usuario de la base de datos
+                User usuario = userRepository.findByUsername(username);
+                mv.addObject("user", usuario);
 
-            // Agregar imágenes de idioma (si las hubiera)
-            Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
-            Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
+                // Agregar imágenes de idioma (si las hubiera)
+                Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
+                Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
 
-            imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
-            imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
-
+                imageService.addLanguageImages(mv, uruguaiImage, "uruguaiImageName");
+                imageService.addLanguageImages(mv, brasilImage, "brasilImageName");
+                
+                // Datos de ejemplo para estadísticas
+                // En el futuro, reemplazar con datos reales de la base de datos
+                mv.addObject("totalSolicitudes", 324);
+                mv.addObject("completadas", 286);
+                mv.addObject("pendientes", 38);
+                mv.addObject("valoracionMedia", 4.8);
+            } else {
+                // Si no hay usuario autenticado, redirigir a la página de login
+                return new ModelAndView("redirect:/login");
+            }
+        } catch (Exception e) {
+            // Manejar cualquier error inesperado
+            mv.addObject("error", "Ha ocurrido un error al cargar las estadísticas: " + e.getMessage());
         }
         return mv;
-
     }
 
     // Método para redireccionar a la página de perfil del usuario actual

@@ -5,7 +5,7 @@
     <title>Estadisticas</title>
     <style>
         .app-background {
-            background: url('/img/background.jpg') no-repeat center center fixed;
+            background: url('/img/fondo__app.jpg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
         }
@@ -102,7 +102,7 @@
                     <div class="icon text-primary">
                         <i class="bi bi-file-earmark-text"></i>
                     </div>
-                    <div class="stat-value">324</div>
+                    <div class="stat-value" th:text="${totalSolicitudes ?: 0}">324</div>
                     <div class="stat-label">Total Solicitudes</div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                     <div class="icon text-success">
                         <i class="bi bi-check-circle"></i>
                     </div>
-                    <div class="stat-value">286</div>
+                    <div class="stat-value" th:text="${completadas ?: 0}">286</div>
                     <div class="stat-label">Completadas</div>
                 </div>
             </div>
@@ -122,7 +122,7 @@
                     <div class="icon text-warning">
                         <i class="bi bi-hourglass-split"></i>
                     </div>
-                    <div class="stat-value">38</div>
+                    <div class="stat-value" th:text="${pendientes ?: 0}">38</div>
                     <div class="stat-label">Pendientes</div>
                 </div>
             </div>
@@ -132,7 +132,7 @@
                     <div class="icon text-info">
                         <i class="bi bi-star"></i>
                     </div>
-                    <div class="stat-value">4.8</div>
+                    <div class="stat-value" th:text="${valoracionMedia ?: '0.0'}">4.8</div>
                     <div class="stat-label">Valoración Media</div>
                 </div>
             </div>

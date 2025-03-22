@@ -53,7 +53,6 @@ com\example\registrationlogindemo\controller\cooperativa\CooperativaController.c
 com\example\registrationlogindemo\entity\Estado.class
 com\example\registrationlogindemo\config\WebConfig$CustomInterceptor.class
 com\example\registrationlogindemo\controller\admin\AUser.class
-com\example\registrationlogindemo\controller\user\SolicitudeController.class
 com\example\registrationlogindemo\service\UserService.class
 com\example\registrationlogindemo\entity\Image.class
 com\example\registrationlogindemo\service\SolicitudeService.class

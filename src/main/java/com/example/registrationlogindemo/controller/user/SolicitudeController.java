@@ -1,6 +1,7 @@
 package com.example.registrationlogindemo.controller.user;
 
 import ch.qos.logback.core.model.Model;
+import com.example.registrationlogindemo.entity.Estado;
 import com.example.registrationlogindemo.entity.Message;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
