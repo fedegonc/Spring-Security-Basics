@@ -69,11 +69,6 @@
       th:classappend="${bodyClass} ?: ''"
       th:style="${bodyStyle} ?: ''">
     
-    <!-- Skip link para accesibilidad -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-md z-50">
-        Saltar al contenido principal
-    </a>
-    
     <!-- Navbar -->
     <th:block th:replace="${navbarFragment} ?: ~{}"></th:block>
     

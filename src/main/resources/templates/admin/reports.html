@@ -3,52 +3,6 @@
 
 <head th:replace="~{fragments/layout/head :: head}">
     <title>Reportes</title>
-    <style>
-        .app-background {
-            background: url('/img/background.jpg') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-        }
-        
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .table-glass {
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .table-glass thead {
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-        }
-        
-        .table-glass tbody tr:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-    </style>
 </head>
 
 <body class="app-background d-flex flex-column min-vh-100">
@@ -56,111 +10,162 @@
 <div th:replace="~{fragments/admin/navbar-admin :: navbar-admin}"></div>
 
 <!-- Contenido principal -->
-<main class="content-container">
-    <div class="container">
-        <!-- Breadcrumbs -->
-        <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb bg-light shadow-sm rounded p-2">
-                <li class="breadcrumb-item">
-                    <i class="bi bi-house"></i>
-                    <a th:href="@{/admin/welcome}">Inicio</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    <i class="bi bi-exclamation-triangle"></i> Gestión de Reportes
-                </li>
-            </ol>
-        </nav>
-
-        <div th:replace="~{fragments/messages :: message-alerts}"></div>
-
-        <!-- Sección de información de usuario -->
-        <section class="mb-4 glass-card">
-            <div class="d-flex align-items-center">
-                <div>
-                    <h6 class="text-muted mb-1" th:text="#{info_usuario}">Información del Usuario</h6>
-                    <h3 th:text="${username}" class="mb-0">Nombre de Usuario</h3>
-                </div>
-                <div class="ms-auto">
-                    <i class="bi bi-person-check-fill text-primary" style="font-size: 2rem;"></i>
-                </div>
-            </div>
-        </section>
-
-        <!-- Sección de búsqueda y filtros -->
-        <section class="glass-card mb-4">
-            <div class="row mb-3">
-                <div class="col-12">
-                    <h4><i class="bi bi-search me-2"></i>Buscar Reportes</h4>
-                </div>
-            </div>
-            
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <form method="post" action="buscarPorNombre" class="d-flex">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                            <input type="text" class="form-control" name="buscarPorNombre" placeholder="Ingrese nombre"/>
-                            <button type="submit" class="btn btn-primary">Buscar</button>
-                        </div>
-                    </form>
+<div class="container mt-4 flex-grow-1">
+    <div class="row g-4">
+        <!-- Panel lateral (33%) -->
+        <div class="col-12 col-md-4">
+            <div class="glass-card h-100 d-flex flex-column">
+                <h2 class="fs-4 fw-bold mb-4">Gestión de Reportes</h2>
+                
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">Información</h4>
+                    <p>En esta sección puedes gestionar los reportes y problemas reportados por los usuarios del sistema.</p>
+                    <hr>
+                    <p>Los reportes nos ayudan a mejorar la calidad del servicio y resolver incidencias.</p>
                 </div>
                 
-                <div class="col-md-6">
-                    <form method="post" action="buscarPorCategoria" class="d-flex">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-tag"></i></span>
-                            <input type="text" class="form-control" name="buscarPorCategoria" placeholder="Ingrese categoría"/>
-                            <button type="submit" class="btn btn-primary">Buscar</button>
+                <!-- Información de usuario -->
+                <div class="card border-0 shadow-sm mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title fs-5">Usuario Actual</h5>
+                        <div class="d-flex align-items-center mt-3">
+                            <i class="bi bi-person-circle fs-1 text-primary me-3"></i>
+                            <div>
+                                <p class="mb-0 small text-muted" th:text="#{info_usuario}">Información del Usuario</p>
+                                <h6 th:text="${username}" class="mb-0 fs-5">Nombre de Usuario</h6>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+                </div>
+                
+                <!-- Filtros rápidos -->
+                <div class="card border-0 shadow-sm mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title fs-6 mb-3">Filtros Rápidos</h5>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                Todos los reportes
+                                <span class="badge bg-primary rounded-pill">12</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                Sin resolver
+                                <span class="badge bg-danger rounded-pill">5</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                Resueltos
+                                <span class="badge bg-success rounded-pill">7</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
-
-        <!-- Sección de listado de reportes -->
-        <section class="glass-effect">
-            <div class="row mb-3">
-                <div class="col-12">
-                    <h3><i class="bi bi-exclamation-triangle me-2"></i>Reportes de Problemas</h3>
-                    <p class="text-muted">Gestiona todos los reportes enviados por los usuarios.</p>
+        </div>
+        
+        <!-- Contenido principal (66%) -->
+        <div class="col-12 col-md-8">
+            <div class="glass-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fs-5 fw-bold mb-0">Lista de Reportes</h3>
+                    <div>
+                        <button class="btn btn-sm btn-outline-secondary me-2">
+                            <i class="bi bi-filter"></i> Filtrar
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                            <i class="bi bi-download me-1"></i> Exportar
+                        </button>
+                    </div>
                 </div>
+                
+                <!-- Tabla de reportes mejorada -->
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="rounded-start">ID</th>
+                                <th scope="col">Usuario</th>
+                                <th scope="col">Asunto</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col" class="rounded-end text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="report: ${reports}" class="align-middle">
+                                <td th:text="${report.id}" class="fw-bold"></td>
+                                <td th:text="${report.username}"></td>
+                                <td th:text="${report.asunto}"></td>
+                                <td>
+                                    <span class="badge" th:classappend="${
+                                        report.status == 'RESUELTO' ? 'bg-success' : 
+                                        report.status == 'PENDIENTE' ? 'bg-warning' : 
+                                        report.status == 'CERRADO' ? 'bg-secondary' : 'bg-danger'
+                                    }" th:text="${report.status}">PENDIENTE</span>
+                                </td>
+                                <td th:text="${#dates.format(report.fecha, 'dd/MM/yyyy')}">01/01/2025</td>
+                                <td class="text-center">
+                                    <a class="btn btn-sm btn-outline-primary me-1" th:href="@{/admin/reportview/{id}(id=${report.id})}">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-success me-1" th:href="@{/admin/reportedit/{id}(id=${report.id})}">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-danger" th:href="@{/admin/reportdelete/{id}(id=${report.id})}"
+                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este reporte?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- Datos ficticios para previsualizar -->
+                            <tr class="align-middle" th:if="${reports == null or #lists.isEmpty(reports)}">
+                                <td class="fw-bold">1</td>
+                                <td>usuario1</td>
+                                <td>Problema con el sistema de reciclaje</td>
+                                <td>
+                                    <span class="badge bg-warning">PENDIENTE</span>
+                                </td>
+                                <td>22/03/2025</td>
+                                <td class="text-center">
+                                    <a class="btn btn-sm btn-outline-primary me-1" href="#">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-success me-1" href="#">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-danger" href="#">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginación -->
+                <nav aria-label="Paginación de reportes" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                        </li>
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Siguiente</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            
-            <div class="table-responsive">
-                <table class="table table-glass">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Problema</th>
-                        <th>Descripción</th>
-                        <th>Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="report: ${reports}">
-                        <td th:text="${report.id}"></td>
-                        <td th:text="${report.problema}"></td>
-                        <td th:text="${report.descripcion}"></td>
-                        <td>
-                            <a class="btn btn-sm btn-primary" th:href="@{/admin/editereport/{id}(id=${report.id})}">
-                                <i class="bi bi-pencil-square me-1"></i>Editar
-                            </a>
-                            <a class="btn btn-sm btn-danger" th:href="@{/admin/deletereport/{id}(id=${report.id})}">
-                                <i class="bi bi-trash me-1"></i>Borrar
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        </div>
     </div>
-</main>
+</div>
 
 <div th:replace="~{fragments/layout/footer :: footer}"></div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

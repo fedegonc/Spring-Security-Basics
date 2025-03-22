@@ -77,6 +77,9 @@ public class Solicitude {
     @Column
     private String tamanio;
     
+    @Column(nullable = false)
+    private String estado = "EN_ESPERA"; // Valores posibles: ACEPTADA, RECHAZADA, EN_ESPERA, EN_REVISION, COMPLETADA
+    
     // Eliminamos la enumeración anidada ya que ahora existe como clase separada
 
     @PrePersist

@@ -3,9 +3,9 @@
 
 <body>
 <div th:fragment="logo">
-    <div>
-        <img src="/img/logov4.png" alt="logo" class="navbar-logo">
-        <a class="navbar-brand" th:href="@{/index}" th:text="#{index.title}"></a>
+    <div class="d-flex align-items-center">
+        <img src="/img/logov4.png" alt="logo" class="navbar-logo" style="max-width: 32px; max-height: 32px; object-fit: contain;">
+        <a class="navbar-brand ms-2" th:href="@{/index}" th:text="#{index.title}"></a>
     </div>
 </div>
 </body>

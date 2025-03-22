@@ -2,114 +2,104 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/layout/head :: head}">
-    <title>Bienvenida</title>
+    <title>Panel de Administración</title>
 </head>
 
-
-<body class="d-flex flex-column min-vh-100">
+<body class="app-background d-flex flex-column min-vh-100">
 
 <div th:replace="~{fragments/admin/navbar-admin :: navbar-admin}"></div>
 
-
-<div th:replace="~{fragments/messages :: message-alerts}"></div>
-
-
 <!-- Contenido principal -->
-<div id="main" class="container mt-4">
-    <div class="header">
-        <h2 >Panel de control</h2>
-        <div id="clock" class="clock"></div>
-    </div>
-    <div class="container mt-4">
-        <div class="alert alert-info" role="alert">
-            <h4 class="alert-heading" th:text="'Bienvenida, ' + <!--/* [[${user.username}]] */--> 'Usuario' + '!'"></h4>
-            <p>Nos alegra que estés aquí, <!--<span th:text="${user.username}">Nombre del Usuario</span>-->. Aquí puedes encontrar un resumen de tus actividades recientes y acceder a las funciones más importantes de la aplicación.</p>
-            <hr>
-            <p class="mb-0">Para comenzar, te recomendamos que revises las últimas actualizaciones, explores las nuevas funcionalidades o realices una nueva solicitud. ¡Estamos aquí para ayudarte a aprovechar al máximo la plataforma!</p>
-        </div>
-    </div>
-
-    <!-- Contenedor de las tarjetas -->
-    <div class="metric-cards-container">
-        <div class="metric-card">
-            <div class="card-header">
-                <h3>Usuarios Registrados</h3>
-            </div>
-            <div class="card-body">
-                <p class="metric-value">120</p>
-                <p class="metric-change positive">+10 desde ayer</p>
+<div id="main" class="container mt-4 flex-grow-1">
+    
+    <div class="row g-4">
+        <!-- Panel lateral (33%) -->
+        <div class="col-12 col-md-4">
+            <div class="glass-card h-100 d-flex flex-column">
+                <h2 class="fs-4 fw-bold mb-4">Panel de Administración</h2>
+                
+                <div class="text-center mb-4">
+                    <img src="/img/logo.png" alt="Logo Reciclaje Sólido" style="width: 128px; height: 128px;" class="mx-auto">
+                </div>
+                
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">Bienvenido al Panel</h4>
+                    <p>Desde aquí puedes gestionar los usuarios, roles, solicitudes y reportes del sistema.</p>
+                    <hr>
+                    <p class="mb-0">Utiliza el menú de navegación superior para acceder a las diferentes funciones administrativas.</p>
+                </div>
+                
+                <div id="clock" class="clock text-center mt-auto fs-4"></div>
             </div>
         </div>
-
-        <!-- Tarjeta para Nuevas Solicitudes -->
-        <div class="metric-card">
-            <div class="card-header">
-                <h3>Nuevas Solicitudes</h3>
+        
+        <!-- Contenido principal (66%) -->
+        <div id="dashboard-content" class="col-12 col-md-8">
+            <div class="glass-card">
+                <h3 class="fs-5 fw-bold mb-4">Resumen del Sistema</h3>
+                
+                <!-- Tarjetas de métricas -->
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4">
+                    <!-- Tarjeta para Usuarios Registrados -->
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-people-fill fs-1 text-primary mb-2"></i>
+                                <h4 class="card-title fs-5">Usuarios</h4>
+                                <p class="card-text fs-2 fw-bold">120</p>
+                                <p class="card-text text-success"><i class="bi bi-arrow-up"></i> +10 desde ayer</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta para Nuevas Solicitudes -->
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-clipboard-plus-fill fs-1 text-info mb-2"></i>
+                                <h4 class="card-title fs-5">Solicitudes</h4>
+                                <p class="card-text fs-2 fw-bold">15</p>
+                                <p class="card-text text-success"><i class="bi bi-arrow-up"></i> +5 desde ayer</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta para Problemas Reportados -->
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-exclamation-triangle-fill fs-1 text-warning mb-2"></i>
+                                <h4 class="card-title fs-5">Problemas</h4>
+                                <p class="card-text fs-2 fw-bold">8</p>
+                                <p class="card-text text-danger"><i class="bi bi-arrow-down"></i> -2 desde ayer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gráficos en diseño responsive -->
+                <div class="row g-4">
+                    <!-- Gráfico de Barras -->
+                    <div class="col-12 col-lg-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">Usuarios Activos</h5>
+                                <canvas id="usersChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gráfico de Solicitudes en Torta -->
+                    <div class="col-12 col-lg-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">Estado de Solicitudes</h5>
+                                <canvas id="solicitudesPieChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <p class="metric-value">15</p>
-                <p class="metric-change positive">+5 desde ayer</p>
-            </div>
-        </div>
-
-        <!-- Tarjeta para Problemas Reportados -->
-        <div class="metric-card">
-            <div class="card-header">
-                <h3>Problemas Reportados</h3>
-            </div>
-            <div class="card-body">
-                <p class="metric-value">8</p>
-                <p class="metric-change negative">-2 desde ayer</p>
-            </div>
-        </div>
-
-        <!-- Tarjeta para Solicitudes Aceptadas -->
-        <div class="metric-card">
-            <div class="card-header">
-                <h3>Solicitudes Aceptadas</h3>
-            </div>
-            <div class="card-body">
-                <p class="metric-value">30</p>
-                <p class="metric-change positive">+7 desde ayer</p>
-            </div>
-        </div>
-
-        <!-- Tarjeta para Usuarios Online -->
-        <div class="metric-card">
-            <div class="card-header">
-                <h3>Usuarios Online</h3>
-            </div>
-            <div class="card-body">
-                <p class="metric-value">25</p>
-                <p class="metric-change negative">-3 desde ayer</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Contenedor de Gráficos -->
-    <div class="charts-container">
-        <!-- Gráfico de Barras -->
-        <div class="chart-container">
-            <h2>Usuarios Activos por Mes</h2>
-            <canvas id="usersChart"></canvas>
-        </div>
-
-        <!-- Gráfico de Solicitudes en Torta -->
-        <div class="chart-container">
-            <h3>Estado de Solicitudes</h3>
-            <canvas id="solicitudesPieChart"></canvas>
-        </div>
-
-        <!-- Gráfico de Barras para Solicitudes -->
-        <div class="chart-container">
-            <h3>Resumen de Solicitudes</h3>
-            <canvas id="solicitudesBarChart"></canvas>
-        </div>
-
-        <!-- Gráfico Combinado -->
-        <div class="chart-container">
-            <h2>Tendencias de Usuarios y Solicitudes</h2>
-            <canvas id="combinedChart"></canvas>
         </div>
     </div>
 </div>

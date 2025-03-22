@@ -2,79 +2,116 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/layout/head :: head}">
-    <title>Bienvenida</title>
+    <title>Gestión de Roles</title>
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="app-background d-flex flex-column min-vh-100">
 
 <div th:replace="~{fragments/admin/navbar-admin :: navbar-admin}"></div>
 
-<div th:replace="~{fragments/messages :: message-alerts}"></div>
-
-
-<div class="container mt-4">
-    <hr/>
-    <div class="container mt-4">
-        <span th:text="#{info_usuario}">Información del Usuario</span>
-        <h3 th:text="${username}">Nombre de Usuario </h3>
-    </div>
-</div>
-<hr/>
-
-
-<div class="container mt-4">
-    <hr/>
-    <div class="container mt-4">
-        <span th:text="#{info_usuario}">Información del Usuario</span>
-        <h3 th:text="${username}">Nombre de Usuario </h3>
-    </div>
-</div>
-<hr/>
-<div class="container mt-4">
-    <div class="row">
-        <h3>Usuarios</h3>
-    </div>
-    <table class="table table-striped table-bordered table-hover">
-        <thead class="table-dark">
-        <tr>
-            <th>Usuario ID</th>
-            <th>Nombre de role</th>
-            <th>acciones</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="role: ${roles}">
-            <td th:text="${role.id}"></td>
-            <td th:text="${role.name}"></td>
-
-            <td>
-                <a class="btn btn-primary" th:href="@{/root/editerole/{id}(id=${role.id})}">Editar</a>
-                <a class="btn btn-danger" th:href="@{/root/deleterole/{id}(id=${role.id})}">Borrar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <div class="row text-left">
-        <div class="col">
-            <h2>Solicitudes</h2>
+<div class="container mt-4 flex-grow-1">
+    <div class="row g-4">
+        <!-- Panel lateral (33%) -->
+        <div class="col-12 col-md-4">
+            <div class="glass-card h-100 d-flex flex-column">
+                <h2 class="fs-4 fw-bold mb-4">Gestión de Roles</h2>
+                
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">Información</h4>
+                    <p>En esta sección puedes administrar los roles del sistema, asignando o modificando permisos a los usuarios.</p>
+                    <hr>
+                    <p>Los roles definen el nivel de acceso que tiene cada usuario en la plataforma.</p>
+                </div>
+                
+                <!-- Panel de estadísticas simples -->
+                <div class="card border-0 shadow-sm mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title fs-5">Resumen de Roles</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="text-center">
+                                <i class="bi bi-shield-lock fs-2 text-primary"></i>
+                                <p class="mb-0 mt-2">Administradores</p>
+                                <p class="fs-5 fw-bold">1</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="bi bi-person-check fs-2 text-success"></i>
+                                <p class="mb-0 mt-2">Usuarios</p>
+                                <p class="fs-5 fw-bold">120</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="bi bi-person-gear fs-2 text-info"></i>
+                                <p class="mb-0 mt-2">Roles</p>
+                                <p class="fs-5 fw-bold" th:text="${roles.size()}">3</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="container mt-4">
-        <form method="post" action="buscarPorNombre">
-            Buscar por Nombre: <input type="text" name="buscarPorNombre"/>
-            <input type="submit"/>
-        </form>
-        <hr>
-        <form method="post" action="buscarPorCategoria">
-            Buscar por Categoría: <input type="text" name="buscarPorCategoria"/>
-            <input type="submit"/>
-        </form>
-        <hr>
-        <br><br>
+        
+        <!-- Contenido principal (66%) -->
+        <div class="col-12 col-md-8">
+            <div class="glass-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fs-5 fw-bold mb-0">Lista de Roles</h3>
+                    <a th:href="@{/root/newrole}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i> Nuevo Rol
+                    </a>
+                </div>
+                
+                <!-- Tabla de roles mejorada -->
+                <div class="table-responsive">
+                    <table class="table table-hover border-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="rounded-start">ID</th>
+                                <th scope="col">Nombre del Rol</th>
+                                <th scope="col" class="rounded-end text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="role: ${roles}" class="align-middle">
+                                <td th:text="${role.id}" class="fw-bold"></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-shield-fill me-2 text-primary" th:if="${role.name == 'ROLE_ADMIN'}"></i>
+                                        <i class="bi bi-person-fill me-2 text-success" th:if="${role.name == 'ROLE_USER'}"></i>
+                                        <i class="bi bi-person-gear me-2 text-info" th:if="${role.name != 'ROLE_ADMIN' && role.name != 'ROLE_USER'}"></i>
+                                        <span th:text="${role.name}"></span>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-sm btn-outline-primary me-1" th:href="@{/root/editerole/{id}(id=${role.id})}">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-danger" th:href="@{/root/deleterole/{id}(id=${role.id})}" 
+                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este rol?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Formulario de búsqueda simplificado -->
+                <div class="card mt-4 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title fs-6 mb-3">Buscar Roles</h5>
+                        <form class="row g-3" method="post" action="buscarRol">
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="buscarRol" placeholder="Ingrese el nombre del rol...">
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-search me-1"></i> Buscar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

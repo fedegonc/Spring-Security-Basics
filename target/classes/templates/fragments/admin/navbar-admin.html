@@ -96,9 +96,9 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownUsuario">
                             <li>
-                                <a th:href="@{/user/profile/{id}(id=${user.id})}" class="dropdown-item" style="display: flex; align-items: center;">
-                                    <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" src="">
-                                    <span th:text="${user.username}">Nombre de Usuario</span>
+                                <a th:href="@{/user/profile}" class="dropdown-item" style="display: flex; align-items: center;">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    <span>Mi Perfil</span>
                                 </a>
                             </li>
                             <li>
@@ -109,23 +109,14 @@
                         </ul>
                     </li>
 
-                    <!-- Perfil de Usuario con Imagen -->
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/admin/profile/{id}(id=${user.id})}">
-                            <img th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" class="rounded-circle" width="30" height="30">
-                            <span th:text="${user.username}">Usuario</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a th:href="@{${currentUrl}(language='es')}"
-                           class="nav-link">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
+                        <a th:href="@{/}" class="nav-link">
+                            <i class="bi bi-flag"></i> ES
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a th:href="@{${currentUrl}(language='pt')}" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
+                        <a th:href="@{/}" class="nav-link">
+                            <i class="bi bi-flag"></i> PT
                         </a>
                     </li>
                 </ul>

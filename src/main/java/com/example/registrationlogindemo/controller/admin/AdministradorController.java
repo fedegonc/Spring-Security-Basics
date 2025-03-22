@@ -234,7 +234,6 @@ public class AdministradorController {
             // Actualizar los campos de la solicitud con los nuevos valores
             changeSolicitude.setCategoria(solicitude.getCategoria());
             changeSolicitude.setDescripcion(solicitude.getDescripcion());
-            changeSolicitude.setEstado(solicitude.getEstado());
             
             // Actualizar campos de ubicación
             changeSolicitude.setBarrio(solicitude.getBarrio());
