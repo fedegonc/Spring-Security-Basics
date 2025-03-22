@@ -25,8 +25,45 @@
 
             <!-- Contenido del navbar -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Dashboard -->
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/dashboard}">
+                            <i class="bi bi-speedometer2"></i> <span>Dashboard</span>
+                        </a>
+                    </li>
 
+                    <!-- Menú desplegable: Gestión -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdownGestion" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-gear"></i> <span>Gestión</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownGestion">
+                            <li>
+                                <a class="dropdown-item" th:href="@{/admin/users}">
+                                    <i class="bi bi-people"></i> <span>Gestionar Usuarios</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" th:href="@{/admin/roles}">
+                                    <i class="bi bi-person-badge"></i> <span>Gestionar Roles</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" th:href="@{/admin/solicitudes}">
+                                    <i class="bi bi-clipboard-check"></i> <span>Gestionar Solicitudes</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" th:href="@{/admin/reports}">
+                                    <i class="bi bi-exclamation-triangle"></i> <span>Gestionar Reportes</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
                     <!-- Menú desplegable: Solicitudes y Contenidos -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownSolicitudesContenidos" role="button" data-bs-toggle="dropdown" aria-expanded="false">

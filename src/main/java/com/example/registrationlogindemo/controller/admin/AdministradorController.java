@@ -199,15 +199,15 @@ public class AdministradorController {
 
     @GetMapping("/solicitudes")
     public ModelAndView adminSolicitudes() {
-        ModelAndView mv = new ModelAndView("root/solicitudes");
+        ModelAndView mv = new ModelAndView("admin/solicitudes");
         List<Solicitude> solicitude = solicitudeRepository.findAll();
-        mv.addObject("solicitude", solicitude);
+        mv.addObject("solicitudes", solicitude);
         return mv;
     }
     // Método para mostrar el formulario de edición de solicitud
     @GetMapping("/editsolicitude/{id}")
     public ModelAndView adminEditSolicitude(@PathVariable("id") int id) {
-        ModelAndView mv = new ModelAndView("solicitude/editsolicitude");
+        ModelAndView mv = new ModelAndView("admin/editsolicitude");
         Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById(id);
 
         if (solicitudeOptional.isPresent()) {
@@ -225,17 +225,21 @@ public class AdministradorController {
                                       @RequestParam("file") MultipartFile imagem) {
         if (result.hasErrors()) {
             // Si hay errores de validación, redirige con un mensaje de error
-            msg.addFlashAttribute("erro", "Error al editar. Por favor, complete todos los campos correctamente.");
-            return "redirect:/editar/" + solicitude.getId();
+            msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");
+            return "redirect:/admin/editsolicitude/" + solicitude.getId();
         }
         // Obtener la solicitud que se va a editar
         Solicitude changeSolicitude = solicitudeRepository.findById(solicitude.getId()).orElse(null);
         if (changeSolicitude != null) {
             // Actualizar los campos de la solicitud con los nuevos valores
-
             changeSolicitude.setCategoria(solicitude.getCategoria());
-
             changeSolicitude.setDescripcion(solicitude.getDescripcion());
+            changeSolicitude.setEstado(solicitude.getEstado());
+            
+            // Actualizar campos de ubicación
+            changeSolicitude.setBarrio(solicitude.getBarrio());
+            changeSolicitude.setCalle(solicitude.getCalle());
+            changeSolicitude.setNumeroDeCasa(solicitude.getNumeroDeCasa());
 
             try {
                 // Guardar la imagen si se proporciona una
@@ -246,15 +250,17 @@ public class AdministradorController {
                     changeSolicitude.setImagen(imagem.getOriginalFilename());
                 }
             } catch (IOException e) {
-                System.out.println("Error de imagen");
+                System.out.println("Error de imagen: " + e.getMessage());
             }
             // Guardar la solicitud editada en la base de datos
             solicitudeRepository.save(changeSolicitude);
             // Redirigir con un mensaje de éxito
-            msg.addFlashAttribute("sucesso", "Alimento editado com sucesso.");
+            msg.addFlashAttribute("success", "Solicitud editada exitosamente.");
+        } else {
+            msg.addFlashAttribute("error", "No se encontró la solicitud a editar.");
         }
 
-        return "redirect:/dashboard";
+        return "redirect:/admin/solicitudes";
     }
     // Método para eliminar una solicitud
     @GetMapping("/deletsolicitude/{id}")
