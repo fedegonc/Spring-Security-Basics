@@ -14,17 +14,7 @@ public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
 
     public ImageServiceImpl(ImageRepository imageRepository) {
-
         this.imageRepository = imageRepository;
-    }
-
-
-    public void addFlagImages(ModelAndView mv) {
-        Optional<Image> uruguaiImage = imageRepository.findByNombre("uruguai.png");
-        Optional<Image> brasilImage = imageRepository.findByNombre("brasil.png");
-
-        uruguaiImage.ifPresent(image -> mv.addObject("uruguaiImageName", image.getNombre()));
-        brasilImage.ifPresent(image -> mv.addObject("brasilImageName", image.getNombre()));
     }
 
     public void addLanguageImages(ModelAndView mv, Optional<Image> image, String imageName) {

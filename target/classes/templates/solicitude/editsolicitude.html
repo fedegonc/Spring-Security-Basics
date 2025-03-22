@@ -35,6 +35,11 @@
                             <i class="bi bi-house-door me-1"></i><span th:text="#{breadcrumb.welcome}">Bienvenida</span>
                         </a>
                     </li>
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/user/view-requests}">
+                            <i class="bi bi-list-check me-1"></i><span>Mis Solicitudes</span>
+                        </a>
+                    </li>
                     <li class="breadcrumb-item active" aria-current="page">
                         <span th:text="#{breadcrumb.editRequest}">Editar Solicitud</span>
                     </li>
@@ -62,6 +67,14 @@
 
             <!-- Contenido de edición de solicitud -->
             <div th:replace="~{fragments/solicitudes/edit-solicitud :: edit-solicitud}"></div>
+            
+            <!-- Sección de comunicación y mensajes -->
+            <div class="mt-5 glass-card">
+                <h2 class="h4 mb-4">
+                    <i class="bi bi-chat-dots me-2"></i>Comunicación
+                </h2>
+                <div th:replace="~{fragments/solicitudes/dialogo :: dialogo}"></div>
+            </div>
         </div>
     </main>
 

@@ -21,7 +21,7 @@
             margin-bottom: 30px;
         }
         
-        .glass-card {
+        .stat-card {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -30,21 +30,7 @@
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
             padding: 20px;
             margin-bottom: 20px;
-        }
-        
-        .stat-card {
             text-align: center;
-            padding: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-card .icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
         }
         
         .stat-value {
@@ -56,13 +42,6 @@
         .stat-label {
             font-size: 1rem;
             color: rgba(0, 0, 0, 0.6);
-        }
-        
-        .chart-container {
-            position: relative;
-            margin: auto;
-            height: 300px;
-            width: 100%;
         }
     </style>
 </head>
@@ -95,272 +74,42 @@
             <p class="lead">Resumen de actividad y métricas importantes</p>
         </div>
 
-        <!-- Tarjetas de estadísticas principales -->
-        <div class="row mb-4">
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="glass-card stat-card">
-                    <div class="icon text-primary">
-                        <i class="bi bi-file-earmark-text"></i>
-                    </div>
-                    <div class="stat-value" th:text="${totalSolicitudes ?: 0}">324</div>
+        <!-- Tarjetas de estadísticas -->
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="stat-card">
+                    <i class="bi bi-file-earmark-text fs-1 text-primary mb-3"></i>
+                    <div class="stat-value" th:text="${totalSolicitudes ?: 0}">0</div>
                     <div class="stat-label">Total Solicitudes</div>
                 </div>
             </div>
             
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="glass-card stat-card">
-                    <div class="icon text-success">
-                        <i class="bi bi-check-circle"></i>
-                    </div>
-                    <div class="stat-value" th:text="${completadas ?: 0}">286</div>
+            <div class="col-md-4 mb-4">
+                <div class="stat-card">
+                    <i class="bi bi-check-circle fs-1 text-success mb-3"></i>
+                    <div class="stat-value" th:text="${completadas ?: 0}">0</div>
                     <div class="stat-label">Completadas</div>
                 </div>
             </div>
             
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="glass-card stat-card">
-                    <div class="icon text-warning">
-                        <i class="bi bi-hourglass-split"></i>
-                    </div>
-                    <div class="stat-value" th:text="${pendientes ?: 0}">38</div>
+            <div class="col-md-4 mb-4">
+                <div class="stat-card">
+                    <i class="bi bi-hourglass-split fs-1 text-warning mb-3"></i>
+                    <div class="stat-value" th:text="${pendientes ?: 0}">0</div>
                     <div class="stat-label">Pendientes</div>
                 </div>
             </div>
-            
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="glass-card stat-card">
-                    <div class="icon text-info">
-                        <i class="bi bi-star"></i>
-                    </div>
-                    <div class="stat-value" th:text="${valoracionMedia ?: '0.0'}">4.8</div>
-                    <div class="stat-label">Valoración Media</div>
-                </div>
-            </div>
         </div>
 
-        <!-- Filtros -->
-        <div class="glass-card mb-4">
-            <h4 class="mb-3"><i class="bi bi-funnel me-2"></i>Filtros</h4>
-            
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <label for="year" class="form-label">Año</label>
-                    <select id="year" class="form-select">
-                        <option value="2025" selected>2025</option>
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                    </select>
-                </div>
-                
-                <div class="col-md-3">
-                    <label for="month" class="form-label">Mes</label>
-                    <select id="month" class="form-select">
-                        <option value="all" selected>Todos</option>
-                        <option value="1">Enero</option>
-                        <option value="2">Febrero</option>
-                        <option value="3">Marzo</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Mayo</option>
-                        <option value="6">Junio</option>
-                        <option value="7">Julio</option>
-                        <option value="8">Agosto</option>
-                        <option value="9">Septiembre</option>
-                        <option value="10">Octubre</option>
-                        <option value="11">Noviembre</option>
-                        <option value="12">Diciembre</option>
-                    </select>
-                </div>
-                
-                <div class="col-md-3">
-                    <label for="category" class="form-label">Categoría</label>
-                    <select id="category" class="form-select">
-                        <option value="all" selected>Todas</option>
-                        <option value="cat1">Categoría 1</option>
-                        <option value="cat2">Categoría 2</option>
-                        <option value="cat3">Categoría 3</option>
-                    </select>
-                </div>
-                
-                <div class="col-md-3 d-flex align-items-end">
-                    <button id="applyFilters" class="btn btn-primary w-100">
-                        <i class="bi bi-search me-2"></i>Aplicar Filtros
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Gráficos -->
-        <div class="row">
-            <!-- Gráfico Principal - Actividad Mensual -->
-            <div class="col-12 mb-4">
-                <div class="glass-effect">
-                    <h4 class="mb-3"><i class="bi bi-bar-chart-line me-2"></i>Actividad Mensual (2025)</h4>
-                    <div class="chart-container">
-                        <canvas id="monthlyActivityChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Gráficos Secundarios -->
-            <div class="col-md-6 mb-4">
-                <div class="glass-card">
-                    <h5 class="mb-3"><i class="bi bi-pie-chart me-2"></i>Distribución por Categoría</h5>
-                    <div class="chart-container" style="height: 250px;">
-                        <canvas id="categoryChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-6 mb-4">
-                <div class="glass-card">
-                    <h5 class="mb-3"><i class="bi bi-graph-up me-2"></i>Estado de Solicitudes</h5>
-                    <div class="chart-container" style="height: 250px;">
-                        <canvas id="statusChart"></canvas>
-                    </div>
-                </div>
-            </div>
+        <!-- Mensaje de error si existe -->
+        <div th:if="${error}" class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <span th:text="${error}">Error</span>
         </div>
     </div>
 </main>
 
 <div th:replace="~{fragments/layout/footer :: footer}"></div>
-
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Configuración de colores
-        const colors = {
-            primary: '#0d6efd',
-            success: '#198754',
-            warning: '#ffc107',
-            danger: '#dc3545',
-            info: '#0dcaf0',
-            secondary: '#6c757d'
-        };
-        
-        // Gráfico de Actividad Mensual
-        const monthlyCtx = document.getElementById('monthlyActivityChart').getContext('2d');
-        const monthlyChart = new Chart(monthlyCtx, {
-            type: 'line',
-            data: {
-                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                datasets: [{
-                    label: 'Solicitudes',
-                    data: [30, 45, 37, 52, 28, 32, 41, 38, 42, 35, 40, 48],
-                    borderColor: colors.primary,
-                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Gráfico de Distribución por Categoría
-        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-        const categoryChart = new Chart(categoryCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Categoría 1', 'Categoría 2', 'Categoría 3', 'Otras'],
-                datasets: [{
-                    data: [35, 30, 25, 10],
-                    backgroundColor: [colors.primary, colors.success, colors.warning, colors.secondary],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-        
-        // Gráfico de Estado de Solicitudes
-        const statusCtx = document.getElementById('statusChart').getContext('2d');
-        const statusChart = new Chart(statusCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Completadas', 'En proceso', 'Pendientes', 'Canceladas'],
-                datasets: [{
-                    label: 'Solicitudes por estado',
-                    data: [286, 24, 14, 3],
-                    backgroundColor: [colors.success, colors.info, colors.warning, colors.danger]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Evento para aplicar filtros
-        document.getElementById('applyFilters').addEventListener('click', function() {
-            // Aquí iría la lógica para filtrar los datos según las selecciones
-            // Por ahora, simularemos una actualización aleatoria de los gráficos
-            
-            // Generamos datos aleatorios para el gráfico mensual
-            const newMonthlyData = Array.from({length: 12}, () => Math.floor(Math.random() * 50) + 10);
-            monthlyChart.data.datasets[0].data = newMonthlyData;
-            monthlyChart.update();
-            
-            // Actualizamos el título para reflejar el año seleccionado
-            const yearSelected = document.getElementById('year').value;
-            document.querySelector('.glass-effect h4').textContent = 
-                `Actividad Mensual (${yearSelected})`;
-        });
-    });
-</script>
 
 </body>
 </html>

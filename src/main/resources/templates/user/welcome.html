@@ -29,9 +29,8 @@
                 <div class="glass-card">
                     <div class="row align-items-center">
                         <div class="col-lg-8">
-                            <h1 class="display-5 fw-bold mb-3" th:text="'¡Bienvenido, ' + ${username} + '!'">¡Bienvenido, Usuario!</h1>
+                            <h1 class="display-5 fw-bold mb-3">¡Bienvenido, <span th:text="${user != null ? user.name : 'Usuario'}">Usuario</span>!</h1>
                             <p class="lead">Gestiona todas tus solicitudes de reciclaje desde un solo lugar.</p>
-                            
                             <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
                                 <a th:href="@{/user/newsolicitude}" class="btn btn-primary btn-lg px-4 me-md-2">
                                     <i class="bi bi-plus-circle me-2"></i>Nueva Solicitud

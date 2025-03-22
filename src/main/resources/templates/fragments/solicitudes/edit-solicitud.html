@@ -21,92 +21,113 @@
               class="needs-validation" 
               novalidate>
             
-            <!-- Estado actual -->
-            <div class="mb-4">
-                <h3 class="h5 mb-3">Estado actual:</h3>
-                <span class="badge fs-6" th:classappend="${
-                    solicitude.estado == 'ACEPTADA' ? 'text-bg-success' : 
-                    solicitude.estado == 'RECHAZADA' ? 'text-bg-danger' : 
-                    solicitude.estado == 'EN_ESPERA' ? 'text-bg-warning' : 
-                    solicitude.estado == 'EN_REVISION' ? 'text-bg-info' : 
-                    'text-bg-secondary'}" 
-                    th:text="${solicitude.estado}">Estado</span>
-            </div>
-
-            <!-- Categoría -->
-            <div class="mb-3">
-                <label for="categoria" class="form-label">Categoría</label>
-                <select class="form-select" id="categoria" name="categoria" required>
-                    <option value="">Seleccione una categoría</option>
-                    <option value="PLASTICO" th:selected="${solicitude.categoria == 'PLASTICO'}">Plástico</option>
-                    <option value="PAPEL" th:selected="${solicitude.categoria == 'PAPEL'}">Papel</option>
-                    <option value="VIDRIO" th:selected="${solicitude.categoria == 'VIDRIO'}">Vidrio</option>
-                    <option value="METAL" th:selected="${solicitude.categoria == 'METAL'}">Metal</option>
-                    <option value="ORGANICO" th:selected="${solicitude.categoria == 'ORGANICO'}">Orgánico</option>
-                </select>
-                <div class="invalid-feedback">
-                    Por favor seleccione una categoría.
-                </div>
-            </div>
-
-            <!-- Ubicación -->
-            <div class="row g-3 mb-3">
+            <div class="row">
+                <!-- Columna de imagen (33%) -->
                 <div class="col-md-4">
-                    <label for="barrio" class="form-label">Barrio</label>
-                    <input type="text" class="form-control" id="barrio" name="barrio" 
-                           th:value="${solicitude.barrio}" required>
-                    <div class="invalid-feedback">
-                        Por favor ingrese el barrio.
+                    <div class="card h-100 border-0">
+                        <div class="card-body">
+                            <h3 class="h5 mb-3">Imagen del material</h3>
+                            <div class="d-flex flex-column align-items-center">
+                                <div class="mb-3 text-center">
+                                    <img th:if="${solicitude.imagen != null}" 
+                                         th:src="@{/img/{img}(img=${solicitude.imagen})}" 
+                                         id="previewImage"
+                                         alt="Vista previa de la imagen" 
+                                         class="img-thumbnail" 
+                                         style="max-height: 200px; width: 100%; object-fit: cover;">
+                                    <i th:if="${solicitude.imagen == null}" 
+                                       class="bi bi-image text-muted" 
+                                       style="font-size: 5rem;"></i>
+                                </div>
+                                <div class="w-100">
+                                    <label for="file" class="form-label">Cambiar imagen</label>
+                                    <input type="file" class="form-control" id="file" name="file" accept="image/*">
+                                    <input type="hidden" name="currentImageUrl" th:value="${solicitude.imagen}">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <label for="calle" class="form-label">Calle</label>
-                    <input type="text" class="form-control" id="calle" name="calle" 
-                           th:value="${solicitude.calle}" required>
-                    <div class="invalid-feedback">
-                        Por favor ingrese la calle.
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label for="numeroDeCasa" class="form-label">Número</label>
-                    <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" 
-                           th:value="${solicitude.numeroDeCasa}" required>
-                    <div class="invalid-feedback">
-                        Por favor ingrese el número.
-                    </div>
-                </div>
-            </div>
 
-            <!-- Imagen -->
-            <div class="mb-4">
-                <label for="file" class="form-label">Imagen del material</label>
-                <input type="file" class="form-control" id="file" name="file" accept="image/*">
-                <input type="hidden" name="currentImageUrl" th:value="${solicitude.imagen}">
-                <div class="mt-2">
-                    <img th:if="${solicitude.imagen != null}" 
-                         th:src="@{/img/{img}(img=${solicitude.imagen})}" 
-                         id="previewImage"
-                         alt="Vista previa de la imagen" 
-                         class="img-thumbnail" 
-                         style="max-height: 200px;">
-                    <i th:if="${solicitude.imagen == null}" 
-                       class="bi bi-image text-muted" 
-                       style="font-size: 3rem;"></i>
-                </div>
-            </div>
+                <!-- Columna de información (66%) -->
+                <div class="col-md-8">
+                    <div class="card h-100 border-0">
+                        <div class="card-body">
+                            <!-- Estado actual -->
+                            <div class="mb-4">
+                                <h3 class="h5 mb-3">Estado actual:</h3>
+                                <span class="badge fs-6" th:classappend="${
+                                    solicitude.estado == 'ACEPTADA' ? 'text-bg-success' : 
+                                    solicitude.estado == 'RECHAZADA' ? 'text-bg-danger' : 
+                                    solicitude.estado == 'EN_ESPERA' ? 'text-bg-warning' : 
+                                    solicitude.estado == 'EN_REVISION' ? 'text-bg-info' : 
+                                    'text-bg-secondary'}" 
+                                    th:text="${solicitude.estado}">Estado</span>
+                            </div>
 
-            <!-- Botones de acción -->
-            <div class="d-flex justify-content-between align-items-center">
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">
-                    <i class="bi bi-trash me-2"></i>Eliminar
-                </button>
-                <div>
-                    <a th:href="@{/user/view-requests}" class="btn btn-secondary me-2">
-                        <i class="bi bi-x-circle me-2"></i>Cancelar
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-circle me-2"></i>Guardar cambios
-                    </button>
+                            <!-- Categoría -->
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label">Categoría</label>
+                                <select class="form-select" id="categoria" name="categoria" required>
+                                    <option value="">Seleccione una categoría</option>
+                                    <option value="PLASTICO" th:selected="${solicitude.categoria == 'PLASTICO'}">Plástico</option>
+                                    <option value="PAPEL" th:selected="${solicitude.categoria == 'PAPEL'}">Papel</option>
+                                    <option value="VIDRIO" th:selected="${solicitude.categoria == 'VIDRIO'}">Vidrio</option>
+                                    <option value="METAL" th:selected="${solicitude.categoria == 'METAL'}">Metal</option>
+                                    <option value="ORGANICO" th:selected="${solicitude.categoria == 'ORGANICO'}">Orgánico</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor seleccione una categoría.
+                                </div>
+                            </div>
+
+                            <!-- Ubicación -->
+                            <div class="mb-4">
+                                <h3 class="h5 mb-3">Ubicación</h3>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="barrio" class="form-label">Barrio</label>
+                                        <input type="text" class="form-control" id="barrio" name="barrio" 
+                                               th:value="${solicitude.barrio}" required>
+                                        <div class="invalid-feedback">
+                                            Por favor ingrese el barrio.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="calle" class="form-label">Calle</label>
+                                        <input type="text" class="form-control" id="calle" name="calle" 
+                                               th:value="${solicitude.calle}" required>
+                                        <div class="invalid-feedback">
+                                            Por favor ingrese la calle.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="numeroDeCasa" class="form-label">Número</label>
+                                        <input type="text" class="form-control" id="numeroDeCasa" name="numeroDeCasa" 
+                                               th:value="${solicitude.numeroDeCasa}" required>
+                                        <div class="invalid-feedback">
+                                            Por favor ingrese el número.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">
+                                    <i class="bi bi-trash me-2"></i>Eliminar
+                                </button>
+                                <div>
+                                    <a th:href="@{/user/view-requests}" class="btn btn-secondary me-2">
+                                        <i class="bi bi-x-circle me-2"></i>Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-2"></i>Guardar cambios
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>

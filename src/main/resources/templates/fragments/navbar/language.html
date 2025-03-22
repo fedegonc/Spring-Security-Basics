@@ -8,17 +8,9 @@
 </head>
 <body>
 
-<!-- Fragmento de las banderas -->
-<div th:fragment="language" class="flag-container">
-
-        <a th:href="@{${currentUrl}(language='es')}" >
-            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
-        </a>
-
-        <a th:href="@{${currentUrl}(language='pt')}" >
-            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
-        </a>
-
+<!-- Language selector fragment -->
+<div th:fragment="language-selector">
+    <!-- Temporarily removed language selector -->
 </div>
 
 </body>

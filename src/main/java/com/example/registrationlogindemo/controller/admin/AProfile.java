@@ -50,7 +50,6 @@ public class AProfile {
             }
             mv.addObject("user", user);
 
-            imageService.addFlagImages(mv);
         }
 
         return mv;

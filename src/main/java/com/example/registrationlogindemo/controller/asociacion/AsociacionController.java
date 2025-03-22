@@ -78,7 +78,6 @@ public class AsociacionController {
             List<User> users = userRepository.findAll();
             mv.addObject("users", users);
         }
-        imageService.addFlagImages(mv);
         return mv;
     }
 
@@ -102,7 +101,6 @@ public class AsociacionController {
             }
             mv.addObject("user", user);
         }
-        imageService.addFlagImages(mv);
         return mv;
     }
 
@@ -183,7 +181,6 @@ public class AsociacionController {
         } else {
             mv.setViewName("redirect:/asociacion/dashboard");
         }
-        imageService.addFlagImages(mv);
         return mv;
     }
 
@@ -254,7 +251,6 @@ public class AsociacionController {
     public ModelAndView getArticles() {
         ModelAndView mv = new ModelAndView("asociacion/articles");
         List<Article> articles = articleRepository.findAll();
-        imageService.addFlagImages(mv);
         mv.addObject("articles", articles);
         return mv;
     }
@@ -281,7 +277,6 @@ public class AsociacionController {
         } else {
             mv.setViewName("redirect:/error");
         }
-        imageService.addFlagImages(mv);
         return mv;
     }
     @GetMapping("/deletearticle/{id}")

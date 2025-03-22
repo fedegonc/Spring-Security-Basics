@@ -5,7 +5,6 @@ import com.example.registrationlogindemo.entity.Image;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ImageRepository;
-import com.example.registrationlogindemo.service.ImageService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -33,21 +32,15 @@ import java.util.Optional;
 @Controller
 public class AuthController implements ErrorController {
 
-
     @Autowired
     UserService userService;
     @Autowired
     ImageRepository imageRepository;
-    @Autowired
-    ImageService imageService;
-
     private final HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
-
 
     @GetMapping("/error")
     public ModelAndView handleError(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("guest/error"); // "error" es el nombre de la vista
-        imageService.addFlagImages(mv);
 
         // Obtener el usuario autenticado
         Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
@@ -77,7 +70,6 @@ public class AuthController implements ErrorController {
 
         return mv;
     }
-
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
@@ -128,20 +120,9 @@ public class AuthController implements ErrorController {
     }
 
     @GetMapping("/login")
-    public ModelAndView loginForm() {
-        ModelAndView mv = new ModelAndView();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            mv.setViewName("redirect:/init");
-        } else {
-            mv.setViewName("guest/login"); // Establecer la vista del formulario de login
-        }
-        imageService.addFlagImages(mv);
-        return mv;
+    public String loginForm() {
+        return "guest/login";
     }
-
-
 
     @GetMapping("/init")
     public ModelAndView welcomePage(RedirectAttributes msg, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
@@ -162,16 +143,16 @@ public class AuthController implements ErrorController {
             SavedRequest savedRequest = requestCache.getRequest(request, response);
             if (savedRequest != null) {
                 String redirectUrl = savedRequest.getRedirectUrl();
-                
+
                 // Verificar si la URL contiene parámetros duplicados
                 if (redirectUrl.contains("?continue")) {
                     // Limpiar URL con parámetros duplicados
                     redirectUrl = redirectUrl.split("\\?continue")[0];
                 }
-                
+
                 // Limpiar el caché de URL
                 requestCache.removeRequest(request, response);
-                
+
                 // Redirige a la URL solicitada originalmente (limpia)
                 return new ModelAndView("redirect:" + redirectUrl);
             }
@@ -184,7 +165,6 @@ public class AuthController implements ErrorController {
         msg.addFlashAttribute("error", "Error de autenticación.");
         return new ModelAndView("redirect:/error");
     }
-
 
     // Redirige al usuario a la vista correspondiente según su rol
     private ModelAndView redirectByUserRole(String userRole) {
@@ -203,5 +183,4 @@ public class AuthController implements ErrorController {
                 return new ModelAndView("redirect:/error");
         }
     }
-
 }

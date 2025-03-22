@@ -52,7 +52,6 @@ public class ArticleController {
         } else {
             mv.setViewName("redirect:/error");
         }
-        imageService.addFlagImages(mv);
         return mv;
     }
 
@@ -103,7 +102,6 @@ public class ArticleController {
         } else {
             mv.setViewName("redirect:/error");
         }
-        imageService.addFlagImages(mv);
         return mv;
     }
 }

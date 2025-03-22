@@ -29,18 +29,6 @@
                     <!-- Menú desplegable: Usuario -->
                     <li class="nav-item dropdown" th:insert="~{fragments/navbar/resources :: resources}"></li>
 
-                    <!-- Idiomas -->
-                    <li class="nav-item">
-                        <a th:href="@{${currentUrl}(language='es')}" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${uruguaiImageName})}" alt="Uruguay" width="30" height="20" style="object-fit: contain;">
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a th:href="@{${currentUrl}(language='pt')}" class="nav-link">
-                            <img th:src="@{/img/{img}(img=${brasilImageName})}" alt="Brasil" width="30" height="20" style="object-fit: contain;">
-                        </a>
-                    </li>
-
                     <div th:if="${#authentication?.principal?.username == null and (currentUrl != '/login' and currentUrl != '/register')}">
 
                         <div th:replace="~{fragments/navbar/auth :: auth}"></div>

@@ -50,7 +50,7 @@ public class Solicitude {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Estado estado = Estado.EN_ESPERA;
+    private Estado estado = Estado.EN_ESPERA; // Estado por defecto
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

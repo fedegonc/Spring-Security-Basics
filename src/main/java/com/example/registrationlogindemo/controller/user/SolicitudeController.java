@@ -57,6 +57,8 @@ public class SolicitudeController {
     @GetMapping("/newsolicitude")
     public ModelAndView newSolicitude() {
         ModelAndView mv = new ModelAndView("solicitude/newsolicitude");
+        
+        // Obtener el usuario autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -66,9 +68,10 @@ public class SolicitudeController {
             User usuario = userRepository.findByUsername(username);
             mv.addObject("user", usuario);
         }
+        
+        // Agregar una nueva solicitud vacía al modelo
         mv.addObject("solicitud", new Solicitude());
-        imageService.addFlagImages(mv);
-
+        
         return mv;
     }
 
@@ -133,22 +136,18 @@ public class SolicitudeController {
             // Obtener todos los mensajes asociados a esta solicitud
             List<Message> messages = messageService.findMessagesBySolicitude(solicitude);
             mv.addObject("messages", messages);
+            
+            // Agregar usuario actual para manejo de mensajes
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String username = auth.getName();
+            Optional<User> userOpt = userRepository.findByEmail(username);
+            userOpt.ifPresent(user -> mv.addObject("user", user));
+            
+            return mv;
         } else {
             mv.setViewName("redirect:/user/welcome");
+            return mv;
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-
-            // Obtener el usuario de la base de datos
-            User usuario = userRepository.findByUsername(username);
-            mv.addObject("user", usuario);
-        }
-        imageService.addFlagImages(mv);
-
-
-        return mv;
     }
 
     @PostMapping("/editsolicitude/{id}")
@@ -200,7 +199,6 @@ public class SolicitudeController {
             msg.addFlashAttribute("error", "No se encontró la solicitud a editar.");
             mv.setViewName("redirect:/user/welcome");
         }
-        imageService.addFlagImages(mv);
 
         return mv;
     }

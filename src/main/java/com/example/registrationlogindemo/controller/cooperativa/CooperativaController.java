@@ -72,7 +72,6 @@ public class CooperativaController {
 
         }
 
-        imageService.addFlagImages(mv);
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         mv.addObject("principal", principal.toString());
@@ -112,8 +111,6 @@ public class CooperativaController {
             }
             mv.addObject("user", user);
         }
-
-        imageService.addFlagImages(mv);
 
         return mv;
     }
@@ -176,7 +173,6 @@ public class CooperativaController {
         List<Solicitude> solicitudes = solicitudeRepository.findByDestinoContaining("cooperativa");
         mv.addObject("solicitudes", solicitudes);
 
-        imageService.addFlagImages(mv);
 
         return mv;
     }
@@ -208,7 +204,6 @@ public class CooperativaController {
             mv.setViewName("redirect:/cooperativa/dashboard");
         }
 
-        imageService.addFlagImages(mv);
 
         return mv;
     }
@@ -283,7 +278,6 @@ public class CooperativaController {
         ModelAndView mv = new ModelAndView("cooperativa/articles");
 
         List<Article> articles = articleRepository.findAll();
-        imageService.addFlagImages(mv);
         mv.addObject("articles", articles);
 
         return mv;

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Información sobre materiales reciclables y cómo prepararlos">
+    <title>Materiales Reciclables - Reciclaje Sólido</title>
+    
+    <!-- Estilos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+
+    <style>
+        .material-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        
+        .material-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .icon-container {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+        
+        .material-instructions {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body class="app-background">
+    <!-- Incluir la barra de navegación -->
+    <div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+    
+    <!-- Skip link para accesibilidad -->
+    <a href="#main-content" class="sr-only-focusable bg-primary text-white px-4 py-2 rounded-md z-50">
+        Saltar al contenido principal
+    </a>
+    
+    <!-- Contenido principal -->
+    <main id="main-content" class="content-container">
+        <div class="container">
+            <!-- Encabezado de la página -->
+            <section class="mb-5">
+                <div class="glass-card">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h1 class="display-5 fw-bold mb-3">Materiales Reciclables</h1>
+                            <p class="lead">Conoce cómo clasificar y preparar correctamente los materiales para el reciclaje.</p>
+                            <p>El reciclaje adecuado comienza con una correcta separación de materiales. Aquí te explicamos los principales tipos de materiales reciclables y cómo prepararlos correctamente.</p>
+                        </div>
+                        <div class="col-lg-4 mt-4 mt-lg-0 text-center">
+                            <i class="bi bi-recycle display-1 text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Plásticos -->
+            <section class="mb-5">
+                <div class="glass-card">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-container bg-primary text-white">
+                            <i class="bi bi-recycle fs-3" aria-hidden="true"></i>
+                        </div>
+                        <h2 class="h3 ms-3 mb-0">Plásticos</h2>
+                    </div>
+                    
+                    <p>Los plásticos son uno de los materiales más comunes en nuestra vida diaria y también uno de los más problemáticos para el medio ambiente si no se reciclan adecuadamente.</p>
+                    
+                    <div class="material-instructions" role="region" aria-label="Instrucciones para reciclar plásticos">
+                        <h3 class="h5 mb-3">¿Cómo preparar los plásticos para reciclar?</h3>
+                        <ul class="mb-3">
+                            <li>Lavar y secar los envases para eliminar residuos</li>
+                            <li>Quitar etiquetas cuando sea posible</li>
+                            <li>Aplastar las botellas para reducir volumen</li>
+                            <li>Separar las tapas (también son reciclables)</li>
+                        </ul>
+                        
+                        <h3 class="h5 mb-3">Ejemplos de plásticos reciclables:</h3>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-water fs-1 text-primary mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Botellas PET</h4>
+                                        <p class="small mb-0">Botellas de agua, refrescos y jugos</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-box fs-1 text-primary mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Envases de alimentos</h4>
+                                        <p class="small mb-0">Recipientes, bandejas y envases de comida</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-bag fs-1 text-primary mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Bolsas plásticas</h4>
+                                        <p class="small mb-0">Bolsas de supermercado limpias y secas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Papel y Cartón -->
+            <section class="mb-5">
+                <div class="glass-card">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-container bg-success text-white">
+                            <i class="bi bi-newspaper fs-3" aria-hidden="true"></i>
+                        </div>
+                        <h2 class="h3 ms-3 mb-0">Papel y Cartón</h2>
+                    </div>
+                    
+                    <p>El papel y cartón son materiales altamente reciclables que pueden ser reutilizados muchas veces, ahorrando energía y recursos naturales.</p>
+                    
+                    <div class="material-instructions" role="region" aria-label="Instrucciones para reciclar papel y cartón">
+                        <h3 class="h5 mb-3">¿Cómo preparar papel y cartón para reciclar?</h3>
+                        <ul class="mb-3">
+                            <li>Remover grapas, clips y cintas adhesivas</li>
+                            <li>Separar por tipos cuando sea posible</li>
+                            <li>Mantener secos y limpios</li>
+                            <li>Desplegar cajas para reducir volumen</li>
+                        </ul>
+                        
+                        <h3 class="h5 mb-3">Ejemplos de papel y cartón reciclables:</h3>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-journal-text fs-1 text-success mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Periódicos y revistas</h4>
+                                        <p class="small mb-0">Publicaciones, folletos, catálogos</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-box-seam fs-1 text-success mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Cajas de cartón</h4>
+                                        <p class="small mb-0">Embalajes, cajas de productos, cartones</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-file-text fs-1 text-success mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Papel de oficina</h4>
+                                        <p class="small mb-0">Hojas impresas, cuadernos, sobres</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vidrio -->
+            <section class="mb-5">
+                <div class="glass-card">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-container bg-info text-white">
+                            <i class="bi bi-cup-straw fs-3" aria-hidden="true"></i>
+                        </div>
+                        <h2 class="h3 ms-3 mb-0">Vidrio</h2>
+                    </div>
+                    
+                    <p>El vidrio es 100% reciclable y puede ser reciclado infinitamente sin perder calidad o pureza, lo que lo convierte en un material ideal para el reciclaje.</p>
+                    
+                    <div class="material-instructions" role="region" aria-label="Instrucciones para reciclar vidrio">
+                        <h3 class="h5 mb-3">¿Cómo preparar el vidrio para reciclar?</h3>
+                        <ul class="mb-3">
+                            <li>Enjuagar para eliminar residuos</li>
+                            <li>Quitar tapas y corchos (reciclar por separado)</li>
+                            <li>No es necesario quitar etiquetas</li>
+                            <li>Manipular con cuidado para evitar roturas</li>
+                        </ul>
+                        
+                        <h3 class="h5 mb-3">Ejemplos de vidrio reciclable:</h3>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-cup fs-1 text-info mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Botellas</h4>
+                                        <p class="small mb-0">Botellas de bebidas, vino, aceite</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-archive fs-1 text-info mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Frascos</h4>
+                                        <p class="small mb-0">Conservas, mermeladas, salsas</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-droplet fs-1 text-info mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Envases</h4>
+                                        <p class="small mb-0">Perfumes, medicamentos, cosmética</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metales -->
+            <section class="mb-5">
+                <div class="glass-card">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-container bg-secondary text-white">
+                            <i class="bi bi-gear fs-3" aria-hidden="true"></i>
+                        </div>
+                        <h2 class="h3 ms-3 mb-0">Metales</h2>
+                    </div>
+                    
+                    <p>Los metales son materiales valiosos para el reciclaje ya que conservan sus propiedades indefinidamente y su recuperación ahorra grandes cantidades de energía y recursos.</p>
+                    
+                    <div class="material-instructions" role="region" aria-label="Instrucciones para reciclar metales">
+                        <h3 class="h5 mb-3">¿Cómo preparar los metales para reciclar?</h3>
+                        <ul class="mb-3">
+                            <li>Enjuagar para eliminar residuos de alimentos</li>
+                            <li>Aplastar latas para reducir volumen</li>
+                            <li>Separar por tipo de metal cuando sea posible</li>
+                            <li>Quitar etiquetas si es posible</li>
+                        </ul>
+                        
+                        <h3 class="h5 mb-3">Ejemplos de metales reciclables:</h3>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-cup-hot fs-1 text-secondary mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Latas de aluminio</h4>
+                                        <p class="small mb-0">Refrescos, cervezas, bebidas energéticas</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-basket fs-1 text-secondary mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Envases metálicos</h4>
+                                        <p class="small mb-0">Conservas, atún, comida para mascotas</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-circle fs-1 text-secondary mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Tapas y chapas</h4>
+                                        <p class="small mb-0">Tapas de botellas, chapas, papel aluminio</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Electrónicos -->
+            <section class="mb-5">
+                <div class="glass-card">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-container bg-danger text-white">
+                            <i class="bi bi-cpu fs-3" aria-hidden="true"></i>
+                        </div>
+                        <h2 class="h3 ms-3 mb-0">Electrónicos</h2>
+                    </div>
+                    
+                    <p>Los residuos electrónicos contienen materiales valiosos y también sustancias tóxicas. Su correcta disposición es crucial para el medio ambiente y la salud pública.</p>
+                    
+                    <div class="material-instructions" role="region" aria-label="Instrucciones para reciclar electrónicos">
+                        <h3 class="h5 mb-3">¿Cómo desechar electrónicos correctamente?</h3>
+                        <ul class="mb-3">
+                            <li>Nunca tirar a la basura común</li>
+                            <li>Llevar a puntos de recolección específicos</li>
+                            <li>Borrar datos personales de dispositivos con memoria</li>
+                            <li>Conservar baterías y separarlas para reciclaje especial</li>
+                        </ul>
+                        
+                        <h3 class="h5 mb-3">Ejemplos de electrónicos reciclables:</h3>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-phone fs-1 text-danger mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Dispositivos móviles</h4>
+                                        <p class="small mb-0">Teléfonos, tablets, accesorios</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-laptop fs-1 text-danger mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Computadoras</h4>
+                                        <p class="small mb-0">Laptops, desktops, monitores, periféricos</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card material-card">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-lightning-charge fs-1 text-danger mb-2" aria-hidden="true"></i>
+                                        <h4 class="h6">Cables y baterías</h4>
+                                        <p class="small mb-0">Cables de conexión, cargadores, pilas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <div class="container">
+            <p class="mb-0">&copy; 2025 Reciclaje Sólido. Todos los derechos reservados.</p>
+            <p class="small mb-0">
+                <a href="#" class="text-white">Términos y condiciones</a> | 
+                <a href="#" class="text-white">Política de privacidad</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
