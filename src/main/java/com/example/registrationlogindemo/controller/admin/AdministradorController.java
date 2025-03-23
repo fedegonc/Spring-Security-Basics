@@ -328,46 +328,4 @@ public class AdministradorController {
         userService.deleteUserById((long) id);
         return "redirect:/admin/dashboard";
     }
-
-    // Método para mostrar las solicitudes de organizaciones pendientes de aprobación
-    @GetMapping("/organizations/pending")
-    public ModelAndView pendingOrganizations() {
-        ModelAndView mv = new ModelAndView("admin/pending-organizations");
-        List<Organization> organizations = organizationService.getOrganizationsByStatus("PENDING");
-        mv.addObject("organizations", organizations);
-        return mv;
-    }
-
-    // Método para aprobar una organización
-    @GetMapping("/organizations/approve/{id}")
-    public String approveOrganization(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        // Actualizar estado de la organización a APPROVED
-        organizationService.updateOrganizationStatus(id, "APPROVED");
-
-        // Obtener la organización actualizada
-        Optional<Organization> orgOptional = organizationService.getOrganizationById(id);
-        if (orgOptional.isPresent()) {
-            // Obtener el propietario y añadir rol de ORGANIZATION
-            Organization org = orgOptional.get();
-            User owner = org.getOwner();
-            Role organizationRole = roleRepository.findByName("ROLE_ORGANIZATION");
-
-            if (organizationRole != null && !owner.getRoles().contains(organizationRole)) {
-                owner.getRoles().add(organizationRole);
-                userRepository.save(owner);
-            }
-        }
-
-        redirectAttributes.addFlashAttribute("success", "Organización aprobada exitosamente");
-        return "redirect:/admin/organizations/pending";
-    }
-
-    // Método para rechazar una organización
-    @GetMapping("/organizations/reject/{id}")
-    public String rejectOrganization(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        // Actualizar estado de la organización a REJECTED
-        organizationService.updateOrganizationStatus(id, "REJECTED");
-        redirectAttributes.addFlashAttribute("success", "Organización rechazada");
-        return "redirect:/admin/organizations/pending";
-    }
 }
