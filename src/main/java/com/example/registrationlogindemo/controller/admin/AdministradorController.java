@@ -387,6 +387,8 @@ public class AdministradorController {
             // Agregar el usuario y la lista de roles al modelo
             mv.addObject("user", user);
             mv.addObject("listRoles", listRoles);
+            // Agregar los tipos de organización al modelo
+            mv.addObject("organizationTypes", OrganizationType.values());
         }
         return mv;
     }
@@ -394,7 +396,9 @@ public class AdministradorController {
     // Método para procesar la edición de un usuario
     @PostMapping("/edit/{id}")
     public String adminEditUserBanco(@ModelAttribute("User") @Valid User user,
-                                     BindingResult result, RedirectAttributes msg) {
+                                    @RequestParam(value = "organizationType", required = false) String organizationType,
+                                    @RequestParam(value = "organizationName", required = false) String organizationName,
+                                    BindingResult result, RedirectAttributes msg) {
         // Verificar errores de validación
         if (result.hasErrors()) {
             msg.addFlashAttribute("erro", "Error al editar. Por favor, complete todos los campos correctamente.");
@@ -407,6 +411,17 @@ public class AdministradorController {
             userEdit.setName(user.getName());
             userEdit.setEmail(user.getEmail());
             userEdit.setRoles(user.getRoles());
+            
+            // Actualizar tipo y nombre de organización
+            if (organizationType != null && !organizationType.isEmpty()) {
+                userEdit.setOrganizationType(OrganizationType.valueOf(organizationType));
+                userEdit.setOrganizationName(organizationName);
+            } else {
+                // Si no se selecciona un tipo de organización, establecer ambos campos como nulos
+                userEdit.setOrganizationType(null);
+                userEdit.setOrganizationName(null);
+            }
+            
             // Guardar los cambios en la base de datos
             userRepository.save(userEdit);
             msg.addFlashAttribute("success", "Usuario editado exitosamente.");
