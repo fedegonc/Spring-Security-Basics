@@ -152,23 +152,17 @@ public class AuthController implements ErrorController {
         Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
         User user = authenticatedUserOpt.orElse(null);
         
+        // Si el usuario tiene organizaciones propias O tiene un tipo de organización, 
+        // redirigir al dashboard de organizaciones
+        if (user != null && 
+            (!user.getOwnedOrganizations().isEmpty() || user.getOrganizationType() != null)) {
+            return new ModelAndView("redirect:/org/dashboard");
+        }
+        
+        // De lo contrario, redirigir según el rol
         switch (userRole) {
             case "[ROLE_USER]":
                 return new ModelAndView("redirect:/user/welcome");
-            case "[ROLE_ORGANIZATION]":
-                // Redirigir según el tipo de organización si está disponible
-                if (user != null && user.getOrganizationType() != null) {
-                    switch (user.getOrganizationType()) {
-                        case CENTRO_ACOPIO:
-                            return new ModelAndView("redirect:/organization/centro-acopio/dashboard");
-                        case EMPRESA:
-                            return new ModelAndView("redirect:/organization/empresa/dashboard");
-                        case INSTITUCION_RECICLAJE:
-                            return new ModelAndView("redirect:/organization/institucion/dashboard");
-                    }
-                }
-                // Si no hay tipo de organización o no coincide con ninguno de los casos anteriores
-                return new ModelAndView("redirect:/organization/dashboard");
             case "[ROLE_ADMIN]":
                 return new ModelAndView("redirect:/admin/dashboard");
             default:

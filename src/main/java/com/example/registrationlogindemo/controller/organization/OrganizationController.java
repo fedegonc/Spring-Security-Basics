@@ -45,7 +45,7 @@ public class OrganizationController {
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     // Dashboard principal para organizaciones
-    @GetMapping("/organization-dashboard")
+    @GetMapping("/dashboard")
     public ModelAndView dashboard() {
         ModelAndView mv = new ModelAndView("organization/dashboard");
 
@@ -81,9 +81,9 @@ public class OrganizationController {
     // Procesar el registro de organización
     @PostMapping("/register")
     public String registerOrganization(@ModelAttribute("organization") Organization organization, 
-                                     @RequestParam(value = "document", required = false) MultipartFile document,
-                                     @RequestParam(value = "logo", required = false) MultipartFile logo,
-                                     RedirectAttributes redirectAttributes) {
+                                      @RequestParam(value = "document", required = false) MultipartFile document,
+                                      @RequestParam(value = "logo", required = false) MultipartFile logo,
+                                      RedirectAttributes redirectAttributes) {
         
         // Obtener el usuario actual
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -107,7 +107,7 @@ public class OrganizationController {
         organizationService.saveOrganization(organization);
         
         redirectAttributes.addFlashAttribute("success", "Tu organización ha sido registrada y está pendiente de aprobación.");
-        return "redirect:/org/organization-dashboard";
+        return "redirect:/org/dashboard";
     }
     
     // Ver detalles de una organización
