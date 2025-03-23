@@ -1,0 +1,44 @@
+### Compilación ###
+/target/
+/bin/
+/build/
+
+### Logs ###
+/logs/
+*.log
+
+### Maven ###
+.mvn/
+mvnw
+mvnw.cmd
+HELP.md
+
+### Archivos específicos de IDE ###
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### VS Code ###
+.vscode/
+
+### NetBeans ###
+/nbproject/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### Archivos de sistema ###
+.DS_Store
+Thumbs.db
