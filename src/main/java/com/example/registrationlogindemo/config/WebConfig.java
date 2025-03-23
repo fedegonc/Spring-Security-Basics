@@ -16,7 +16,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-
 import java.util.Locale;
 
 @Configuration
@@ -61,7 +60,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     // Método para agregar los interceptores al registro de interceptores
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(@SuppressWarnings("null") InterceptorRegistry registry) {
         // Agregar el interceptor de cambio de idioma
         registry.addInterceptor(localeChangeInterceptor());
         registry.addInterceptor(new CustomInterceptor()).addPathPatterns("/**");
@@ -75,9 +74,6 @@ public class WebConfig implements WebMvcConfigurer {
 
             // Guardar la URL como un atributo de la solicitud para que esté disponible en las vistas
             request.setAttribute("currentUrl", currentUrl);
-
-            // Imprimir la URL para ver en qué página estás
-            System.out.println("Current URL: " + currentUrl);
 
             return true;
         }

@@ -14,12 +14,8 @@ public class GlobalControllerAdvice {
     @ModelAttribute("isAuthenticated")
     public boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticated = authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String);
-
-
-        System.out.println("Estado de autenticación del usuario: " + isAuthenticated);
-        return authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String);
-
+        return authentication != null && authentication.isAuthenticated() 
+               && !(authentication.getPrincipal() instanceof String);
     }
 
     @ModelAttribute("userStatus")

@@ -1,5 +1,6 @@
 package com.example.registrationlogindemo.entity;
 
+import jakarta.persistence.EnumType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,6 +42,15 @@ public class User {
     // Contraseña del usuario
     @Column(nullable=false)
     private String password;
+
+    // Tipo de organización (centro de acopio, empresa, institución de reciclaje)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "organization_type")
+    private OrganizationType organizationType;
+
+    // Nombre de la organización
+    @Column(name = "organization_name")
+    private String organizationName;
 
     // Relación muchos a muchos con la entidad Role, cargada de forma eager y con eliminación en cascada
     @ManyToMany(fetch = FetchType.EAGER, cascade={CascadeType.MERGE, CascadeType.REMOVE})

@@ -16,9 +16,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 
     // Método para obtener todos los usuarios
+    @SuppressWarnings("null")
     List<User> findAll();
 
     // Método para buscar un usuario por su ID
+    @SuppressWarnings("null")
     Optional<User> findById(Long id);
 
     // Método para buscar un usuario por su nombre

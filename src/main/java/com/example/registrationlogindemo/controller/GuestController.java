@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class GuestController {
-
 
     @Autowired
     private ReportService reportService;
@@ -31,37 +29,22 @@ public class GuestController {
 
     @GetMapping({"", "/", "/index"})
     public ModelAndView getIndex() {
-        ModelAndView mv = new ModelAndView("guest/index");;
-
+        ModelAndView mv = new ModelAndView("guest/index");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = authentication != null && authentication.isAuthenticated()
                 && !(authentication.getPrincipal() instanceof String
                 && authentication.getPrincipal().equals("anonymousUser"));
-
         if (isAuthenticated) {
             return new ModelAndView("redirect:/init");
         }
-
-
-
         return mv;
     }
 
     @GetMapping("/ambiental")
     public ModelAndView ambiental() {
         ModelAndView mv = new ModelAndView("guest/ambiental");
-
-
-
         return mv;
     }
-
-
-
-
-
-
-
 
     @GetMapping("/report")
     public ModelAndView newReport() {
@@ -74,29 +57,18 @@ public class GuestController {
             BindingResult result,
             RedirectAttributes msg,
             @AuthenticationPrincipal UserDetails currentUser) {
-        // Validar si hay errores en el formulario
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "El formulario contiene errores. Por favor, corrige los campos.");
-            return "redirect:/report/form"; // Ajusta la ruta según sea necesario
+            return "redirect:/report/form"; 
         }
-
-        // Obtener el usuario actual
         Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
         if (authenticatedUserOpt.isPresent()) {
-            // Asignar el usuario al reporte
             report.setUser(authenticatedUserOpt.get());
-
-            // Guardar el reporte
             reportService.saveReport(report);
-
-            // Agregar mensaje de éxito
             msg.addFlashAttribute("exito", "Reporte realizado con éxito.");
         } else {
-            // Manejar el caso donde no se encuentra el usuario
             msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
         }
-
         return "redirect:/init";
     }
-
 }

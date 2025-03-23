@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReportRepository extends JpaRepository<Report, Integer> {
+    @SuppressWarnings("null")
     List<Report> findAll();
     Optional<Report> findById(Long id);
 

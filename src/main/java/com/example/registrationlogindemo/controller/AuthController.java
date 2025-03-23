@@ -1,6 +1,7 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
+import com.example.registrationlogindemo.entity.OrganizationType;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,12 +44,10 @@ public class AuthController implements ErrorController {
             mv.addObject("username", usuario.getUsername());
             mv.addObject("user", usuario); // Solo se agrega si el usuario está autenticado
             mv.addObject("isAuthenticatedUser", true); // Agregar la variable solo si el usuario está autenticado
-            System.out.println("Usuario autenticado, isAuthenticatedUser = true");
         } else {
             // Usuario no autenticado: agregar mensaje de error
             mv.addObject("error", "No tienes acceso a esta página. Por favor, inicia sesión.");
             mv.addObject("isAuthenticatedUser", false); // Se asegura de que isAuthenticatedUser sea false
-            System.out.println("Usuario no autenticado, isAuthenticatedUser = false");
         }
 
         // Capturar código de estado y mensaje de error
@@ -83,11 +82,11 @@ public class AuthController implements ErrorController {
         User existingUserByEmail = userService.findByEmail(userDto.getEmail());
         User existingUserByUsername = userService.findByUsername(userDto.getUsername());
 
-        if (existingUserByEmail != null && existingUserByEmail.getEmail() != null && !existingUserByEmail.getEmail().isEmpty()) {
+        if (existingUserByEmail != null) {
             result.rejectValue("email", null, "Email existente");
         }
 
-        if (existingUserByUsername != null && existingUserByUsername.getUsername() != null && !existingUserByUsername.getUsername().isEmpty()) {
+        if (existingUserByUsername != null) {
             result.rejectValue("username", null, "Usuario existente");
         }
 
@@ -149,13 +148,27 @@ public class AuthController implements ErrorController {
 
     // Redirige al usuario a la vista correspondiente según su rol
     private ModelAndView redirectByUserRole(String userRole) {
+        // Obtener el usuario autenticado
+        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
+        User user = authenticatedUserOpt.orElse(null);
+        
         switch (userRole) {
             case "[ROLE_USER]":
                 return new ModelAndView("redirect:/user/welcome");
-            case "[ROLE_COOPERATIVA]":
-                return new ModelAndView("redirect:/cooperativa/dashboard");
-            case "[ROLE_ASOCIACION]":
-                return new ModelAndView("redirect:/asociacion/dashboard");
+            case "[ROLE_ORGANIZATION]":
+                // Redirigir según el tipo de organización si está disponible
+                if (user != null && user.getOrganizationType() != null) {
+                    switch (user.getOrganizationType()) {
+                        case CENTRO_ACOPIO:
+                            return new ModelAndView("redirect:/organization/centro-acopio/dashboard");
+                        case EMPRESA:
+                            return new ModelAndView("redirect:/organization/empresa/dashboard");
+                        case INSTITUCION_RECICLAJE:
+                            return new ModelAndView("redirect:/organization/institucion/dashboard");
+                    }
+                }
+                // Si no hay tipo de organización o no coincide con ninguno de los casos anteriores
+                return new ModelAndView("redirect:/organization/dashboard");
             case "[ROLE_ADMIN]":
                 return new ModelAndView("redirect:/admin/dashboard");
             default:

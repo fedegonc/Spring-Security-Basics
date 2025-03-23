@@ -1,16 +1,8 @@
 package com.example.registrationlogindemo.controller.admin;
 
-import com.example.registrationlogindemo.entity.Organization;
-import com.example.registrationlogindemo.entity.Report;
-import com.example.registrationlogindemo.entity.Role;
-import com.example.registrationlogindemo.entity.Solicitude;
-import com.example.registrationlogindemo.entity.User;
-import com.example.registrationlogindemo.repository.ReportRepository;
-import com.example.registrationlogindemo.repository.RoleRepository;
-import com.example.registrationlogindemo.repository.SolicitudeRepository;
-import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.OrganizationService;
-import com.example.registrationlogindemo.service.UserService;
+import com.example.registrationlogindemo.entity.*;
+import com.example.registrationlogindemo.repository.*;
+import com.example.registrationlogindemo.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -35,16 +27,32 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/admin")
 public class AdministradorController {
-    private int id;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private SolicitudeRepository solicitudeRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private ReportRepository reportRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private OrganizationService organizationService;
+
+    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     @GetMapping("/dashboard")
     public ModelAndView getDashboard() {
         ModelAndView mv = new ModelAndView("admin/dashboard");
         return mv;
     }
-    @Autowired
-    private UserRepository userRepository;
-
 
     @GetMapping("/profile/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
@@ -64,18 +72,20 @@ public class AdministradorController {
                 user.setProfileImage("descargas.jpeg");
             }
             mv.addObject("user", user);
-
+            mv.addObject("organizationTypes", OrganizationType.values());
         }
 
         return mv;
     }
 
     @PostMapping("/profile/{id}")
-    public ModelAndView editUser(@PathVariable("id") long id,
-                                 @ModelAttribute("user") @Valid User user,
+    public ModelAndView editUser(@ModelAttribute("user") @Valid User user,
                                  BindingResult result,
-                                 @RequestParam("file") MultipartFile fileImage,
+                                 @PathVariable("id") long id,
+                                 @RequestParam("fileImage") MultipartFile fileImage,
                                  @RequestParam("currentProfileImageUrl") String currentProfileImageUrl,
+                                 @RequestParam(value = "organizationType", required = false) String organizationType,
+                                 @RequestParam(value = "organizationName", required = false) String organizationName,
                                  RedirectAttributes msg) {
 
         ModelAndView mv = new ModelAndView();
@@ -94,6 +104,12 @@ public class AdministradorController {
             userEdit.setName(user.getName());
             userEdit.setEmail(user.getEmail());
 
+            // Actualizar tipo y nombre de organización
+            if (organizationType != null && !organizationType.isEmpty()) {
+                userEdit.setOrganizationType(OrganizationType.valueOf(organizationType));
+            }
+            userEdit.setOrganizationName(organizationName);
+
             try {
                 // Si se proporciona una nueva imagen de perfil
                 if (!fileImage.isEmpty()) {
@@ -102,7 +118,7 @@ public class AdministradorController {
                         String modifiedFilename = originalFilename.replace(" ", "_");
 
                         byte[] bytes = fileImage.getBytes();
-                        Path path = Paths.get("./src/main/resources/static/img/" + modifiedFilename);
+                        Path path = Paths.get(UPLOAD_DIR + modifiedFilename);
                         Files.write(path, bytes);
                         userEdit.setProfileImage(modifiedFilename);
                     }
@@ -111,8 +127,7 @@ public class AdministradorController {
                     userEdit.setProfileImage(currentProfileImageUrl);
                 }
             } catch (IOException e) {
-                System.out.println("Error al procesar la imagen de perfil: " + e.getMessage());
-                msg.addFlashAttribute("error", "Error al cargar la imagen. Inténtalo nuevamente.");
+                msg.addFlashAttribute("error", "Error al procesar la imagen de perfil: " + e.getMessage());
                 mv.setViewName("redirect:/admin/profile/" + id);
                 return mv;
             }
@@ -127,18 +142,6 @@ public class AdministradorController {
 
         return mv;
     }
-
-    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
-    @Autowired
-    SolicitudeRepository solicitudeRepository;
-    @Autowired
-    RoleRepository roleRepository;
-    @Autowired
-    ReportRepository reportRepository;
-    @Autowired
-    UserService userService;
-    @Autowired
-    private OrganizationService organizationService;
 
     @GetMapping("/reports")
     public ModelAndView adminReports() {
@@ -170,13 +173,11 @@ public class AdministradorController {
         return mv;
     }
 
-
-
     @GetMapping("/roles")
     public ModelAndView rootRoles() {
         ModelAndView mv = new ModelAndView("admin/roles");
         List<Role> roles = roleRepository.findAll();
-        
+
         // Agregar conteo de usuarios por rol
         Map<Long, Integer> roleUserCounts = new HashMap<>();
         for (Role role : roles) {
@@ -184,7 +185,7 @@ public class AdministradorController {
             int userCount = userRepository.countByRolesId(role.getId());
             roleUserCounts.put(role.getId(), userCount);
         }
-        
+
         mv.addObject("roles", roles);
         mv.addObject("roleUserCounts", roleUserCounts);
 
@@ -203,7 +204,7 @@ public class AdministradorController {
                 int userCount = userRepository.countByRolesId(r.getId());
                 roleUserCounts.put(r.getId(), userCount);
             }
-            
+
             mv.addObject("roles", roles);
             mv.addObject("roleUserCounts", roleUserCounts);
             mv.addObject("editingRole", role.get());
@@ -217,20 +218,20 @@ public class AdministradorController {
 
     // Método para procesar la actualización de un rol
     @PostMapping("/updaterole")
-    public String updateRole(@RequestParam("id") Long id, 
+    public String updateRole(@RequestParam("id") Long id,
                              @RequestParam("roleName") String roleName,
                              RedirectAttributes redirectAttributes) {
         Optional<Role> roleOpt = roleRepository.findById(id);
         if (roleOpt.isPresent()) {
             Role role = roleOpt.get();
-            
+
             // Verificar si el nombre ya existe en otro rol
             Role existingRole = roleRepository.findByName(roleName);
             if (existingRole != null && !existingRole.getId().equals(id)) {
                 redirectAttributes.addFlashAttribute("error", "Ya existe un rol con el nombre '" + roleName + "'.");
                 return "redirect:/admin/roles";
             }
-            
+
             // Actualizar el rol
             role.setName(roleName);
             roleRepository.save(role);
@@ -238,7 +239,7 @@ public class AdministradorController {
         } else {
             redirectAttributes.addFlashAttribute("error", "No se encontró el rol para actualizar.");
         }
-        
+
         return "redirect:/admin/roles";
     }
 
@@ -251,14 +252,14 @@ public class AdministradorController {
             redirectAttributes.addFlashAttribute("error", "No se puede eliminar este rol porque hay " + userCount + " usuario(s) asociado(s) a él.");
             return "redirect:/admin/roles";
         }
-        
+
         try {
             roleRepository.deleteById(id);
             redirectAttributes.addFlashAttribute("success", "Rol eliminado correctamente.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al eliminar el rol: " + e.getMessage());
         }
-        
+
         return "redirect:/admin/roles";
     }
 
@@ -271,12 +272,12 @@ public class AdministradorController {
             redirectAttributes.addFlashAttribute("error", "El rol '" + roleName + "' ya existe.");
             return "redirect:/admin/roles";
         }
-        
+
         // Crear y guardar el nuevo rol
         Role newRole = new Role();
         newRole.setName(roleName);
         roleRepository.save(newRole);
-        
+
         redirectAttributes.addFlashAttribute("success", "Rol '" + roleName + "' creado exitosamente.");
         return "redirect:/admin/roles";
     }
@@ -288,6 +289,7 @@ public class AdministradorController {
         mv.addObject("solicitudes", solicitude);
         return mv;
     }
+
     // Método para mostrar el formulario de edición de solicitud
     @GetMapping("/editsolicitude/{id}")
     public ModelAndView adminEditSolicitude(@PathVariable("id") int id) {
@@ -302,6 +304,7 @@ public class AdministradorController {
         }
         return mv;
     }
+
     // Método para procesar la edición de una solicitud
     @PostMapping("/editsolicitude/{id}")
     public String editSolicitudeBanco(@ModelAttribute("solicitude") @Valid Solicitude solicitude,
@@ -318,7 +321,7 @@ public class AdministradorController {
             // Actualizar los campos de la solicitud con los nuevos valores
             changeSolicitude.setCategoria(solicitude.getCategoria());
             changeSolicitude.setDescripcion(solicitude.getDescripcion());
-            
+
             // Actualizar campos de ubicación
             changeSolicitude.setBarrio(solicitude.getBarrio());
             changeSolicitude.setCalle(solicitude.getCalle());
@@ -328,12 +331,12 @@ public class AdministradorController {
                 // Guardar la imagen si se proporciona una
                 if (!imagem.isEmpty()) {
                     byte[] bytes = imagem.getBytes();
-                    Path caminho = Paths.get("./src/main/resources/static/img/" + imagem.getOriginalFilename());
+                    Path caminho = Paths.get(UPLOAD_DIR + imagem.getOriginalFilename());
                     Files.write(caminho, bytes);
                     changeSolicitude.setImagen(imagem.getOriginalFilename());
                 }
             } catch (IOException e) {
-                System.out.println("Error de imagen: " + e.getMessage());
+                msg.addFlashAttribute("error", "Error al procesar la imagen: " + e.getMessage());
             }
             // Guardar la solicitud editada en la base de datos
             solicitudeRepository.save(changeSolicitude);
@@ -345,13 +348,13 @@ public class AdministradorController {
 
         return "redirect:/admin/solicitudes";
     }
+
     // Método para eliminar una solicitud
     @GetMapping("/deletsolicitude/{id}")
     public String adminExcluirSolicitud(@PathVariable("id") int id) {
         solicitudeRepository.deleteSolicitudeById((long) id);
         return "redirect:/admin/dashboard";
     }
-
 
     @GetMapping("/users")
     public ModelAndView rootUsers() {
@@ -370,6 +373,7 @@ public class AdministradorController {
 
         return mv;
     }
+
     // Método para editar un usuario
     @GetMapping("/edit/{id}")
     public ModelAndView adminEditUser(@PathVariable("id") long id) {
@@ -386,6 +390,7 @@ public class AdministradorController {
         }
         return mv;
     }
+
     // Método para procesar la edición de un usuario
     @PostMapping("/edit/{id}")
     public String adminEditUserBanco(@ModelAttribute("User") @Valid User user,
@@ -411,6 +416,7 @@ public class AdministradorController {
 
         return "redirect:/admin/dashboard";
     }
+
     // Método para eliminar una solicitud
     @GetMapping("/deletuser/{id}")
     public String adminExcluirUser(@PathVariable("id") int id) {
@@ -432,7 +438,7 @@ public class AdministradorController {
     public String approveOrganization(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         // Actualizar estado de la organización a APPROVED
         organizationService.updateOrganizationStatus(id, "APPROVED");
-        
+
         // Obtener la organización actualizada
         Optional<Organization> orgOptional = organizationService.getOrganizationById(id);
         if (orgOptional.isPresent()) {
@@ -440,13 +446,13 @@ public class AdministradorController {
             Organization org = orgOptional.get();
             User owner = org.getOwner();
             Role organizationRole = roleRepository.findByName("ROLE_ORGANIZATION");
-            
+
             if (organizationRole != null && !owner.getRoles().contains(organizationRole)) {
                 owner.getRoles().add(organizationRole);
                 userRepository.save(owner);
             }
         }
-        
+
         redirectAttributes.addFlashAttribute("success", "Organización aprobada exitosamente");
         return "redirect:/admin/organizations/pending";
     }

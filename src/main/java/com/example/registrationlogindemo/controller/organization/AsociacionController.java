@@ -133,7 +133,7 @@ public class AsociacionController {
 
 
             } catch (IOException e) {
-                System.out.println("Error de imagen");
+                msg.addFlashAttribute("error", "Error al procesar la imagen de perfil.");
             }
 
             userRepository.save(userEdit);

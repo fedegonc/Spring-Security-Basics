@@ -57,6 +57,7 @@ public class UserDetailsServiceImpl implements org.springframework.security.core
     }
 
     // Método para registrar un usuario con un rol por defecto
+    @SuppressWarnings("unchecked")
     public void registerUserWithDefaultRole(String email, String password) {
         // Busca el rol por defecto "ROLE_USER"
         Role userRole = roleRepository.findByName("ROLE_USER");
