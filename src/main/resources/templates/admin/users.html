@@ -89,7 +89,6 @@
                                 <th scope="col">Usuario</th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Email</th>
-                                <th scope="col">Contraseña (encriptada)</th>
                                 <th scope="col">Roles</th>
                                 <th scope="col">Organización</th>
                                 <th scope="col">Tipo</th>
@@ -107,17 +106,6 @@
                                 </td>
                                 <td th:text="${user.name}"></td>
                                 <td th:text="${user.email}"></td>
-                                <td>
-                                    <div class="position-relative">
-                                        <span th:text="${#strings.length(user.password) > 20} ? ${#strings.substring(user.password, 0, 20) + '...'} : ${user.password}" class="password-text"></span>
-                                        <button th:if="${#strings.length(user.password) > 20}" 
-                                                class="btn btn-sm btn-outline-secondary ms-2 btn-ver-mas"
-                                                onclick="expandirTexto(this)" 
-                                                th:data-texto-completo="${user.password}">
-                                            Ver más
-                                        </button>
-                                    </div>
-                                </td>
                                 <td>
                                     <div class="position-relative">
                                         <span th:text="${#strings.length(user.roles.toString()) > 20} ? ${#strings.substring(user.roles.toString(), 0, 20) + '...'} : ${user.roles}" class="roles-text"></span>
