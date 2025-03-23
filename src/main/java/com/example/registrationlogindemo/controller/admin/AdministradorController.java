@@ -35,9 +35,6 @@ public class AdministradorController {
     private SolicitudeRepository solicitudeRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private ReportRepository reportRepository;
 
     @Autowired
@@ -173,115 +170,6 @@ public class AdministradorController {
             mv.setViewName("redirect:/admin/dashboard");
         }
         return mv;
-    }
-
-    @GetMapping("/roles")
-    public ModelAndView rootRoles() {
-        ModelAndView mv = new ModelAndView("admin/roles");
-        List<Role> roles = roleRepository.findAll();
-
-        // Agregar conteo de usuarios por rol
-        Map<Long, Integer> roleUserCounts = new HashMap<>();
-        for (Role role : roles) {
-            // Consultar cuántos usuarios tienen este rol
-            int userCount = userRepository.countByRolesId(role.getId());
-            roleUserCounts.put(role.getId(), userCount);
-        }
-
-        mv.addObject("roles", roles);
-        mv.addObject("roleUserCounts", roleUserCounts);
-
-        return mv;
-    }
-
-    @GetMapping("/editrole/{id}")
-    public ModelAndView adminEditReportrole(@PathVariable("id") long id) {
-        ModelAndView mv = new ModelAndView("admin/roles");
-        Optional<Role> role = roleRepository.findById(id);
-        if (role.isPresent()) {
-            // Obtener el conteo de usuarios por rol para mantener la consistencia
-            List<Role> roles = roleRepository.findAll();
-            Map<Long, Integer> roleUserCounts = new HashMap<>();
-            for (Role r : roles) {
-                int userCount = userRepository.countByRolesId(r.getId());
-                roleUserCounts.put(r.getId(), userCount);
-            }
-
-            mv.addObject("roles", roles);
-            mv.addObject("roleUserCounts", roleUserCounts);
-            mv.addObject("editingRole", role.get());
-            mv.addObject("isEditing", true);
-        } else {
-            mv.setViewName("redirect:/admin/roles");
-            mv.addObject("error", "El rol que intenta editar no existe.");
-        }
-        return mv;
-    }
-
-    // Método para procesar la actualización de un rol
-    @PostMapping("/updaterole")
-    public String updateRole(@RequestParam("id") Long id,
-                             @RequestParam("roleName") String roleName,
-                             RedirectAttributes redirectAttributes) {
-        Optional<Role> roleOpt = roleRepository.findById(id);
-        if (roleOpt.isPresent()) {
-            Role role = roleOpt.get();
-
-            // Verificar si el nombre ya existe en otro rol
-            Role existingRole = roleRepository.findByName(roleName);
-            if (existingRole != null && !existingRole.getId().equals(id)) {
-                redirectAttributes.addFlashAttribute("error", "Ya existe un rol con el nombre '" + roleName + "'.");
-                return "redirect:/admin/roles";
-            }
-
-            // Actualizar el rol
-            role.setName(roleName);
-            roleRepository.save(role);
-            redirectAttributes.addFlashAttribute("success", "Rol actualizado correctamente.");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "No se encontró el rol para actualizar.");
-        }
-
-        return "redirect:/admin/roles";
-    }
-
-    // Método para eliminar un rol
-    @GetMapping("/deleterole/{id}")
-    public String deleteRole(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
-        // Verificar si hay usuarios con este rol antes de eliminarlo
-        int userCount = userRepository.countByRolesId(id);
-        if (userCount > 0) {
-            redirectAttributes.addFlashAttribute("error", "No se puede eliminar este rol porque hay " + userCount + " usuario(s) asociado(s) a él.");
-            return "redirect:/admin/roles";
-        }
-
-        try {
-            roleRepository.deleteById(id);
-            redirectAttributes.addFlashAttribute("success", "Rol eliminado correctamente.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al eliminar el rol: " + e.getMessage());
-        }
-
-        return "redirect:/admin/roles";
-    }
-
-    // Método para crear un nuevo rol desde la lista desplegable
-    @PostMapping("/newrole")
-    public String createNewRole(@RequestParam("roleName") String roleName, RedirectAttributes redirectAttributes) {
-        // Verificar si el rol ya existe
-        Role existingRole = roleRepository.findByName(roleName);
-        if (existingRole != null) {
-            redirectAttributes.addFlashAttribute("error", "El rol '" + roleName + "' ya existe.");
-            return "redirect:/admin/roles";
-        }
-
-        // Crear y guardar el nuevo rol
-        Role newRole = new Role();
-        newRole.setName(roleName);
-        roleRepository.save(newRole);
-
-        redirectAttributes.addFlashAttribute("success", "Rol '" + roleName + "' creado exitosamente.");
-        return "redirect:/admin/roles";
     }
 
     @GetMapping("/solicitudes")
