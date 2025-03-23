@@ -9,14 +9,11 @@
 <body>
 
 <div th:fragment="navbar-admin">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <!-- Logo y nombre de la aplicación -->
-            <a class="navbar-brand" th:href="@{/admin/dashboard}">
-                <img src="/img/logo.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
-                RSU - Residuo Sólido Urbano
-            </a>
-            
+            <!-- Logo -->
+            <div id="logo" th:replace="~{fragments/logo}"></div>
+
             <!-- Botón para navegación colapsable en dispositivos móviles -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,6 +125,16 @@
         </div>
     </nav>
 </div>
+
+<script>
+    // Inicializar los dropdowns de Bootstrap manualmente
+    document.addEventListener('DOMContentLoaded', function() {
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+        dropdownElementList.map(function(dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl);
+        });
+    });
+</script>
 
 </body>
 </html>
