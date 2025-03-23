@@ -92,7 +92,10 @@
                                 <th scope="col">Usuario</th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Email</th>
-                                <th scope="col">Rol</th>
+                                <th scope="col">Contraseña (encriptada)</th>
+                                <th scope="col">Roles</th>
+                                <th scope="col">Organización</th>
+                                <th scope="col">Tipo</th>
                                 <th scope="col" class="rounded-end text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -108,14 +111,35 @@
                                 <td th:text="${user.name}"></td>
                                 <td th:text="${user.email}"></td>
                                 <td>
-                                    <span class="badge bg-primary" th:each="role : ${user.roles}" th:text="${role.name}">ROLE_ADMIN</span>
+                                    <div class="position-relative">
+                                        <span th:text="${#strings.length(user.password) > 20} ? ${#strings.substring(user.password, 0, 20) + '...'} : ${user.password}" class="password-text"></span>
+                                        <button th:if="${#strings.length(user.password) > 20}" 
+                                                class="btn btn-sm btn-outline-secondary ms-2 btn-ver-mas"
+                                                onclick="expandirTexto(this)" 
+                                                th:data-texto-completo="${user.password}">
+                                            Ver más
+                                        </button>
+                                    </div>
                                 </td>
+                                <td>
+                                    <div class="position-relative">
+                                        <span th:text="${#strings.length(user.roles.toString()) > 20} ? ${#strings.substring(user.roles.toString(), 0, 20) + '...'} : ${user.roles}" class="roles-text"></span>
+                                        <button th:if="${#strings.length(user.roles.toString()) > 20}" 
+                                                class="btn btn-sm btn-outline-secondary ms-2 btn-ver-mas"
+                                                onclick="expandirTexto(this)" 
+                                                th:data-texto-completo="${user.roles}">
+                                            Ver más
+                                        </button>
+                                    </div>
+                                </td>
+                                <td th:text="${user.organizationName != null ? user.organizationName : '-'}"></td>
+                                <td th:text="${user.organizationType != null ? user.organizationType : '-'}"></td>
                                 <td class="text-center">
                                     <a class="btn btn-sm btn-outline-primary me-1" th:href="@{/admin/edit/{id}(id=${user.id})}" 
                                        aria-label="Editar usuario">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a class="btn btn-sm btn-outline-danger" th:href="@{/admin/delet/{id}(id=${user.id})}" 
+                                    <a class="btn btn-sm btn-outline-danger" th:href="@{/admin/deletuser/{id}(id=${user.id})}" 
                                        onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');"
                                        aria-label="Eliminar usuario">
                                         <i class="bi bi-trash"></i>
@@ -152,6 +176,34 @@
 </div>
 
 <div th:replace="~{fragments/layout/footer :: footer}"></div>
+
+<script>
+    function expandirTexto(boton) {
+        const textoCompleto = boton.getAttribute('data-texto-completo');
+        const contenedor = boton.parentElement;
+        const spanTexto = contenedor.querySelector('span');
+        
+        if (boton.textContent === 'Ver más') {
+            spanTexto.textContent = textoCompleto;
+            boton.textContent = 'Ver menos';
+            contenedor.classList.add('expandido');
+        } else {
+            spanTexto.textContent = textoCompleto.substring(0, 20) + '...';
+            boton.textContent = 'Ver más';
+            contenedor.classList.remove('expandido');
+        }
+    }
+</script>
+<style>
+    .expandido {
+        position: relative;
+        z-index: 100;
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+</style>
 
 </body>
 </html>

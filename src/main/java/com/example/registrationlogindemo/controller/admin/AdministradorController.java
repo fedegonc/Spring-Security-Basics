@@ -51,6 +51,8 @@ public class AdministradorController {
     @GetMapping("/dashboard")
     public ModelAndView getDashboard() {
         ModelAndView mv = new ModelAndView("admin/dashboard");
+        List<User> users = userRepository.findAll();
+        mv.addObject("users", users);
         return mv;
     }
 
