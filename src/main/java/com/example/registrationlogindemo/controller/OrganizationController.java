@@ -1,4 +1,4 @@
-package com.example.registrationlogindemo.controller.organization;
+package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Organization;
 import com.example.registrationlogindemo.entity.Role;

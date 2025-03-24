@@ -46,7 +46,7 @@ public class User {
     // Tipo de organización (centro de acopio, empresa, institución de reciclaje)
     @Enumerated(EnumType.STRING)
     @Column(name = "organization_type")
-    private OrganizationType organizationType;
+    private Organization.OrganizationType organizationType;
 
     // Nombre de la organización
     @Column(name = "organization_name")

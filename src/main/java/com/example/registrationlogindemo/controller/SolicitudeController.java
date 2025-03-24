@@ -1,4 +1,4 @@
-package com.example.registrationlogindemo.controller.user;
+package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Message;
 import com.example.registrationlogindemo.entity.Solicitude;

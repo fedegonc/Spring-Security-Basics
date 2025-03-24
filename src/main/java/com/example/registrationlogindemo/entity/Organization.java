@@ -37,9 +37,27 @@ public class Organization {
     // Logo o imagen de la organización
     private String logo = "default-org-logo.jpg";
     
+    // Tipo de organización como enum interno
+    public enum OrganizationType {
+        CENTRO_ACOPIO("Centro de Acopio"),
+        EMPRESA("Empresa"),
+        INSTITUCION_RECICLAJE("Institución de Reciclaje");
+
+        private final String displayName;
+
+        OrganizationType(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+    }
+    
     // Tipo de organización (Asociación, Cooperativa, etc.)
     @Column(nullable=false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private OrganizationType type;
     
     // Estatus de verificación (pendiente, aprobada, rechazada)
     @Column(nullable=false)

@@ -1,4 +1,4 @@
-package com.example.registrationlogindemo.controller.admin;
+package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.*;
 import com.example.registrationlogindemo.repository.*;
@@ -74,7 +74,6 @@ public class AdministradorController {
                 user.setProfileImage("descargas.jpeg");
             }
             mv.addObject("user", user);
-            mv.addObject("organizationTypes", OrganizationType.values());
         }
 
         return mv;
@@ -108,7 +107,7 @@ public class AdministradorController {
 
             // Actualizar tipo y nombre de organización
             if (organizationType != null && !organizationType.isEmpty()) {
-                userEdit.setOrganizationType(OrganizationType.valueOf(organizationType));
+                userEdit.setOrganizationType(Organization.OrganizationType.valueOf(organizationType));
             }
             userEdit.setOrganizationName(organizationName);
 
@@ -280,8 +279,7 @@ public class AdministradorController {
             // Agregar el usuario y la lista de roles al modelo
             mv.addObject("user", user);
             mv.addObject("listRoles", listRoles);
-            // Agregar los tipos de organización al modelo
-            mv.addObject("organizationTypes", OrganizationType.values());
+            mv.addObject("organizationTypes", Organization.OrganizationType.values());
         }
         return mv;
     }
@@ -336,7 +334,7 @@ public class AdministradorController {
             
             // Actualizar tipo y nombre de organización
             if (organizationType != null && !organizationType.isEmpty()) {
-                userEdit.setOrganizationType(OrganizationType.valueOf(organizationType));
+                userEdit.setOrganizationType(Organization.OrganizationType.valueOf(organizationType));
                 userEdit.setOrganizationName(organizationName);
             } else {
                 // Si no se selecciona un tipo de organización, establecer ambos campos como nulos
