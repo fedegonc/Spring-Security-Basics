@@ -50,36 +50,6 @@ public class UserController {
     @Autowired
     private RoleRepository roleRepository;
 
-    // Dashboard para organizaciones
-    @GetMapping("/org/dashboard")
-    public ModelAndView organizationDashboard() {
-        ModelAndView mv = new ModelAndView("user/org_dashboard");
-        
-        try {
-            // Obtener el usuario actualmente autenticado
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                String username = userDetails.getUsername();
-                
-                // Obtener el usuario de la base de datos
-                User usuario = userRepository.findByUsername(username);
-                mv.addObject("user", usuario);
-                
-                // Obtener solicitudes pendientes para la organización
-                List<Solicitude> solicitudesPendientes = solicitudeService.getSolicitudesPendientes();
-                mv.addObject("solicitudesPendientes", solicitudesPendientes);
-                
-                // Agregar información adicional a la vista
-                mv.addObject("username", username);
-            }
-        } catch (Exception e) {
-            mv.addObject("error", "Ha ocurrido un error: " + e.getMessage());
-        }
-        
-        return mv;
-    }
-
     // Método para la página de bienvenida del usuario
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {

@@ -168,12 +168,10 @@ public class AuthController implements ErrorController {
             case "[ROLE_ADMIN]":
                 return new ModelAndView("redirect:/admin/dashboard");
             case "[ROLE_ORGANIZATION]":
-                return new ModelAndView("redirect:/user/org/dashboard");
+                return new ModelAndView("redirect:/org/dashboard");
             default:
                 return new ModelAndView("redirect:/error");
         }
-
-        // segun el tipo de usuario                         
                     
     }
 }
