@@ -1,7 +1,6 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.dto.UserDto;
-import com.example.registrationlogindemo.entity.Organization;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -154,10 +153,7 @@ public class AuthController implements ErrorController {
         
         // Si el usuario tiene organizaciones propias O tiene un tipo de organización, 
         // redirigir al dashboard de organizaciones
-        if (user != null && 
-            (!user.getOwnedOrganizations().isEmpty() || user.getOrganizationType() != null)) {
-            return new ModelAndView("redirect:/user/org/dashboard");
-        }
+        
         
         // De lo contrario, redirigir según el rol
         switch (userRole) {

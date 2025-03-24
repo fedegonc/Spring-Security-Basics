@@ -90,8 +90,6 @@
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Roles</th>
-                                <th scope="col">Organización</th>
-                                <th scope="col">Tipo</th>
                                 <th scope="col" class="rounded-end text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -117,8 +115,6 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td th:text="${user.organizationName != null ? user.organizationName : '-'}"></td>
-                                <td th:text="${user.organizationType != null ? user.organizationType : '-'}"></td>
                                 <td class="text-center">
                                     <a class="btn btn-sm btn-outline-primary me-1" th:href="@{/admin/edit/{id}(id=${user.id})}" 
                                        aria-label="Editar usuario">

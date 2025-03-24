@@ -3,7 +3,6 @@ package com.example.registrationlogindemo.controller;
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.*;
 import com.example.registrationlogindemo.repository.*;
-import com.example.registrationlogindemo.service.OrganizationService;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
@@ -47,9 +46,6 @@ public class UserController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    private OrganizationService organizationService;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -267,45 +263,29 @@ public class UserController {
     }
 
 
-    // Dashboard para usuarios con organización
-    @GetMapping("/org/dashboard")
-    public ModelAndView orgDashboard() {
-        ModelAndView mv = new ModelAndView("organization/dashboard");
-
+    @GetMapping("/materiales")
+    public ModelAndView materiales() {
+        ModelAndView mv = new ModelAndView("user/materiales");
         try {
-            // Obtener el usuario autenticado actualmente
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
             if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) authentication.getPrincipal();
                 String username = userDetails.getUsername();
 
-                // Obtener el usuario de la base de datos
+                // Obtener el usuario
                 User usuario = userRepository.findByUsername(username);
                 mv.addObject("user", usuario);
-
-                // Obtener organizaciones propias y a las que pertenece el usuario
-                List<Organization> ownedOrganizations = organizationService.getOrganizationsByOwner(usuario.getId());
-                mv.addObject("ownedOrganizations", ownedOrganizations);
-                mv.addObject("memberOrganizations", usuario.getMemberOrganizations());
-
-                // Obtener las solicitudes pendientes
-                try {
-                    List<Solicitude> solicitudesPendientes = solicitudeService.getSolicitudesPendientes();
-                    mv.addObject("solicitudesPendientes", solicitudesPendientes);
-                } catch (Exception e) {
-                    mv.addObject("errorSolicitudes", "Error al cargar las solicitudes: " + e.getMessage());
-                }
-
-                // Otros datos para la vista
-                mv.addObject("username", username);
             }
-        } catch (Exception e) {
-            mv.addObject("error", "Ha ocurrido un error: " + e.getMessage());
-        }
 
+            // No necesitamos agregar materiales aquí ya que están directamente
+            // en la plantilla HTML con estructura completa
+
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar la información de materiales: " + e.getMessage());
+        }
         return mv;
     }
+
 
     @PostMapping("/updatesolicitude/{id}")
     public ModelAndView updateSolicitude(@PathVariable("id") int id,
@@ -367,29 +347,5 @@ public class UserController {
         msg.addFlashAttribute("error", "No se pudo actualizar la solicitud");
         return new ModelAndView("redirect:/user/view-requests");
     }
-
-    @GetMapping("/materiales")
-    public ModelAndView materiales() {
-        ModelAndView mv = new ModelAndView("user/materiales");
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                String username = userDetails.getUsername();
-
-                // Obtener el usuario
-                User usuario = userRepository.findByUsername(username);
-                mv.addObject("user", usuario);
-            }
-
-            // No necesitamos agregar materiales aquí ya que están directamente
-            // en la plantilla HTML con estructura completa
-
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar la información de materiales: " + e.getMessage());
-        }
-        return mv;
-    }
-
 
 }

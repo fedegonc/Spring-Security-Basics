@@ -43,15 +43,6 @@ public class User {
     @Column(nullable=false)
     private String password;
 
-    // Tipo de organización (centro de acopio, empresa, institución de reciclaje)
-    @Enumerated(EnumType.STRING)
-    @Column(name = "organization_type")
-    private Organization.OrganizationType organizationType;
-
-    // Nombre de la organización
-    @Column(name = "organization_name")
-    private String organizationName;
-
     // Relación muchos a muchos con la entidad Role, cargada de forma eager y con eliminación en cascada
     @ManyToMany(fetch = FetchType.EAGER, cascade={CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
@@ -59,14 +50,6 @@ public class User {
             joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
             inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ID")})
     private List<Role> roles = new ArrayList<>();
-
-    // Organizaciones que posee el usuario
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    private List<Organization> ownedOrganizations = new ArrayList<>();
-
-    // Organizaciones a las que pertenece el usuario
-    @ManyToMany(mappedBy = "members")
-    private List<Organization> memberOrganizations = new ArrayList<>();
 
     // Método para pasar los roles
     public List<String> getUserRoles() {
@@ -77,8 +60,6 @@ public class User {
         return userRoles;
     }
 
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={ CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Solicitude> solicitudes = new ArrayList<>();
-
 }

@@ -16,8 +16,7 @@
                 <!-- Enlaces comunes -->
                 <div class="nav-item">
                     <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/dashboard}">Dashboard</a>
-                    <a sec:authorize="hasRole('ROLE_ORGANIZATION')" th:href="@{/user/org/dashboard}">Dashboard</a>
-                    <a sec:authorize="hasRole('ROLE_USER') and !hasRole('ROLE_ORGANIZATION') and !hasRole('ROLE_ADMIN')" th:href="@{/user/dashboard}">Dashboard</a>
+                    <a sec:authorize="hasRole('ROLE_USER') and !hasRole('ROLE_ADMIN')" th:href="@{/user/dashboard}">Dashboard</a>
                 </div>
                 
                 <!-- Enlaces específicos por rol -->
@@ -30,31 +29,6 @@
                             <a th:href="@{/admin/solicitudes}">Gestionar Solicitudes</a>
                             <a th:href="@{/admin/reports}">Gestionar Reportes</a>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- ORGANIZATION -->
-                <div class="nav-group" sec:authorize="hasRole('ROLE_ORGANIZATION')">
-                    <div class="nav-item nav-dropdown">
-                        <span class="dropdown-trigger">Mi Organización</span>
-                        <div class="dropdown-content">
-                            <a th:href="@{/user/org/register}">Registrar Organización</a>
-                            <a th:href="@{/user/org/members}">Gestionar Miembros</a>
-                            <a th:href="@{/user/org/profile}">Editar Perfil</a>
-                        </div>
-                    </div>
-                    
-                    <div class="nav-item nav-dropdown">
-                        <span class="dropdown-trigger">Actividades</span>
-                        <div class="dropdown-content">
-                            <a th:href="@{/user/org/activities/new}">Nueva Actividad</a>
-                            <a th:href="@{/user/org/activities/list}">Listar Actividades</a>
-                            <a th:href="@{/user/org/activities/calendar}">Calendario</a>
-                        </div>
-                    </div>
-                    
-                    <div class="nav-item">
-                        <a th:href="@{/user/org/statistics}">Estadísticas</a>
                     </div>
                 </div>
                 

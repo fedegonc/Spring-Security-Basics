@@ -42,44 +42,15 @@
             <input type="text" class="form-control" name="email" th:value="${user.email}" required>
         </div>
 
-        <!-- Tipo de Organización -->
-        <div class="mb-3">
-            <label class="form-label" for="organizationType">Tipo de Organización</label>
-            <select class="form-select" id="organizationType" name="organizationType">
-                <option value="">-- Seleccione un tipo de organización --</option>
-                <option th:each="type : ${organizationTypes}" 
-                        th:value="${type}" 
-                        th:text="${type.toString().replace('_', ' ')}"
-                        th:selected="${user.organizationType == type}">
-                </option>
-            </select>
-            <div class="form-text">Si no se selecciona ningún tipo, el usuario será tratado como usuario común.</div>
-        </div>
-
-        <!-- Nombre de Organización -->
-        <div class="mb-3">
-            <label class="form-label" for="organizationName">Nombre de Organización</label>
-            <input type="text" class="form-control" id="organizationName" name="organizationName" 
-                   th:value="${user.organizationName}">
-            <div class="form-text">Ingrese el nombre de la organización si corresponde.</div>
-        </div>
-
         <div class="form-group row">
             <label class="col-4 col-form-label">Roles:</label>
             <div class="col-8">
                 <th:block th:each="role: ${listRoles}">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="roles" th:id="${'role-' + role.id}" th:value="${role.id}" th:checked="${user.roles.contains(role)}">
+                        <input class="form-check-input" type="radio" name="roles" th:id="${'role-' + role.id}" th:value="${role.name}" th:checked="${user.roles.contains(role)}">
                         <label class="form-check-label" th:for="${'role-' + role.id}" th:text="${role.name}"></label>
                     </div>
                 </th:block>
-                
-                <!-- Añadir opción para ROLE_ORGANIZATION -->
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="roles" id="role-organization" value="ROLE_ORGANIZATION"
-                           th:checked="${user.roles != null && user.roles.?[name=='ROLE_ORGANIZATION'].size > 0}">
-                    <label class="form-check-label" for="role-organization">ROLE_ORGANIZATION</label>
-                </div>
             </div>
         </div>
 

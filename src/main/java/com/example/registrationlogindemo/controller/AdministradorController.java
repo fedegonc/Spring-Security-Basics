@@ -19,9 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -39,9 +37,6 @@ public class AdministradorController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private OrganizationService organizationService;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -85,8 +80,6 @@ public class AdministradorController {
                                  @PathVariable("id") long id,
                                  @RequestParam("fileImage") MultipartFile fileImage,
                                  @RequestParam("currentProfileImageUrl") String currentProfileImageUrl,
-                                 @RequestParam(value = "organizationType", required = false) String organizationType,
-                                 @RequestParam(value = "organizationName", required = false) String organizationName,
                                  RedirectAttributes msg) {
 
         ModelAndView mv = new ModelAndView();
@@ -104,12 +97,6 @@ public class AdministradorController {
             userEdit.setUsername(user.getUsername());
             userEdit.setName(user.getName());
             userEdit.setEmail(user.getEmail());
-
-            // Actualizar tipo y nombre de organización
-            if (organizationType != null && !organizationType.isEmpty()) {
-                userEdit.setOrganizationType(Organization.OrganizationType.valueOf(organizationType));
-            }
-            userEdit.setOrganizationName(organizationName);
 
             try {
                 // Si se proporciona una nueva imagen de perfil
@@ -279,67 +266,49 @@ public class AdministradorController {
             // Agregar el usuario y la lista de roles al modelo
             mv.addObject("user", user);
             mv.addObject("listRoles", listRoles);
-            mv.addObject("organizationTypes", Organization.OrganizationType.values());
         }
         return mv;
     }
 
     // Método para procesar la edición de un usuario
     @PostMapping("/edit/{id}")
-    public String adminEditUserBanco(@ModelAttribute("user") User user,
-                                    @RequestParam(value = "organizationType", required = false) String organizationType,
-                                    @RequestParam(value = "organizationName", required = false) String organizationName,
-                                    @RequestParam(value = "roles", required = false) String roleValue,
-                                    BindingResult result, RedirectAttributes msg) {
-        // Verificar errores de validación
-        if (result.hasErrors()) {
-            msg.addFlashAttribute("erro", "Error al editar. Por favor, complete todos los campos correctamente.");
-            return "redirect:/admin/edit/" + user.getId();
-        }
-        User userEdit = userRepository.findById(user.getId()).orElse(null);
+    public String adminEditUserBanco(@PathVariable("id") long id,
+                                   @RequestParam(value = "name", required = false) String name,
+                                   @RequestParam(value = "email", required = false) String email,
+                                   @RequestParam(value = "roles", required = false) String roleValue,
+                                   RedirectAttributes msg) {
 
+        User userEdit = userRepository.findById(id).orElse(null);
+        
         if (userEdit != null) {
             // Actualizar los datos del usuario con los nuevos valores
-            userEdit.setName(user.getName());
-            userEdit.setEmail(user.getEmail());
+            if (name != null) userEdit.setName(name);
+            if (email != null) userEdit.setEmail(email);
             
-            // Gestionar roles - enfoque simplificado
-            if (roleValue != null) {
+            // Gestionar los roles
+            if (roleValue != null && !roleValue.isEmpty()) {
                 // Limpiar roles existentes
                 userEdit.getRoles().clear();
                 
-                if ("ROLE_ORGANIZATION".equals(roleValue)) {
-                    // Manejar específicamente el rol ORGANIZATION
-                    Role organizationRole = roleRepository.findByName("ROLE_ORGANIZATION");
-                    if (organizationRole == null) {
-                        // Crear el rol si no existe
-                        organizationRole = new Role();
-                        organizationRole.setName("ROLE_ORGANIZATION");
-                        organizationRole = roleRepository.save(organizationRole);
-                    }
-                    userEdit.getRoles().add(organizationRole);
-                } else {
+                // Buscar el rol, primero por nombre exacto
+                Role role = roleRepository.findByName(roleValue);
+                
+                // Si no se encuentra por nombre, intentar por ID
+                if (role == null) {
                     try {
-                        // Manejar otros roles por ID
                         Long roleId = Long.parseLong(roleValue);
-                        Role role = roleRepository.findById(roleId).orElse(null);
-                        if (role != null) {
-                            userEdit.getRoles().add(role);
-                        }
+                        role = roleRepository.findById(roleId).orElse(null);
                     } catch (NumberFormatException e) {
-                        // Si no es un número, ignorarlo silenciosamente
+                        // No es un ID, dejamos role como null
                     }
                 }
-            }
-            
-            // Actualizar tipo y nombre de organización
-            if (organizationType != null && !organizationType.isEmpty()) {
-                userEdit.setOrganizationType(Organization.OrganizationType.valueOf(organizationType));
-                userEdit.setOrganizationName(organizationName);
-            } else {
-                // Si no se selecciona un tipo de organización, establecer ambos campos como nulos
-                userEdit.setOrganizationType(null);
-                userEdit.setOrganizationName(null);
+                
+                // Si se encontró el rol, añadirlo al usuario
+                if (role != null) {
+                    userEdit.getRoles().add(role);
+                } else {
+                    msg.addFlashAttribute("error", "Rol no encontrado: " + roleValue + ". Verifique que exista en la base de datos.");
+                }
             }
 
             // Guardar el usuario actualizado
