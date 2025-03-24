@@ -49,22 +49,17 @@ public class SpringSecurity {
                                         "/resources/**", "/templates/fragments/**"
                                                 ).permitAll()
 
-                                .requestMatchers("/report/**","/img/**"
-
-                                                ).hasAnyRole("USER", "COOPERATIVA", "ASOCIACION", "ADMIN", "ROOT")
 
 
                                 .requestMatchers("/user/**","/index/**","/init/**","/report/**"
                                                 ).hasRole("USER")
 
                                 .requestMatchers("/org/**","/report/**"
-                                                ).hasRole("ORGANIZATION")
+                                                ).hasAnyRole("ORGANIZATION")
 
                                 .requestMatchers("/admin/**","/report/**"
                                                 ).hasRole("ADMIN")
 
-                                .requestMatchers("/root/**","/report/**")
-                                                .hasRole("ROOT")
 
 
                 )

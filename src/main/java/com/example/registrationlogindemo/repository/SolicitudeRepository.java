@@ -22,6 +22,9 @@ public interface SolicitudeRepository extends JpaRepository<Solicitude, Integer>
 
     // Método para buscar solicitudes por estado activo o inactivo
     List<Solicitude> findSolicitudeByActivo(String estado);
+    
+    // Método para buscar solicitudes por estado
+    List<Solicitude> findByEstado(String estado);
 
     @Transactional
     @Modifying

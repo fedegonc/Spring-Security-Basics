@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="es">
+
+<div th:fragment="header">
+    <header class="app-header">
+        <div class="header-container">
+            <!-- Logo -->
+            <div class="header-logo">
+                <a th:href="@{/}">
+                    <span class="logo-text">RSU - Residuo Sólido Urbano</span>
+                </a>
+            </div>
+            
+            <!-- Navigation Links - Adaptados según el rol del usuario -->
+            <nav class="header-nav">
+                <!-- Enlaces comunes -->
+                <div class="nav-item">
+                    <a th:href="${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? @{/admin/dashboard} : 
+                             (${#authorization.expression('hasRole(''ROLE_ORGANIZATION'')')} ? @{/user/org/dashboard} : @{/user/dashboard})">
+                        Dashboard
+                    </a>
+                </div>
+                
+                <!-- Enlaces específicos por rol -->
+                <!-- ADMIN -->
+                <div class="nav-group" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                    <div class="nav-item nav-dropdown">
+                        <span class="dropdown-trigger">Gestión</span>
+                        <div class="dropdown-content">
+                            <a th:href="@{/admin/users}">Gestionar Usuarios</a>
+                            <a th:href="@{/admin/solicitudes}">Gestionar Solicitudes</a>
+                            <a th:href="@{/admin/reports}">Gestionar Reportes</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ORGANIZATION -->
+                <div class="nav-group" th:if="${#authorization.expression('hasRole(''ROLE_ORGANIZATION'')')}">
+                    <div class="nav-item nav-dropdown">
+                        <span class="dropdown-trigger">Mi Organización</span>
+                        <div class="dropdown-content">
+                            <a th:href="@{/user/org/register}">Registrar Organización</a>
+                            <a th:href="@{/user/org/members}">Gestionar Miembros</a>
+                            <a th:href="@{/user/org/profile}">Editar Perfil</a>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-item nav-dropdown">
+                        <span class="dropdown-trigger">Actividades</span>
+                        <div class="dropdown-content">
+                            <a th:href="@{/user/org/activities/new}">Nueva Actividad</a>
+                            <a th:href="@{/user/org/activities/list}">Listar Actividades</a>
+                            <a th:href="@{/user/org/activities/calendar}">Calendario</a>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-item">
+                        <a th:href="@{/user/org/statistics}">Estadísticas</a>
+                    </div>
+                </div>
+                
+                <!-- USER -->
+                <div class="nav-group" th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}">
+                    <div class="nav-item nav-dropdown">
+                        <span class="dropdown-trigger">Solicitudes y Contenidos</span>
+                        <div class="dropdown-content">
+                            <a th:href="@{/user/view-requests}">Ver Historial de Solicitudes</a>
+                            <a th:href="@{/user/viewarticles}">Ver Publicaciones</a>
+                            <a th:href="@{/user/informaciones}">Informaciones</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- User Menu -->
+            <div class="user-menu nav-dropdown">
+                <span class="dropdown-trigger" th:text="${#authentication.principal.username}">Usuario</span>
+                <div class="dropdown-content">
+                    <a th:href="@{/user/profile}">Mi Perfil</a>
+                    <a th:href="@{/user/settings}">Configuración</a>
+                    <a th:href="@{/logout}">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- CSS básico para el header sin Bootstrap -->
+    <style>
+        .app-header {
+            background-color: #24292e; /* Color oscuro para el header */
+            color: white;
+            padding: 0.5rem 1rem;
+            width: 100%;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-logo a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .header-nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-group {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-item a, .dropdown-trigger {
+            color: #f0f0f0;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .nav-item a:hover, .dropdown-trigger:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-dropdown:hover .dropdown-content {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dropdown-content a {
+            color: white;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #444;
+        }
+        
+        .user-menu {
+            margin-left: auto;
+        }
+        
+        /* Para pantallas pequeñas */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-nav {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            
+            .nav-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .user-menu {
+                margin: 1rem 0 0 0;
+                width: 100%;
+            }
+            
+            .dropdown-content {
+                position: static;
+                box-shadow: none;
+                border-radius: 0;
+                margin-left: 1rem;
+            }
+        }
+    </style>
+    
+    <!-- Simple JavaScript para dispositivos táctiles -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Solo para dispositivos táctiles
+            if ('ontouchstart' in window) {
+                const dropdowns = document.querySelectorAll('.nav-dropdown');
+                
+                dropdowns.forEach(dropdown => {
+                    const trigger = dropdown.querySelector('.dropdown-trigger');
+                    const content = dropdown.querySelector('.dropdown-content');
+                    
+                    trigger.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        content.style.display = content.style.display === 'flex' ? 'none' : 'flex';
+                    });
+                });
+            }
+        });
+    </script>
+</div>
+
+</html>

@@ -6,11 +6,15 @@ import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 @Service
 public class SolicitudeServiceImpl implements SolicitudeService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SolicitudeServiceImpl.class);
 
     @Autowired
     SolicitudeRepository solicitudeRepository;
@@ -47,5 +51,19 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     @Override
     public List<Solicitude> findSolicitudeActivos() {
         return solicitudeRepository.findSolicitudeByActivo("Activo");
+    }
+    
+    // Implementación del método para obtener solicitudes pendientes
+    @Override
+    public List<Solicitude> getSolicitudesPendientes() {
+        logger.info("Iniciando getSolicitudesPendientes");
+        try {
+            List<Solicitude> solicitudes = solicitudeRepository.findByEstado("EN_ESPERA");
+            logger.info("Solicitudes pendientes encontradas: {}", solicitudes.size());
+            return solicitudes;
+        } catch (Exception e) {
+            logger.error("Error al obtener solicitudes pendientes: {}", e.getMessage(), e);
+            throw new RuntimeException("Error al obtener solicitudes pendientes: " + e.getMessage(), e);
+        }
     }
 }

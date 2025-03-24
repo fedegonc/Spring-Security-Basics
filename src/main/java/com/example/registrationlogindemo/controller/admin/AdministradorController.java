@@ -43,6 +43,9 @@ public class AdministradorController {
     @Autowired
     private OrganizationService organizationService;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     @GetMapping("/dashboard")
@@ -285,14 +288,15 @@ public class AdministradorController {
 
     // Método para procesar la edición de un usuario
     @PostMapping("/edit/{id}")
-    public String adminEditUserBanco(@ModelAttribute("User") @Valid User user,
+    public String adminEditUserBanco(@ModelAttribute("user") User user,
                                     @RequestParam(value = "organizationType", required = false) String organizationType,
                                     @RequestParam(value = "organizationName", required = false) String organizationName,
+                                    @RequestParam(value = "roles", required = false) String roleValue,
                                     BindingResult result, RedirectAttributes msg) {
         // Verificar errores de validación
         if (result.hasErrors()) {
             msg.addFlashAttribute("erro", "Error al editar. Por favor, complete todos los campos correctamente.");
-            return "redirect:/editar/" + user.getId();
+            return "redirect:/admin/edit/" + user.getId();
         }
         User userEdit = userRepository.findById(user.getId()).orElse(null);
 
@@ -300,7 +304,35 @@ public class AdministradorController {
             // Actualizar los datos del usuario con los nuevos valores
             userEdit.setName(user.getName());
             userEdit.setEmail(user.getEmail());
-            userEdit.setRoles(user.getRoles());
+            
+            // Gestionar roles - enfoque simplificado
+            if (roleValue != null) {
+                // Limpiar roles existentes
+                userEdit.getRoles().clear();
+                
+                if ("ROLE_ORGANIZATION".equals(roleValue)) {
+                    // Manejar específicamente el rol ORGANIZATION
+                    Role organizationRole = roleRepository.findByName("ROLE_ORGANIZATION");
+                    if (organizationRole == null) {
+                        // Crear el rol si no existe
+                        organizationRole = new Role();
+                        organizationRole.setName("ROLE_ORGANIZATION");
+                        organizationRole = roleRepository.save(organizationRole);
+                    }
+                    userEdit.getRoles().add(organizationRole);
+                } else {
+                    try {
+                        // Manejar otros roles por ID
+                        Long roleId = Long.parseLong(roleValue);
+                        Role role = roleRepository.findById(roleId).orElse(null);
+                        if (role != null) {
+                            userEdit.getRoles().add(role);
+                        }
+                    } catch (NumberFormatException e) {
+                        // Si no es un número, ignorarlo silenciosamente
+                    }
+                }
+            }
             
             // Actualizar tipo y nombre de organización
             if (organizationType != null && !organizationType.isEmpty()) {
@@ -311,15 +343,15 @@ public class AdministradorController {
                 userEdit.setOrganizationType(null);
                 userEdit.setOrganizationName(null);
             }
-            
-            // Guardar los cambios en la base de datos
+
+            // Guardar el usuario actualizado
             userRepository.save(userEdit);
             msg.addFlashAttribute("success", "Usuario editado exitosamente.");
-        } else {
-            msg.addFlashAttribute("error", "No se encontró el usuario a editar.");
+            return "redirect:/admin/users";
         }
-
-        return "redirect:/admin/dashboard";
+        
+        msg.addFlashAttribute("error", "Usuario no encontrado.");
+        return "redirect:/admin/users";
     }
 
     // Método para eliminar una solicitud

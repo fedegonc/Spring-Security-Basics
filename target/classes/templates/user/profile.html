@@ -34,12 +34,12 @@
     </style>
 </head>
 
-<body class="app-background">
+<body class="app-background d-flex flex-column min-vh-100">
 
-<div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <!-- Contenido principal -->
-<main id="main-content" class="content-container glass-effect">
+<main id="main-content" class="content-container glass-effect flex-grow-1">
     <div class="container">
         <!-- Breadcrumbs -->
         <nav aria-label="breadcrumb" class="mb-3">

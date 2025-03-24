@@ -24,4 +24,7 @@ public interface SolicitudeService {
     List<Solicitude> findSolicitudeActivos();
 
     List<Solicitude> getSolicitudesByUser(User usuario);
+    
+    // Método para obtener solicitudes pendientes
+    List<Solicitude> getSolicitudesPendientes();
 }

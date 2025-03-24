@@ -165,6 +165,8 @@ public class AuthController implements ErrorController {
                 return new ModelAndView("redirect:/user/welcome");
             case "[ROLE_ADMIN]":
                 return new ModelAndView("redirect:/admin/dashboard");
+            case "[ROLE_ORGANIZATION]":
+                return new ModelAndView("redirect:/org/dashboard");
             default:
                 return new ModelAndView("redirect:/error");
         }

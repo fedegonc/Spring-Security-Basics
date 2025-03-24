@@ -3,9 +3,11 @@ package com.example.registrationlogindemo.controller.organization;
 import com.example.registrationlogindemo.entity.Organization;
 import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.OrganizationService;
+import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -25,10 +27,14 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping("/org")
 public class OrganizationController {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrganizationController.class);
 
     @Autowired
     private OrganizationService organizationService;
@@ -42,31 +48,40 @@ public class OrganizationController {
     @Autowired
     private UserService userService;
     
+    @Autowired
+    private SolicitudeService solicitudeService;
+    
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     // Dashboard principal para organizaciones
     @GetMapping("/dashboard")
     public ModelAndView dashboard() {
         ModelAndView mv = new ModelAndView("organization/dashboard");
-
-        // Obtener el usuario autenticado actualmente
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-
-            // Obtener el usuario de la base de datos
-            User usuario = userRepository.findByUsername(username);
-            mv.addObject("user", usuario);
+        
+        // Añadir contenido de prueba para verificar funcionamiento
+        mv.addObject("testMessage", "¡Bienvenido al Dashboard de Organización!");
+        mv.addObject("testDescription", "Esta es una versión básica del dashboard para confirmar que la configuración de rutas funciona correctamente.");
+        
+        try {
+            // Obtener el usuario autenticado actualmente
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             
-            // Obtener organizaciones propias y a las que pertenece el usuario
-            List<Organization> ownedOrganizations = organizationService.getOrganizationsByOwner(usuario.getId());
-            mv.addObject("ownedOrganizations", ownedOrganizations);
-            mv.addObject("memberOrganizations", usuario.getMemberOrganizations());
-            
-            // Otros datos para la vista
-            mv.addObject("username", username);
+            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                String username = userDetails.getUsername();
+                
+                // Obtener el usuario de la base de datos
+                User usuario = userRepository.findByUsername(username);
+                mv.addObject("user", usuario);
+                
+                // Agregar el nombre de usuario al modelo
+                mv.addObject("username", username);
+            }
+        } catch (Exception e) {
+            logger.error("Error en dashboard: {}", e.getMessage(), e);
+            mv.addObject("error", "Ha ocurrido un error al cargar el dashboard. Por favor, intente nuevamente.");
         }
+        
         return mv;
     }
 
