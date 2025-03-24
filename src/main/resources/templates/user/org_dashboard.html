@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Organización</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/user/welcome">Sistema de Reciclaje</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/user/welcome">Inicio</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <span th:text="${username}">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{/user/edit/{id}(id=${user.id})}">Mi Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/user/logout}">Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="container py-4">
+        <!-- Alertas y mensajes -->
+        <div th:if="${success != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Panel de información de la organización -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Información de la Organización</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            <img th:if="${user.profileImageUrl != null}" th:src="${user.profileImageUrl}" alt="Perfil" class="rounded-circle" width="150">
+                            <img th:unless="${user.profileImageUrl != null}" src="/img/default-profile.png" alt="Perfil predeterminado" class="rounded-circle" width="150">
+                            <div class="mt-3">
+                                <h4 th:text="${user.name}">Nombre de la Organización</h4>
+                                <p class="text-secondary mb-1" th:text="${user.email}">correo@ejemplo.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">Estadísticas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Solicitudes Pendientes</span>
+                            <span class="badge bg-primary rounded-pill" th:text="${solicitudesPendientes.size()}">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Solicitudes Procesadas</span>
+                            <span class="badge bg-success rounded-pill">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <!-- Solicitudes pendientes -->
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="card-title mb-0">Solicitudes Pendientes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${solicitudesPendientes.empty}" class="alert alert-info">
+                            No hay solicitudes pendientes en este momento.
+                        </div>
+                        <div th:unless="${solicitudesPendientes.empty}" class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Categoría</th>
+                                        <th>Barrio</th>
+                                        <th>Dirección</th>
+                                        <th>Fecha</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="solicitud : ${solicitudesPendientes}">
+                                        <td th:text="${solicitud.id}">1</td>
+                                        <td th:text="${solicitud.categoria}">Plástico</td>
+                                        <td th:text="${solicitud.barrio}">Centro</td>
+                                        <td th:text="${solicitud.calle + ' ' + solicitud.numeroDeCasa}">Calle Principal 123</td>
+                                        <td th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}">01/01/2023</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary">Ver</a>
+                                            <a href="#" class="btn btn-sm btn-success">Aprobar</a>
+                                            <a href="#" class="btn btn-sm btn-danger">Rechazar</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer bg-light mt-auto py-3">
+        <div class="container text-center">
+            <span class="text-muted"> 2023 Sistema de Reciclaje. Todos los derechos reservados.</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
