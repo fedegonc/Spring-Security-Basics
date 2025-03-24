@@ -21,6 +21,7 @@ com\example\registrationlogindemo\entity\Solicitude.class
 com\example\registrationlogindemo\repository\SolicitudeRepository.class
 com\example\registrationlogindemo\config\WebConfig.class
 com\example\registrationlogindemo\entity\Organization$OrganizationType.class
+com\example\registrationlogindemo\controller\UserController.class
 com\example\registrationlogindemo\repository\OrganizationRepository.class
 com\example\registrationlogindemo\controller\AdministradorController.class
 com\example\registrationlogindemo\controller\OrganizationController.class

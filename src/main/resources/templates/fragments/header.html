@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/xhtml" lang="es">
 
 <div th:fragment="header">
     <header class="app-header">
@@ -15,15 +15,14 @@
             <nav class="header-nav">
                 <!-- Enlaces comunes -->
                 <div class="nav-item">
-                    <a th:href="${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? @{/admin/dashboard} : 
-                             (${#authorization.expression('hasRole(''ROLE_ORGANIZATION'')')} ? @{/user/org/dashboard} : @{/user/dashboard})">
-                        Dashboard
-                    </a>
+                    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/dashboard}">Dashboard</a>
+                    <a sec:authorize="hasRole('ROLE_ORGANIZATION')" th:href="@{/user/org/dashboard}">Dashboard</a>
+                    <a sec:authorize="hasRole('ROLE_USER') and !hasRole('ROLE_ORGANIZATION') and !hasRole('ROLE_ADMIN')" th:href="@{/user/dashboard}">Dashboard</a>
                 </div>
                 
                 <!-- Enlaces específicos por rol -->
                 <!-- ADMIN -->
-                <div class="nav-group" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                <div class="nav-group" sec:authorize="hasRole('ROLE_ADMIN')">
                     <div class="nav-item nav-dropdown">
                         <span class="dropdown-trigger">Gestión</span>
                         <div class="dropdown-content">
@@ -35,7 +34,7 @@
                 </div>
                 
                 <!-- ORGANIZATION -->
-                <div class="nav-group" th:if="${#authorization.expression('hasRole(''ROLE_ORGANIZATION'')')}">
+                <div class="nav-group" sec:authorize="hasRole('ROLE_ORGANIZATION')">
                     <div class="nav-item nav-dropdown">
                         <span class="dropdown-trigger">Mi Organización</span>
                         <div class="dropdown-content">
@@ -60,7 +59,7 @@
                 </div>
                 
                 <!-- USER -->
-                <div class="nav-group" th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}">
+                <div class="nav-group" sec:authorize="hasRole('ROLE_USER')">
                     <div class="nav-item nav-dropdown">
                         <span class="dropdown-trigger">Solicitudes y Contenidos</span>
                         <div class="dropdown-content">
