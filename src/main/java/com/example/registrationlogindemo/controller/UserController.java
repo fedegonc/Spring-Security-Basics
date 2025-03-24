@@ -50,6 +50,8 @@ public class UserController {
     @Autowired
     private RoleRepository roleRepository;
 
+    
+
     // Método para la página de bienvenida del usuario
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
