@@ -66,8 +66,8 @@
                     </div>
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
-                            <img th:if="${user.profileImageUrl != null}" th:src="${user.profileImageUrl}" alt="Perfil" class="rounded-circle" width="150">
-                            <img th:unless="${user.profileImageUrl != null}" src="/img/default-profile.png" alt="Perfil predeterminado" class="rounded-circle" width="150">
+                            <img th:if="${user.profileImage != null}" th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" class="rounded-circle" width="150">
+                            <img th:unless="${user.profileImage != null}" src="/img/default-profile.jpg" alt="Perfil predeterminado" class="rounded-circle" width="150">
                             <div class="mt-3">
                                 <h4 th:text="${user.name}">Nombre de la Organización</h4>
                                 <p class="text-secondary mb-1" th:text="${user.email}">correo@ejemplo.com</p>

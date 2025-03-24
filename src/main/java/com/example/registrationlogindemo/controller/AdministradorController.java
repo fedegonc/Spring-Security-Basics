@@ -293,8 +293,14 @@ public class AdministradorController {
                 // Buscar el rol, primero por nombre exacto
                 Role role = roleRepository.findByName(roleValue);
                 
-                // Si no se encuentra por nombre, intentar por ID
-                if (role == null) {
+                // Si no se encuentra por nombre y es ROLE_ORGANIZATION, crear el rol
+                if (role == null && "ROLE_ORGANIZATION".equals(roleValue)) {
+                    role = new Role();
+                    role.setName("ROLE_ORGANIZATION");
+                    role = roleRepository.save(role); // Guardar para obtener el ID
+                }
+                // Si no, intentar por ID
+                else if (role == null) {
                     try {
                         Long roleId = Long.parseLong(roleValue);
                         role = roleRepository.findById(roleId).orElse(null);

@@ -32,30 +32,36 @@ public class AuthController implements ErrorController {
 
     @GetMapping("/error")
     public ModelAndView handleError(HttpServletRequest request) {
-        ModelAndView mv = new ModelAndView("guest/error"); // "error" es el nombre de la vista
-
-        // Obtener el usuario autenticado
-        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
-
-        // Si el usuario está autenticado, cargar datos en el modelo
-        if (authenticatedUserOpt.isPresent()) {
-            User usuario = authenticatedUserOpt.get();
-            mv.addObject("username", usuario.getUsername());
-            mv.addObject("user", usuario); // Solo se agrega si el usuario está autenticado
-            mv.addObject("isAuthenticatedUser", true); // Agregar la variable solo si el usuario está autenticado
-        } else {
-            // Usuario no autenticado: agregar mensaje de error
-            mv.addObject("error", "No tienes acceso a esta página. Por favor, inicia sesión.");
-            mv.addObject("isAuthenticatedUser", false); // Se asegura de que isAuthenticatedUser sea false
-        }
+        ModelAndView mv = new ModelAndView("guest/error");
 
         // Capturar código de estado y mensaje de error
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         String errorMessage = (String) request.getAttribute("javax.servlet.error.message");
+        
+        // Para el estado HTTP desconocido
+        if (statusCode == null) {
+            statusCode = 500; // Asumimos error interno del servidor como valor predeterminado
+        }
 
-        // Mensaje de error amigable
-        errorMessage = (errorMessage != null) ? errorMessage : "Ha ocurrido un error inesperado. Por favor, vuelve a intentarlo.";
-        mv.addObject("status", statusCode != null ? statusCode : "Error desconocido");
+        // Personalizar mensajes de error según el código de estado
+        if (errorMessage == null || errorMessage.isEmpty()) {
+            switch (statusCode) {
+                case 403:
+                    errorMessage = "No tienes permiso para acceder a esta página.";
+                    break;
+                case 404:
+                    errorMessage = "La página que buscas no existe.";
+                    break;
+                case 500:
+                    errorMessage = "Ha ocurrido un error interno del servidor.";
+                    break;
+                default:
+                    errorMessage = "Ha ocurrido un error inesperado. Por favor, vuelve a intentarlo.";
+            }
+        }
+
+        // Añadir los datos a la vista
+        mv.addObject("status", statusCode);
         mv.addObject("error", errorMessage);
 
         return mv;
@@ -162,9 +168,12 @@ public class AuthController implements ErrorController {
             case "[ROLE_ADMIN]":
                 return new ModelAndView("redirect:/admin/dashboard");
             case "[ROLE_ORGANIZATION]":
-                return new ModelAndView("redirect:/org/dashboard");
+                return new ModelAndView("redirect:/user/org/dashboard");
             default:
                 return new ModelAndView("redirect:/error");
         }
+
+        // segun el tipo de usuario                         
+                    
     }
 }
