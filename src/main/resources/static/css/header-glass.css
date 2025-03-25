@@ -5,6 +5,8 @@
     -webkit-backdrop-filter: blur(8px) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    position: relative !important;
+    z-index: 1031 !important; /* Aumentado para asegurar que esté por encima */
 }
 
 /* Colores específicos por rol */
@@ -13,21 +15,21 @@
 }
 
 .navbar-glass.user-navbar {
-    background: rgba(25, 135, 84, 0.15) !important; /* Bootstrap success */
+    background: rgba(21, 87, 36, 0.85) !important; /* Verde oscuro con mayor opacidad */
 }
 
 .navbar-glass.org-navbar {
-    background: rgba(102, 16, 242, 0.15) !important; /* Bootstrap purple */
+    background: rgba(21, 87, 36, 0.85) !important; /* Mismo verde oscuro que user-navbar para consistencia */
 }
 
 .navbar-glass.admin-navbar {
-    background: rgba(220, 53, 69, 0.15) !important; /* Bootstrap danger */
+    background: rgba(21, 87, 36, 0.85) !important; /* Mismo verde oscuro que user-navbar para consistencia */
 }
 
 /* Estilo para el texto */
 .navbar-glass .navbar-brand,
 .navbar-glass .nav-link {
-    color: #333 !important;
+    color: #ffffff !important; /* Blanco para mejor contraste con fondo verde oscuro */
     font-weight: 500;
 }
 
@@ -42,9 +44,58 @@
     -webkit-backdrop-filter: blur(8px) !important;
     border: 1px solid rgba(255, 255, 255, 0.18) !important;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+    top: 100% !important; /* Asegura que el menú inicie justo debajo del botón */
+    margin-top: 0 !important; /* Elimina el margen superior */
+    z-index: 1050 !important; /* Z-index aumentado para asegurar que esté por encima de todo */
+    right: 0 !important; /* Alinea el dropdown a la derecha */
+    left: auto !important; /* Asegura que no se alinee a la izquierda */
+    position: absolute !important; /* Asegura que se posicione absolutamente */
+}
+
+/* Estilos para la posición del dropdown item */
+.dropdown-menu-end {
+    --bs-position: end;
+    right: 0 !important;
+    left: auto !important;
+    position: absolute !important;
 }
 
 /* Estilos para hover en dropdown items */
 .navbar-glass .dropdown-item:hover {
     background: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Asegurar que los elementos dentro del dropdown estén visibles y por encima */
+.navbar-glass .dropdown-item {
+    position: relative !important;
+    z-index: 1051 !important;
+}
+
+/* Clase para forzar la visualización del dropdown */
+.show > .dropdown-menu {
+    display: block !important;
+    z-index: 9999 !important;
+}
+
+/* Asegurar que el dropdown se muestre correctamente en dispositivos móviles */
+@media (max-width: 992px) {
+    .navbar-glass .dropdown-menu {
+        position: static !important;
+        float: none !important;
+        width: auto !important;
+        margin-top: 0 !important;
+        background-color: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    .navbar-glass .dropdown-item {
+        color: #ffffff !important;
+    }
+}
+
+/* Asegurarse de que ningún otro elemento se sobreponga al menú desplegable */
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    position: relative !important;
+    z-index: 1020 !important; /* Menor que el z-index del dropdown */
 }

@@ -1,6 +1,5 @@
 package com.example.registrationlogindemo.entity;
 
-import jakarta.persistence.EnumType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

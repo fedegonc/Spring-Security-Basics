@@ -2,9 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="es">
 
 <div th:fragment="navbar-user">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <nav class="navbar navbar-expand-lg navbar-glass user-navbar">
         <div class="container">
-            <a class="navbar-brand" href="#">Reciclaje Sólido</a>
+            <a class="navbar-brand" th:href="@{/user/welcome}">
+                <i class="bi bi-recycle"></i> RSU - Residuo Sólido Urbano
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
