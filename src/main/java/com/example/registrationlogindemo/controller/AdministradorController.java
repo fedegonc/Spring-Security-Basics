@@ -62,7 +62,7 @@ public class AdministradorController {
         }
 
         Optional<User> userOptional = userRepository.findById(id);
-        ModelAndView mv = new ModelAndView("user/profile");
+        ModelAndView mv = new ModelAndView("admin/profile");
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
