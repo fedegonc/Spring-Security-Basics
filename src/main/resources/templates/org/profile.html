@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 
 <head th:replace="~{fragments/layout/head :: head}">
-    <title>Perfil de Administrador</title>
+    <title>Perfil de Organización</title>
 </head>
 
 <body class="app-background d-flex flex-column min-vh-100">
 
 <!-- Navbar con estilo glass card -->
-<div th:replace="~{fragments/headers/admin_header :: header}"></div>
+<div th:replace="~{fragments/headers/org_header :: header}"></div>
 
 <!-- Contenido principal -->
 <main id="main-content" class="content-container glass-effect flex-grow-1">
@@ -18,7 +18,7 @@
             <ol class="breadcrumb bg-light shadow-sm rounded p-2">
                 <li class="breadcrumb-item">
                     <i class="bi bi-house"></i>
-                    <a th:href="@{/admin/dashboard}">Dashboard</a>
+                    <a th:href="@{/org/dashboard}">Dashboard</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">Perfil</li>
             </ol>
@@ -30,27 +30,27 @@
         <section class="mb-5">
             <div class="row mb-4">
                 <div class="col-12">
-                    <h1 class="display-5 fw-bold mb-3">Mi Perfil de Administrador</h1>
-                    <p class="lead">Administra y actualiza tu información personal.</p>
+                    <h1 class="display-5 fw-bold">Mi Perfil de Organización</h1>
+                    <p class="lead">Administra y actualiza la información de tu organización.</p>
                 </div>
             </div>
             
             <!-- Formulario de edición de perfil -->
-            <form method="post" enctype="multipart/form-data" th:action="@{'/admin/profile/' + ${user.id}}">
+            <form method="post" enctype="multipart/form-data" th:action="@{'/org/profile/' + ${user.id}}">
                 <div class="row">
                     <!-- Imagen de Perfil -->
                     <div class="col-md-4 mb-4 text-center">
                         <div class="glass-card h-100">
-                            <h4 class="card-title mb-3"><i class="bi bi-image me-2"></i>Tu Imagen</h4>
+                            <h4 class="card-title mb-3"><i class="bi bi-image me-2"></i>Logo de la Organización</h4>
                             
                             <div class="mb-3">
                                 <div th:if="${user.profileImage != null}">
-                                    <img id="currentProfileImage" th:src="@{'/img/' + ${user.profileImage}}" alt="Imagen de Perfil" 
+                                    <img id="currentProfileImage" th:src="@{'/img/' + ${user.profileImage}}" alt="Logo de la Organización" 
                                          class="img-thumbnail rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                                     <input type="hidden" name="currentProfileImageUrl" th:value="${user.profileImage}">
                                 </div>
                                 <div th:if="${user.profileImage == null}">
-                                    <img id="defaultProfileImage" src="/img/descarga.jpeg" alt="Imagen de Perfil Predeterminada" 
+                                    <img id="defaultProfileImage" src="/img/descarga.jpeg" alt="Logo Predeterminado" 
                                          class="img-thumbnail rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                                     <input type="hidden" name="currentProfileImageUrl" value="descarga.jpeg">
                                 </div>
@@ -63,10 +63,10 @@
                         </div>
                     </div>
                     
-                    <!-- Datos del Usuario -->
+                    <!-- Datos de la Organización -->
                     <div class="col-md-8 mb-4">
                         <div class="glass-card h-100">
-                            <h4 class="card-title mb-3"><i class="bi bi-shield-lock me-2"></i>Datos Personales</h4>
+                            <h4 class="card-title mb-3"><i class="bi bi-building me-2"></i>Datos de la Organización</h4>
                             
                             <div class="mb-3">
                                 <label for="username" class="form-label">Nombre de Usuario <span class="text-danger">*</span></label>
@@ -77,9 +77,9 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="name" class="form-label">Nombre Completo <span class="text-danger">*</span></label>
+                                <label for="name" class="form-label">Nombre de la Organización <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
+                                    <span class="input-group-text"><i class="bi bi-building"></i></span>
                                     <input type="text" id="name" class="form-control" name="name" th:value="${user.name}" required>
                                 </div>
                             </div>
@@ -96,13 +96,13 @@
                 </div>
                 
                 <!-- Botones de acción -->
-                <div class="d-flex justify-content-between mt-3">
-                    <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left me-2"></i>Volver
-                    </a>
-                    <div>
-                        <button type="submit" class="btn btn-success me-2">
-                            <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-end gap-2">
+                        <a th:href="@{/org/dashboard}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-1"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i> Guardar Cambios
                         </button>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
 <!-- Footer -->
 <div th:replace="~{fragments/layout/footer :: footer}"></div>
 
-<!-- Script para previsualizar la imagen -->
+<!-- Script para previsualizar la imagen seleccionada -->
 <script>
     function previewFile() {
         const fileInput = document.getElementById('fileImage');
@@ -122,20 +122,16 @@
         
         if (file) {
             const reader = new FileReader();
+            
             reader.onload = function(e) {
-                const currentImage = document.getElementById('currentProfileImage');
-                if (currentImage) {
-                    currentImage.src = e.target.result;
-                } else {
-                    const defaultImage = document.getElementById('defaultProfileImage');
-                    if (defaultImage) {
-                        defaultImage.src = e.target.result;
-                    }
-                }
+                const img = document.getElementById('currentProfileImage') || document.getElementById('defaultProfileImage');
+                img.src = e.target.result;
             }
+            
             reader.readAsDataURL(file);
         }
     }
 </script>
+
 </body>
 </html>

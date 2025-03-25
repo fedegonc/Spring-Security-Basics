@@ -14,10 +14,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.util.StringUtils;
 
 @Controller
 @RequestMapping("/org")
@@ -65,5 +78,97 @@ public class OrgController {
         }
 
         return mv;
+    }
+
+    @GetMapping("/profile")
+    public ModelAndView viewProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User currentUser = userRepository.findByUsername(username);
+
+        if (currentUser != null) {
+            return new ModelAndView("redirect:/org/profile/" + currentUser.getId());
+        } else {
+            return new ModelAndView("redirect:/error");
+        }
+    }
+
+    @GetMapping("/profile/{id}")
+    public ModelAndView editUser(@PathVariable("id") long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User currentUser = userRepository.findByUsername(username);
+
+        if (currentUser != null && currentUser.getId() != id) {
+            return new ModelAndView("redirect:/org/profile/" + currentUser.getId());
+        }
+
+        Optional<User> userOptional = userRepository.findById(id);
+        ModelAndView mv = new ModelAndView("org/profile");
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
+                user.setProfileImage("descargas.jpeg");
+            }
+            mv.addObject("user", user);
+        }
+
+        return mv;
+    }
+
+    @PostMapping("/profile/{id}")
+    public ModelAndView updateUser(@PathVariable("id") long id,
+                                  @ModelAttribute("user") User user,
+                                  @RequestParam("fileImage") MultipartFile multipartFile) throws IOException {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User currentUser = userRepository.findByUsername(username);
+
+        if (currentUser != null && currentUser.getId() != id) {
+            return new ModelAndView("redirect:/org/profile/" + currentUser.getId());
+        }
+
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User existingUser = userOptional.get();
+
+            // Actualizar datos básicos
+            existingUser.setUsername(user.getUsername());
+            existingUser.setName(user.getName());
+            existingUser.setEmail(user.getEmail());
+
+            // Procesar imagen si se ha subido una nueva
+            if (!multipartFile.isEmpty()) {
+                String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+                existingUser.setProfileImage(fileName);
+
+                // Guardar la imagen en el sistema de archivos
+                String uploadDir = "src/main/resources/static/img/";
+                Path uploadPath = Paths.get(uploadDir);
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                try (java.io.InputStream inputStream = multipartFile.getInputStream()) {
+                    Path filePath = uploadPath.resolve(fileName);
+                    Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new IOException("No se pudo guardar el archivo de imagen: " + fileName, e);
+                }
+            }
+
+            // Guardar los cambios
+            userRepository.save(existingUser);
+
+            // Redirigir con mensaje de éxito
+            ModelAndView mv = new ModelAndView("redirect:/org/profile/" + id);
+            mv.addObject("successMessage", "Perfil actualizado correctamente");
+            return mv;
+        } else {
+            // Usuario no encontrado
+            return new ModelAndView("redirect:/error");
+        }
     }
 }
