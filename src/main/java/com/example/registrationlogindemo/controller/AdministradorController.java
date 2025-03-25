@@ -51,6 +51,19 @@ public class AdministradorController {
         return mv;
     }
 
+    @GetMapping("/profile")
+    public ModelAndView viewProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User currentUser = userRepository.findByUsername(username);
+        
+        if (currentUser != null) {
+            return new ModelAndView("redirect:/admin/profile/" + currentUser.getId());
+        } else {
+            return new ModelAndView("redirect:/error");
+        }
+    }
+
     @GetMapping("/profile/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
