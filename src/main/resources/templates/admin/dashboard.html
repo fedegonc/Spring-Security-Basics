@@ -1,114 +1,14 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{fragments/layout/head :: head}">
-    <title>Panel de Administración</title>
-</head>
-
+<!DOCTYPE html><html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout/head :: head}"><title>Admin</title></head>
 <body class="app-background d-flex flex-column min-vh-100">
-
-<!-- Navbar con estilo glass card -->
 <div th:replace="~{fragments/headers/admin_header :: header}"></div>
-
-<!-- Contenido principal -->
-<div id="main" class="container mt-4 flex-grow-1">
-    
+<div class="container mt-4 flex-grow-1">
     <div class="row g-4">
-        <!-- Panel lateral (33%) -->
-        <div class="col-12 col-md-4">
-            <div class="glass-card h-100 d-flex flex-column">
-                <h2 class="fs-4 fw-bold mb-4">Panel de Administración</h2>
-                
-                <div class="text-center mb-4">
-                    <img src="/img/logo.png" alt="Logo Reciclaje Sólido" style="width: 128px; height: 128px;" class="mx-auto">
-                </div>
-                
-                <div class="alert alert-info" role="alert">
-                    <h4 class="alert-heading">Bienvenido al Panel</h4>
-                    <p>Desde aquí puedes gestionar los usuarios, roles, solicitudes y reportes del sistema.</p>
-                    <hr>
-                    <p class="mb-0">Utiliza el menú de navegación superior para acceder a las diferentes funciones administrativas.</p>
-                </div>
-                
-                <div id="clock" class="clock text-center mt-auto fs-4"></div>
-            </div>
-        </div>
-        
-        <!-- Contenido principal (66%) -->
-        <div id="dashboard-content" class="col-12 col-md-8">
-            <div class="glass-card">
-                <h3 class="fs-5 fw-bold mb-4">Resumen del Sistema</h3>
-                
-                <!-- Tarjetas de métricas -->
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4">
-                    <!-- Tarjeta para Usuarios Registrados -->
-                    <div class="col">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body text-center">
-                                <i class="bi bi-people-fill fs-1 text-primary mb-2"></i>
-                                <h4 class="card-title fs-5">Usuarios</h4>
-                                <p class="card-text fs-2 fw-bold">120</p>
-                                <p class="card-text text-success"><i class="bi bi-arrow-up"></i> +10 desde ayer</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Tarjeta para Nuevas Solicitudes -->
-                    <div class="col">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body text-center">
-                                <i class="bi bi-clipboard-plus-fill fs-1 text-info mb-2"></i>
-                                <h4 class="card-title fs-5">Solicitudes</h4>
-                                <p class="card-text fs-2 fw-bold">15</p>
-                                <p class="card-text text-success"><i class="bi bi-arrow-up"></i> +5 desde ayer</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Tarjeta para Problemas Reportados -->
-                    <div class="col">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body text-center">
-                                <i class="bi bi-exclamation-triangle-fill fs-1 text-warning mb-2"></i>
-                                <h4 class="card-title fs-5">Problemas</h4>
-                                <p class="card-text fs-2 fw-bold">8</p>
-                                <p class="card-text text-danger"><i class="bi bi-arrow-down"></i> -2 desde ayer</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Gráficos en diseño responsive -->
-                <div class="row g-4">
-                    <!-- Gráfico de Barras -->
-                    <div class="col-12 col-lg-6 mb-4">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body">
-                                <h5 class="card-title">Usuarios Activos</h5>
-                                <canvas id="usersChart" height="200"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Gráfico de Solicitudes en Torta -->
-                    <div class="col-12 col-lg-6 mb-4">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="card-body">
-                                <h5 class="card-title">Estado de Solicitudes</h5>
-                                <canvas id="solicitudesPieChart" height="200"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+        <div class="col-md-4 glass-card"><h2>Panel</h2><img src="/img/logo.png" width="128"><div class="alert alert-info">Gestiona usuarios, roles y más.</div><div id="clock" class="clock text-center mt-auto fs-4"></div></div>
+        <div class="col-md-8 glass-card"><h3>Resumen</h3><div class="row g-3">
+            <div class="col"><div class="card h-100 text-center"><i class="bi bi-people-fill fs-1"></i><p>Usuarios: <b>120</b></p></div></div>
+            <div class="col"><div class="card h-100 text-center"><i class="bi bi-clipboard-plus-fill fs-1"></i><p>Solicitudes: <b>15</b></p></div></div>
+            <div class="col"><div class="card h-100 text-center"><i class="bi bi-exclamation-triangle-fill fs-1"></i><p>Problemas: <b>8</b></p></div></div></div>
+            <div class="row g-4"><div class="col"><canvas id="usersChart" height="200"></canvas></div><div class="col"><canvas id="solicitudesPieChart" height="200"></canvas></div></div></div></div></div>
 <div th:replace="~{fragments/layout/footer :: footer}"></div>
-
-<!-- Scripts específicos para el dashboard -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
-<script src="/scripts/adminScript.js"></script>
-</body>
-</html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script><script src="/scripts/adminScript.js"></script></body></html>
