@@ -5,6 +5,7 @@ import com.example.registrationlogindemo.entity.*;
 import com.example.registrationlogindemo.repository.*;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -33,127 +34,69 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired UserService userService;
+    @Autowired SolicitudeService solicitudeService;
+    @Autowired UserRepository userRepository;
+    @Autowired SolicitudeRepository solicitudeRepository;
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
-    @Autowired
-    SolicitudeRepository solicitudeRepository;
-    @Autowired
-    SolicitudeService solicitudeService;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    ReportRepository reportRepository;
+    private User getAuthenticatedUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (auth != null) ? userRepository.findByUsername(auth.getName()) : null;
+    }
 
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    
-
-    // Método para la página de bienvenida del usuario
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
         ModelAndView mv = new ModelAndView("user/welcome");
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                String username = userDetails.getUsername();
-
-                // Obtener el usuario y sus datos
-                User usuario = userRepository.findByUsername(username);
-
-                // Obtener las solicitudes del usuario
-                List<Solicitude> solicitude = solicitudeService.getSolicitudesByUser(usuario);
-
-                mv.addObject("solicitude", solicitude);
-                mv.addObject("user", usuario);
-                mv.addObject("username", username);
-            }
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar los datos del usuario: " + e.getMessage());
+        User usuario = getAuthenticatedUser();
+        if (usuario != null) {
+            mv.addObject("solicitude", solicitudeService.getSolicitudesByUser(usuario));
+            mv.addObject("user", usuario);
+            mv.addObject("username", usuario.getUsername());
         }
         return mv;
     }
 
     @GetMapping("/profile/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User currentUser = userRepository.findByUsername(username);
-
-        if (currentUser != null && currentUser.getId() != id) {
+        User currentUser = getAuthenticatedUser();
+        if (currentUser != null && currentUser.getId() != id)
             return new ModelAndView("redirect:/user/profile/" + currentUser.getId());
-        }
 
-        Optional<User> userOptional = userRepository.findById(id);
-        ModelAndView mv = new ModelAndView("user/profile");
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
-                user.setProfileImage("descargas.jpeg");
-            }
-            mv.addObject("user", user);
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null && (user.getProfileImage() == null || user.getProfileImage().isEmpty()))
+            user.setProfileImage("descargas.jpeg");
 
-            // Agregar imágenes de idioma (si las hubiera)
-
-
-        }
-        return mv;
+        return new ModelAndView("user/profile").addObject("user", user);
     }
 
     @PostMapping("/profile/{id}")
-    public ModelAndView editUser(@PathVariable("id") long id,
-                                 @ModelAttribute("user") @Valid User user,
-                                 BindingResult result,
-                                 @RequestParam("file") MultipartFile fileImage,
-                                 @RequestParam("currentProfileImageUrl") String currentProfileImageUrl,
-                                 RedirectAttributes msg) {
-        ModelAndView mv = new ModelAndView();
-
+    public ModelAndView updateUser(@PathVariable("id") long id, @Valid User user, BindingResult result,
+                                   @RequestParam("file") MultipartFile file, @RequestParam("currentProfileImageUrl") String currentImg,
+                                   RedirectAttributes msg) {
         if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");
-            mv.setViewName("redirect:/user/profile/" + id);
-            return mv;
+            msg.addFlashAttribute("error", "Error al editar.");
+            return new ModelAndView("redirect:/user/profile/" + id);
         }
 
-        User userEdit = userRepository.findById(user.getId()).orElse(null);
-
+        User userEdit = userRepository.findById(id).orElse(null);
         if (userEdit != null) {
             userEdit.setUsername(user.getUsername());
             userEdit.setName(user.getName());
             userEdit.setEmail(user.getEmail());
-
             try {
-                if (!fileImage.isEmpty()) {
-                    // Reemplazar espacios en el nombre del archivo
-                    String originalFilename = fileImage.getOriginalFilename();
-                    String modifiedFilename = originalFilename.replace(" ", "_");
-
-                    byte[] bytes = fileImage.getBytes();
-                    Path path = Paths.get("./src/main/resources/static/img/" + modifiedFilename);
-                    Files.write(path, bytes);
-                    userEdit.setProfileImage(modifiedFilename);
+                if (!file.isEmpty()) {
+                    String filename = file.getOriginalFilename().replace(" ", "_");
+                    Files.write(Paths.get(UPLOAD_DIR + filename), file.getBytes());
+                    userEdit.setProfileImage(filename);
                 } else {
-                    userEdit.setProfileImage(currentProfileImageUrl);
+                    userEdit.setProfileImage(currentImg);
                 }
-
-
-            } catch (IOException e) {
-                msg.addFlashAttribute("error", "Error al procesar la imagen de perfil.");
-            }
-
+            } catch (IOException e) { msg.addFlashAttribute("error", "Error con la imagen."); }
             userRepository.save(userEdit);
-            msg.addFlashAttribute("success", "Usuario editado exitosamente.");
-            mv.setViewName("redirect:/user/profile/" + user.getId());
-        } else {
-            mv.setViewName("redirect:/error");
+            msg.addFlashAttribute("success", "Usuario editado.");
         }
-
-        return mv;
+        return new ModelAndView("redirect:/user/profile/" + id);
     }
 
     @GetMapping("/delet/{id}")
@@ -162,192 +105,50 @@ public class UserController {
         return "redirect:/logout";
     }
 
-    // Método para cerrar sesión
-    @GetMapping("/logout")
-    public String logout() {
-        return "index";
-    }
+    @GetMapping("/logout") public String logout() { return "index"; }
 
     @GetMapping("/users")
-    public String listRegisteredUsers(Model model) {
-        List<UserDto> users = userService.findAllUsers();
-        model.addAttribute("users", users);
+    public String listUsers(Model model) {
+        model.addAttribute("users", userService.findAllUsers());
         return "users";
     }
 
-    @GetMapping("/construction")
-    public ModelAndView showConstructionPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("user/construction"); // Nombre de la vista
-        // Aquí puedes agregar atributos al modelo si lo necesitas
-        return modelAndView;
+    @GetMapping({"/construction", "/contacto", "/informaciones", "/statistics", "/materiales"})
+    public ModelAndView staticPages(HttpServletRequest req) {
+        ModelAndView mv = new ModelAndView("user/" + req.getRequestURI().split("/")[2]);
+        mv.addObject("user", getAuthenticatedUser());
+        return mv;
     }
 
     @GetMapping("/view-requests")
     public ModelAndView viewRequests() {
-        ModelAndView mv = new ModelAndView();
-
-        // Obtener la autenticación actual
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-
-            // Obtener el usuario autenticado
-            User usuario = userRepository.findByUsername(username);
-            if (usuario != null) {
-                // Cargar las solicitudes del usuario
-                List<Solicitude> solicitudes = solicitudeRepository.findByUser(usuario);
-                mv.addObject("solicitudes", solicitudes);
-
-                // Verificar y cargar la imagen de perfil
-                if (usuario.getProfileImage() == null || usuario.getProfileImage().isEmpty()) {
-                    usuario.setProfileImage("descargas.jpeg");
-                }
-                mv.addObject("user", usuario);
-
-
-            }
-        }
-
-        mv.setViewName("user/view-requests");
-        return mv;
+        User user = getAuthenticatedUser();
+        List<Solicitude> solicitudes = solicitudeRepository.findByUser(user);
+        if (user != null && (user.getProfileImage() == null || user.getProfileImage().isEmpty()))
+            user.setProfileImage("descargas.jpeg");
+        return new ModelAndView("user/view-requests").addObject("solicitudes", solicitudes).addObject("user", user);
     }
-
-
-    @GetMapping("/informaciones")
-    public ModelAndView informaciones() {
-        ModelAndView mv = new ModelAndView("user/informaciones");
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-
-            // Agregar el nombre de usuario al modelo para dar la bienvenida
-            mv.addObject("username", username);
-
-            // Obtener el usuario de la base de datos
-            User usuario = userRepository.findByUsername(username);
-            mv.addObject("user", usuario);
-
-
-        }
-        return mv;
-    }
-
-    @GetMapping("/contacto")
-    public ModelAndView contacto() {
-        ModelAndView mv = new ModelAndView("user/noticias");
-        return mv;
-
-    }
-
-    @GetMapping("/statistics")
-    public ModelAndView estadisticas() {
-        ModelAndView mv = new ModelAndView("user/statistics");
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                String username = userDetails.getUsername();
-
-                // Obtener el usuario y sus solicitudes
-                User usuario = userRepository.findByUsername(username);
-                List<Solicitude> solicitudes = solicitudeService.getSolicitudesByUser(usuario);
-
-
-            }
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar las estadísticas: " + e.getMessage());
-        }
-        return mv;
-    }
-
-
-    @GetMapping("/materiales")
-    public ModelAndView materiales() {
-        ModelAndView mv = new ModelAndView("user/materiales");
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                String username = userDetails.getUsername();
-
-                // Obtener el usuario
-                User usuario = userRepository.findByUsername(username);
-                mv.addObject("user", usuario);
-            }
-
-            // No necesitamos agregar materiales aquí ya que están directamente
-            // en la plantilla HTML con estructura completa
-
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar la información de materiales: " + e.getMessage());
-        }
-        return mv;
-    }
-
 
     @PostMapping("/updatesolicitude/{id}")
-    public ModelAndView updateSolicitude(@PathVariable("id") int id,
-                                         @RequestParam("categoria") String categoria,
-                                         @RequestParam("barrio") String barrio,
-                                         @RequestParam("calle") String calle,
-                                         @RequestParam("numeroDeCasa") String numeroDeCasa,
-                                         @RequestParam("file") MultipartFile file,
-                                         @RequestParam("currentImageUrl") String currentImageUrl,
-                                         RedirectAttributes msg) {
-
-        // Obtener el usuario autenticado
-        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
-
-        if (authenticatedUserOpt.isPresent()) {
-            User usuario = authenticatedUserOpt.get();
-
-            // Obtener la solicitud
-            Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
-
-            if (solicitudeOpt.isPresent()) {
-                Solicitude solicitude = solicitudeOpt.get();
-
-                // Verificar que la solicitud pertenece al usuario actual
-                if (solicitude.getUser().getId() == usuario.getId()) {
-                    // Actualizar datos
-                    solicitude.setCategoria(categoria);
-                    solicitude.setBarrio(barrio);
-                    solicitude.setCalle(calle);
-                    solicitude.setNumeroDeCasa(numeroDeCasa);
-
-                    // Manejar la imagen
-                    try {
-                        if (!file.isEmpty()) {
-                            String originalFilename = file.getOriginalFilename();
-                            String modifiedFilename = originalFilename.replace(" ", "_");
-
-                            byte[] bytes = file.getBytes();
-                            Path path = Paths.get(UPLOAD_DIR + modifiedFilename);
-                            Files.write(path, bytes);
-
-                            solicitude.setImagen(modifiedFilename);
-                        } else {
-                            solicitude.setImagen(currentImageUrl);
-                        }
-                    } catch (IOException e) {
-                        msg.addFlashAttribute("error", "Error al procesar la imagen");
-                        return new ModelAndView("redirect:/user/editsolicitude/" + id);
-                    }
-
-                    // Guardar cambios
-                    solicitudeRepository.save(solicitude);
-                    msg.addFlashAttribute("success", "Solicitud actualizada exitosamente");
-                    return new ModelAndView("redirect:/user/view-requests");
-                }
-            }
+    public ModelAndView updateSolicitude(@PathVariable("id") int id, @RequestParam String categoria,
+                                         @RequestParam String barrio, @RequestParam String calle,
+                                         @RequestParam String numeroDeCasa, @RequestParam MultipartFile file,
+                                         @RequestParam String currentImageUrl, RedirectAttributes msg) {
+        User user = getAuthenticatedUser();
+        Optional<Solicitude> opt = solicitudeRepository.findById(id);
+        if (opt.isPresent() && opt.get().getUser().getId() == user.getId()) {
+            Solicitude s = opt.get();
+            s.setCategoria(categoria); s.setBarrio(barrio); s.setCalle(calle); s.setNumeroDeCasa(numeroDeCasa);
+            try {
+                if (!file.isEmpty()) {
+                    String filename = file.getOriginalFilename().replace(" ", "_");
+                    Files.write(Paths.get(UPLOAD_DIR + filename), file.getBytes());
+                    s.setImagen(filename);
+                } else s.setImagen(currentImageUrl);
+                solicitudeRepository.save(s);
+                msg.addFlashAttribute("success", "Solicitud actualizada");
+            } catch (IOException e) { msg.addFlashAttribute("error", "Error con imagen"); }
         }
-
-        msg.addFlashAttribute("error", "No se pudo actualizar la solicitud");
         return new ModelAndView("redirect:/user/view-requests");
     }
-
 }
