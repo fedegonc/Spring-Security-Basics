@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+
 @Controller
 @RequestMapping("/org")
 public class OrgController {
@@ -36,9 +37,10 @@ public class OrgController {
 
     @Autowired
     private RoleRepository roleRepository;
+
     @GetMapping("/dashboard")
     public ModelAndView organizationDashboard() {
-        ModelAndView mv = new ModelAndView("user/org_dashboard");
+        ModelAndView mv = new ModelAndView("org/dashboard");
 
         try {
             // Obtener el usuario actualmente autenticado

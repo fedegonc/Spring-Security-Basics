@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Glass card header styles -->
+    <link rel="stylesheet" th:href="@{/css/header-glass.css}">
     <style>
         .sidebar {
             background-color: #f8f9fa;
@@ -17,26 +19,34 @@
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Navbar con estilo glass card -->
+    <nav class="navbar navbar-expand-lg navbar-glass org-navbar">
         <div class="container">
-            <a class="navbar-brand" href="/user/welcome">Sistema de Reciclaje</a>
+            <a class="navbar-brand" th:href="@{/org/dashboard}">
+                <i class="bi bi-recycle"></i> RSU - Residuo Sólido Urbano
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/user/welcome">Inicio</a>
-                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <span th:text="${username}">Usuario</span>
+                            <i class="bi bi-building"></i> 
+                            <span th:text="${#authentication.principal.username}">Organización</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" th:href="@{/user/edit/{id}(id=${user.id})}">Mi Perfil</a></li>
+                            <li>
+                                <a class="dropdown-item" th:href="@{/org/profile}">
+                                    <i class="bi bi-pencil-square"></i> Perfil de Organización
+                                </a>
+                            </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" th:href="@{/user/logout}">Cerrar Sesión</a></li>
+                            <li>
+                                <a class="dropdown-item" th:href="@{/logout}">
+                                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Header para usuarios invitados (no autenticados) -->
+    <nav th:fragment="header" class="navbar navbar-expand-lg navbar-glass guest-navbar">
+        <div class="container">
+            <!-- Brand name -->
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-recycle"></i> RSU - Residuo Sólido Urbano
+            </a>
+            
+            <!-- Botón para menú responsive -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Contenido del navbar -->
+            <div class="collapse navbar-collapse" id="navbarGuestContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/login}">
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

@@ -1,0 +1,50 @@
+/* Estilos para headers con efecto glass card */
+.navbar-glass {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Colores específicos por rol */
+.navbar-glass.guest-navbar {
+    background: rgba(13, 110, 253, 0.15) !important; /* Bootstrap primary */
+}
+
+.navbar-glass.user-navbar {
+    background: rgba(25, 135, 84, 0.15) !important; /* Bootstrap success */
+}
+
+.navbar-glass.org-navbar {
+    background: rgba(102, 16, 242, 0.15) !important; /* Bootstrap purple */
+}
+
+.navbar-glass.admin-navbar {
+    background: rgba(220, 53, 69, 0.15) !important; /* Bootstrap danger */
+}
+
+/* Estilo para el texto */
+.navbar-glass .navbar-brand,
+.navbar-glass .nav-link {
+    color: #333 !important;
+    font-weight: 500;
+}
+
+.navbar-glass .navbar-brand {
+    font-weight: 700;
+}
+
+/* Estilos para dropdown */
+.navbar-glass .dropdown-menu {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Estilos para hover en dropdown items */
+.navbar-glass .dropdown-item:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+}

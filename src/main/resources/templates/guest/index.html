@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <!-- Glass card header styles -->
+    <link rel="stylesheet" th:href="@{/css/header-glass.css}">
 </head>
 <body class="app-background">
     <!-- Skip link para accesibilidad -->
@@ -18,47 +20,20 @@
         Saltar al contenido principal
     </a>
     
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Navbar con estilo glass card -->
+    <nav class="navbar navbar-expand-lg navbar-glass guest-navbar">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <i class="bi bi-recycle navbar-logo me-2"></i>
-                <span>Reciclaje Sólido</span>
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-recycle"></i> RSU - Residuo Sólido Urbano
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" 
-                    aria-controls="navbarMain" aria-expanded="false" aria-label="Alternar navegación">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarMain">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
-                            <i class="bi bi-house"></i> Inicio
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#nosotros">
-                            <i class="bi bi-info-circle"></i> Nosotros
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#servicios">
-                            <i class="bi bi-gear"></i> Servicios
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#contacto">
-                            <i class="bi bi-envelope"></i> Contacto
-                        </a>
-                    </li>
+            <div class="collapse navbar-collapse" id="navbarGuestContent">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/login}">
-                            <i class="bi bi-person-circle"></i> Iniciar Sesión
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/register}">
-                            <i class="bi bi-person-plus"></i> Registrarse
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
                         </a>
                     </li>
                 </ul>
