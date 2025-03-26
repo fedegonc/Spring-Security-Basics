@@ -59,8 +59,23 @@ public class AdministradorController {
     @GetMapping("/dashboard")
     public ModelAndView getDashboard() {
         ModelAndView mv = new ModelAndView("admin/dashboard");
+        
+        // Obtener datos para las gráficas
         List<User> users = userRepository.findAll();
+        List<Solicitude> solicitudes = solicitudeRepository.findAll();
+        List<Report> reportes = reportRepository.findAll();
+        
+        // Contar totales
+        int totalUsers = users.size();
+        int totalSolicitudes = solicitudes.size();
+        int totalReportes = reportes.size();
+        
+        // Agregar datos al modelo
         mv.addObject("users", users);
+        mv.addObject("totalUsers", totalUsers);
+        mv.addObject("totalSolicitudes", totalSolicitudes);
+        mv.addObject("totalReportes", totalReportes);
+        
         return mv;
     }
 

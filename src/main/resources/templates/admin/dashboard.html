@@ -1,14 +1,189 @@
-<!DOCTYPE html><html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout/head :: head}"><title>Admin</title></head>
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Panel de Control - Admin</title>
+</head>
 <body class="app-background d-flex flex-column min-vh-100">
-<div th:replace="~{fragments/headers/admin_header :: header}"></div>
-<div class="container mt-4 flex-grow-1">
-    <div class="row g-4">
-        <div class="col-md-4 glass-card"><h2>Panel</h2><img src="/img/logo.png" width="128"><div class="alert alert-info">Gestiona usuarios, roles y más.</div><div id="clock" class="clock text-center mt-auto fs-4"></div></div>
-        <div class="col-md-8 glass-card"><h3>Resumen</h3><div class="row g-3">
-            <div class="col"><div class="card h-100 text-center"><i class="bi bi-people-fill fs-1"></i><p>Usuarios: <b>120</b></p></div></div>
-            <div class="col"><div class="card h-100 text-center"><i class="bi bi-clipboard-plus-fill fs-1"></i><p>Solicitudes: <b>15</b></p></div></div>
-            <div class="col"><div class="card h-100 text-center"><i class="bi bi-exclamation-triangle-fill fs-1"></i><p>Problemas: <b>8</b></p></div></div></div>
-            <div class="row g-4"><div class="col"><canvas id="usersChart" height="200"></canvas></div><div class="col"><canvas id="solicitudesPieChart" height="200"></canvas></div></div></div></div></div>
-<div th:replace="~{fragments/layout/footer :: footer}"></div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script><script src="/scripts/adminScript.js"></script></body></html>
+    <div th:replace="~{fragments/headers/admin_header :: header}"></div>
+    
+    <div class="container mt-4 flex-grow-1">
+        <div class="row g-4">
+            <!-- Panel lateral izquierdo -->
+            <div class="col-md-4">
+                <div class="glass-card h-100">
+                    <h2>Panel</h2>
+                    <img src="/img/logo.png" width="128">
+                    <div class="alert alert-info">
+                        Gestiona usuarios, roles y más.
+                    </div>
+                    <div id="clock" class="clock text-center mt-auto fs-4"></div>
+                </div>
+            </div>
+            
+            <!-- Panel principal derecho -->
+            <div class="col-md-8">
+                <div class="glass-card h-100">
+                    <h3>Resumen</h3>
+                    
+                    <!-- Tarjetas de resumen -->
+                    <div class="row g-3 mb-4">
+                        <div class="col">
+                            <div class="card h-100 text-center">
+                                <i class="bi bi-people-fill fs-1"></i>
+                                <p>Usuarios: <b th:text="${totalUsers}">120</b></p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card h-100 text-center">
+                                <i class="bi bi-clipboard-plus-fill fs-1"></i>
+                                <p>Solicitudes: <b th:text="${totalSolicitudes}">15</b></p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card h-100 text-center">
+                                <i class="bi bi-exclamation-triangle-fill fs-1"></i>
+                                <p>Problemas: <b th:text="${totalReportes}">8</b></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gráficas -->
+                    <div class="row g-4">
+                        <!-- Gráfica de usuarios por día -->
+                        <div class="col-md-12 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-people me-2"></i>Usuarios registrados por día</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="usersChart" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Gráfica de solicitudes por día -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-clipboard-plus me-2"></i>Solicitudes por día</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="solicitudesChart" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Gráfica de reportes de problemas -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Reportes de problemas</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="reportesChart" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragments/layout/footer :: footer}"></div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script>
+        // Datos para las gráficas (simulados)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gráfica de usuarios registrados por día
+            var usersCtx = document.getElementById('usersChart').getContext('2d');
+            var usersChart = new Chart(usersCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+                    datasets: [{
+                        label: 'Usuarios registrados',
+                        data: [5, 8, 12, 6, 10, 4, 7],
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Gráfica de solicitudes por día
+            var solicitudesCtx = document.getElementById('solicitudesChart').getContext('2d');
+            var solicitudesChart = new Chart(solicitudesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+                    datasets: [{
+                        label: 'Solicitudes nuevas',
+                        data: [3, 5, 2, 7, 4, 1, 2],
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Gráfica de reportes de problemas
+            var reportesCtx = document.getElementById('reportesChart').getContext('2d');
+            var reportesChart = new Chart(reportesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pendientes', 'En proceso', 'Resueltos'],
+                    datasets: [{
+                        data: [4, 2, 2],
+                        backgroundColor: [
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(75, 192, 192, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+            
+            // Reloj digital
+            function updateClock() {
+                var now = new Date();
+                var hours = now.getHours().toString().padStart(2, '0');
+                var minutes = now.getMinutes().toString().padStart(2, '0');
+                var seconds = now.getSeconds().toString().padStart(2, '0');
+                document.getElementById('clock').textContent = hours + ':' + minutes + ':' + seconds;
+            }
+            
+            setInterval(updateClock, 1000);
+            updateClock();
+        });
+    </script>
+</body>
+</html>
