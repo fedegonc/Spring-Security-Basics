@@ -611,9 +611,19 @@ public class AdministradorController {
             redirectAttributes.addFlashAttribute("success", "Rol '" + roleName + "' creado exitosamente");
         }
         
-        // Si se proporciona una URL de retorno, redireccionar a ella
-        if (returnUrl != null && !returnUrl.isEmpty()) {
-            return "redirect:" + returnUrl;
+        // Siempre redireccionar a una página GET, nunca a una acción POST
+        // Si la URL de retorno es para crear usuario, vamos a la página de creación
+        if (returnUrl != null && returnUrl.equals("/admin/crear-usuario")) {
+            return "redirect:/admin/crear-usuario";
+        }
+        
+        // Si la URL contiene edit, extraemos el ID y redireccionamos a la edición
+        if (returnUrl != null && returnUrl.contains("/admin/edit/")) {
+            String[] parts = returnUrl.split("/");
+            if (parts.length > 3) {
+                String userId = parts[parts.length - 1];
+                return "redirect:/admin/edit/" + userId;
+            }
         }
         
         // Por defecto, redirigir a la lista de usuarios
