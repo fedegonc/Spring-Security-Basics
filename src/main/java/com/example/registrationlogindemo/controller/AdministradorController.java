@@ -448,49 +448,43 @@ public class AdministradorController {
             return "redirect:/admin/crear-usuario";
         }
         
-        // Crear un nuevo UserDto para usar el servicio existente
-        UserDto userDto = new UserDto();
-        // Dividir el nombre completo en nombre y apellido
-        String[] nombreCompleto = user.getName().split(" ", 2);
-        userDto.setFirstName(nombreCompleto.length > 0 ? nombreCompleto[0] : user.getName());
-        userDto.setLastName(nombreCompleto.length > 1 ? nombreCompleto[1] : "");
-        userDto.setEmail(user.getEmail());
-        userDto.setPassword(password);
-        
-        // Usar el servicio existente para guardar el usuario
-        userService.saveUser(userDto);
-        
-        // Obtener el usuario recién creado para asignarle el rol específico si es necesario
-        User nuevoUsuario = userRepository.findByEmail(userDto.getEmail());
-        
-        // Si se especificó un rol diferente al predeterminado
-        if (roleValue != null && !roleValue.isEmpty() && !"ROLE_USER".equals(roleValue)) {
-            // Buscar el rol por nombre
-            Role role = roleRepository.findByName(roleValue);
+        try {
+            // Crear un nuevo UserDto para usar el servicio existente
+            UserDto userDto = new UserDto();
+            // Dividir el nombre completo en nombre y apellido
+            String[] nombreCompleto = user.getName().split(" ", 2);
+            userDto.setFirstName(nombreCompleto.length > 0 ? nombreCompleto[0] : user.getName());
+            userDto.setLastName(nombreCompleto.length > 1 ? nombreCompleto[1] : "");
+            userDto.setEmail(user.getEmail());
+            userDto.setPassword(password);
             
-            // Si no se encuentra por nombre, intentar por ID
-            if (role == null) {
-                try {
-                    Long roleId = Long.parseLong(roleValue);
-                    role = roleRepository.findById(roleId).orElse(null);
-                } catch (NumberFormatException e) {
-                    // No es un ID válido
+            // Usar el servicio existente para guardar el usuario
+            User nuevoUsuario = userService.saveUser(userDto);
+            
+            // Si se especificó un rol diferente al predeterminado
+            if (roleValue != null && !roleValue.isEmpty() && !"ROLE_USER".equals(roleValue)) {
+                // Buscar el rol por nombre exacto
+                Role role = roleRepository.findByName(roleValue);
+                
+                // Si se encontró el rol y es diferente al rol de usuario predeterminado
+                if (role != null && !role.getName().equals("ROLE_USER")) {
+                    // Limpiar roles existentes (que serían ROLE_USER por defecto)
+                    nuevoUsuario.getRoles().clear();
+                    // Agregar el nuevo rol
+                    nuevoUsuario.getRoles().add(role);
+                    // Guardar el usuario con el nuevo rol
+                    userRepository.save(nuevoUsuario);
                 }
             }
             
-            // Si se encontró el rol y es diferente al rol de usuario predeterminado
-            if (role != null && !role.getName().equals("ROLE_USER")) {
-                // Limpiar roles existentes (que serían ROLE_USER por defecto)
-                nuevoUsuario.getRoles().clear();
-                // Agregar el nuevo rol
-                nuevoUsuario.getRoles().add(role);
-                // Guardar el usuario con el nuevo rol
-                userRepository.save(nuevoUsuario);
-            }
+            redirectAttributes.addFlashAttribute("success", "Usuario creado exitosamente");
+            return "redirect:/admin/users";
+            
+        } catch (Exception e) {
+            // Capturar cualquier excepción y mostrar un mensaje de error
+            redirectAttributes.addFlashAttribute("error", "Error al crear el usuario: " + e.getMessage());
+            return "redirect:/admin/crear-usuario";
         }
-        
-        redirectAttributes.addFlashAttribute("success", "Usuario creado exitosamente");
-        return "redirect:/admin/users";
     }
 
     // Método para mostrar el formulario de creación de solicitudes de prueba
