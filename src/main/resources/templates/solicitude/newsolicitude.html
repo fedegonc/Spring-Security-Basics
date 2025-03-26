@@ -114,7 +114,17 @@
                             
                             <div class="col-md-6 mb-3">
                                 <label for="destino" class="form-label">Destino <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="destino" th:field="*{destino}" required>
+                                <select class="form-select" id="destino" th:field="*{destino}" required>
+                                    <option value="">Seleccione una organización</option>
+                                    <option th:each="org : ${organizaciones}" 
+                                            th:value="${org.username}" 
+                                            th:text="${org.name + ' (' + org.username + ')'}">
+                                        Nombre de la organización
+                                    </option>
+                                </select>
+                                <div class="form-text text-info" th:if="${organizaciones == null || #lists.isEmpty(organizaciones)}">
+                                    No hay organizaciones disponibles. Por favor, contacte al administrador.
+                                </div>
                             </div>
                         </div>
                         
@@ -137,10 +147,10 @@
                         
                         <!-- Botones de acción -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a th:href="@{/user/welcome}" class="btn btn-secondary px-4">
+                            <a th:href="@{/user/welcome}" class="btn-modern">
                                 <i class="bi bi-x-circle me-2"></i>Cancelar
                             </a>
-                            <button type="submit" class="btn btn-primary px-4">
+                            <button type="submit" class="btn-modern btn-primary-modern">
                                 <i class="bi bi-check-circle me-2"></i>Guardar Solicitud
                             </button>
                         </div>

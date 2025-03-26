@@ -7,7 +7,7 @@
 
 <body class="app-background d-flex flex-column min-vh-100">
 
-<div th:replace="~{fragments/admin/navbar-admin :: navbar-admin}"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container mt-4 flex-grow-1">
     <div class="row g-4">
@@ -77,6 +77,9 @@
             <div class="glass-card">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 class="fs-5 fw-bold mb-0">Lista de Usuarios</h3>
+                    <a th:href="@{/admin/crear-usuario}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-person-plus"></i> Crear Usuario
+                    </a>
                 </div>
                 
                 <!-- Tabla de usuarios mejorada -->

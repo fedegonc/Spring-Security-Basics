@@ -217,3 +217,99 @@ a:focus {
     white-space: nowrap;
     border-width: 0;
 }
+
+/* ================================
+   Estilos de botones modernos
+   (inspirados en tu diseño Aromar)
+================================= */
+.btn-modern {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    font-weight: 500;
+}
+
+.btn-modern:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-modern:active {
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: scale(0.95);
+}
+
+.btn-primary-modern {
+    background-color: rgba(13, 110, 253, 0.8);
+}
+
+.btn-primary-modern:hover {
+    background-color: rgba(13, 110, 253, 0.9);
+}
+
+.btn-danger-modern {
+    background-color: rgba(220, 53, 69, 0.8);
+}
+
+.btn-danger-modern:hover {
+    background-color: rgba(220, 53, 69, 0.9);
+}
+
+.btn-success-modern {
+    background-color: rgba(25, 135, 84, 0.8);
+}
+
+.btn-success-modern:hover {
+    background-color: rgba(25, 135, 84, 0.9);
+}
+
+/* Estilos para el botón de hamburguesa (menú responsive) */
+.navbar-toggler {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(4px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.5rem !important;
+    padding: 0.5rem !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease !important;
+    outline: none !important;
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.navbar-toggler:hover {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    transform: translateY(-2px) !important;
+}
+
+.navbar-toggler:active {
+    transform: translateY(0) !important;
+}
+
+.navbar-toggler .bi-list {
+    color: white !important;
+    font-size: 1.5rem !important;
+}
+
+/* Quitar el ícono de hamburguesa predeterminado de Bootstrap */
+.navbar-toggler-icon {
+    display: none !important;
+}
+
+/* Asegurar que el fondo y el borde no aparezcan */
+.navbar-light .navbar-toggler,
+.navbar-dark .navbar-toggler {
+    background-color: transparent !important;
+    border-color: transparent !important;
+}

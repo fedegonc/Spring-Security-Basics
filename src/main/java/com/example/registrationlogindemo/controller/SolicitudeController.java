@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,17 @@ public class SolicitudeController {
             User usuario = userRepository.findByUsername(username);
             mv.addObject("user", usuario);
         }
+        
+        // Obtener todas las organizaciones (usuarios con rol ROLE_ORGANIZATION)
+        List<User> organizaciones = userRepository.findByRoleName("ROLE_ORGANIZATION");
+        
+        // Agregar mensaje de diagnóstico
+        System.out.println("Organizaciones encontradas: " + organizaciones.size());
+        for (User org : organizaciones) {
+            System.out.println("Organización: " + org.getName() + " (ID: " + org.getId() + ", Username: " + org.getUsername() + ")");
+        }
+        
+        mv.addObject("organizaciones", organizaciones);
         
         // Agregar una nueva solicitud vacía al modelo
         mv.addObject("solicitud", new Solicitude());

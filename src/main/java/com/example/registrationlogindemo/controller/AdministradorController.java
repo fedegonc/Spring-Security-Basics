@@ -1,14 +1,23 @@
 package com.example.registrationlogindemo.controller;
 
-import com.example.registrationlogindemo.entity.*;
-import com.example.registrationlogindemo.repository.*;
-import com.example.registrationlogindemo.service.*;
+import com.example.registrationlogindemo.dto.UserDto;
+import com.example.registrationlogindemo.entity.Report;
+import com.example.registrationlogindemo.entity.Role;
+import com.example.registrationlogindemo.entity.Solicitude;
+import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.repository.ReportRepository;
+import com.example.registrationlogindemo.repository.RoleRepository;
+import com.example.registrationlogindemo.repository.SolicitudeRepository;
+import com.example.registrationlogindemo.repository.UserRepository;
+import com.example.registrationlogindemo.service.SolicitudeService;
+import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +40,9 @@ public class AdministradorController {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private SolicitudeRepository solicitudeRepository;
 
     @Autowired
@@ -39,7 +52,7 @@ public class AdministradorController {
     private UserService userService;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private SolicitudeService solicitudeService;
 
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
@@ -147,6 +160,7 @@ public class AdministradorController {
     @GetMapping("/reports")
     public ModelAndView adminReports() {
         ModelAndView mv = new ModelAndView("admin/reports");
+        
         // Obtener el usuario autenticado actualmente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
@@ -154,11 +168,12 @@ public class AdministradorController {
             String username = userDetails.getUsername();
             // Agregar el nombre de usuario al modelo para dar la bienvenida
             mv.addObject("username", username);
-
         }
-
-        List<Report> reports = reportRepository.findAll();
-        mv.addObject("reports", reports);
+        
+        // Obtener la lista de reportes
+        List<Report> reportes = reportRepository.findAll();
+        mv.addObject("reportes", reportes);
+        
         return mv;
     }
 
@@ -345,5 +360,183 @@ public class AdministradorController {
     public String adminExcluirUser(@PathVariable("id") int id) {
         userService.deleteUserById((long) id);
         return "redirect:/admin/dashboard";
+    }
+
+    @GetMapping("/crear-usuario")
+    public ModelAndView mostrarFormularioCrearUsuario() {
+        ModelAndView mv = new ModelAndView("admin/crear-usuario");
+        // Crear un usuario vacío para el formulario
+        User nuevoUsuario = new User();
+        mv.addObject("user", nuevoUsuario);
+        // Obtener la lista de roles disponibles
+        List<Role> listRoles = userService.listRoles();
+        mv.addObject("listRoles", listRoles);
+        return mv;
+    }
+
+    @PostMapping("/crear-usuario")
+    public String crearUsuario(@ModelAttribute("user") User user,
+                              @RequestParam("password") String password,
+                              @RequestParam(value = "roles", required = false) String roleValue,
+                              RedirectAttributes redirectAttributes) {
+        
+        // Verificar si el usuario ya existe
+        User existingUser = userRepository.findByUsername(user.getUsername());
+        if (existingUser != null) {
+            redirectAttributes.addFlashAttribute("error", "El nombre de usuario ya está en uso");
+            return "redirect:/admin/crear-usuario";
+        }
+        
+        // Verificar si el email ya está en uso
+        User existingEmail = userRepository.findByEmail(user.getEmail());
+        if (existingEmail != null) {
+            redirectAttributes.addFlashAttribute("error", "El email ya está en uso");
+            return "redirect:/admin/crear-usuario";
+        }
+        
+        // Crear un nuevo UserDto para usar el servicio existente
+        UserDto userDto = new UserDto();
+        // Dividir el nombre completo en nombre y apellido
+        String[] nombreCompleto = user.getName().split(" ", 2);
+        userDto.setFirstName(nombreCompleto.length > 0 ? nombreCompleto[0] : user.getName());
+        userDto.setLastName(nombreCompleto.length > 1 ? nombreCompleto[1] : "");
+        userDto.setEmail(user.getEmail());
+        userDto.setPassword(password);
+        
+        // Usar el servicio existente para guardar el usuario
+        userService.saveUser(userDto);
+        
+        // Obtener el usuario recién creado para asignarle el rol específico si es necesario
+        User nuevoUsuario = userRepository.findByEmail(userDto.getEmail());
+        
+        // Si se especificó un rol diferente al predeterminado
+        if (roleValue != null && !roleValue.isEmpty() && !"ROLE_USER".equals(roleValue)) {
+            // Buscar el rol por nombre
+            Role role = roleRepository.findByName(roleValue);
+            
+            // Si no se encuentra por nombre, intentar por ID
+            if (role == null) {
+                try {
+                    Long roleId = Long.parseLong(roleValue);
+                    role = roleRepository.findById(roleId).orElse(null);
+                } catch (NumberFormatException e) {
+                    // No es un ID válido
+                }
+            }
+            
+            // Si se encontró el rol y es diferente al rol de usuario predeterminado
+            if (role != null && !role.getName().equals("ROLE_USER")) {
+                // Limpiar roles existentes (que serían ROLE_USER por defecto)
+                nuevoUsuario.getRoles().clear();
+                // Agregar el nuevo rol
+                nuevoUsuario.getRoles().add(role);
+                // Guardar el usuario con el nuevo rol
+                userRepository.save(nuevoUsuario);
+            }
+        }
+        
+        redirectAttributes.addFlashAttribute("success", "Usuario creado exitosamente");
+        return "redirect:/admin/users";
+    }
+
+    // Método para mostrar el formulario de creación de solicitudes de prueba
+    @GetMapping("/newsolicitude")
+    public ModelAndView mostrarFormularioCrearSolicitud() {
+        ModelAndView mv = new ModelAndView("admin/newsolicitude");
+        
+        // Obtener todas las organizaciones (usuarios con rol ROLE_ORGANIZATION)
+        List<User> organizaciones = userRepository.findByRoleName("ROLE_ORGANIZATION");
+        mv.addObject("organizaciones", organizaciones);
+        
+        // Obtener todos los usuarios regulares para asignar la solicitud
+        List<User> usuarios = userRepository.findByRoleName("ROLE_USER");
+        mv.addObject("usuarios", usuarios);
+        
+        // Agregar una nueva solicitud vacía al modelo
+        mv.addObject("solicitud", new Solicitude());
+        
+        return mv;
+    }
+
+    @PostMapping("/newsolicitude")
+    public String crearSolicitudPrueba(@Valid @ModelAttribute("solicitud") Solicitude solicitud,
+                                   BindingResult result, RedirectAttributes msg,
+                                   @RequestParam("file") MultipartFile imagen,
+                                   @RequestParam("userId") Long userId) {
+        if (result.hasErrors()) {
+            msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
+            return "redirect:/admin/newsolicitude";
+        }
+
+        // Establecer la fecha actual
+        solicitud.setFecha(LocalDateTime.now());
+        
+        // Establecer activo como true
+        solicitud.setActivo(true);
+
+        // Manejar la imagen
+        if (!imagen.isEmpty()) {
+            try {
+                byte[] bytes = imagen.getBytes();
+                Path rutaImagen = Paths.get("src/main/resources/static/img/" + imagen.getOriginalFilename());
+                Files.write(rutaImagen, bytes);
+                solicitud.setImagen(imagen.getOriginalFilename());
+            } catch (IOException e) {
+                msg.addFlashAttribute("error", "Error al guardar la imagen. Inténtalo de nuevo más tarde.");
+                return "redirect:/admin/newsolicitude";
+            }
+        } else {
+            msg.addFlashAttribute("error", "Debe seleccionar una imagen.");
+            return "redirect:/admin/newsolicitude";
+        }
+
+        // Buscar y asignar el usuario seleccionado
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            solicitud.setUser(user);
+            solicitudeRepository.save(solicitud);
+            msg.addFlashAttribute("exito", "Solicitud de prueba creada con éxito para el usuario " + user.getName());
+        } else {
+            msg.addFlashAttribute("error", "No se pudo encontrar el usuario seleccionado.");
+            return "redirect:/admin/newsolicitude";
+        }
+
+        return "redirect:/admin/solicitudes";
+    }
+
+    @GetMapping("/newreport")
+    public ModelAndView mostrarFormularioCrearReporte() {
+        ModelAndView mv = new ModelAndView("admin/newreport");
+        // Obtener usuarios con rol "ROLE_USER" para asignar el reporte
+        List<User> usuarios = userRepository.findByRoleName("ROLE_USER");
+        mv.addObject("usuarios", usuarios);
+        mv.addObject("reporte", new Report());
+        return mv;
+    }
+
+    @PostMapping("/newreport")
+    public String crearReportePrueba(@ModelAttribute("reporte") Report reporte,
+                                    @RequestParam("userId") Long userId,
+                                    RedirectAttributes redirectAttributes) {
+        try {
+            // Buscar el usuario por ID
+            Optional<User> usuarioOpt = userRepository.findById(userId);
+            if (usuarioOpt.isPresent()) {
+                User usuario = usuarioOpt.get();
+                reporte.setUser(usuario);
+                
+                // Guardar el reporte
+                Report savedReport = reportRepository.save(reporte);
+                redirectAttributes.addFlashAttribute("success", "Reporte de prueba #" + savedReport.getId() + " creado exitosamente para " + usuario.getName());
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Usuario no encontrado con ID: " + userId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Para ver el error completo en la consola
+            redirectAttributes.addFlashAttribute("error", "Error al crear el reporte: " + e.getMessage());
+        }
+        
+        return "redirect:/admin/reports";
     }
 }

@@ -37,5 +37,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("DELETE FROM User u WHERE u.id = :userId")
     void deleteUserById(@Param("userId") Long userId);
+    
+    // Método para buscar usuarios por nombre de rol
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName")
+    List<User> findByRoleName(@Param("roleName") String roleName);
 
 }

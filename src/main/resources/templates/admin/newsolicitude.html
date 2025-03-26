@@ -4,13 +4,13 @@
 <head th:replace="~{fragments/layout/head :: head}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Página de nueva solicitud para la aplicación de Reciclaje Sólido">
-    <title>Nueva Solicitud - Reciclaje Sólido</title>
+    <meta name="description" content="Página de creación de solicitudes de prueba para administradores">
+    <title>Crear Solicitud de Prueba - Panel de Administración</title>
 </head>
 
 <body class="app-background d-flex flex-column min-vh-100">
     
-    <div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/headers/admin_header :: header}"></div>
     
     <!-- Contenido principal -->
     <main id="main-content" class="content-container">
@@ -22,15 +22,27 @@
                 <div class="glass-card">
                     <div class="row align-items-center mb-4">
                         <div class="col-lg-8">
-                            <h1 class="display-5 fw-bold mb-3">Nueva Solicitud de Reciclaje</h1>
-                            <p class="lead">Complete los campos para registrar su solicitud de reciclaje.</p>
+                            <h1 class="display-5 fw-bold mb-3">Crear Solicitud de Prueba</h1>
+                            <p class="lead">Complete los campos para crear una solicitud de prueba asignada a un usuario específico.</p>
                         </div>
                         <div class="col-lg-4 mt-4 mt-lg-0 text-center">
                             <i class="bi bi-recycle text-primary" style="font-size: 5rem;"></i>
                         </div>
                     </div>
                     
-                    <form method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
+                    <form method="post" enctype="multipart/form-data" th:action="@{/admin/newsolicitude}" th:object="${solicitud}">
+                        <!-- Selección de usuario -->
+                        <h4 class="mb-3 mt-4"><i class="bi bi-person me-2"></i>Asignar a Usuario</h4>
+                        
+                        <div class="mb-3">
+                            <label for="userId" class="form-label">Usuario <span class="text-danger">*</span></label>
+                            <select class="form-select" id="userId" name="userId" required>
+                                <option value="">Seleccione un usuario</option>
+                                <option th:each="user : ${usuarios}" th:value="${user.id}" th:text="${user.name + ' (' + user.username + ')'}"></option>
+                            </select>
+                            <small class="form-text text-muted">Seleccione el usuario al que se asignará esta solicitud de prueba.</small>
+                        </div>
+                        
                         <!-- Información de material -->
                         <h4 class="mb-3 mt-4"><i class="bi bi-recycle me-2"></i>Información del Material</h4>
                         
@@ -85,6 +97,26 @@
                             </div>
                         </div>
                         
+                        <!-- Información de contacto -->
+                        <h4 class="mb-3 mt-4"><i class="bi bi-telephone me-2"></i>Información de Contacto</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="telefono" class="form-label">Teléfono <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="telefono" th:field="*{telefono}" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="diasDisponibles" class="form-label">Días Disponibles <span class="text-danger">*</span></label>
+                                <select class="form-select" id="diasDisponibles" th:field="*{diasDisponibles}" required>
+                                    <option value="">Seleccione una opción</option>
+                                    <option value="Lunes a Viernes">Lunes a Viernes</option>
+                                    <option value="Fines de Semana">Fines de Semana</option>
+                                    <option value="Cualquier día">Cualquier día</option>
+                                </select>
+                            </div>
+                        </div>
+                        
                         <!-- Información de recolección -->
                         <h4 class="mb-3 mt-4"><i class="bi bi-calendar-check me-2"></i>Información de Recolección</h4>
                         
@@ -95,69 +127,27 @@
                                     <option value="">Seleccione una opción</option>
                                     <option value="Mañana (8:00 - 12:00)">Mañana (8:00 - 12:00)</option>
                                     <option value="Tarde (13:00 - 17:00)">Tarde (13:00 - 17:00)</option>
-                                    <option value="Noche (18:00 - 21:00)">Noche (18:00 - 21:00)</option>
+                                    <option value="Noche (18:00 - 20:00)">Noche (18:00 - 20:00)</option>
                                 </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="diasDisponibles" class="form-label">Días Disponibles <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="diasDisponibles" th:field="*{diasDisponibles}" required 
-                                       placeholder="Ej: Lunes, Miércoles, Viernes">
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="telefono" class="form-label">Teléfono <span class="text-danger">*</span></label>
-                                <input type="tel" class="form-control" id="telefono" th:field="*{telefono}" required>
                             </div>
                             
                             <div class="col-md-6 mb-3">
                                 <label for="destino" class="form-label">Destino <span class="text-danger">*</span></label>
                                 <select class="form-select" id="destino" th:field="*{destino}" required>
-                                    <option value="">Seleccione una organización</option>
-                                    <option th:each="org : ${organizaciones}" 
-                                            th:value="${org.username}" 
-                                            th:text="${org.name + ' (' + org.username + ')'}">
-                                        Nombre de la organización
-                                    </option>
+                                    <option value="">Seleccione una opción</option>
+                                    <option th:each="org : ${organizaciones}" th:value="${org.name}" th:text="${org.name}"></option>
                                 </select>
-                                <div class="form-text text-info" th:if="${organizaciones == null || #lists.isEmpty(organizaciones)}">
-                                    No hay organizaciones disponibles. Por favor, contacte al administrador.
-                                </div>
                             </div>
                         </div>
                         
-                        <!-- Información adicional -->
-                        <h4 class="mb-3 mt-4"><i class="bi bi-info-circle me-2"></i>Información Adicional</h4>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="peso" class="form-label">Peso (aproximado)</label>
-                                <input type="text" class="form-control" id="peso" th:field="*{peso}" 
-                                       placeholder="Ej: 5kg, 10kg, etc.">
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="tamanio" class="form-label">Tamaño (aproximado)</label>
-                                <input type="text" class="form-control" id="tamanio" th:field="*{tamanio}" 
-                                       placeholder="Ej: pequeño, mediano, grande">
-                            </div>
-                        </div>
-                        
-                        <!-- Botones de acción -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a th:href="@{/user/welcome}" class="btn-modern">
-                                <i class="bi bi-x-circle me-2"></i>Cancelar
+                            <a th:href="@{/admin/solicitudes}" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-x-circle me-1"></i> Cancelar
                             </a>
-                            <button type="submit" class="btn-modern btn-primary-modern">
-                                <i class="bi bi-check-circle me-2"></i>Guardar Solicitud
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-1"></i> Crear Solicitud de Prueba
                             </button>
                         </div>
-                        
-                        <p class="small text-muted mt-3">
-                            <i class="bi bi-info-circle me-1"></i> Los campos marcados con <span class="text-danger">*</span> son obligatorios
-                        </p>
                     </form>
                 </div>
             </section>

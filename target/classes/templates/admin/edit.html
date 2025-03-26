@@ -7,7 +7,7 @@
 
 <body class="bg-light d-flex flex-column min-vh-100">
 
-<div th:replace="~{fragments/admin/navbar-admin :: navbar-admin}"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
@@ -72,15 +72,6 @@
                                         <label class="form-check-label" th:for="${'role-' + role.id}" th:text="${role.name}"></label>
                                     </div>
                                 </th:block>
-                                
-                                <!-- Añadir explícitamente ROLE_ORGANIZATION -->
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="roles" 
-                                           id="role-organization" 
-                                           value="ROLE_ORGANIZATION" 
-                                           th:checked="${user.roles != null && user.roles.?[name=='ROLE_ORGANIZATION'].size > 0}">
-                                    <label class="form-check-label" for="role-organization">ROLE_ORGANIZATION</label>
-                                </div>
                             </div>
                         </div>
 

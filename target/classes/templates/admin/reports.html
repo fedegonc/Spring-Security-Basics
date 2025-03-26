@@ -7,7 +7,7 @@
 
 <body class="app-background d-flex flex-column min-vh-100">
 
-<div th:replace="~{fragments/admin/navbar-admin :: navbar-admin}"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <!-- Contenido principal -->
 <div class="container mt-4 flex-grow-1">
@@ -90,50 +90,48 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="report: ${reports}" class="align-middle">
-                                <td th:text="${report.id}" class="fw-bold"></td>
-                                <td th:text="${report.username}"></td>
-                                <td th:text="${report.asunto}"></td>
-                                <td>
-                                    <span class="badge" th:classappend="${
-                                        report.status == 'RESUELTO' ? 'bg-success' : 
-                                        report.status == 'PENDIENTE' ? 'bg-warning' : 
-                                        report.status == 'CERRADO' ? 'bg-secondary' : 'bg-danger'
-                                    }" th:text="${report.status}">PENDIENTE</span>
-                                </td>
-                                <td th:text="${#dates.format(report.fecha, 'dd/MM/yyyy')}">01/01/2025</td>
-                                <td class="text-center">
-                                    <a class="btn btn-sm btn-outline-primary me-1" th:href="@{/admin/reportview/{id}(id=${report.id})}">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a class="btn btn-sm btn-outline-success me-1" th:href="@{/admin/reportedit/{id}(id=${report.id})}">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a class="btn btn-sm btn-outline-danger" th:href="@{/admin/reportdelete/{id}(id=${report.id})}"
-                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este reporte?');">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <!-- Datos ficticios para previsualizar -->
-                            <tr class="align-middle" th:if="${reports == null or #lists.isEmpty(reports)}">
-                                <td class="fw-bold">1</td>
-                                <td>usuario1</td>
-                                <td>Problema con el sistema de reciclaje</td>
+                            <tr th:each="reporte: ${reportes}" class="align-middle">
+                                <td th:text="${reporte.id}" class="fw-bold"></td>
+                                <td th:text="${reporte.user.name}"></td>
+                                <td th:text="${reporte.problema}"></td>
                                 <td>
                                     <span class="badge bg-warning">PENDIENTE</span>
                                 </td>
+                                <td>[[${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}]]</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a class="btn btn-outline-primary btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" th:href="@{/admin/reportview/{id}(id=${reporte.id})}">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a class="btn btn-outline-success btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" th:href="@{/admin/reportedit/{id}(id=${reporte.id})}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a class="btn btn-outline-danger btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" th:href="@{/admin/reportdelete/{id}(id=${reporte.id})}"
+                                           onclick="return confirm('¿Estás seguro de que deseas eliminar este reporte?');">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Datos ficticios para previsualizar -->
+                            <tr class="align-middle" th:if="${reportes == null or #lists.isEmpty(reportes)}">
+                                <td class="fw-bold">1</td>
+                                <td>usuario1</td>
+                                <td>Problema con el sistema de reciclaje</td>
+                                <td><span class="badge bg-warning">PENDIENTE</span></td>
                                 <td>22/03/2025</td>
                                 <td class="text-center">
-                                    <a class="btn btn-sm btn-outline-primary me-1" href="#">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a class="btn btn-sm btn-outline-success me-1" href="#">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a class="btn btn-sm btn-outline-danger" href="#">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a class="btn btn-outline-primary btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" href="#">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a class="btn btn-outline-success btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" href="#">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a class="btn btn-outline-danger btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" href="#">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

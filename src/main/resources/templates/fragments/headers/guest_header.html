@@ -10,17 +10,55 @@
                     <i class="bi bi-recycle"></i> RSU - Residuo Sólido Urbano
                 </a>
                 
-                <!-- Botón para menú responsive -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
-                    <span class="navbar-toggler-icon"></span>
+                <!-- Botón para menú responsive con ícono de hamburguesa moderno (SVG) -->
+                <button class="navbar-toggler bg-black/60 backdrop-blur-sm border border-white/10 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
+                    <svg class="h-6 w-6" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
                 </button>
                 
                 <!-- Contenido del navbar -->
                 <div class="collapse navbar-collapse" id="navbarGuestContent">
+                    <ul class="navbar-nav me-auto">
+                        <!-- Inicio -->
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
+                                <i class="bi bi-house"></i> Inicio
+                            </a>
+                        </li>
+                        
+                        <!-- Acerca de -->
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/about}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
+                                <i class="bi bi-info-circle"></i> Acerca de
+                            </a>
+                        </li>
+                        
+                        <!-- Contacto -->
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/contact}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
+                                <i class="bi bi-envelope"></i> Contacto
+                            </a>
+                        </li>
+                        
+                        <!-- Información -->
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/information}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
+                                <i class="bi bi-book"></i> Información
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <!-- Login y Registro -->
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/login}">
+                            <a class="nav-link btn-primary-modern px-3 py-2 me-2" th:href="@{/login}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
                                 <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn-outline-primary-modern px-3 py-2" th:href="@{/register}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
+                                <i class="bi bi-person-plus"></i> Registrarse
                             </a>
                         </li>
                     </ul>
@@ -28,8 +66,34 @@
             </div>
         </nav>
         
-        <!-- Script de Bootstrap para asegurar que los menús desplegables funcionen -->
+        <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Script simple para cerrar el menú hamburguesa al hacer clic en cualquier enlace
+            document.addEventListener('DOMContentLoaded', function() {
+                // Seleccionar el menú colapsable
+                const navbarCollapse = document.getElementById('navbarGuestContent');
+                
+                // Verificar si navbarCollapse existe
+                if (navbarCollapse) {
+                    // Crear una instancia de collapse de Bootstrap
+                    const bsCollapse = new bootstrap.Collapse(navbarCollapse, {toggle: false});
+                    
+                    // Seleccionar todos los enlaces dentro del menú
+                    const navLinks = navbarCollapse.querySelectorAll('a');
+                    
+                    // Añadir evento de clic a cada enlace
+                    navLinks.forEach(function(link) {
+                        link.addEventListener('click', function() {
+                            // Si el menú está abierto (tiene la clase 'show'), cerrarlo
+                            if (navbarCollapse.classList.contains('show')) {
+                                bsCollapse.hide();
+                            }
+                        });
+                    });
+                }
+            });
+        </script>
     </div>
 </body>
 </html>
