@@ -97,10 +97,11 @@
                                 <option value="" selected disabled>Selecciona un rol</option>
                                 <option th:each="role : ${listRoles}" th:value="${role.name}" th:text="${role.name}"></option>
                             </select>
+                            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#nuevoRolModal">
+                                <i class="bi bi-plus-circle"></i>
+                            </button>
                         </div>
-                        <div class="invalid-feedback">
-                            Por favor, selecciona un rol.
-                        </div>
+                        <div class="form-text">Selecciona un rol existente o crea uno nuevo haciendo clic en el botón +.</div>
                     </div>
                     
                     <!-- Botones de acción -->
@@ -114,6 +115,36 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para crear un nuevo rol -->
+<div class="modal fade" id="nuevoRolModal" tabindex="-1" aria-labelledby="nuevoRolModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nuevoRolModalLabel">Crear Nuevo Rol</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/admin/crear-rol}" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="roleName" class="form-label">Nombre del Rol</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                            <input type="text" class="form-control" id="roleName" name="roleName" 
+                                   placeholder="ej: ROLE_NOMBRE" required>
+                        </div>
+                        <div class="form-text">El nombre del rol debe comenzar con "ROLE_" seguido del nombre (ej: ROLE_ADMIN).</div>
+                    </div>
+                    <input type="hidden" name="returnUrl" value="/admin/crear-usuario">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Crear Rol</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

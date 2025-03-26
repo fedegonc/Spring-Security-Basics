@@ -11,6 +11,7 @@ import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -367,6 +368,7 @@ public class AdministradorController {
     // Método para procesar la edición de un usuario
     @PostMapping("/edit/{id}")
     public String adminEditUserBanco(@PathVariable("id") long id,
+                                   @RequestParam(value = "username", required = false) String username,
                                    @RequestParam(value = "name", required = false) String name,
                                    @RequestParam(value = "email", required = false) String email,
                                    @RequestParam(value = "roles", required = false) String roleValue,
@@ -376,6 +378,7 @@ public class AdministradorController {
         
         if (userEdit != null) {
             // Actualizar los datos del usuario con los nuevos valores
+            if (username != null) userEdit.setUsername(username);
             if (name != null) userEdit.setName(name);
             if (email != null) userEdit.setEmail(email);
             
@@ -384,30 +387,15 @@ public class AdministradorController {
                 // Limpiar roles existentes
                 userEdit.getRoles().clear();
                 
-                // Buscar el rol, primero por nombre exacto
+                // Buscar el rol por nombre
                 Role role = roleRepository.findByName(roleValue);
-                
-                // Si no se encuentra por nombre y es ROLE_ORGANIZATION, crear el rol
-                if (role == null && "ROLE_ORGANIZATION".equals(roleValue)) {
-                    role = new Role();
-                    role.setName("ROLE_ORGANIZATION");
-                    role = roleRepository.save(role); // Guardar para obtener el ID
-                }
-                // Si no, intentar por ID
-                else if (role == null) {
-                    try {
-                        Long roleId = Long.parseLong(roleValue);
-                        role = roleRepository.findById(roleId).orElse(null);
-                    } catch (NumberFormatException e) {
-                        // No es un ID, dejamos role como null
-                    }
-                }
                 
                 // Si se encontró el rol, añadirlo al usuario
                 if (role != null) {
                     userEdit.getRoles().add(role);
                 } else {
                     msg.addFlashAttribute("error", "Rol no encontrado: " + roleValue + ". Verifique que exista en la base de datos.");
+                    return "redirect:/admin/edit/" + id;
                 }
             }
 
@@ -604,5 +592,31 @@ public class AdministradorController {
         }
         
         return "redirect:/admin/reports";
+    }
+
+    @PostMapping("/crear-rol")
+    public String crearRol(@RequestParam("roleName") String roleName, 
+                          @RequestParam(value = "returnUrl", required = false) String returnUrl,
+                          RedirectAttributes redirectAttributes) {
+        // Verificar si el rol ya existe
+        Role existingRole = roleRepository.findByName(roleName);
+        if (existingRole != null) {
+            redirectAttributes.addFlashAttribute("warning", "El rol '" + roleName + "' ya existe");
+        } else {
+            // Crear el nuevo rol
+            Role nuevoRol = new Role();
+            nuevoRol.setName(roleName);
+            roleRepository.save(nuevoRol);
+            
+            redirectAttributes.addFlashAttribute("success", "Rol '" + roleName + "' creado exitosamente");
+        }
+        
+        // Si se proporciona una URL de retorno, redireccionar a ella
+        if (returnUrl != null && !returnUrl.isEmpty()) {
+            return "redirect:" + returnUrl;
+        }
+        
+        // Por defecto, redirigir a la lista de usuarios
+        return "redirect:/admin/users";
     }
 }

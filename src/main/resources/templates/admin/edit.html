@@ -62,23 +62,58 @@
 
                         <div class="mb-3">
                             <label class="form-label">Roles:</label>
-                            <div class="mt-2">
-                                <th:block th:each="role: ${listRoles}">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="roles" 
-                                               th:id="${'role-' + role.id}" 
-                                               th:value="${role.name}" 
-                                               th:checked="${user.roles.contains(role)}">
-                                        <label class="form-check-label" th:for="${'role-' + role.id}" th:text="${role.name}"></label>
-                                    </div>
-                                </th:block>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-shield"></i></span>
+                                <select class="form-select" id="roles" name="roles" required>
+                                    <option value="" selected disabled>Selecciona un rol</option>
+                                    <th:block th:each="role: ${listRoles}">
+                                        <option th:value="${role.name}" 
+                                                th:text="${role.name}"
+                                                th:selected="${user.roles.contains(role)}">
+                                        </option>
+                                    </th:block>
+                                </select>
+                                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#nuevoRolModal">
+                                    <i class="bi bi-plus-circle"></i>
+                                </button>
                             </div>
+                            <div class="form-text">Selecciona el rol que deseas asignar al usuario o crea uno nuevo.</div>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para crear un nuevo rol -->
+<div class="modal fade" id="nuevoRolModal" tabindex="-1" aria-labelledby="nuevoRolModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nuevoRolModalLabel">Crear Nuevo Rol</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/admin/crear-rol}" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="roleName" class="form-label">Nombre del Rol</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                            <input type="text" class="form-control" id="roleName" name="roleName" 
+                                   placeholder="ej: ROLE_NOMBRE" required>
+                        </div>
+                        <div class="form-text">El nombre del rol debe comenzar con "ROLE_" seguido del nombre (ej: ROLE_ADMIN).</div>
+                    </div>
+                    <input type="hidden" name="returnUrl" value="/admin/edit/[[${user.id}]]">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Crear Rol</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
