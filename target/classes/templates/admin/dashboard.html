@@ -53,7 +53,7 @@
                         <div class="col-md-12 mb-4">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="mb-0"><i class="bi bi-people me-2"></i>Usuarios registrados por día</h5>
+                                    <h5 class="mb-0"><i class="bi bi-people me-2"></i>Usuarios registrados</h5>
                                 </div>
                                 <div class="card-body">
                                     <canvas id="usersChart" height="200"></canvas>
@@ -65,7 +65,7 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="mb-0"><i class="bi bi-clipboard-plus me-2"></i>Solicitudes por día</h5>
+                                    <h5 class="mb-0"><i class="bi bi-clipboard-plus me-2"></i>Solicitudes</h5>
                                 </div>
                                 <div class="card-body">
                                     <canvas id="solicitudesChart" height="200"></canvas>
@@ -94,18 +94,22 @@
     
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
-    <script>
-        // Datos para las gráficas (simulados)
+    <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {
-            // Gráfica de usuarios registrados por día
+            // Datos básicos para las gráficas
+            var totalUsuarios = /*[[${totalUsers}]]*/ 0;
+            var totalSolicitudes = /*[[${totalSolicitudes}]]*/ 0;
+            var totalReportes = /*[[${totalReportes}]]*/ 0;
+            
+            // Gráfica de usuarios - Mostrar el total actual
             var usersCtx = document.getElementById('usersChart').getContext('2d');
             var usersChart = new Chart(usersCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+                    labels: ['Total de Usuarios'],
                     datasets: [{
                         label: 'Usuarios registrados',
-                        data: [5, 8, 12, 6, 10, 4, 7],
+                        data: [totalUsuarios],
                         backgroundColor: 'rgba(75, 192, 192, 0.5)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
@@ -121,19 +125,18 @@
                 }
             });
             
-            // Gráfica de solicitudes por día
+            // Gráfica de solicitudes - Mostrar el total actual
             var solicitudesCtx = document.getElementById('solicitudesChart').getContext('2d');
             var solicitudesChart = new Chart(solicitudesCtx, {
-                type: 'line',
+                type: 'bar',
                 data: {
-                    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+                    labels: ['Total de Solicitudes'],
                     datasets: [{
-                        label: 'Solicitudes nuevas',
-                        data: [3, 5, 2, 7, 4, 1, 2],
+                        label: 'Solicitudes',
+                        data: [totalSolicitudes],
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 2,
-                        tension: 0.3
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -146,29 +149,27 @@
                 }
             });
             
-            // Gráfica de reportes de problemas
+            // Gráfica de reportes - Mostrar el total actual
             var reportesCtx = document.getElementById('reportesChart').getContext('2d');
             var reportesChart = new Chart(reportesCtx, {
-                type: 'doughnut',
+                type: 'bar',
                 data: {
-                    labels: ['Pendientes', 'En proceso', 'Resueltos'],
+                    labels: ['Total de Reportes'],
                     datasets: [{
-                        data: [4, 2, 2],
-                        backgroundColor: [
-                            'rgba(255, 206, 86, 0.7)',
-                            'rgba(54, 162, 235, 0.7)',
-                            'rgba(75, 192, 192, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(75, 192, 192, 1)'
-                        ],
+                        label: 'Reportes',
+                        data: [totalReportes],
+                        backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
                         borderWidth: 1
                     }]
                 },
                 options: {
-                    responsive: true
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
             });
             

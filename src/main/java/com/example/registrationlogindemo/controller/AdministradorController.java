@@ -29,8 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -70,11 +69,63 @@ public class AdministradorController {
         int totalSolicitudes = solicitudes.size();
         int totalReportes = reportes.size();
         
+        // Procesar datos para gráficas
+        Map<String, Integer> usuariosPorDia = new HashMap<>();
+        Map<String, Integer> solicitudesPorDia = new HashMap<>();
+        Map<String, Integer> reportesPorEstado = new HashMap<>();
+        
+        // Inicializar días de la semana
+        String[] diasSemana = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
+        for (String dia : diasSemana) {
+            usuariosPorDia.put(dia, 0);
+            solicitudesPorDia.put(dia, 0);
+        }
+        
+        // Inicializar estados de reportes
+        reportesPorEstado.put("Pendientes", 0);
+        reportesPorEstado.put("En proceso", 0);
+        reportesPorEstado.put("Resueltos", 0);
+        
+        // Simular datos de usuarios por día (en una implementación real, se obtendría de la base de datos)
+        usuariosPorDia.put("Lunes", 5);
+        usuariosPorDia.put("Martes", 8);
+        usuariosPorDia.put("Miércoles", 12);
+        usuariosPorDia.put("Jueves", 6);
+        usuariosPorDia.put("Viernes", 10);
+        usuariosPorDia.put("Sábado", 4);
+        usuariosPorDia.put("Domingo", 7);
+        
+        // Simular datos de solicitudes por día
+        solicitudesPorDia.put("Lunes", 3);
+        solicitudesPorDia.put("Martes", 5);
+        solicitudesPorDia.put("Miércoles", 2);
+        solicitudesPorDia.put("Jueves", 7);
+        solicitudesPorDia.put("Viernes", 4);
+        solicitudesPorDia.put("Sábado", 1);
+        solicitudesPorDia.put("Domingo", 2);
+        
+        // Contar reportes por estado
+        int pendientes = 0;
+        int enProceso = 0;
+        int resueltos = 0;
+        
+        // En una implementación real, los reportes tendrían un campo de estado
+        // Por ahora, asumimos que todos están pendientes
+        pendientes = reportes.size();
+        
+        reportesPorEstado.put("Pendientes", pendientes);
+        reportesPorEstado.put("En proceso", enProceso);
+        reportesPorEstado.put("Resueltos", resueltos);
+        
         // Agregar datos al modelo
         mv.addObject("users", users);
         mv.addObject("totalUsers", totalUsers);
         mv.addObject("totalSolicitudes", totalSolicitudes);
         mv.addObject("totalReportes", totalReportes);
+        mv.addObject("usuariosPorDia", usuariosPorDia);
+        mv.addObject("solicitudesPorDia", solicitudesPorDia);
+        mv.addObject("reportesPorEstado", reportesPorEstado);
+        mv.addObject("diasSemana", diasSemana);
         
         return mv;
     }
@@ -258,7 +309,7 @@ public class AdministradorController {
                     changeSolicitude.setImagen(imagem.getOriginalFilename());
                 }
             } catch (IOException e) {
-                msg.addFlashAttribute("error", "Error al procesar la imagen: " + e.getMessage());
+                msg.addFlashAttribute("error", "Error al guardar la imagen: " + e.getMessage());
             }
             // Guardar la solicitud editada en la base de datos
             solicitudeRepository.save(changeSolicitude);
