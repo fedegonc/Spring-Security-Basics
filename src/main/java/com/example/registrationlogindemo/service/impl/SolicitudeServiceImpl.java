@@ -6,6 +6,7 @@ import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,7 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     
     // Implementación del método para obtener solicitudes pendientes
     @Override
+    @Transactional
     public List<Solicitude> getSolicitudesPendientes() {
         logger.info("Iniciando getSolicitudesPendientes");
         try {

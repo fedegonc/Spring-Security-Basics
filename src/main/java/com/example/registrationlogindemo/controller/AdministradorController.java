@@ -611,18 +611,19 @@ public class AdministradorController {
             redirectAttributes.addFlashAttribute("success", "Rol '" + roleName + "' creado exitosamente");
         }
         
-        // Siempre redireccionar a una página GET, nunca a una acción POST
-        // Si la URL de retorno es para crear usuario, vamos a la página de creación
-        if (returnUrl != null && returnUrl.equals("/admin/crear-usuario")) {
-            return "redirect:/admin/crear-usuario";
-        }
-        
-        // Si la URL contiene edit, extraemos el ID y redireccionamos a la edición
-        if (returnUrl != null && returnUrl.contains("/admin/edit/")) {
-            String[] parts = returnUrl.split("/");
-            if (parts.length > 3) {
-                String userId = parts[parts.length - 1];
-                return "redirect:/admin/edit/" + userId;
+        // Manejar la redirección de forma más general
+        if (returnUrl != null && !returnUrl.isEmpty()) {
+            // Siempre redirige a una URL GET válida
+            // Verificar si la URL comienza con '/' para asegurarnos de que es una URL interna
+            if (returnUrl.startsWith("/")) {
+                // Si contiene verbo HTTP o parámetros, redirigir a la ruta base
+                if (returnUrl.contains("?") || returnUrl.contains("POST") || returnUrl.contains("DELETE")) {
+                    String baseUrl = returnUrl.split("\\?")[0];
+                    return "redirect:" + baseUrl;
+                }
+                
+                // URL segura, redirigir directamente
+                return "redirect:" + returnUrl;
             }
         }
         
