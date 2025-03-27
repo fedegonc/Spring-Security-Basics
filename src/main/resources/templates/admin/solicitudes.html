@@ -76,7 +76,9 @@
                             <td th:text="${solicitud.barrio + ', ' + solicitud.calle + ' ' + solicitud.numeroDeCasa}"></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Acciones para solicitud">
-                                    <a class="btn btn-sm btn-primary" th:href="@{/admin/editsolicitude/{id}(id=${solicitud.id})}" aria-label="Editar solicitud">
+                                    <a class="btn btn-sm btn-primary" 
+                                       th:href="${isOrganizacion != null && isOrganizacion ? '/org/editsolicitude/' + solicitud.id : '/admin/editsolicitude/' + solicitud.id}" 
+                                       aria-label="Editar solicitud">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                     <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${solicitud.id}" aria-label="Eliminar solicitud">
@@ -97,7 +99,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <a th:href="@{/admin/deletsolicitude/{id}(id=${solicitud.id})}" class="btn btn-danger">Eliminar</a>
+                                                <a th:href="${isOrganizacion != null && isOrganizacion ? '/org/deletsolicitude/' + solicitud.id : '/admin/deletsolicitude/' + solicitud.id}" class="btn btn-danger">Eliminar</a>
                                             </div>
                                         </div>
                                     </div>
@@ -178,7 +180,9 @@
                                 th:text="${solicitud.estado}">
                             </span>
                             <div class="btn-group" role="group" aria-label="Acciones para solicitud">
-                                <a class="btn btn-sm btn-primary" th:href="@{/admin/editsolicitude/{id}(id=${solicitud.id})}" aria-label="Editar solicitud">
+                                <a class="btn btn-sm btn-primary" 
+                                   th:href="${isOrganizacion != null && isOrganizacion ? '/org/editsolicitude/' + solicitud.id : '/admin/editsolicitude/' + solicitud.id}" 
+                                   aria-label="Editar solicitud">
                                     <i class="bi bi-pencil-square me-1"></i>Editar
                                 </a>
                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModalCard' + ${solicitud.id}" aria-label="Eliminar solicitud">
@@ -200,7 +204,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <a th:href="@{/admin/deletsolicitude/{id}(id=${solicitud.id})}" class="btn btn-danger">Eliminar</a>
+                                        <a th:href="${isOrganizacion != null && isOrganizacion ? '/org/deletsolicitude/' + solicitud.id : '/admin/deletsolicitude/' + solicitud.id}" class="btn btn-danger">Eliminar</a>
                                     </div>
                                 </div>
                             </div>

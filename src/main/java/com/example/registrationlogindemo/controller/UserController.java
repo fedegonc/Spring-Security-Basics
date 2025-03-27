@@ -200,11 +200,40 @@ public class UserController {
             
             reportRepository.save(report);
             
-            attributes.addAttribute("exito", "Tu reporte ha sido enviado correctamente. Lo revisaremos lo antes posible.");
-            return "redirect:/user/report-problem";
+            attributes.addFlashAttribute("success", "El problema ha sido reportado correctamente");
+            return "redirect:/user/welcome";
         } catch (Exception e) {
-            attributes.addAttribute("error", "Ha ocurrido un error al enviar el reporte: " + e.getMessage());
+            attributes.addFlashAttribute("error", "Ocurrió un error al reportar el problema: " + e.getMessage());
             return "redirect:/user/report-problem";
         }
+    }
+    
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("currentPassword") String currentPassword,
+                                @RequestParam("newPassword") String newPassword,
+                                @RequestParam("confirmPassword") String confirmPassword,
+                                RedirectAttributes attributes) {
+        
+        // Verificar que las contraseñas nuevas coincidan
+        if (!newPassword.equals(confirmPassword)) {
+            attributes.addFlashAttribute("error", "La nueva contraseña y la confirmación no coinciden");
+            return "redirect:/user/profile";
+        }
+        
+        // Obtener el usuario autenticado
+        User currentUser = getAuthenticatedUser();
+        if (currentUser == null) {
+            attributes.addFlashAttribute("error", "Usuario no encontrado");
+            return "redirect:/login";
+        }
+        
+        // Cambiar la contraseña
+        if (userService.changePassword(currentUser, currentPassword, newPassword)) {
+            attributes.addFlashAttribute("success", "La contraseña se ha actualizado correctamente");
+        } else {
+            attributes.addFlashAttribute("error", "La contraseña actual es incorrecta");
+        }
+        
+        return "redirect:/user/profile";
     }
 }

@@ -95,6 +95,46 @@
                     </div>
                 </div>
                 
+                <!-- Sección de cambio de contraseña -->
+                <div class="row mt-4">
+                    <div class="col-md-12 mb-4">
+                        <div class="glass-card">
+                            <h4 class="card-title mb-3"><i class="bi bi-key me-2"></i>Cambiar Contraseña</h4>
+                            
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Contraseña Actual <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                                    <input type="password" id="currentPassword" class="form-control" name="currentPassword" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">Nueva Contraseña <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                    <input type="password" id="newPassword" class="form-control" name="newPassword" required>
+                                </div>
+                                <small class="text-muted">La contraseña debe tener al menos 8 caracteres y contener letras y números.</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                                    <input type="password" id="confirmPassword" class="form-control" name="confirmPassword" required>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" onclick="submitPasswordChange()">
+                                    <i class="bi bi-check-circle me-2"></i>Actualizar Contraseña
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Botones de acción -->
                 <div class="d-flex justify-content-between mt-3">
                     <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary">
@@ -110,6 +150,13 @@
         </section>
     </div>
 </main>
+
+<!-- Formulario oculto para cambio de contraseña -->
+<form id="passwordForm" method="post" th:action="@{/admin/change-password}" style="display: none;">
+    <input type="hidden" name="currentPassword" id="hiddenCurrentPassword">
+    <input type="hidden" name="newPassword" id="hiddenNewPassword">
+    <input type="hidden" name="confirmPassword" id="hiddenConfirmPassword">
+</form>
 
 <!-- Footer -->
 <div th:replace="~{fragments/layout/footer :: footer}"></div>
@@ -135,6 +182,36 @@
             }
             reader.readAsDataURL(file);
         }
+    }
+    
+    function submitPasswordChange() {
+        // Validación básica
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            alert('Por favor, complete todos los campos de contraseña.');
+            return false;
+        }
+        
+        if (newPassword !== confirmPassword) {
+            alert('La nueva contraseña y la confirmación no coinciden.');
+            return false;
+        }
+        
+        if (newPassword.length < 8) {
+            alert('La nueva contraseña debe tener al menos 8 caracteres.');
+            return false;
+        }
+        
+        // Transferir valores al formulario oculto
+        document.getElementById('hiddenCurrentPassword').value = currentPassword;
+        document.getElementById('hiddenNewPassword').value = newPassword;
+        document.getElementById('hiddenConfirmPassword').value = confirmPassword;
+        
+        // Enviar formulario
+        document.getElementById('passwordForm').submit();
     }
 </script>
 </body>

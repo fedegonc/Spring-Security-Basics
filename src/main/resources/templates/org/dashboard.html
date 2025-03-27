@@ -1,127 +1,67 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head th:replace="~{fragments/layout/head :: head}">
     <title>Dashboard de Organización</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Glass card header styles -->
-    <link rel="stylesheet" th:href="@{/css/header-glass.css}">
-    <style>
-        .sidebar {
-            background-color: #f8f9fa;
-            min-height: 100vh;
-        }
-    </style>
 </head>
 
-<body>
+<body class="app-background d-flex flex-column min-vh-100">
     <!-- Navbar con estilo glass card -->
-    <nav class="navbar navbar-expand-lg navbar-glass org-navbar">
-        <div class="container">
-            <a class="navbar-brand" th:href="@{/org/dashboard}">
-                <i class="bi bi-recycle"></i> RSU - Residuo Sólido Urbano
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-building"></i> 
-                            <span th:text="${#authentication.principal.username}">Organización</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" th:href="@{/org/profile}">
-                                    <i class="bi bi-pencil-square"></i> Perfil de Organización
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" th:href="@{/logout}">
-                                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div th:replace="~{fragments/headers/org_header :: header}"></div>
 
-    <!-- Contenido Principal -->
     <div class="container py-4">
         <!-- Alertas y mensajes -->
-        <div th:if="${success != null}" class="alert alert-success alert-dismissible fade show" role="alert">
-            <span th:text="${success}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
-            <span th:text="${error}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        <div th:replace="~{fragments/messages :: message-alerts}"></div>
 
-        <!-- Dashboard -->
+        <!-- Contenido principal -->
         <div class="row">
             <div class="col-md-4">
                 <!-- Panel de información de la organización -->
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0">Información de la Organización</h5>
+                <div class="card mb-4 glass-card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-building me-2"></i>Información de la Organización</h5>
                     </div>
                     <div class="card-body">
-                        <div class="d-flex flex-column align-items-center text-center">
-                            <img th:if="${user.profileImage != null}" th:src="@{'/img/' + ${user.profileImage}}" alt="Perfil" class="rounded-circle" width="150">
-                            <img th:unless="${user.profileImage != null}" src="/img/default-profile.jpg" alt="Perfil predeterminado" class="rounded-circle" width="150">
-                            <div class="mt-3">
-                                <h4 th:text="${user.name}">Nombre de la Organización</h4>
-                                <p class="text-secondary mb-1" th:text="${user.email}">correo@ejemplo.com</p>
-                            </div>
+                        <div class="text-center mb-3">
+                            <img th:if="${user != null && user.profileImage != null}" th:src="@{'/img/' + ${user.profileImage}}" alt="Logo de la Organización" 
+                                 class="img-thumbnail rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                            <img th:unless="${user != null && user.profileImage != null}" src="/img/descarga.jpeg" alt="Avatar por defecto" 
+                                 class="img-thumbnail rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
                         </div>
-                    </div>
-                </div>
-
-                <!-- Estadísticas -->
-                <div class="card mb-4">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="card-title mb-0">Estadísticas</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mb-3">
-                            <span>Solicitudes Pendientes</span>
-                            <span class="badge bg-primary rounded-pill" th:text="${solicitudesPendientes.size()}">0</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-3">
-                            <span>Solicitudes Procesadas</span>
-                            <span class="badge bg-success rounded-pill">0</span>
+                        <h5 th:if="${user != null}" th:text="${user.name}">Nombre de la Organización</h5>
+                        <h5 th:unless="${user != null}">Organización</h5>
+                        
+                        <p class="text-muted" th:if="${user != null && user.email != null}">
+                            <i class="bi bi-envelope"></i> <span th:text="${user.email}">email@example.com</span>
+                        </p>
+                        <hr>
+                        <p th:if="${user != null}"><strong>Usuario:</strong> <span th:text="${user.username}">username</span></p>
+                        <!-- La propiedad registrationDate no existe en la entidad User -->
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/org/profile}" class="btn btn-outline-primary">
+                                <i class="bi bi-pencil-square me-2"></i>Editar Perfil
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-8">
-                <!-- Solicitudes pendientes -->
-                <div class="card">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="card-title mb-0">Solicitudes Pendientes</h5>
+                <!-- Panel de solicitudes pendientes -->
+                <div class="card mb-4 glass-card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-hourglass-split me-2"></i>Solicitudes Pendientes</h5>
                     </div>
                     <div class="card-body">
-                        <div th:if="${solicitudesPendientes.empty}" class="alert alert-info">
-                            No hay solicitudes pendientes en este momento.
+                        <div th:if="${solicitudesPendientes == null || #lists.isEmpty(solicitudesPendientes)}" class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>No hay solicitudes pendientes en este momento.
                         </div>
-                        <div th:unless="${solicitudesPendientes.empty}" class="table-responsive">
-                            <table class="table table-hover">
+                        <div th:if="${solicitudesPendientes != null && !#lists.isEmpty(solicitudesPendientes)}" class="table-responsive">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Categoría</th>
-                                        <th>Barrio</th>
-                                        <th>Dirección</th>
+                                        <th>Usuario</th>
                                         <th>Fecha</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -129,18 +69,48 @@
                                 <tbody>
                                     <tr th:each="solicitud : ${solicitudesPendientes}">
                                         <td th:text="${solicitud.id}">1</td>
-                                        <td th:text="${solicitud.categoria}">Plástico</td>
-                                        <td th:text="${solicitud.barrio}">Centro</td>
-                                        <td th:text="${solicitud.calle + ' ' + solicitud.numeroDeCasa}">Calle Principal 123</td>
-                                        <td th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}">01/01/2023</td>
+                                        <td th:text="${solicitud.categoria}">Categoría de la solicitud</td>
+                                        <td th:text="${solicitud.user != null ? solicitud.user.name : ''}">Nombre del usuario</td>
+                                        <td th:text="${solicitud.fecha != null ? #temporals.format(solicitud.fecha, 'dd/MM/yyyy') : ''}">01/01/2023</td>
                                         <td>
-                                            <a href="#" class="btn btn-sm btn-primary">Ver</a>
-                                            <a href="#" class="btn btn-sm btn-success">Aprobar</a>
-                                            <a href="#" class="btn btn-sm btn-danger">Rechazar</a>
+                                            <a th:href="@{/org/solicitudes}" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-eye me-1"></i>Ver
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="d-grid gap-2 mt-3">
+                            <a th:href="@{/org/solicitudes}" class="btn btn-outline-primary">
+                                <i class="bi bi-list-ul me-2"></i>Ver Todas las Solicitudes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel de acciones rápidas -->
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-lightning-charge me-2"></i>Acciones Rápidas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <a th:href="@{/org/newsolicitude}" class="btn btn-success w-100 py-3">
+                                    <i class="bi bi-file-earmark-plus me-2"></i>Nueva Solicitud
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a th:href="@{/org/reports}" class="btn btn-info w-100 py-3 text-white">
+                                    <i class="bi bi-graph-up me-2"></i>Ver Reportes
+                                </a>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <a th:href="@{/org/recursos}" class="btn btn-primary w-100 py-3">
+                                    <i class="bi bi-files me-2"></i>Recursos
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -149,13 +119,9 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer bg-light mt-auto py-3">
-        <div class="container text-center">
-            <span class="text-muted"> 2023 Sistema de Reciclaje. Todos los derechos reservados.</span>
-        </div>
-    </footer>
+    <div th:replace="~{fragments/layout/footer :: footer}"></div>
 
-    <!-- Bootstrap JS Bundle with Popper -->
+    <!-- Scripts Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

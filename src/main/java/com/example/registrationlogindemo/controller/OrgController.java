@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -78,6 +79,65 @@ public class OrgController {
         }
 
         return mv;
+    }
+    
+    @GetMapping("/solicitudes")
+    public ModelAndView verSolicitudes() {
+        ModelAndView mv = new ModelAndView("admin/solicitudes");
+        
+        try {
+            // Obtener el usuario actualmente autenticado
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                String username = userDetails.getUsername();
+                
+                // Obtener todas las solicitudes
+                List<Solicitude> solicitudes = solicitudeService.findAll();
+                mv.addObject("solicitudes", solicitudes);
+                mv.addObject("username", username);
+                // Indicar que estamos en el rol de organización para ajustar los enlaces en la plantilla
+                mv.addObject("isOrganizacion", true);
+            }
+        } catch (Exception e) {
+            mv.addObject("error", "Ha ocurrido un error al cargar las solicitudes: " + e.getMessage());
+        }
+        
+        return mv;
+    }
+    
+    @GetMapping("/editsolicitude/{id}")
+    public ModelAndView editarSolicitud(@PathVariable("id") int id) {
+        ModelAndView mv = new ModelAndView("admin/editsolicitude");
+        Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById(id);
+
+        if (solicitudeOptional.isPresent()) {
+            Solicitude solicitude = solicitudeOptional.get();
+            mv.addObject("solicitude", solicitude);
+            // Indicar que estamos en el rol de organización
+            mv.addObject("isOrganizacion", true);
+        } else {
+            mv.setViewName("redirect:/error");
+        }
+        return mv;
+    }
+    
+    @GetMapping("/deletsolicitude/{id}")
+    public String eliminarSolicitud(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {
+        try {
+            Optional<Solicitude> solicitudeOptional = solicitudeRepository.findById(id);
+            if (solicitudeOptional.isPresent()) {
+                // Eliminar la solicitud
+                solicitudeRepository.deleteById(id);
+                redirectAttributes.addFlashAttribute("success", "Solicitud eliminada correctamente");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "No se encontró la solicitud con ID: " + id);
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar la solicitud: " + e.getMessage());
+        }
+        
+        return "redirect:/org/solicitudes";
     }
 
     @GetMapping("/profile")
@@ -170,5 +230,42 @@ public class OrgController {
             // Usuario no encontrado
             return new ModelAndView("redirect:/error");
         }
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("currentPassword") String currentPassword,
+                                @RequestParam("newPassword") String newPassword,
+                                @RequestParam("confirmPassword") String confirmPassword,
+                                RedirectAttributes attributes) {
+        
+        // Verificar que las contraseñas nuevas coincidan
+        if (!newPassword.equals(confirmPassword)) {
+            attributes.addFlashAttribute("error", "La nueva contraseña y la confirmación no coinciden");
+            return "redirect:/org/profile";
+        }
+        
+        // Obtener el usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            attributes.addFlashAttribute("error", "Usuario no autenticado");
+            return "redirect:/login";
+        }
+        
+        User currentUser = userRepository.findByUsername(authentication.getName());
+        if (currentUser == null) {
+            attributes.addFlashAttribute("error", "Usuario no encontrado");
+            return "redirect:/login";
+        }
+        
+        // Cambiar la contraseña
+        boolean success = userService.changePassword(currentUser, currentPassword, newPassword);
+        
+        if (success) {
+            attributes.addFlashAttribute("success", "Contraseña actualizada correctamente");
+        } else {
+            attributes.addFlashAttribute("error", "La contraseña actual es incorrecta");
+        }
+        
+        return "redirect:/org/profile";
     }
 }

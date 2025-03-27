@@ -174,8 +174,8 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            String username = authentication.getName();
-            return Optional.ofNullable(userRepository.findByUsername(username));
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return Optional.ofNullable(userRepository.findByUsername(userDetails.getUsername()));
         }
         return Optional.empty();
     }
@@ -205,5 +205,18 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.save(user);
+    }
+
+    @Override
+    public boolean changePassword(User user, String currentPassword, String newPassword) {
+        // Verificar que la contraseña actual es correcta
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return false;
+        }
+        
+        // Encriptar la nueva contraseña y actualizarla
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return true;
     }
 }

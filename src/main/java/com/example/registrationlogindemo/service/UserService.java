@@ -1,4 +1,3 @@
-
 package com.example.registrationlogindemo.service;
 
 import com.example.registrationlogindemo.dto.UserDto;
@@ -49,6 +48,10 @@ public interface UserService {
     boolean debeMostrarLogin();
 
     Optional<User> findUserById(Long id);
+    
+    // Método para cambiar la contraseña de un usuario
+    boolean changePassword(User user, String currentPassword, String newPassword);
+
     void updateUserProfile(User user, MultipartFile fileImage, String currentProfileImageUrl) throws IOException;
 
     Optional<User> getAuthenticatedUser();

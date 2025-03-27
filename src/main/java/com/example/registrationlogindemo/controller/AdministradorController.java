@@ -657,4 +657,39 @@ public class AdministradorController {
         // Por defecto, redirigir a la lista de usuarios
         return "redirect:/admin/users";
     }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("currentPassword") String currentPassword,
+                                @RequestParam("newPassword") String newPassword,
+                                @RequestParam("confirmPassword") String confirmPassword,
+                                RedirectAttributes attributes) {
+        
+        // Verificar que las contraseñas nuevas coincidan
+        if (!newPassword.equals(confirmPassword)) {
+            attributes.addFlashAttribute("error", "La nueva contraseña y la confirmación no coinciden");
+            return "redirect:/admin/profile";
+        }
+        
+        // Obtener el usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            attributes.addFlashAttribute("error", "Usuario no autenticado");
+            return "redirect:/login";
+        }
+        
+        User currentUser = userRepository.findByUsername(authentication.getName());
+        if (currentUser == null) {
+            attributes.addFlashAttribute("error", "Usuario no encontrado");
+            return "redirect:/login";
+        }
+        
+        // Cambiar la contraseña
+        if (userService.changePassword(currentUser, currentPassword, newPassword)) {
+            attributes.addFlashAttribute("success", "La contraseña se ha actualizado correctamente");
+        } else {
+            attributes.addFlashAttribute("error", "La contraseña actual es incorrecta");
+        }
+        
+        return "redirect:/admin/profile";
+    }
 }
