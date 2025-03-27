@@ -457,9 +457,13 @@ public class AdministradorController {
             userDto.setLastName(nombreCompleto.length > 1 ? nombreCompleto[1] : "");
             userDto.setEmail(user.getEmail());
             userDto.setPassword(password);
+            userDto.setUsername(user.getUsername()); // Añadir el username
             
             // Usar el servicio existente para guardar el usuario
-            User nuevoUsuario = userService.saveUser(userDto);
+            userService.saveUser(userDto);
+            
+            // Obtener el usuario recién creado para asignarle el rol específico si es necesario
+            User nuevoUsuario = userRepository.findByEmail(userDto.getEmail());
             
             // Si se especificó un rol diferente al predeterminado
             if (roleValue != null && !roleValue.isEmpty() && !"ROLE_USER".equals(roleValue)) {
