@@ -16,6 +16,7 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -84,20 +85,23 @@ public class AuthController implements ErrorController {
     public String registration(@Valid @ModelAttribute("user") UserDto userDto,
                                BindingResult result,
                                Model model) {
+        if (result.hasErrors()) {
+            return "guest/register";
+        }
+
         User existingUserByEmail = userService.findByEmail(userDto.getEmail());
         User existingUserByUsername = userService.findByUsername(userDto.getUsername());
 
         if (existingUserByEmail != null) {
             result.rejectValue("email", null, "Email existente");
+            model.addAttribute("user", userDto);
+            return "guest/register";
         }
 
         if (existingUserByUsername != null) {
             result.rejectValue("username", null, "Usuario existente");
-        }
-
-        if (result.hasErrors()) {
             model.addAttribute("user", userDto);
-            return "/guest/register";
+            return "guest/register";
         }
 
         userService.saveUser(userDto);

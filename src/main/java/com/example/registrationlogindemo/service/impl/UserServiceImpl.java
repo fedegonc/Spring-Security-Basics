@@ -1,4 +1,3 @@
-
 package com.example.registrationlogindemo.service.impl;
 
 import com.example.registrationlogindemo.dto.UserDto;
@@ -19,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,7 +79,11 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        user.setRoles(List.of(role));
+        // Asignar el rol al usuario (evitando problemas de conversión)
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        user.setRoles(roles);
+        
         userRepository.save(user);
     }
 

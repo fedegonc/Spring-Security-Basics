@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-    <!-- Footer simple con copyright y créditos -->
+    <!-- Footer simple con copyright y botón de reportar problema -->
     <footer th:fragment="footer" class="bg-light py-3 mt-auto border-top">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center text-md-start">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
                     <span class="text-muted">
-                        <i class="bi bi-recycle"></i> RSU - Residuo Sólido Urbano &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2023</span>
+                        &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2025</span> Reciclaje Sólido. Todos los derechos reservados.
                     </span>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
-                    <span class="text-muted">
-                        <a href="#" class="text-decoration-none text-muted">Términos</a> · 
-                        <a href="#" class="text-decoration-none text-muted">Privacidad</a>
-                    </span>
+                    <a th:href="@{/reportar-problema}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-exclamation-triangle me-1"></i>Reportar problema
+                    </a>
                 </div>
             </div>
         </div>

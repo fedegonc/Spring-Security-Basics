@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,4 +28,5 @@ public class UserDto {
     private String roleName; // Rol del usuario
     @NotEmpty(message = "{user.username.notEmpty}")
     private String username; // Nombre de usuario del usuario
+    private List<Long> roles; // Lista de IDs de roles
 }

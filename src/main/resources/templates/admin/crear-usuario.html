@@ -93,7 +93,7 @@
                         <label for="roles" class="form-label">Rol</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-shield"></i></span>
-                            <select class="form-select" id="roles" name="roles" required>
+                            <select class="form-select" id="roles" name="roleName" required>
                                 <option value="" selected disabled>Selecciona un rol</option>
                                 <option th:each="role : ${listRoles}" th:value="${role.name}" th:text="${role.name}"></option>
                             </select>

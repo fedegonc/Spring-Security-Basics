@@ -256,6 +256,34 @@ public class AdministradorController {
         return mv;
     }
 
+    @GetMapping("/reportedit/{id}")
+    public ModelAndView adminReportEdit(@PathVariable("id") long id) {
+        return adminEditReport(id);
+    }
+
+    @PostMapping("/updatereport")
+    public String updateReport(@ModelAttribute("image") Report report, RedirectAttributes redirectAttributes) {
+        try {
+            // Obtener el reporte existente para mantener la referencia al usuario
+            Optional<Report> existingReport = reportRepository.findById(report.getId());
+            if (existingReport.isPresent()) {
+                Report reportToUpdate = existingReport.get();
+                // Actualizar solo los campos editables
+                reportToUpdate.setProblema(report.getProblema());
+                reportToUpdate.setDescripcion(report.getDescripcion());
+                
+                // Guardar los cambios
+                reportRepository.save(reportToUpdate);
+                redirectAttributes.addFlashAttribute("success", "Reporte actualizado exitosamente");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "No se encontró el reporte con ID: " + report.getId());
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al actualizar el reporte: " + e.getMessage());
+        }
+        return "redirect:/admin/reports";
+    }
+
     @GetMapping("/solicitudes")
     public ModelAndView adminSolicitudes() {
         ModelAndView mv = new ModelAndView("admin/solicitudes");
@@ -431,7 +459,7 @@ public class AdministradorController {
     @PostMapping("/crear-usuario")
     public String crearUsuario(@ModelAttribute("user") User user,
                               @RequestParam("password") String password,
-                              @RequestParam(value = "roles", required = false) String roleValue,
+                              @RequestParam(value = "roleName", required = false) String roleName,
                               RedirectAttributes redirectAttributes) {
         
         // Verificar si el usuario ya existe
@@ -458,6 +486,7 @@ public class AdministradorController {
             userDto.setEmail(user.getEmail());
             userDto.setPassword(password);
             userDto.setUsername(user.getUsername()); // Añadir el username
+            userDto.setRoleName(roleName); // Establecer el nombre del rol
             
             // Usar el servicio existente para guardar el usuario
             userService.saveUser(userDto);
@@ -466,9 +495,9 @@ public class AdministradorController {
             User nuevoUsuario = userRepository.findByEmail(userDto.getEmail());
             
             // Si se especificó un rol diferente al predeterminado
-            if (roleValue != null && !roleValue.isEmpty() && !"ROLE_USER".equals(roleValue)) {
+            if (roleName != null && !roleName.isEmpty() && !"ROLE_USER".equals(roleName)) {
                 // Buscar el rol por nombre exacto
-                Role role = roleRepository.findByName(roleValue);
+                Role role = roleRepository.findByName(roleName);
                 
                 // Si se encontró el rol y es diferente al rol de usuario predeterminado
                 if (role != null && !role.getName().equals("ROLE_USER")) {
