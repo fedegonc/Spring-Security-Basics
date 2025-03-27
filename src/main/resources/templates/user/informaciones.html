@@ -243,11 +243,16 @@
     <!-- Footer -->
     <footer class="bg-dark text-white text-center py-3 mt-auto">
         <div class="container">
-            <p class="mb-0">&copy; 2025 Reciclaje Sólido. Todos los derechos reservados.</p>
-            <p class="small mb-0">
-                <a href="#" class="text-white">Términos y condiciones</a> | 
-                <a href="#" class="text-white">Política de privacidad</a>
-            </p>
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                    <p class="mb-0">&copy; 2025 Reciclaje Sólido. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a th:href="@{/user/report-problem}" class="btn btn-sm btn-outline-light">
+                        <i class="bi bi-exclamation-triangle me-1"></i>Reportar problema
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
 
