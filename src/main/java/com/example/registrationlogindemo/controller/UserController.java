@@ -39,6 +39,7 @@ public class UserController {
     @Autowired SolicitudeService solicitudeService;
     @Autowired UserRepository userRepository;
     @Autowired SolicitudeRepository solicitudeRepository;
+    @Autowired ReportRepository reportRepository;
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     private User getAuthenticatedUser() {
@@ -173,5 +174,37 @@ public class UserController {
             } catch (IOException e) { msg.addFlashAttribute("error", "Error con imagen"); }
         }
         return new ModelAndView("redirect:/user/view-requests");
+    }
+
+    @GetMapping("/report-problem")
+    public String reportProblemForm() {
+        return "user/report-problem";
+    }
+    
+    @PostMapping("/report")
+    public String submitReport(@RequestParam("problema") String problema, 
+                               @RequestParam("descripcion") String descripcion,
+                               RedirectAttributes attributes) {
+        try {
+            User currentUser = getAuthenticatedUser();
+            if (currentUser == null) {
+                attributes.addFlashAttribute("error", "Debes iniciar sesión para reportar un problema");
+                return "redirect:/login";
+            }
+            
+            // Crear y guardar el nuevo reporte
+            Report report = new Report();
+            report.setProblema(problema);
+            report.setDescripcion(descripcion);
+            report.setUser(currentUser);
+            
+            reportRepository.save(report);
+            
+            attributes.addAttribute("exito", "Tu reporte ha sido enviado correctamente. Lo revisaremos lo antes posible.");
+            return "redirect:/user/report-problem";
+        } catch (Exception e) {
+            attributes.addAttribute("error", "Ha ocurrido un error al enviar el reporte: " + e.getMessage());
+            return "redirect:/user/report-problem";
+        }
     }
 }
