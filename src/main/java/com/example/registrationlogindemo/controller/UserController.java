@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -57,46 +58,68 @@ public class UserController {
         return mv;
     }
 
-    @GetMapping("/profile/{id}")
-    public ModelAndView editUser(@PathVariable("id") long id) {
+    @GetMapping("/profile")
+    public ModelAndView editUser() {
         User currentUser = getAuthenticatedUser();
-        if (currentUser != null && currentUser.getId() != id)
-            return new ModelAndView("redirect:/user/profile/" + currentUser.getId());
+        if (currentUser == null) {
+            return new ModelAndView("redirect:/login");
+        }
 
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null && (user.getProfileImage() == null || user.getProfileImage().isEmpty()))
-            user.setProfileImage("descargas.jpeg");
+        if (currentUser.getProfileImage() == null || currentUser.getProfileImage().isEmpty()) {
+            currentUser.setProfileImage("descargas.jpeg");
+        }
 
-        return new ModelAndView("user/profile").addObject("user", user);
+        return new ModelAndView("user/profile").addObject("user", currentUser);
     }
 
-    @PostMapping("/profile/{id}")
-    public ModelAndView updateUser(@PathVariable("id") long id, @Valid User user, BindingResult result,
-                                   @RequestParam("file") MultipartFile file, @RequestParam("currentProfileImageUrl") String currentImg,
+    @PostMapping("/profile")
+    public ModelAndView updateUser(@Valid User user, BindingResult result,
+                                   @RequestParam(value = "file", required = false) MultipartFile file, 
+                                   @RequestParam(value = "currentProfileImageUrl", required = false, defaultValue = "descargas.jpeg") String currentImg,
                                    RedirectAttributes msg) {
         if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "Error al editar.");
-            return new ModelAndView("redirect:/user/profile/" + id);
+            msg.addFlashAttribute("error", "Error al editar usuario.");
+            return new ModelAndView("redirect:/user/profile");
         }
 
-        User userEdit = userRepository.findById(id).orElse(null);
-        if (userEdit != null) {
-            userEdit.setUsername(user.getUsername());
-            userEdit.setName(user.getName());
-            userEdit.setEmail(user.getEmail());
-            try {
-                if (!file.isEmpty()) {
-                    String filename = file.getOriginalFilename().replace(" ", "_");
-                    Files.write(Paths.get(UPLOAD_DIR + filename), file.getBytes());
-                    userEdit.setProfileImage(filename);
-                } else {
-                    userEdit.setProfileImage(currentImg);
+        try {
+            User currentUser = getAuthenticatedUser();
+            if (currentUser != null) {
+                currentUser.setUsername(user.getUsername());
+                currentUser.setName(user.getName());
+                currentUser.setEmail(user.getEmail());
+                
+                // Manejo de imagen de perfil
+                try {
+                    if (file != null && !file.isEmpty()) {
+                        String filename = file.getOriginalFilename().replace(" ", "_");
+                        // Aseguramos que el directorio existe
+                        File uploadDir = new File(UPLOAD_DIR);
+                        if (!uploadDir.exists()) {
+                            uploadDir.mkdirs();
+                        }
+                        Files.write(Paths.get(UPLOAD_DIR + filename), file.getBytes());
+                        currentUser.setProfileImage(filename);
+                    } else {
+                        // Si no hay nueva imagen, mantener la imagen actual
+                        currentUser.setProfileImage(currentImg);
+                    }
+                } catch (IOException e) {
+                    msg.addFlashAttribute("error", "Error al procesar la imagen: " + e.getMessage());
+                    // Si hay error con la imagen, mantener la imagen actual
+                    currentUser.setProfileImage(currentImg);
                 }
-            } catch (IOException e) { msg.addFlashAttribute("error", "Error con la imagen."); }
-            userRepository.save(userEdit);
-            msg.addFlashAttribute("success", "Usuario editado.");
+                
+                userRepository.save(currentUser);
+                msg.addFlashAttribute("success", "Usuario editado correctamente.");
+            } else {
+                msg.addFlashAttribute("error", "Usuario no encontrado.");
+            }
+        } catch (Exception e) {
+            msg.addFlashAttribute("error", "Error al actualizar el usuario: " + e.getMessage());
         }
-        return new ModelAndView("redirect:/user/profile/" + id);
+        
+        return new ModelAndView("redirect:/user/profile");
     }
 
     @GetMapping("/delet/{id}")

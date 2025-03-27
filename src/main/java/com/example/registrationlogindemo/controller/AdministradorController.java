@@ -138,7 +138,7 @@ public class AdministradorController {
         User currentUser = userRepository.findByUsername(username);
         
         if (currentUser != null) {
-            return new ModelAndView("redirect:/admin/profile/" + currentUser.getId());
+            return new ModelAndView("redirect:/admin/profile");
         } else {
             return new ModelAndView("redirect:/error");
         }
@@ -151,7 +151,7 @@ public class AdministradorController {
         User currentUser = userRepository.findByUsername(username);
 
         if (currentUser != null && currentUser.getId() != id) {
-            return new ModelAndView("redirect:/user/profile/" + currentUser.getId());
+            return new ModelAndView("redirect:/user/profile");
         }
 
         Optional<User> userOptional = userRepository.findById(id);
@@ -216,7 +216,7 @@ public class AdministradorController {
             // Guardar el usuario editado
             userRepository.save(userEdit);
             msg.addFlashAttribute("success", "Usuario editado exitosamente.");
-            mv.setViewName("redirect:/admin/profile/" + user.getId());
+            mv.setViewName("redirect:/admin/profile");
         } else {
             mv.setViewName("redirect:/error");
         }
