@@ -40,15 +40,20 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" th:href="@{/org/members}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-list-ul"></i> Ver Miembros</a></li>
-                                <li><a class="dropdown-item" th:href="@{/org/invite}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-person-plus"></i> Invitar Miembros</a></li>
+                                <li><a class="dropdown-item" th:href="@{/org/members/add}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-person-plus"></i> Añadir Miembro</a></li>
                             </ul>
                         </li>
                         
-                        <!-- Centro de Recursos -->
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/org/resources}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent">
-                                <i class="bi bi-book"></i> Recursos
+                        <!-- Recursos -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-journals"></i> Recursos
                             </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{/org/resources}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-journals"></i> Documentos</a></li>
+                                <li><a class="dropdown-item" th:href="@{/org/resources/guides}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-book"></i> Guías</a></li>
+                                <li><a class="dropdown-item" th:href="@{/org/resources/regulations}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-file-earmark-text"></i> Normativas</a></li>
+                            </ul>
                         </li>
                     </ul>
                     

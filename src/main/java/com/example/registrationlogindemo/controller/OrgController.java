@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 
 @Controller
 @RequestMapping("/org")
@@ -135,6 +137,52 @@ public class OrgController {
             }
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al eliminar la solicitud: " + e.getMessage());
+        }
+        
+        return "redirect:/org/solicitudes";
+    }
+    
+    @PostMapping("/editsolicitude/{id}")
+    public String procesarEditarSolicitud(@ModelAttribute("solicitude") @Validated Solicitude solicitude,
+                                      BindingResult result, RedirectAttributes msg,
+                                      @RequestParam("file") MultipartFile imagem) {
+        if (result.hasErrors()) {
+            // Si hay errores de validación, redirige con un mensaje de error
+            msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");
+            return "redirect:/org/editsolicitude/" + solicitude.getId();
+        }
+        // Obtener la solicitud que se va a editar
+        Solicitude changeSolicitude = solicitudeRepository.findById(solicitude.getId()).orElse(null);
+        if (changeSolicitude != null) {
+            // Actualizar los campos de la solicitud con los nuevos valores
+            changeSolicitude.setCategoria(solicitude.getCategoria());
+            changeSolicitude.setDescripcion(solicitude.getDescripcion());
+
+            // Actualizar campos de ubicación
+            changeSolicitude.setBarrio(solicitude.getBarrio());
+            changeSolicitude.setCalle(solicitude.getCalle());
+            changeSolicitude.setNumeroDeCasa(solicitude.getNumeroDeCasa());
+            
+            // Actualizar el estado si es necesario
+            changeSolicitude.setEstado(solicitude.getEstado());
+
+            try {
+                // Guardar la imagen si se proporciona una
+                if (!imagem.isEmpty()) {
+                    byte[] bytes = imagem.getBytes();
+                    Path caminho = Paths.get("src/main/resources/static/img/" + imagem.getOriginalFilename());
+                    Files.write(caminho, bytes);
+                    changeSolicitude.setImagen(imagem.getOriginalFilename());
+                }
+            } catch (IOException e) {
+                msg.addFlashAttribute("error", "Error al guardar la imagen: " + e.getMessage());
+            }
+            // Guardar la solicitud editada en la base de datos
+            solicitudeRepository.save(changeSolicitude);
+            // Redirigir con un mensaje
+            msg.addFlashAttribute("success", "Solicitud actualizada correctamente");
+        } else {
+            msg.addFlashAttribute("error", "No se encontró la solicitud con ID: " + solicitude.getId());
         }
         
         return "redirect:/org/solicitudes";

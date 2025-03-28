@@ -2,19 +2,24 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/layout/head :: head}">
-    <title>Administración de Solicitudes</title>
+    <title th:if="${isOrganizacion != null && isOrganizacion}">Gestión de Solicitudes - Panel de Organización</title>
+    <title th:unless="${isOrganizacion != null && isOrganizacion}">Administración de Solicitudes</title>
 </head>
 
 <body class="app-background d-flex flex-column min-vh-100">
     
-    <div th:replace="~{fragments/header :: header}"></div>
+    <!-- Barra de navegación según el rol -->
+    <div th:if="${isOrganizacion == null || !isOrganizacion}" th:replace="~{fragments/header :: header}"></div>
+    <div th:if="${isOrganizacion != null && isOrganizacion}" th:replace="~{fragments/headers/org_header :: header}"></div>
 
     <div th:replace="~{fragments/messages :: message-alerts}"></div>
 
     <main id="main-content" class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2">
-                <i class="bi bi-clipboard-check me-2"></i>Administración de Solicitudes
+                <i class="bi bi-clipboard-check me-2"></i>
+                <span th:if="${isOrganizacion != null && isOrganizacion}">Gestión de Solicitudes</span>
+                <span th:unless="${isOrganizacion != null && isOrganizacion}">Administración de Solicitudes</span>
             </h1>
             <div>
                 <button class="btn btn-primary" id="toggleViewBtn" onclick="toggleView()" aria-label="Cambiar vista">
