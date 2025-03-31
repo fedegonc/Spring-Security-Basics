@@ -1,35 +1,35 @@
 /* Estilos para headers con efecto glass card */
 .navbar-glass {
-    background: rgba(255, 255, 255, 0.15) !important;
+    background: rgba(0, 0, 0, 0.85) !important; /* Fondo negro con alta opacidad */
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important; /* Sombra más pronunciada */
     position: relative !important;
     z-index: 1031 !important; /* Aumentado para asegurar que esté por encima */
 }
 
-/* Colores específicos por rol */
+/* Colores específicos por rol - Todos ahora usan negro con pequeñas variaciones */
 .navbar-glass.guest-navbar {
-    background: rgba(13, 110, 253, 0.15) !important; /* Bootstrap primary */
+    background: rgba(0, 0, 0, 0.85) !important; /* Negro para invitados */
 }
 
 .navbar-glass.user-navbar {
-    background: rgba(21, 87, 36, 0.85) !important; /* Verde oscuro con mayor opacidad */
+    background: rgba(0, 0, 0, 0.85) !important; /* Negro para usuarios */
 }
 
 .navbar-glass.org-navbar {
-    background: rgba(21, 87, 36, 0.85) !important; /* Mismo verde oscuro que user-navbar para consistencia */
+    background: rgba(0, 0, 0, 0.85) !important; /* Negro para organizaciones */
 }
 
 .navbar-glass.admin-navbar {
-    background: rgba(21, 87, 36, 0.85) !important; /* Mismo verde oscuro que user-navbar para consistencia */
+    background: rgba(0, 0, 0, 0.85) !important; /* Negro para administradores */
 }
 
 /* Estilo para el texto */
 .navbar-glass .navbar-brand,
 .navbar-glass .nav-link {
-    color: #ffffff !important; /* Blanco para mejor contraste con fondo verde oscuro */
+    color: #ffffff !important; /* Blanco para mejor contraste con fondo negro */
     font-weight: 500;
 }
 
