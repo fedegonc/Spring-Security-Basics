@@ -19,44 +19,6 @@
                 
                 <!-- Contenido del navbar -->
                 <div class="collapse navbar-collapse" id="navbarOrgContent">
-                    <ul class="navbar-nav me-auto">
-                        <!-- Gestión de Solicitudes -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-clipboard-check"></i> Solicitudes
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" th:href="@{/org/solicitudes}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-list-check"></i> Ver Solicitudes</a></li>
-                                <li><a class="dropdown-item" th:href="@{/org/newsolicitude}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-file-earmark-plus"></i> Nueva Solicitud</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" th:href="@{/org/reports}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-graph-up"></i> Reportes</a></li>
-                            </ul>
-                        </li>
-                        
-                        <!-- Gestión de Miembros -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-people"></i> Miembros
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" th:href="@{/org/members}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-list-ul"></i> Ver Miembros</a></li>
-                                <li><a class="dropdown-item" th:href="@{/org/members/add}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-person-plus"></i> Añadir Miembro</a></li>
-                            </ul>
-                        </li>
-                        
-                        <!-- Recursos -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-journals"></i> Recursos
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" th:href="@{/org/resources}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-journals"></i> Documentos</a></li>
-                                <li><a class="dropdown-item" th:href="@{/org/resources/guides}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-book"></i> Guías</a></li>
-                                <li><a class="dropdown-item" th:href="@{/org/resources/regulations}" data-bs-toggle="collapse" data-bs-target="#navbarOrgContent"><i class="bi bi-file-earmark-text"></i> Normativas</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    
                     <!-- Perfil y Logout -->
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item dropdown">
