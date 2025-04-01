@@ -10,65 +10,58 @@
                     <img src="/img/logov4.png" alt="Logo RSU" height="30" class="d-inline-block align-text-top me-2"> RSU - Residuo Sólido Urbano
                 </a>
                 
-                <!-- Botón para menú responsive con ícono de hamburguesa moderno (SVG) -->
-                <button class="navbar-toggler bg-black/60 backdrop-blur-sm border border-white/10 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAdminContent">
-                    <svg class="h-6 w-6" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
+                <!-- Botón para menú responsive con ícono de hamburguesa estándar -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAdminContent" aria-controls="navbarAdminContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
                 
                 <!-- Contenido del navbar -->
                 <div class="collapse navbar-collapse" id="navbarAdminContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <!-- Panel de Control -->
+                    <!-- Menú principal -->
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/admin/dashboard}">
-                                <i class="bi bi-speedometer2"></i> Panel de Control
+                                <i class="bi bi-speedometer2"></i> Dashboard
                             </a>
                         </li>
-                        
-                        <!-- Gestión de Usuarios -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/users}">
                                 <i class="bi bi-people"></i> Usuarios
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" th:href="@{/admin/users}"><i class="bi bi-list-ul"></i> Listar Usuarios</a></li>
-                                <li><a class="dropdown-item" th:href="@{/admin/crear-usuario}"><i class="bi bi-person-plus"></i> Crear Usuario</a></li>
-                            </ul>
                         </li>
-                        
-                        <!-- Gestión de Solicitudes -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-recycle"></i> Solicitudes
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/organizations}">
+                                <i class="bi bi-building"></i> Organizaciones
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" th:href="@{/admin/solicitudes}"><i class="bi bi-list-check"></i> Listar Solicitudes</a></li>
-                                <li><a class="dropdown-item" th:href="@{/admin/newsolicitude}"><i class="bi bi-plus-circle"></i> Crear Solicitud de Prueba</a></li>
-                            </ul>
-                        </li>
-                        
-                        <!-- Gestión de Reportes -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-file-earmark-text"></i> Reportes
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" th:href="@{/admin/reports}"><i class="bi bi-list-ul"></i> Listar Reportes</a></li>
-                                <li><a class="dropdown-item" th:href="@{/admin/newreport}"><i class="bi bi-file-earmark-plus"></i> Crear Reporte de Prueba</a></li>
-                            </ul>
                         </li>
                     </ul>
                     
                     <!-- Perfil y Logout -->
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-person-circle"></i> Admin
+                    <ul class="navbar-nav ms-auto">
+                        <!-- Selector de idioma -->
+                        <li class="nav-item me-2">
+                            <a class="nav-link" th:href="@{?lang=es}">
+                                <img src="/img/uruguay.png" alt="Español" height="20" class="rounded">
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" th:href="@{/admin/profile}"><i class="bi bi-person"></i> Perfil</a></li>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link" th:href="@{?lang=pt}">
+                                <img src="/img/brasil.png" alt="Português" height="20" class="rounded">
+                            </a>
+                        </li>
+                        
+                        <!-- Menú desplegable de usuario -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle"></i> 
+                                <span th:text="${#authentication.principal.username}">Admin</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item" th:href="@{/admin/profile}">
+                                        <i class="bi bi-gear"></i> Configuración
+                                    </a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form th:action="@{/logout}" method="post" class="dropdown-item p-0">
@@ -83,35 +76,6 @@
                 </div>
             </div>
         </nav>
-        
-        <!-- Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Script simple para cerrar el menú hamburguesa al hacer clic en cualquier enlace
-            document.addEventListener('DOMContentLoaded', function() {
-                // Seleccionar el menú colapsable
-                const navbarCollapse = document.getElementById('navbarAdminContent');
-                
-                // Verificar si navbarCollapse existe
-                if (navbarCollapse) {
-                    // Crear una instancia de collapse de Bootstrap
-                    const bsCollapse = new bootstrap.Collapse(navbarCollapse, {toggle: false});
-                    
-                    // Seleccionar todos los enlaces dentro del menú
-                    const navLinks = navbarCollapse.querySelectorAll('a');
-                    
-                    // Añadir evento de clic a cada enlace
-                    navLinks.forEach(function(link) {
-                        link.addEventListener('click', function() {
-                            // Si el menú está abierto (tiene la clase 'show'), cerrarlo
-                            if (navbarCollapse.classList.contains('show')) {
-                                bsCollapse.hide();
-                            }
-                        });
-                    });
-                }
-            });
-        </script>
     </div>
 </body>
 </html>

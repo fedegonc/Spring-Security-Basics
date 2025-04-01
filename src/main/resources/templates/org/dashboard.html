@@ -13,83 +13,91 @@
         <div th:replace="~{fragments/messages :: message-alerts}"></div>
 
         <!-- Contenido principal -->
-        <div class="row">
-            <div class="col-md-4">
-                <!-- Panel de información de la organización -->
-                <div class="card mb-4 glass-card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi bi-building me-2"></i>Información de la Organización</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center mb-3">
-                            <img th:if="${user != null && user.profileImage != null}" th:src="@{'/img/' + ${user.profileImage}}" alt="Logo de la Organización" 
-                                 class="img-thumbnail rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
-                            <img th:unless="${user != null && user.profileImage != null}" src="/img/descarga.jpeg" alt="Avatar por defecto" 
-                                 class="img-thumbnail rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+        <main id="main-content" class="content-container glass-effect flex-grow-1">
+            <div class="container">
+                <!-- Breadcrumbs -->
+                <div th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
+                
+                <!-- Título de la página -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <!-- Panel de información de la organización -->
+                        <div class="card mb-4 glass-card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="bi bi-building me-2"></i>Información de la Organización</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <img th:if="${user != null && user.profileImage != null}" th:src="@{'/img/' + ${user.profileImage}}" alt="Logo de la Organización" 
+                                         class="img-thumbnail rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                                    <img th:unless="${user != null && user.profileImage != null}" src="/img/descarga.jpeg" alt="Avatar por defecto" 
+                                         class="img-thumbnail rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                                </div>
+                                <h5 th:if="${user != null}" th:text="${user.name}">Nombre de la Organización</h5>
+                                <h5 th:unless="${user != null}">Organización</h5>
+                                
+                                <p class="text-muted" th:if="${user != null && user.email != null}">
+                                    <i class="bi bi-envelope"></i> <span th:text="${user.email}">email@example.com</span>
+                                </p>
+                                <hr>
+                                <p th:if="${user != null}"><strong>Usuario:</strong> <span th:text="${user.username}">username</span></p>
+                                <!-- La propiedad registrationDate no existe en la entidad User -->
+                                <div class="d-grid gap-2">
+                                    <a th:href="@{/org/profile}" class="btn btn-outline-primary">
+                                        <i class="bi bi-pencil-square me-2"></i>Editar Perfil
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <h5 th:if="${user != null}" th:text="${user.name}">Nombre de la Organización</h5>
-                        <h5 th:unless="${user != null}">Organización</h5>
-                        
-                        <p class="text-muted" th:if="${user != null && user.email != null}">
-                            <i class="bi bi-envelope"></i> <span th:text="${user.email}">email@example.com</span>
-                        </p>
-                        <hr>
-                        <p th:if="${user != null}"><strong>Usuario:</strong> <span th:text="${user.username}">username</span></p>
-                        <!-- La propiedad registrationDate no existe en la entidad User -->
-                        <div class="d-grid gap-2">
-                            <a th:href="@{/org/profile}" class="btn btn-outline-primary">
-                                <i class="bi bi-pencil-square me-2"></i>Editar Perfil
-                            </a>
-                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="col-md-8">
-                <!-- Panel de solicitudes pendientes -->
-                <div class="card mb-4 glass-card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi bi-hourglass-split me-2"></i>Solicitudes Pendientes</h5>
-                    </div>
-                    <div class="card-body">
-                        <div th:if="${solicitudesPendientes == null || #lists.isEmpty(solicitudesPendientes)}" class="alert alert-info">
-                            <i class="bi bi-info-circle me-2"></i>No hay solicitudes pendientes en este momento.
-                        </div>
-                        <div th:if="${solicitudesPendientes != null && !#lists.isEmpty(solicitudesPendientes)}" class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Categoría</th>
-                                        <th>Usuario</th>
-                                        <th>Fecha</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="solicitud : ${solicitudesPendientes}">
-                                        <td th:text="${solicitud.id}">1</td>
-                                        <td th:text="${solicitud.categoria}">Categoría de la solicitud</td>
-                                        <td th:text="${solicitud.user != null ? solicitud.user.name : ''}">Nombre del usuario</td>
-                                        <td th:text="${solicitud.fecha != null ? #temporals.format(solicitud.fecha, 'dd/MM/yyyy') : ''}">01/01/2023</td>
-                                        <td>
-                                            <a th:href="@{/org/solicitudes}" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-eye me-1"></i>Ver
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="d-grid gap-2 mt-3">
-                            <a th:href="@{/org/solicitudes}" class="btn btn-outline-primary">
-                                <i class="bi bi-list-ul me-2"></i>Ver Todas las Solicitudes
-                            </a>
+                    <div class="col-md-8">
+                        <!-- Panel de solicitudes pendientes -->
+                        <div class="card mb-4 glass-card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="bi bi-hourglass-split me-2"></i>Solicitudes Pendientes</h5>
+                            </div>
+                            <div class="card-body">
+                                <div th:if="${solicitudesPendientes == null || #lists.isEmpty(solicitudesPendientes)}" class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>No hay solicitudes pendientes en este momento.
+                                </div>
+                                <div th:if="${solicitudesPendientes != null && !#lists.isEmpty(solicitudesPendientes)}" class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Categoría</th>
+                                                <th>Usuario</th>
+                                                <th>Fecha</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="solicitud : ${solicitudesPendientes}">
+                                                <td th:text="${solicitud.id}">1</td>
+                                                <td th:text="${solicitud.categoria}">Categoría de la solicitud</td>
+                                                <td th:text="${solicitud.user != null ? solicitud.user.name : ''}">Nombre del usuario</td>
+                                                <td th:text="${solicitud.fecha != null ? #temporals.format(solicitud.fecha, 'dd/MM/yyyy') : ''}">01/01/2023</td>
+                                                <td>
+                                                    <a th:href="@{/org/solicitudes}" class="btn btn-sm btn-primary">
+                                                        <i class="bi bi-eye me-1"></i>Ver
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="d-grid gap-2 mt-3">
+                                    <a th:href="@{/org/solicitudes}" class="btn btn-outline-primary">
+                                        <i class="bi bi-list-ul me-2"></i>Ver Todas las Solicitudes
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- Footer -->

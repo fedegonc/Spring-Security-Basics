@@ -28,7 +28,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.util.StringUtils;
@@ -75,6 +77,11 @@ public class OrgController {
 
                 // Agregar información adicional a la vista
                 mv.addObject("username", username);
+                
+                // Agregar datos para el breadcrumb
+                List<Map<String, String>> breadcrumbItems = new ArrayList<>();
+                breadcrumbItems.add(Map.of("text", "Dashboard", "url", "/org/dashboard"));
+                mv.addObject("breadcrumbItems", breadcrumbItems);
             }
         } catch (Exception e) {
             mv.addObject("error", "Ha ocurrido un error: " + e.getMessage());
@@ -195,70 +202,51 @@ public class OrgController {
         User currentUser = userRepository.findByUsername(username);
 
         if (currentUser != null) {
-            return new ModelAndView("redirect:/org/profile/" + currentUser.getId());
+            ModelAndView mv = new ModelAndView("org/profile");
+            if (currentUser.getProfileImage() == null || currentUser.getProfileImage().isEmpty()) {
+                currentUser.setProfileImage("descargas.jpeg");
+            }
+            mv.addObject("user", currentUser);
+            
+            // Agregar datos para el breadcrumb
+            List<Map<String, String>> breadcrumbItems = new ArrayList<>();
+            breadcrumbItems.add(Map.of("text", "Dashboard", "url", "/org/dashboard"));
+            breadcrumbItems.add(Map.of("text", "Perfil", "url", "/org/profile"));
+            mv.addObject("breadcrumbItems", breadcrumbItems);
+            
+            return mv;
         } else {
             return new ModelAndView("redirect:/error");
         }
     }
 
-    @GetMapping("/profile/{id}")
-    public ModelAndView editUser(@PathVariable("id") long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User currentUser = userRepository.findByUsername(username);
-
-        if (currentUser != null && currentUser.getId() != id) {
-            return new ModelAndView("redirect:/org/profile/" + currentUser.getId());
-        }
-
-        Optional<User> userOptional = userRepository.findById(id);
-        ModelAndView mv = new ModelAndView("org/profile");
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
-                user.setProfileImage("descargas.jpeg");
-            }
-            mv.addObject("user", user);
-        }
-
-        return mv;
-    }
-
-    @PostMapping("/profile/{id}")
-    public ModelAndView updateUser(@PathVariable("id") long id,
-                                  @ModelAttribute("user") User user,
+    @PostMapping("/profile")
+    public ModelAndView updateUser(@ModelAttribute("user") User user,
                                   @RequestParam("fileImage") MultipartFile multipartFile) throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User currentUser = userRepository.findByUsername(username);
 
-        if (currentUser != null && currentUser.getId() != id) {
-            return new ModelAndView("redirect:/org/profile/" + currentUser.getId());
-        }
-
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isPresent()) {
-            User existingUser = userOptional.get();
-
+        if (currentUser != null) {
             // Actualizar datos básicos
-            existingUser.setUsername(user.getUsername());
-            existingUser.setName(user.getName());
-            existingUser.setEmail(user.getEmail());
+            currentUser.setUsername(user.getUsername());
+            currentUser.setName(user.getName());
+            currentUser.setEmail(user.getEmail());
 
             // Procesar imagen si se ha subido una nueva
             if (!multipartFile.isEmpty()) {
                 String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-                existingUser.setProfileImage(fileName);
-
+                currentUser.setProfileImage(fileName);
+                
                 // Guardar la imagen en el sistema de archivos
                 String uploadDir = "src/main/resources/static/img/";
                 Path uploadPath = Paths.get(uploadDir);
-
+                
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
-
+                
                 try (java.io.InputStream inputStream = multipartFile.getInputStream()) {
                     Path filePath = uploadPath.resolve(fileName);
                     Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
@@ -266,16 +254,14 @@ public class OrgController {
                     throw new IOException("No se pudo guardar el archivo de imagen: " + fileName, e);
                 }
             }
-
+            
             // Guardar los cambios
-            userRepository.save(existingUser);
-
-            // Redirigir con mensaje de éxito
-            ModelAndView mv = new ModelAndView("redirect:/org/profile/" + id);
-            mv.addObject("successMessage", "Perfil actualizado correctamente");
+            userRepository.save(currentUser);
+            
+            ModelAndView mv = new ModelAndView("redirect:/org/profile");
+            mv.addObject("success", "Perfil actualizado correctamente");
             return mv;
         } else {
-            // Usuario no encontrado
             return new ModelAndView("redirect:/error");
         }
     }

@@ -24,8 +24,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -50,27 +51,55 @@ public class UserController {
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
         ModelAndView mv = new ModelAndView("user/welcome");
-        User usuario = getAuthenticatedUser();
-        if (usuario != null) {
-            mv.addObject("solicitude", solicitudeService.getSolicitudesByUser(usuario));
-            mv.addObject("user", usuario);
-            mv.addObject("username", usuario.getUsername());
+        
+        try {
+            // Obtener el usuario actual
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User user = userRepository.findByUsername(username);
+            mv.addObject("user", user);
+            
+            // Agregar datos para el breadcrumb
+            List<Map<String, String>> breadcrumbItems = new ArrayList<>();
+            breadcrumbItems.add(Map.of("text", "Inicio", "url", "/user/welcome"));
+            mv.addObject("breadcrumbItems", breadcrumbItems);
+            
+            mv.addObject("solicitude", solicitudeService.getSolicitudesByUser(user));
+            mv.addObject("username", user.getUsername());
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
         }
+        
         return mv;
     }
 
     @GetMapping("/profile")
-    public ModelAndView editUser() {
-        User currentUser = getAuthenticatedUser();
-        if (currentUser == null) {
-            return new ModelAndView("redirect:/login");
+    public ModelAndView viewProfile() {
+        ModelAndView mv = new ModelAndView("user/profile");
+        
+        try {
+            // Obtener el usuario actual
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User user = userRepository.findByUsername(username);
+            
+            if (user != null) {
+                if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
+                    user.setProfileImage("descargas.jpeg");
+                }
+                mv.addObject("user", user);
+                
+                // Agregar datos para el breadcrumb
+                List<Map<String, String>> breadcrumbItems = new ArrayList<>();
+                breadcrumbItems.add(Map.of("text", "Inicio", "url", "/user/welcome"));
+                breadcrumbItems.add(Map.of("text", "Perfil", "url", "/user/profile"));
+                mv.addObject("breadcrumbItems", breadcrumbItems);
+            }
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar el perfil: " + e.getMessage());
         }
-
-        if (currentUser.getProfileImage() == null || currentUser.getProfileImage().isEmpty()) {
-            currentUser.setProfileImage("descargas.jpeg");
-        }
-
-        return new ModelAndView("user/profile").addObject("user", currentUser);
+        
+        return mv;
     }
 
     @PostMapping("/profile")

@@ -10,54 +10,48 @@
                     <img src="/img/logov4.png" alt="Logo RSU" height="30" class="d-inline-block align-text-top me-2"> RSU - Residuo Sólido Urbano
                 </a>
                 
-                <!-- Botón para menú responsive con ícono de hamburguesa moderno (SVG) -->
-                <button class="navbar-toggler bg-black/60 backdrop-blur-sm border border-white/10 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
-                    <svg class="h-6 w-6" width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
+                <!-- Botón para menú responsive con ícono de hamburguesa estándar -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent" aria-controls="navbarGuestContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
                 
                 <!-- Contenido del navbar -->
                 <div class="collapse navbar-collapse" id="navbarGuestContent">
+                    <!-- Menú principal -->
                     <ul class="navbar-nav me-auto">
-                        <!-- Inicio -->
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
-                                <i class="bi bi-house"></i> Inicio
-                            </a>
+                            <a class="nav-link" th:href="@{/}" th:text="#{nav.home}">Inicio</a>
                         </li>
-                        
-                        <!-- Acerca de -->
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/about}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
-                                <i class="bi bi-info-circle"></i> Acerca de
-                            </a>
+                            <a class="nav-link" th:href="@{/about}" th:text="#{nav.about}">Acerca de</a>
                         </li>
-                        
-                        <!-- Contacto -->
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/contact}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
-                                <i class="bi bi-envelope"></i> Contacto
-                            </a>
-                        </li>
-                        
-                        <!-- Información -->
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/information}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
-                                <i class="bi bi-book"></i> Información
-                            </a>
+                            <a class="nav-link" th:href="@{/contact}" th:text="#{nav.contact}">Contacto</a>
                         </li>
                     </ul>
                     
-                    <!-- Login y Registro -->
-                    <ul class="navbar-nav ms-auto">
+                    <!-- Selector de idioma y botones de login/registro -->
+                    <ul class="navbar-nav">
+                        <!-- Selector de idioma -->
+                        <li class="nav-item me-2">
+                            <a class="nav-link" th:href="@{?lang=es}">
+                                <img src="/img/uruguay.png" alt="Español" height="20" class="rounded">
+                            </a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link" th:href="@{?lang=pt}">
+                                <img src="/img/brasil.png" alt="Português" height="20" class="rounded">
+                            </a>
+                        </li>
+                        
+                        <!-- Botones de login y registro -->
                         <li class="nav-item">
-                            <a class="nav-link btn-primary-modern px-3 py-2 me-2" th:href="@{/login}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
+                            <a class="nav-link" th:href="@{/login}">
                                 <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn-outline-primary-modern px-3 py-2" th:href="@{/register}" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
+                            <a class="nav-link" th:href="@{/register}">
                                 <i class="bi bi-person-plus"></i> Registrarse
                             </a>
                         </li>
@@ -65,35 +59,6 @@
                 </div>
             </div>
         </nav>
-        
-        <!-- Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Script simple para cerrar el menú hamburguesa al hacer clic en cualquier enlace
-            document.addEventListener('DOMContentLoaded', function() {
-                // Seleccionar el menú colapsable
-                const navbarCollapse = document.getElementById('navbarGuestContent');
-                
-                // Verificar si navbarCollapse existe
-                if (navbarCollapse) {
-                    // Crear una instancia de collapse de Bootstrap
-                    const bsCollapse = new bootstrap.Collapse(navbarCollapse, {toggle: false});
-                    
-                    // Seleccionar todos los enlaces dentro del menú
-                    const navLinks = navbarCollapse.querySelectorAll('a');
-                    
-                    // Añadir evento de clic a cada enlace
-                    navLinks.forEach(function(link) {
-                        link.addEventListener('click', function() {
-                            // Si el menú está abierto (tiene la clase 'show'), cerrarlo
-                            if (navbarCollapse.classList.contains('show')) {
-                                bsCollapse.hide();
-                            }
-                        });
-                    });
-                }
-            });
-        </script>
     </div>
 </body>
 </html>

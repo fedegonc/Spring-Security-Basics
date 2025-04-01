@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Fragmento de breadcrumb reutilizable -->
+    <nav th:fragment="breadcrumb(items)" aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb bg-light shadow-sm rounded p-2">
+            <li th:each="item, iterStat : ${items}" 
+                th:class="${iterStat.last} ? 'breadcrumb-item active' : 'breadcrumb-item'"
+                th:aria-current="${iterStat.last} ? 'page' : null">
+                
+                <!-- Ícono para el primer elemento (Dashboard) -->
+                <i th:if="${iterStat.first}" class="bi bi-house"></i>
+                
+                <!-- Link o texto según sea el último elemento o no -->
+                <a th:if="${!iterStat.last}" th:href="${item.url}" th:text="${item.text}">Enlace</a>
+                <span th:if="${iterStat.last}" th:text="${item.text}">Texto</span>
+            </li>
+        </ol>
+    </nav>
+</body>
+</html>

@@ -128,6 +128,11 @@ public class AdministradorController {
         mv.addObject("reportesPorEstado", reportesPorEstado);
         mv.addObject("diasSemana", diasSemana);
         
+        // Agregar datos para el breadcrumb
+        List<Map<String, String>> breadcrumbItems = new ArrayList<>();
+        breadcrumbItems.add(Map.of("text", "Dashboard", "url", "/admin/dashboard"));
+        mv.addObject("breadcrumbItems", breadcrumbItems);
+        
         return mv;
     }
 
@@ -466,58 +471,57 @@ public class AdministradorController {
         User existingUser = userRepository.findByUsername(user.getUsername());
         if (existingUser != null) {
             redirectAttributes.addFlashAttribute("error", "El nombre de usuario ya está en uso");
-            return "redirect:/admin/crear-usuario";
-        }
-        
-        // Verificar si el email ya está en uso
-        User existingEmail = userRepository.findByEmail(user.getEmail());
-        if (existingEmail != null) {
-            redirectAttributes.addFlashAttribute("error", "El email ya está en uso");
-            return "redirect:/admin/crear-usuario";
-        }
-        
-        try {
-            // Crear un nuevo UserDto para usar el servicio existente
-            UserDto userDto = new UserDto();
-            // Dividir el nombre completo en nombre y apellido
-            String[] nombreCompleto = user.getName().split(" ", 2);
-            userDto.setFirstName(nombreCompleto.length > 0 ? nombreCompleto[0] : user.getName());
-            userDto.setLastName(nombreCompleto.length > 1 ? nombreCompleto[1] : "");
-            userDto.setEmail(user.getEmail());
-            userDto.setPassword(password);
-            userDto.setUsername(user.getUsername()); // Añadir el username
-            userDto.setRoleName(roleName); // Establecer el nombre del rol
-            
-            // Usar el servicio existente para guardar el usuario
-            userService.saveUser(userDto);
-            
-            // Obtener el usuario recién creado para asignarle el rol específico si es necesario
-            User nuevoUsuario = userRepository.findByEmail(userDto.getEmail());
-            
-            // Si se especificó un rol diferente al predeterminado
-            if (roleName != null && !roleName.isEmpty() && !"ROLE_USER".equals(roleName)) {
-                // Buscar el rol por nombre exacto
-                Role role = roleRepository.findByName(roleName);
-                
-                // Si se encontró el rol y es diferente al rol de usuario predeterminado
-                if (role != null && !role.getName().equals("ROLE_USER")) {
-                    // Limpiar roles existentes (que serían ROLE_USER por defecto)
-                    nuevoUsuario.getRoles().clear();
-                    // Agregar el nuevo rol
-                    nuevoUsuario.getRoles().add(role);
-                    // Guardar el usuario con el nuevo rol
-                    userRepository.save(nuevoUsuario);
+        } else {
+            // Verificar si el email ya está en uso
+            User existingEmail = userRepository.findByEmail(user.getEmail());
+            if (existingEmail != null) {
+                redirectAttributes.addFlashAttribute("error", "El email ya está en uso");
+            } else {
+                try {
+                    // Crear un nuevo UserDto para usar el servicio existente
+                    UserDto userDto = new UserDto();
+                    // Dividir el nombre completo en nombre y apellido
+                    String[] nombreCompleto = user.getName().split(" ", 2);
+                    userDto.setFirstName(nombreCompleto.length > 0 ? nombreCompleto[0] : user.getName());
+                    userDto.setLastName(nombreCompleto.length > 1 ? nombreCompleto[1] : "");
+                    userDto.setEmail(user.getEmail());
+                    userDto.setPassword(password);
+                    userDto.setUsername(user.getUsername()); // Añadir el username
+                    userDto.setRoleName(roleName); // Establecer el nombre del rol
+                    
+                    // Usar el servicio existente para guardar el usuario
+                    userService.saveUser(userDto);
+                    
+                    // Obtener el usuario recién creado para asignarle el rol específico si es necesario
+                    User nuevoUsuario = userRepository.findByEmail(userDto.getEmail());
+                    
+                    // Si se especificó un rol diferente al predeterminado
+                    if (roleName != null && !roleName.isEmpty() && !"ROLE_USER".equals(roleName)) {
+                        // Buscar el rol por nombre exacto
+                        Role role = roleRepository.findByName(roleName);
+                        
+                        // Si se encontró el rol y es diferente al rol de usuario predeterminado
+                        if (role != null && !role.getName().equals("ROLE_USER")) {
+                            // Limpiar roles existentes (que serían ROLE_USER por defecto)
+                            nuevoUsuario.getRoles().clear();
+                            // Agregar el nuevo rol
+                            nuevoUsuario.getRoles().add(role);
+                            // Guardar el usuario con el nuevo rol
+                            userRepository.save(nuevoUsuario);
+                        }
+                    }
+                    
+                    redirectAttributes.addFlashAttribute("success", "Usuario creado exitosamente");
+                    return "redirect:/admin/users";
+                    
+                } catch (Exception e) {
+                    // Capturar cualquier excepción y mostrar un mensaje de error
+                    redirectAttributes.addFlashAttribute("error", "Error al crear el usuario: " + e.getMessage());
+                    return "redirect:/admin/crear-usuario";
                 }
             }
-            
-            redirectAttributes.addFlashAttribute("success", "Usuario creado exitosamente");
-            return "redirect:/admin/users";
-            
-        } catch (Exception e) {
-            // Capturar cualquier excepción y mostrar un mensaje de error
-            redirectAttributes.addFlashAttribute("error", "Error al crear el usuario: " + e.getMessage());
-            return "redirect:/admin/crear-usuario";
         }
+        return "redirect:/admin/crear-usuario";
     }
 
     // Método para mostrar el formulario de creación de solicitudes de prueba

@@ -4,6 +4,9 @@
 <body class="app-background d-flex flex-column min-vh-100">
   <div th:replace="~{fragments/headers/admin_header :: header}"></div>
   <div class="container mt-4 flex-grow-1">
+    <!-- Breadcrumbs -->
+    <div th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
+    
     <div class="row g-4">
       <!-- Panel lateral -->
       <div class="col-md-4">
