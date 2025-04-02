@@ -31,6 +31,17 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarGuestContent">
                 <ul class="navbar-nav ms-auto">
+                    <!-- Selector de idioma -->
+                    <li class="nav-item me-2">
+                        <a class="nav-link" th:href="@{?language=es}">
+                            <img src="/img/uruguay.png" alt="Español" height="20" class="rounded">
+                        </a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link" th:href="@{?language=pt}">
+                            <img src="/img/brasil.png" alt="Português" height="20" class="rounded">
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/login}">
                             <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
@@ -114,9 +125,9 @@
                         <div class="col-md-4">
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body text-center">
-                                    <i class="bi bi-recycle text-primary" style="font-size: 2.5rem;"></i>
-                                    <h3 class="card-title fs-4 mt-3">Reciclaje</h3>
-                                    <p class="card-text">Implementamos sistemas eficientes de reciclaje adaptados a las necesidades de cada comunidad.</p>
+                                    <i class="bi bi-building text-primary" style="font-size: 2.5rem;"></i>
+                                    <h3 class="card-title fs-4 mt-3">Centros de Acopio y Reciclaje</h3>
+                                    <p class="card-text">Implementamos y conectamos centros de acopio y reciclaje adaptados a las necesidades de cada comunidad.</p>
                                 </div>
                             </div>
                         </div>
@@ -124,17 +135,17 @@
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body text-center">
                                     <i class="bi bi-lightbulb text-primary" style="font-size: 2.5rem;"></i>
-                                    <h3 class="card-title fs-4 mt-3">Educación Ambiental</h3>
-                                    <p class="card-text">Ofrecemos programas educativos para concientizar sobre la importancia del manejo adecuado de residuos.</p>
+                                    <h3 class="card-title fs-4 mt-3">Educación Ambiental y Buenas Prácticas</h3>
+                                    <p class="card-text">Ofrecemos programas educativos para concientizar sobre la importancia de las buenas prácticas en el manejo de residuos.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-body text-center">
-                                    <i class="bi bi-graph-up text-primary" style="font-size: 2.5rem;"></i>
-                                    <h3 class="card-title fs-4 mt-3">Consultoría</h3>
-                                    <p class="card-text">Asesoramos a empresas y gobiernos en la implementación de políticas y prácticas sostenibles.</p>
+                                    <i class="bi bi-people text-primary" style="font-size: 2.5rem;"></i>
+                                    <h3 class="card-title fs-4 mt-3">Inclusión Social</h3>
+                                    <p class="card-text">Promovemos la inclusión social a través de iniciativas que integran a todos los sectores de la comunidad en proyectos sostenibles.</p>
                                 </div>
                             </div>
                         </div>
@@ -148,33 +159,26 @@
                     <h2 class="fs-1 fw-bold mb-4">Contacto</h2>
                     <div class="row">
                         <div class="col-md-6 mb-4 mb-md-0">
-                            <form>
-                                <div class="mb-3">
-                                    <label for="nombre" class="form-label">Nombre</label>
-                                    <input type="text" class="form-control" id="nombre" placeholder="Tu nombre">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Correo Electrónico</label>
-                                    <input type="email" class="form-control" id="email" placeholder="tu@email.com">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="mensaje" class="form-label">Mensaje</label>
-                                    <textarea class="form-control" id="mensaje" rows="4" placeholder="¿Cómo podemos ayudarte?"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
-                            </form>
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                <h3 class="fs-4 mb-4">¿Necesitas ayuda o información?</h3>
+                                <p class="text-center mb-4">Contáctanos directamente a través de WhatsApp para una respuesta rápida.</p>
+                                <a href="https://wa.me/59891620374" target="_blank" class="btn btn-success btn-lg d-flex align-items-center gap-2">
+                                    <i class="bi bi-whatsapp fs-4"></i>
+                                    <span>Contactar por WhatsApp</span>
+                                </a>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <h3 class="fs-4 mb-3">Información de Contacto</h3>
                             <ul class="list-unstyled">
                                 <li class="mb-2">
-                                    <i class="bi bi-geo-alt text-primary me-2"></i> Av. Principal 123, Lima, Perú
+                                    <i class="bi bi-geo-alt text-primary me-2"></i> Frontera de la Paz - Rivera/Santana
                                 </li>
                                 <li class="mb-2">
-                                    <i class="bi bi-envelope text-primary me-2"></i> info@reciclajesolido.com
+                                    <i class="bi bi-envelope text-primary me-2"></i> info@fronteradelapaz.org
                                 </li>
                                 <li class="mb-2">
-                                    <i class="bi bi-telephone text-primary me-2"></i> +51 123 456 789
+                                    <i class="bi bi-telephone text-primary me-2"></i> +598 091 620 374
                                 </li>
                             </ul>
                             <div class="mt-4">
@@ -192,6 +196,46 @@
                                     <a href="#" class="text-primary fs-4" aria-label="LinkedIn">
                                         <i class="bi bi-linkedin"></i>
                                     </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sección de Ubicaciones -->
+                    <div class="mt-5">
+                        <h3 class="fs-4 mb-4">Nuestras Ubicaciones</h3>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">Asociación de Catadores Novo Horizonte</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p><i class="bi bi-geo-alt text-primary me-2"></i> Rua Washington Muniz, 350 - Jardins, Sant'Ana do Livramento</p>
+                                        <p><i class="bi bi-telephone text-primary me-2"></i> Contacto: +55 (55) 3242-1234</p>
+                                        <div class="ratio ratio-16x9 mt-3">
+                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3458.7553026652395!2d-55.51480492374903!3d-30.89498757440887!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a9fe3f7907c833%3A0xc0e4e7f2f41fd363!2sR.%20Washington%20Muniz%2C%20350%20-%20Jardins%2C%20Sant&#39;Ana%20do%20Livramento%20-%20RS%2C%2097576-380%2C%20Brasil!5e0!3m2!1ses!2suy!4v1711949761646!5m2!1ses!2suy" 
+                                                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" 
+                                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">Cooperativa Renacer del Norte</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p><i class="bi bi-geo-alt text-primary me-2"></i> Camino Paso del Enano s/n, Rivera</p>
+                                        <p><i class="bi bi-telephone text-primary me-2"></i> Contacto: +598 091 620 374</p>
+                                        <p><i class="bi bi-clock text-primary me-2"></i> Horario: Lunes a Viernes 7:00 - 17:00</p>
+                                        <div class="ratio ratio-16x9 mt-3">
+                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d108745.31979607193!2d-55.60418389453124!3d-30.90293!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a9ff8e6f3446a5%3A0x6c7c1dbfb92c3a4a!2sPaso%20del%20Enano%20-%20IDR!5e0!3m2!1ses!2suy!4v1711949864125!5m2!1ses!2suy" 
+                                                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" 
+                                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

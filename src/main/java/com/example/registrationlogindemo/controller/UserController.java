@@ -73,8 +73,33 @@ public class UserController {
         return mv;
     }
 
-    @GetMapping("/profile")
-    public ModelAndView viewProfile() {
+    /**
+     * Maneja las operaciones relacionadas con el perfil de usuario.
+     * GET: Muestra el perfil del usuario.
+     * POST: Actualiza la información del perfil.
+     */
+    @RequestMapping(value = "/profile", method = {RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView handleProfile(
+            @Valid @ModelAttribute(binding = false) User user,
+            BindingResult result,
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "currentProfileImageUrl", required = false, defaultValue = "descargas.jpeg") String currentImg,
+            RedirectAttributes msg,
+            jakarta.servlet.http.HttpServletRequest request) {
+        
+        // Si es una solicitud GET, mostrar el perfil
+        if (request.getMethod().equalsIgnoreCase("GET")) {
+            return viewProfile();
+        }
+        
+        // Si es una solicitud POST, actualizar el perfil
+        return updateProfile(user, result, file, currentImg, msg);
+    }
+    
+    /**
+     * Método privado para mostrar el perfil del usuario.
+     */
+    private ModelAndView viewProfile() {
         ModelAndView mv = new ModelAndView("user/profile");
         
         try {
@@ -102,11 +127,12 @@ public class UserController {
         return mv;
     }
 
-    @PostMapping("/profile")
-    public ModelAndView updateUser(@Valid User user, BindingResult result,
-                                   @RequestParam(value = "file", required = false) MultipartFile file, 
-                                   @RequestParam(value = "currentProfileImageUrl", required = false, defaultValue = "descargas.jpeg") String currentImg,
-                                   RedirectAttributes msg) {
+    /**
+     * Método privado para actualizar el perfil del usuario.
+     */
+    private ModelAndView updateProfile(@Valid User user, BindingResult result,
+                                  MultipartFile file, String currentImg,
+                                  RedirectAttributes msg) {
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Error al editar usuario.");
             return new ModelAndView("redirect:/user/profile");
@@ -124,9 +150,9 @@ public class UserController {
                     if (file != null && !file.isEmpty()) {
                         String filename = file.getOriginalFilename().replace(" ", "_");
                         // Aseguramos que el directorio existe
-                        File uploadDir = new File(UPLOAD_DIR);
-                        if (!uploadDir.exists()) {
-                            uploadDir.mkdirs();
+                        java.io.File uploadDirectory = new java.io.File(UPLOAD_DIR);
+                        if (!uploadDirectory.exists()) {
+                            uploadDirectory.mkdirs();
                         }
                         Files.write(Paths.get(UPLOAD_DIR + filename), file.getBytes());
                         currentUser.setProfileImage(filename);
