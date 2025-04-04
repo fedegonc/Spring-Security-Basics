@@ -4,8 +4,8 @@ import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.AuthService;
-import com.example.registrationlogindemo.service.NotificationService;
 import com.example.registrationlogindemo.service.UserService;
+import com.example.registrationlogindemo.service.ValidationAndNotificationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     private UserService userService;
     
     @Autowired
-    private NotificationService notificationService;
+    private ValidationAndNotificationService validationAndNotificationService;
     
     @Autowired
     private UserRepository userRepository;
@@ -101,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
             // Solo muestra el mensaje de bienvenida una vez al iniciar sesión
             if (session.getAttribute("hasLoggedIn") == null) {
                 session.setAttribute("hasLoggedIn", true);
-                notificationService.addSuccessMessage(msg, "Bienvenido/a al sistema.");
+                validationAndNotificationService.addSuccessMessage(msg, "Bienvenido, " + userDetails.getUsername() + "!");
             }
 
             // Recupera la URL solicitada antes de iniciar sesión, si existe
@@ -127,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // Si no hay autenticación válida, redirige a una página de error
-        notificationService.addErrorMessage(msg, "Error de autenticación.");
+        validationAndNotificationService.addErrorMessage(msg, "Error de autenticación.");
         return new ModelAndView("redirect:/error");
     }
     

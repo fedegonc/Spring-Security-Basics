@@ -3,9 +3,9 @@ package com.example.registrationlogindemo.service.impl;
 import com.example.registrationlogindemo.entity.Report;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.service.GuestService;
-import com.example.registrationlogindemo.service.NotificationService;
 import com.example.registrationlogindemo.service.ReportService;
 import com.example.registrationlogindemo.service.UserService;
+import com.example.registrationlogindemo.service.ValidationAndNotificationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -28,7 +28,7 @@ public class GuestServiceImpl implements GuestService {
     private UserService userService;
     
     @Autowired
-    private NotificationService notificationService;
+    private ValidationAndNotificationService validationAndNotificationService;
     
     @Override
     public boolean isUserAuthenticated(Authentication authentication) {
@@ -41,21 +41,21 @@ public class GuestServiceImpl implements GuestService {
     public boolean submitReport(@Valid Report report, BindingResult result, RedirectAttributes msg) {
         // Validar el formulario
         if (result.hasErrors()) {
-            notificationService.addErrorMessage(msg, "El formulario contiene errores. Por favor, corrige los campos.");
+            validationAndNotificationService.addErrorMessage(msg, "El formulario contiene errores. Por favor, corrige los campos.");
             return false;
         }
         
         // Obtener el usuario autenticado
         Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
         if (!authenticatedUserOpt.isPresent()) {
-            notificationService.addErrorMessage(msg, "No se pudo encontrar el usuario actual.");
+            validationAndNotificationService.addErrorMessage(msg, "No se pudo encontrar el usuario actual.");
             return false;
         }
         
         // Asignar el usuario al reporte y guardar
         report.setUser(authenticatedUserOpt.get());
         reportService.saveReport(report);
-        notificationService.addSuccessMessage(msg, "Reporte realizado con éxito.");
+        validationAndNotificationService.addSuccessMessage(msg, "Reporte realizado con éxito.");
         return true;
     }
 }

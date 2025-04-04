@@ -39,10 +39,7 @@ public class AdministradorController extends BaseController {
     private SolicitudeService solicitudeService;
 
     @Autowired
-    private ValidationService validationService;
-
-    @Autowired
-    private NotificationService notificationService;
+    private ValidationAndNotificationService validationAndNotificationService;
 
     @Autowired
     private RoleManagementService roleManagementService;
@@ -301,7 +298,7 @@ public class AdministradorController extends BaseController {
         
         // Verificar que no se esté intentando eliminar al propio usuario
         if (currentUser.getId() == id) {
-            notificationService.addErrorMessage(redirectAttributes, "No puedes eliminar tu propio usuario");
+            validationAndNotificationService.addErrorMessage(redirectAttributes, "No puedes eliminar tu propio usuario");
             return "redirect:/admin/users";
         }
         

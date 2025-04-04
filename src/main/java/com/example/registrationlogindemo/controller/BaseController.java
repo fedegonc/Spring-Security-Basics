@@ -5,7 +5,7 @@ import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.AuthService;
 import com.example.registrationlogindemo.service.BreadcrumbService;
 import com.example.registrationlogindemo.service.FileStorageService;
-import com.example.registrationlogindemo.service.NotificationService;
+import com.example.registrationlogindemo.service.ValidationAndNotificationService;
 import com.example.registrationlogindemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +35,7 @@ public abstract class BaseController {
     protected AuthService authService;
     
     @Autowired
-    protected NotificationService notificationService;
+    protected ValidationAndNotificationService validationAndNotificationService;
 
     /**
      * Obtiene el usuario actualmente autenticado
@@ -80,22 +80,22 @@ public abstract class BaseController {
                                   String confirmPassword, RedirectAttributes attributes, 
                                   String redirectUrl) {
         // Verificar que las contraseñas nuevas coincidan
-        if (!notificationService.validatePasswordMatch(attributes, newPassword, confirmPassword)) {
+        if (!validationAndNotificationService.validatePasswordMatch(attributes, newPassword, confirmPassword)) {
             return "redirect:" + redirectUrl;
         }
         
         // Obtener el usuario autenticado
         User currentUser = getCurrentUser();
         if (currentUser == null) {
-            notificationService.addErrorMessage(attributes, "Usuario no encontrado");
+            validationAndNotificationService.addErrorMessage(attributes, "Usuario no encontrado");
             return "redirect:/login";
         }
         
         // Cambiar la contraseña usando el servicio de usuario
         if (getUserService().changePassword(currentUser, currentPassword, newPassword)) {
-            notificationService.addSuccessMessage(attributes, "La contraseña se ha actualizado correctamente");
+            validationAndNotificationService.addSuccessMessage(attributes, "La contraseña se ha actualizado correctamente");
         } else {
-            notificationService.addErrorMessage(attributes, "La contraseña actual es incorrecta");
+            validationAndNotificationService.addErrorMessage(attributes, "La contraseña actual es incorrecta");
         }
         
         return "redirect:" + redirectUrl;

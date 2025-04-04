@@ -73,36 +73,32 @@
           <div class="col-12 col-md-8 col-lg-6">
             <div class="glass-card">
               <h4 class="card-title mb-4 text-center">
-                <i class="bi bi-exclamation-triangle me-2"></i>Formulario de Reporte
+                <i class="bi bi-exclamation-triangle me-2"></i>Reportar un problema
               </h4>
               
               <div th:if="${param.error}" class="alert alert-danger mb-3" th:text="${param.error}"></div>
               <div th:if="${param.exito}" class="alert alert-success mb-3" th:text="${param.exito}"></div>
               
-              <form th:action="@{/user/report}" method="post">
-                <div class="mb-3">
-                  <label for="problema" class="form-label">Problema <span class="text-danger">*</span></label>
-                  <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-exclamation-octagon"></i></span>
-                    <input type="text" id="problema" name="problema" class="form-control" 
-                           placeholder="Describe brevemente el problema" required>
-                  </div>
-                </div>
+              <form th:action="@{/user/report}" method="post" style="max-width: 500px; margin: auto;">
+                <label for="problema" class="form-label"><strong>Título del problema:</strong></label>
+                <input type="text" id="problema" name="problema" class="form-control mb-3" 
+                      placeholder="Ej: Error al cargar imágenes" required>
                 
-                <div class="mb-4">
-                  <label for="descripcion" class="form-label">Descripción detallada</label>
-                  <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-card-text"></i></span>
-                    <textarea id="descripcion" name="descripcion" class="form-control" rows="4" 
-                              placeholder="Proporciona todos los detalles que consideres relevantes"></textarea>
-                  </div>
-                </div>
+                <label for="descripcion"><strong>Descripción del problema:</strong></label>
+                <p style="font-size: 14px; color: #555;" class="mt-1 mb-2">
+                  Podés escribir algo como:<br>
+                  - En qué parte de la app ocurrió<br>
+                  - Con qué frecuencia pasa<br>
+                  - Pasos para reproducir el error<br>
+                  - Un ejemplo concreto
+                </p>
+                <textarea id="descripcion" name="descripcion" rows="6" required 
+                         placeholder="Ejemplo: Al intentar subir una imagen en el perfil, aparece un mensaje de error. Me pasó 3 veces en la última hora." 
+                         class="form-control mb-3"></textarea>
                 
-                <div class="d-grid">
-                  <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-send me-2"></i>Enviar Reporte
-                  </button>
-                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-2">
+                  <i class="bi bi-send me-2"></i>Enviar reporte
+                </button>
               </form>
             </div>
           </div>

@@ -38,16 +38,13 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     
     @Autowired
-    private NotificationService notificationService;
+    private ValidationAndNotificationService validationAndNotificationService;
     
     @Autowired
     private FileStorageService fileStorageService;
     
     @Autowired
     private RoleManagementService roleManagementService;
-    
-    @Autowired
-    private ValidationService validationService;
 
     private static final String IMAGE_UPLOAD_DIR = "./src/main/resources/static/img/";
 
@@ -185,7 +182,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Override
+    // Método para obtener el usuario actual sin requerir Optional
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
@@ -259,62 +256,65 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUserByAdmin(long id, User user, MultipartFile fileImage, 
                                    String currentProfileImage, String roleValue, 
-                                   RedirectAttributes msg) throws IOException {
+                                   RedirectAttributes msg) {
         try {
             // Verificar si el usuario existe
             Optional<User> userExistente = userRepository.findById(id);
             if (!userExistente.isPresent()) {
-                notificationService.addErrorMessage(msg, "Usuario no encontrado con ID: " + id);
+                validationAndNotificationService.addErrorMessage(msg, "Usuario no encontrado");
                 return false;
             }
             
-            User userActual = userExistente.get();
+            User existingUser = userExistente.get();
             
-            // Verificar si el email o username ya están en uso por otro usuario
-            if (!userActual.getEmail().equals(user.getEmail()) && 
-                !validationService.validateUniqueEmail(user.getEmail(), msg)) {
+            // Validar unicidad de email si cambió
+            if (!existingUser.getEmail().equals(user.getEmail()) && 
+                !validationAndNotificationService.validateUniqueEmail(user.getEmail(), msg)) {
                 return false;
             }
             
-            if (!userActual.getUsername().equals(user.getUsername()) && 
-                !validationService.validateUniqueUsername(user.getUsername(), msg)) {
+            // Validar unicidad de username si cambió
+            if (!existingUser.getUsername().equals(user.getUsername()) && 
+                !validationAndNotificationService.validateUniqueUsername(user.getUsername(), msg)) {
                 return false;
             }
             
-            // Actualizar atributos básicos
-            userActual.setName(user.getName());
-            userActual.setEmail(user.getEmail());
-            userActual.setUsername(user.getUsername());
+            // Actualizar los datos del usuario
+            existingUser.setName(user.getName());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setUsername(user.getUsername());
             
-            // Manejar la imagen de perfil (si se proporciona una nueva)
+            // Manejar la imagen de perfil si se proporciona una nueva
             if (fileImage != null && !fileImage.isEmpty()) {
                 if (!fileStorageService.isValidImageFile(fileImage)) {
-                    notificationService.addErrorMessage(msg, "Por favor, sube solo imágenes (jpg, jpeg, png, gif)");
+                    validationAndNotificationService.addErrorMessage(msg, "Por favor, sube solo imágenes (jpg, jpeg, png, gif)");
                     return false;
                 }
                 
-                String imageName = fileStorageService.storeImage(fileImage, currentProfileImage);
-                userActual.setProfileImage(imageName);
+                // Guardar la nueva imagen y eliminar la anterior si existe
+                String newImageName = fileStorageService.storeImage(fileImage, currentProfileImage);
+                existingUser.setProfileImage(newImageName);
             }
             
-            // Manejar roles si se proporcionan
+            // Guardar las actualizaciones del usuario
+            userRepository.save(existingUser);
+            
+            // Asignar roles si se proporcionan
             if (roleValue != null && !roleValue.isEmpty()) {
+                // Convertir la cadena de roles a una lista
                 List<String> roleNames = Arrays.stream(roleValue.split(","))
                     .map(String::trim)
                     .collect(Collectors.toList());
                 
                 // Usar RoleManagementService para asignar roles
-                roleManagementService.setUserRoles(userActual, roleNames, msg);
+                roleManagementService.setUserRoles(existingUser, roleNames, msg);
             }
             
-            // Guardar el usuario actualizado
-            userRepository.save(userActual);
-            
-            notificationService.addSuccessMessage(msg, "Usuario actualizado exitosamente");
+            validationAndNotificationService.addSuccessMessage(msg, "Usuario actualizado correctamente");
             return true;
             
         } catch (Exception e) {
-            notificationService.addErrorMessage(msg, "Error al actualizar el usuario: " + e.getMessage());
+            validationAndNotificationService.addErrorMessage(msg, "Error al actualizar el usuario: " + e.getMessage());
             return false;
         }
     }
@@ -326,21 +326,21 @@ public class UserServiceImpl implements UserService {
         try {
             // Validaciones básicas
             if (!password.equals(confirmPassword)) {
-                notificationService.addErrorMessage(msg, "Las contraseñas no coinciden");
+                validationAndNotificationService.addErrorMessage(msg, "Las contraseñas no coinciden");
                 return false;
             }
             
             // Validar unicidad de email y username
-            if (!validationService.validateUniqueEmail(user.getEmail(), msg)) {
+            if (!validationAndNotificationService.validateUniqueEmail(user.getEmail(), msg)) {
                 return false;
             }
             
-            if (!validationService.validateUniqueUsername(user.getUsername(), msg)) {
+            if (!validationAndNotificationService.validateUniqueUsername(user.getUsername(), msg)) {
                 return false;
             }
             
             // Validar fortaleza de la contraseña
-            if (!validationService.validatePasswordStrength(password, msg)) {
+            if (!validationAndNotificationService.validatePasswordStrength(password, msg)) {
                 return false;
             }
             
@@ -350,7 +350,7 @@ public class UserServiceImpl implements UserService {
             // Manejar la imagen de perfil
             if (fileImage != null && !fileImage.isEmpty()) {
                 if (!fileStorageService.isValidImageFile(fileImage)) {
-                    notificationService.addErrorMessage(msg, "Por favor, sube solo imágenes (jpg, jpeg, png, gif)");
+                    validationAndNotificationService.addErrorMessage(msg, "Por favor, sube solo imágenes (jpg, jpeg, png, gif)");
                     return false;
                 }
                 
@@ -374,11 +374,11 @@ public class UserServiceImpl implements UserService {
                 roleManagementService.assignRoleToUser(savedUser, "ROLE_ADMIN", msg);
             }
             
-            notificationService.addSuccessMessage(msg, "Usuario administrador creado exitosamente");
+            validationAndNotificationService.addSuccessMessage(msg, "Usuario administrador creado exitosamente");
             return true;
             
         } catch (Exception e) {
-            notificationService.addErrorMessage(msg, "Error al crear el usuario: " + e.getMessage());
+            validationAndNotificationService.addErrorMessage(msg, "Error al crear el usuario: " + e.getMessage());
             return false;
         }
     }
@@ -389,7 +389,7 @@ public class UserServiceImpl implements UserService {
             // Verificar si el usuario existe
             Optional<User> userOpt = userRepository.findById((long) id);
             if (!userOpt.isPresent()) {
-                notificationService.addErrorMessage(redirectAttributes, "Usuario no encontrado");
+                validationAndNotificationService.addErrorMessage(redirectAttributes, "Usuario no encontrado");
                 return false;
             }
             
@@ -404,11 +404,11 @@ public class UserServiceImpl implements UserService {
             // Eliminar el usuario
             userRepository.deleteById((long) id);
             
-            notificationService.addSuccessMessage(redirectAttributes, "Usuario eliminado exitosamente");
+            validationAndNotificationService.addSuccessMessage(redirectAttributes, "Usuario eliminado exitosamente");
             return true;
             
         } catch (Exception e) {
-            notificationService.addErrorMessage(redirectAttributes, 
+            validationAndNotificationService.addErrorMessage(redirectAttributes, 
                 "Error al eliminar el usuario: " + e.getMessage());
             return false;
         }

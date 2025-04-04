@@ -6,10 +6,10 @@ import com.example.registrationlogindemo.repository.ReportRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.BreadcrumbService;
-import com.example.registrationlogindemo.service.NotificationService;
 import com.example.registrationlogindemo.service.OrgService;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
+import com.example.registrationlogindemo.service.ValidationAndNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,7 +55,7 @@ public class OrgServiceImpl implements OrgService {
     private BreadcrumbService breadcrumbService;
     
     @Autowired
-    private NotificationService notificationService;
+    private ValidationAndNotificationService validationAndNotificationService;
 
     @Override
     public ModelAndView getDashboardData(UserDetails userDetails) {
@@ -150,9 +150,9 @@ public class OrgServiceImpl implements OrgService {
         Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
         if (solicitudeOpt.isPresent()) {
             solicitudeRepository.deleteById(id);
-            notificationService.addSuccessMessage(redirectAttributes, "Solicitud eliminada correctamente");
+            validationAndNotificationService.addSuccessMessage(redirectAttributes, "Solicitud eliminada correctamente");
         } else {
-            notificationService.addErrorMessage(redirectAttributes, "No se pudo encontrar la solicitud");
+            validationAndNotificationService.addErrorMessage(redirectAttributes, "No se pudo encontrar la solicitud");
         }
         
         return "redirect:/org/solicitudes";
@@ -187,9 +187,9 @@ public class OrgServiceImpl implements OrgService {
             
             // Guardar los cambios
             solicitudeRepository.save(existingSolicitude);
-            notificationService.addSuccessMessage(redirectAttributes, "Solicitud actualizada correctamente");
+            validationAndNotificationService.addSuccessMessage(redirectAttributes, "Solicitud actualizada correctamente");
         } else {
-            notificationService.addErrorMessage(redirectAttributes, "No se pudo encontrar la solicitud");
+            validationAndNotificationService.addErrorMessage(redirectAttributes, "No se pudo encontrar la solicitud");
         }
         
         return "redirect:/org/solicitudes";
@@ -260,7 +260,7 @@ public class OrgServiceImpl implements OrgService {
                                String confirmPassword, RedirectAttributes attributes, UserDetails userDetails) {
         // Verificar que las contraseñas nuevas coincidan
         if (!newPassword.equals(confirmPassword)) {
-            notificationService.addErrorMessage(attributes, "La nueva contraseña y la confirmación no coinciden");
+            validationAndNotificationService.addErrorMessage(attributes, "La nueva contraseña y la confirmación no coinciden");
             return "redirect:/org/profile";
         }
         
@@ -269,7 +269,7 @@ public class OrgServiceImpl implements OrgService {
         User currentUser = userRepository.findByUsername(username);
         
         if (currentUser == null) {
-            notificationService.addErrorMessage(attributes, "Usuario no encontrado");
+            validationAndNotificationService.addErrorMessage(attributes, "Usuario no encontrado");
             return "redirect:/login";
         }
         
@@ -277,9 +277,9 @@ public class OrgServiceImpl implements OrgService {
         boolean success = userService.changePassword(currentUser, currentPassword, newPassword);
         
         if (success) {
-            notificationService.addSuccessMessage(attributes, "Contraseña actualizada correctamente");
+            validationAndNotificationService.addSuccessMessage(attributes, "Contraseña actualizada correctamente");
         } else {
-            notificationService.addErrorMessage(attributes, "La contraseña actual es incorrecta");
+            validationAndNotificationService.addErrorMessage(attributes, "La contraseña actual es incorrecta");
         }
         
         return "redirect:/org/profile";

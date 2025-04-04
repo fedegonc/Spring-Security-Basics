@@ -4,9 +4,9 @@ import com.example.registrationlogindemo.entity.Report;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ReportRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.NotificationService;
 import com.example.registrationlogindemo.service.ReportService;
 import com.example.registrationlogindemo.service.UserService;
+import com.example.registrationlogindemo.service.ValidationAndNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -31,7 +31,7 @@ public class ReportServiceImpl implements ReportService {
     private UserService userService;
     
     @Autowired
-    private NotificationService notificationService;
+    private ValidationAndNotificationService validationAndNotificationService;
 
     // ======= Métodos básicos de acceso a datos =======
     
@@ -89,7 +89,7 @@ public class ReportServiceImpl implements ReportService {
             // Verificar si el reporte existe
             Optional<Report> reporteExistente = reportRepository.findById(report.getId());
             if (!reporteExistente.isPresent()) {
-                notificationService.addErrorMessage(redirectAttributes, "Reporte no encontrado con ID: " + report.getId());
+                validationAndNotificationService.addErrorMessage(redirectAttributes, "Reporte no encontrado con ID: " + report.getId());
                 return false;
             }
             
@@ -101,10 +101,10 @@ public class ReportServiceImpl implements ReportService {
             // Guardar el reporte actualizado
             reportRepository.save(reporteActual);
             
-            notificationService.addSuccessMessage(redirectAttributes, "Reporte actualizado exitosamente");
+            validationAndNotificationService.addSuccessMessage(redirectAttributes, "Reporte actualizado exitosamente");
             return true;
         } catch (Exception e) {
-            notificationService.addErrorMessage(redirectAttributes, "Error al actualizar el reporte: " + e.getMessage());
+            validationAndNotificationService.addErrorMessage(redirectAttributes, "Error al actualizar el reporte: " + e.getMessage());
             return false;
         }
     }
@@ -115,7 +115,7 @@ public class ReportServiceImpl implements ReportService {
             // Buscar el usuario por ID
             Optional<User> usuarioOpt = userRepository.findById(userId);
             if (!usuarioOpt.isPresent()) {
-                notificationService.addErrorMessage(redirectAttributes, "Usuario no encontrado con ID: " + userId);
+                validationAndNotificationService.addErrorMessage(redirectAttributes, "Usuario no encontrado con ID: " + userId);
                 return false;
             }
             
@@ -124,11 +124,11 @@ public class ReportServiceImpl implements ReportService {
             
             // Guardar el reporte
             Report savedReport = reportRepository.save(report);
-            notificationService.addSuccessMessage(redirectAttributes, 
+            validationAndNotificationService.addSuccessMessage(redirectAttributes, 
                 "Reporte #" + savedReport.getId() + " creado exitosamente para " + usuario.getName());
             return true;
         } catch (Exception e) {
-            notificationService.addErrorMessage(redirectAttributes, "Error al crear el reporte: " + e.getMessage());
+            validationAndNotificationService.addErrorMessage(redirectAttributes, "Error al crear el reporte: " + e.getMessage());
             return false;
         }
     }

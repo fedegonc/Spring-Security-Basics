@@ -5,6 +5,7 @@ import com.example.registrationlogindemo.entity.*;
 import com.example.registrationlogindemo.repository.*;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
+import com.example.registrationlogindemo.service.ValidationAndNotificationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,14 @@ import java.util.Optional;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController {
 
     @Autowired UserService userService;
     @Autowired SolicitudeService solicitudeService;
     @Autowired UserRepository userRepository;
     @Autowired SolicitudeRepository solicitudeRepository;
     @Autowired ReportRepository reportRepository;
+    @Autowired ValidationAndNotificationService validationAndNotificationService;
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     private User getAuthenticatedUser() {
@@ -273,26 +275,11 @@ public class UserController {
                                 @RequestParam("confirmPassword") String confirmPassword,
                                 RedirectAttributes attributes) {
         
-        // Verificar que las contraseñas nuevas coincidan
-        if (!newPassword.equals(confirmPassword)) {
-            attributes.addFlashAttribute("error", "La nueva contraseña y la confirmación no coinciden");
-            return "redirect:/user/profile";
-        }
-        
-        // Obtener el usuario autenticado
-        User currentUser = getAuthenticatedUser();
-        if (currentUser == null) {
-            attributes.addFlashAttribute("error", "Usuario no encontrado");
-            return "redirect:/login";
-        }
-        
-        // Cambiar la contraseña
-        if (userService.changePassword(currentUser, currentPassword, newPassword)) {
-            attributes.addFlashAttribute("success", "La contraseña se ha actualizado correctamente");
-        } else {
-            attributes.addFlashAttribute("error", "La contraseña actual es incorrecta");
-        }
-        
-        return "redirect:/user/profile";
+        return super.changePassword(currentPassword, newPassword, confirmPassword, attributes, "/user/profile");
+    }
+    
+    @Override
+    protected UserService getUserService() {
+        return userService;
     }
 }

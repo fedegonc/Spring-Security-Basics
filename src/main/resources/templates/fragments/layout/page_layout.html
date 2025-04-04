@@ -9,8 +9,8 @@
     </head>
 
     <body class="app-background d-flex flex-column min-vh-100">
-        <!-- Header dinámico basado en el rol -->
-        <div th:replace="~{fragments/headers/__${roleHeader}__ :: header}"></div>
+        <!-- Header unificado que se adapta automáticamente al rol -->
+        <div th:replace="~{fragments/header :: header}"></div>
         
         <!-- Contenido principal -->
         <main id="main-content" class="content-container glass-effect flex-grow-1">

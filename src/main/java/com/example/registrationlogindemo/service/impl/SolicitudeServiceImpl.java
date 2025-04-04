@@ -9,6 +9,7 @@ import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.BreadcrumbService;
 import com.example.registrationlogindemo.service.MessageService;
 import com.example.registrationlogindemo.service.SolicitudeService;
+import com.example.registrationlogindemo.service.ValidationAndNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -50,6 +51,9 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     
     @Autowired
     private BreadcrumbService breadcrumbService;
+    
+    @Autowired
+    private ValidationAndNotificationService validationAndNotificationService;
 
     // ======= Métodos básicos de acceso a datos =======
     
@@ -420,9 +424,11 @@ public class SolicitudeServiceImpl implements SolicitudeService {
      * Verifica si un usuario tiene roles administrativos
      */
     private boolean hasRolePermission(User usuario) {
-        // Comprobar roles mediante el repositorio
-        List<String> roles = userRepository.findRolesByUserId(usuario.getId());
-        return roles.contains("ROLE_ADMIN") || roles.contains("ROLE_ORGANIZATION");
+        // Verificar si el usuario tiene roles administrativos 
+        // usando directamente los roles del usuario en lugar de una consulta adicional
+        return usuario.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("ROLE_ADMIN") || 
+                                 role.getName().equals("ROLE_ORGANIZATION"));
     }
     
     /**

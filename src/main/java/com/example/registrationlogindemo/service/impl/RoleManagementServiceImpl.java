@@ -4,8 +4,8 @@ import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.NotificationService;
 import com.example.registrationlogindemo.service.RoleManagementService;
+import com.example.registrationlogindemo.service.ValidationAndNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -27,7 +27,7 @@ public class RoleManagementServiceImpl implements RoleManagementService {
     private UserRepository userRepository;
     
     @Autowired
-    private NotificationService notificationService;
+    private ValidationAndNotificationService validationAndNotificationService;
     
     /**
      * Crea un nuevo rol en el sistema
@@ -38,7 +38,7 @@ public class RoleManagementServiceImpl implements RoleManagementService {
     @Override
     public boolean createRole(String roleName, RedirectAttributes attributes) {
         if (roleName == null || roleName.trim().isEmpty()) {
-            notificationService.addErrorMessage(attributes, "El nombre del rol no puede estar vacío");
+            validationAndNotificationService.addErrorMessage(attributes, "El nombre del rol no puede estar vacío");
             return false;
         }
         
@@ -47,7 +47,7 @@ public class RoleManagementServiceImpl implements RoleManagementService {
         
         // Verificar si el rol ya existe
         if (roleRepository.findByName(normalizedRoleName) != null) {
-            notificationService.addErrorMessage(attributes, "El rol " + roleName + " ya existe");
+            validationAndNotificationService.addErrorMessage(attributes, "El rol " + roleName + " ya existe");
             return false;
         }
         
@@ -56,7 +56,7 @@ public class RoleManagementServiceImpl implements RoleManagementService {
         newRole.setName(normalizedRoleName);
         roleRepository.save(newRole);
         
-        notificationService.addSuccessMessage(attributes, "Rol " + roleName + " creado correctamente");
+        validationAndNotificationService.addSuccessMessage(attributes, "Rol " + roleName + " creado correctamente");
         return true;
     }
     
@@ -70,12 +70,12 @@ public class RoleManagementServiceImpl implements RoleManagementService {
     @Override
     public boolean assignRoleToUser(User user, String roleName, RedirectAttributes attributes) {
         if (user == null) {
-            notificationService.addErrorMessage(attributes, "Usuario no encontrado");
+            validationAndNotificationService.addErrorMessage(attributes, "Usuario no encontrado");
             return false;
         }
         
         if (roleName == null || roleName.trim().isEmpty()) {
-            notificationService.addErrorMessage(attributes, "El nombre del rol no puede estar vacío");
+            validationAndNotificationService.addErrorMessage(attributes, "El nombre del rol no puede estar vacío");
             return false;
         }
         
@@ -85,7 +85,7 @@ public class RoleManagementServiceImpl implements RoleManagementService {
         // Buscar el rol
         Role role = roleRepository.findByName(normalizedRoleName);
         if (role == null) {
-            notificationService.addErrorMessage(attributes, "El rol " + roleName + " no existe");
+            validationAndNotificationService.addErrorMessage(attributes, "El rol " + roleName + " no existe");
             return false;
         }
         
@@ -97,7 +97,7 @@ public class RoleManagementServiceImpl implements RoleManagementService {
         
         // Verificar si el usuario ya tiene este rol
         if (roles.stream().anyMatch(r -> r.getName().equals(normalizedRoleName))) {
-            notificationService.addInfoMessage(attributes, "El usuario ya tiene asignado el rol " + roleName);
+            validationAndNotificationService.addInfoMessage(attributes, "El usuario ya tiene asignado el rol " + roleName);
             return true;
         }
         
@@ -105,7 +105,7 @@ public class RoleManagementServiceImpl implements RoleManagementService {
         user.setRoles(roles);
         userRepository.save(user);
         
-        notificationService.addSuccessMessage(attributes, "Rol " + roleName + " asignado correctamente al usuario");
+        validationAndNotificationService.addSuccessMessage(attributes, "Rol " + roleName + " asignado correctamente");
         return true;
     }
     
@@ -119,19 +119,19 @@ public class RoleManagementServiceImpl implements RoleManagementService {
     @Override
     public boolean setUserRoles(User user, List<String> roleNames, RedirectAttributes attributes) {
         if (user == null) {
-            notificationService.addErrorMessage(attributes, "Usuario no encontrado");
+            validationAndNotificationService.addErrorMessage(attributes, "Usuario no encontrado");
             return false;
         }
         
         if (roleNames == null || roleNames.isEmpty()) {
-            notificationService.addErrorMessage(attributes, "Debe especificar al menos un rol");
+            validationAndNotificationService.addErrorMessage(attributes, "Debe proporcionar al menos un rol");
             return false;
         }
         
-        // Comenzar con una lista vacía de roles
+        // Crear una nueva lista de roles
         List<Role> roles = new ArrayList<>();
         
-        // Buscar y agregar cada rol especificado
+        // Obtener los roles por nombre
         for (String roleName : roleNames) {
             String normalizedRoleName = normalizeRoleName(roleName);
             Role role = roleRepository.findByName(normalizedRoleName);
@@ -142,14 +142,14 @@ public class RoleManagementServiceImpl implements RoleManagementService {
         }
         
         if (roles.isEmpty()) {
-            notificationService.addErrorMessage(attributes, "Ninguno de los roles especificados existe en el sistema");
+            validationAndNotificationService.addErrorMessage(attributes, "Ninguno de los roles especificados existe en el sistema");
             return false;
         }
         
         user.setRoles(roles);
         userRepository.save(user);
         
-        notificationService.addSuccessMessage(attributes, "Roles actualizados correctamente");
+        validationAndNotificationService.addSuccessMessage(attributes, "Roles actualizados correctamente");
         return true;
     }
     
@@ -163,12 +163,12 @@ public class RoleManagementServiceImpl implements RoleManagementService {
     @Override
     public boolean removeRoleFromUser(User user, String roleName, RedirectAttributes attributes) {
         if (user == null) {
-            notificationService.addErrorMessage(attributes, "Usuario no encontrado");
+            validationAndNotificationService.addErrorMessage(attributes, "Usuario no encontrado");
             return false;
         }
         
         if (roleName == null || roleName.trim().isEmpty()) {
-            notificationService.addErrorMessage(attributes, "El nombre del rol no puede estar vacío");
+            validationAndNotificationService.addErrorMessage(attributes, "El nombre del rol no puede estar vacío");
             return false;
         }
         
@@ -177,13 +177,13 @@ public class RoleManagementServiceImpl implements RoleManagementService {
         
         List<Role> roles = user.getRoles();
         if (roles == null || roles.isEmpty()) {
-            notificationService.addInfoMessage(attributes, "El usuario no tiene roles asignados");
+            validationAndNotificationService.addInfoMessage(attributes, "El usuario no tiene roles asignados");
             return false;
         }
         
         boolean roleRemoved = roles.removeIf(role -> role.getName().equals(normalizedRoleName));
         if (!roleRemoved) {
-            notificationService.addInfoMessage(attributes, "El usuario no tenía asignado el rol " + roleName);
+            validationAndNotificationService.addInfoMessage(attributes, "El usuario no tenía asignado el rol " + roleName);
             return false;
         }
         
@@ -198,7 +198,7 @@ public class RoleManagementServiceImpl implements RoleManagementService {
         user.setRoles(roles);
         userRepository.save(user);
         
-        notificationService.addSuccessMessage(attributes, "Rol " + roleName + " eliminado correctamente del usuario");
+        validationAndNotificationService.addSuccessMessage(attributes, "Rol " + roleName + " eliminado correctamente del usuario");
         return true;
     }
     

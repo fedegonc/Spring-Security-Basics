@@ -1,19 +1,146 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-    <!-- Fragmento de header principal que redirige al fragmento específico según el rol -->
+    <!-- Header unificado para todos los roles - Se adapta automáticamente según el rol del usuario -->
     <div th:fragment="header">
-        <!-- Header para administradores -->
-        <div sec:authorize="hasRole('ROLE_ADMIN')" th:replace="~{fragments/headers/admin_header :: header}"></div>
-        
-        <!-- Header para usuarios normales -->
-        <div sec:authorize="hasRole('ROLE_USER')" th:replace="~{fragments/headers/user_header :: header}"></div>
-        
-        <!-- Header para organizaciones -->
-        <div sec:authorize="hasRole('ROLE_ORG')" th:replace="~{fragments/headers/org_header :: header}"></div>
-        
-        <!-- Header para invitados (no autenticados) -->
-        <div sec:authorize="isAnonymous()" th:replace="~{fragments/headers/guest_header :: header}"></div>
+        <!-- Determinamos la clase de navbar según el rol del usuario -->
+        <nav class="navbar navbar-expand-lg navbar-glass"
+             th:classappend="${#authorization.expression('hasRole(''ADMIN'')')} ? 'admin-navbar' : 
+                            (${#authorization.expression('hasRole(''USER'')')} ? 'user-navbar' : 
+                            (${#authorization.expression('hasRole(''ORGANIZATION'')')} ? 'org-navbar' : 'guest-navbar'))">
+            <div class="container">
+                <!-- Brand name - URL depende del rol -->
+                <a class="navbar-brand" 
+                   th:href="${#authorization.expression('hasRole(''ADMIN'')')} ? @{/admin/dashboard} : 
+                           (${#authorization.expression('hasRole(''USER'')')} ? @{/user/welcome} : 
+                           (${#authorization.expression('hasRole(''ORGANIZATION'')')} ? @{/org/dashboard} : @{/}))">
+                    <img src="/img/logov4.png" alt="Logo RSU" height="30" class="d-inline-block align-text-top me-2"> RSU - Residuo Sólido Urbano
+                </a>
+                
+                <!-- Botón para menú responsive -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                        th:attr="data-bs-target=${#authorization.expression('hasRole(''ADMIN'')')} ? '#navbarAdminContent' : 
+                                               (${#authorization.expression('hasRole(''USER'')')} ? '#navbarUserContent' : 
+                                               (${#authorization.expression('hasRole(''ORGANIZATION'')')} ? '#navbarOrgContent' : '#navbarGuestContent')),
+                                aria-controls=${#authorization.expression('hasRole(''ADMIN'')')} ? 'navbarAdminContent' : 
+                                              (${#authorization.expression('hasRole(''USER'')')} ? 'navbarUserContent' : 
+                                              (${#authorization.expression('hasRole(''ORGANIZATION'')')} ? 'navbarOrgContent' : 'navbarGuestContent'))"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <!-- Contenido del navbar -->
+                <div class="collapse navbar-collapse" 
+                     th:id="${#authorization.expression('hasRole(''ADMIN'')')} ? 'navbarAdminContent' : 
+                            (${#authorization.expression('hasRole(''USER'')')} ? 'navbarUserContent' : 
+                            (${#authorization.expression('hasRole(''ORGANIZATION'')')} ? 'navbarOrgContent' : 'navbarGuestContent'))">
+                    
+                    <!-- ADMIN MENU -->
+                    <ul class="navbar-nav me-auto" sec:authorize="hasRole('ADMIN')">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/dashboard}">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/users}">
+                                <i class="bi bi-people"></i> Usuarios
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/organizations}">
+                                <i class="bi bi-building"></i> Organizaciones
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <!-- USER MENU -->
+                    <ul class="navbar-nav me-auto" sec:authorize="hasRole('USER')">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/user/welcome}">
+                                <i class="bi bi-house"></i> Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/user/solicitudes}">
+                                <i class="bi bi-recycle"></i> Mis Solicitudes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/user/nueva-solicitud}">
+                                <i class="bi bi-plus-circle"></i> Nueva Solicitud
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <!-- GUEST MENU (no autenticado) -->
+                    <ul class="navbar-nav me-auto" sec:authorize="isAnonymous()">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/login}">
+                                <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/register}">
+                                <i class="bi bi-person-plus"></i> Registrarse
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <!-- PARTE DERECHA DEL MENÚ - TODOS LOS USUARIOS AUTENTICADOS -->
+                    <ul class="navbar-nav ms-auto" sec:authorize="isAuthenticated()">
+                        <!-- Selector de idioma -->
+                        <li class="nav-item me-2">
+                            <a class="nav-link" th:href="@{?language=es}">
+                                <img src="/img/uruguay.png" alt="Español" height="20" class="rounded">
+                            </a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link" th:href="@{?language=pt}">
+                                <img src="/img/brasil.png" alt="Português" height="20" class="rounded">
+                            </a>
+                        </li>
+                        
+                        <!-- Menú desplegable de usuario -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <!-- Ícono según rol -->
+                                <i sec:authorize="hasRole('ADMIN')" class="bi bi-person-circle"></i>
+                                <i sec:authorize="hasRole('USER')" class="bi bi-person"></i>
+                                <i sec:authorize="hasRole('ORGANIZATION')" class="bi bi-building"></i>
+                                <span th:text="${#authentication.principal.username}">Usuario</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <!-- Configuración con URL según rol -->
+                                    <a class="dropdown-item" 
+                                       th:href="${#authorization.expression('hasRole(''ADMIN'')')} ? @{/admin/profile} : 
+                                              (${#authorization.expression('hasRole(''USER'')')} ? @{/user/profile} : 
+                                              (${#authorization.expression('hasRole(''ORGANIZATION'')')} ? @{/org/profile} : @{/}))">
+                                        <i class="bi bi-gear"></i> Configuración
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                
+                                <!-- Cierre de sesión - Form para admin, enlace para otros -->
+                                <li sec:authorize="hasRole('ADMIN')">
+                                    <form th:action="@{/logout}" method="post" class="dropdown-item p-0">
+                                        <button type="submit" class="btn btn-link dropdown-item text-decoration-none">
+                                            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                                        </button>
+                                    </form>
+                                </li>
+                                <li sec:authorize="!hasRole('ADMIN')">
+                                    <a class="dropdown-item" th:href="@{/logout}">
+                                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </div>
 </body>
 </html>
