@@ -9,6 +9,7 @@ import com.example.registrationlogindemo.repository.UserRepository;
 import com.example.registrationlogindemo.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -53,13 +54,7 @@ public class AdministradorController extends BaseController {
     private DashboardService dashboardService;
     
     @Autowired
-    private AdminUserService adminUserService;
-    
-    @Autowired
-    private AdminReportService adminReportService;
-    
-    @Autowired
-    private AdminSolicitudeService adminSolicitudeService;
+    private ReportService reportService;
 
     @GetMapping("/dashboard")
     public ModelAndView getDashboard() {
@@ -96,7 +91,7 @@ public class AdministradorController extends BaseController {
         ModelAndView mv = new ModelAndView("admin/edit");
         
         // Obtener usuario por ID
-        Optional<User> userOpt = adminUserService.getUserById(id);
+        Optional<User> userOpt = userService.findUserById(id);
         if (!userOpt.isPresent()) {
             mv.setViewName("redirect:/admin/profile");
             return mv;
@@ -124,7 +119,7 @@ public class AdministradorController extends BaseController {
         }
         
         // Usar el servicio para actualizar el usuario
-        adminUserService.updateUser(id, user, fileImage, currentProfileImageUrl, null, msg);
+        userService.updateUserByAdmin(id, user, fileImage, currentProfileImageUrl, null, msg);
         
         return "redirect:/admin/profile";
     }
@@ -133,8 +128,8 @@ public class AdministradorController extends BaseController {
     public ModelAndView adminReports() {
         ModelAndView mv = new ModelAndView("admin/reports");
         
-        // Obtener todos los reportes
-        List<Report> reportes = adminReportService.getAllReports();
+        // Obtener todos los reportes usando el servicio
+        List<Report> reportes = reportService.findAll();
         mv.addObject("reportes", reportes);
         
         // Agregar breadcrumbs
@@ -143,18 +138,24 @@ public class AdministradorController extends BaseController {
         return mv;
     }
 
-    @GetMapping("/reports/edit/{id}")
+    @GetMapping("/report/{id}")
     public ModelAndView adminEditReport(@PathVariable("id") long id) {
-        ModelAndView mv = new ModelAndView("admin/report_edit");
+        ModelAndView mv = new ModelAndView("admin/editReport");
         
         // Obtener reporte por ID
-        Optional<Report> reportOpt = adminReportService.getReportById(id);
+        Optional<Report> reportOpt = reportService.findById(id);
         if (!reportOpt.isPresent()) {
             mv.setViewName("redirect:/admin/reports");
             return mv;
         }
         
-        mv.addObject("image", reportOpt.get());
+        Report report = reportOpt.get();
+        mv.addObject("report", report);
+        
+        // Agregar usuario asociado si existe
+        if (report.getUser() != null) {
+            mv.addObject("userName", report.getUser().getName());
+        }
         
         // Agregar breadcrumbs
         mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Reportes", "Editar"));
@@ -162,15 +163,10 @@ public class AdministradorController extends BaseController {
         return mv;
     }
 
-    @GetMapping("/reports/{id}")
-    public String adminReportEdit(@PathVariable("id") long id) {
-        return "redirect:/admin/reports/edit/" + id;
-    }
-
-    @PostMapping("/reports/edit/{id}")
+    @PostMapping("/report/{id}")
     public String updateReport(@ModelAttribute("image") Report report, RedirectAttributes redirectAttributes) {
         // Usar el servicio para actualizar el reporte
-        adminReportService.updateReport(report, redirectAttributes);
+        reportService.updateReportByAdmin(report, redirectAttributes);
         
         return "redirect:/admin/reports";
     }
@@ -179,8 +175,8 @@ public class AdministradorController extends BaseController {
     public ModelAndView adminSolicitudes() {
         ModelAndView mv = new ModelAndView("admin/solicitudes");
         
-        // Obtener todas las solicitudes
-        List<Solicitude> solicitudes = adminSolicitudeService.getAllSolicitudes();
+        // Obtener todas las solicitudes usando el método findAll() del servicio consolidado
+        List<Solicitude> solicitudes = solicitudeService.findAll();
         mv.addObject("solicitudes", solicitudes);
         
         // Agregar breadcrumbs
@@ -194,19 +190,19 @@ public class AdministradorController extends BaseController {
     public ModelAndView adminEditSolicitude(@PathVariable("id") int id) {
         ModelAndView mv = new ModelAndView("admin/solicitude_edit");
         
-        // Obtener solicitud por ID
-        Optional<Solicitude> solicitudeOpt = adminSolicitudeService.getSolicitudeById(id);
-        if (!solicitudeOpt.isPresent()) {
+        // Obtener solicitud por ID usando el método findById() del servicio consolidado
+        try {
+            Solicitude solicitude = solicitudeService.findById(id);
+            mv.addObject("solicitude", solicitude);
+            
+            // Agregar breadcrumbs
+            mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Solicitudes", "Editar"));
+            
+            return mv;
+        } catch (Exception e) {
             mv.setViewName("redirect:/admin/solicitudes");
             return mv;
         }
-        
-        mv.addObject("solicitude", solicitudeOpt.get());
-        
-        // Agregar breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Solicitudes", "Editar"));
-        
-        return mv;
     }
 
     // Método para procesar la edición de una solicitud
@@ -219,8 +215,8 @@ public class AdministradorController extends BaseController {
             return "admin/solicitude_edit";
         }
         
-        // Usar el servicio para actualizar la solicitud
-        adminSolicitudeService.updateSolicitude(solicitude, imagem, msg);
+        // Usar el servicio consolidado para actualizar la solicitud
+        solicitudeService.updateSolicitudeByAdmin(solicitude, imagem, msg);
         
         return "redirect:/admin/solicitudes";
     }
@@ -228,8 +224,8 @@ public class AdministradorController extends BaseController {
     // Método para eliminar una solicitud
     @GetMapping("/solicitudes/delete/{id}")
     public String adminExcluirSolicitud(@PathVariable("id") int id) {
-        // Usar el servicio para eliminar la solicitud
-        adminSolicitudeService.deleteSolicitude(id);
+        // Usar el servicio consolidado para eliminar la solicitud
+        solicitudeService.deleteSolicitudeByAdmin(id);
         
         return "redirect:/admin/solicitudes";
     }
@@ -239,7 +235,7 @@ public class AdministradorController extends BaseController {
         ModelAndView mv = new ModelAndView("admin/users");
         
         // Obtener todos los usuarios
-        List<User> users = adminUserService.getAllUsers();
+        List<User> users = userService.findAll();
         mv.addObject("users", users);
         
         // Obtener todos los roles
@@ -258,7 +254,7 @@ public class AdministradorController extends BaseController {
         ModelAndView mv = new ModelAndView("admin/user_edit");
         
         // Obtener usuario por ID
-        Optional<User> userOpt = adminUserService.getUserById(id);
+        Optional<User> userOpt = userService.findUserById(id);
         if (!userOpt.isPresent()) {
             mv.setViewName("redirect:/admin/users");
             return mv;
@@ -292,7 +288,7 @@ public class AdministradorController extends BaseController {
         }
         
         // Usar el servicio para actualizar el usuario
-        adminUserService.updateUser(id, user, fileImage, currentProfileImageUrl, roleValue, msg);
+        userService.updateUserByAdmin(id, user, fileImage, currentProfileImageUrl, roleValue, msg);
         
         return "redirect:/admin/users";
     }
@@ -310,7 +306,7 @@ public class AdministradorController extends BaseController {
         }
         
         // Usar el servicio para eliminar el usuario
-        adminUserService.deleteUser(id, redirectAttributes);
+        userService.deleteUserByAdmin(id, redirectAttributes);
         
         return "redirect:/admin/users";
     }
@@ -346,7 +342,7 @@ public class AdministradorController extends BaseController {
         }
         
         // Usar el servicio para crear el usuario administrador
-        adminUserService.createAdminUser(user, password, confirmPassword, fileImage, roleValue, msg);
+        userService.createUserByAdmin(user, password, confirmPassword, fileImage, roleValue, msg);
         
         return "redirect:/admin/users";
     }
@@ -372,8 +368,8 @@ public class AdministradorController extends BaseController {
             return "admin/newsolicitude";
         }
         
-        // Usar el servicio para crear la solicitud
-        adminSolicitudeService.createSolicitude(solicitude, imagem, msg);
+        // Para crear una solicitud nueva como admin, usamos updateSolicitudeByAdmin que funciona tanto para crear como actualizar
+        solicitudeService.updateSolicitudeByAdmin(solicitude, imagem, msg);
         
         return "redirect:/admin/solicitudes";
     }
@@ -383,7 +379,7 @@ public class AdministradorController extends BaseController {
         ModelAndView mv = new ModelAndView("admin/newreport");
         
         // Obtener usuarios con rol "ROLE_USER" para asignar el reporte
-        List<User> usuarios = adminReportService.getUsersForReportAssignment();
+        List<User> usuarios = reportService.getUsersForReportAssignment();
         mv.addObject("usuarios", usuarios);
         mv.addObject("reporte", new Report());
         
@@ -399,7 +395,7 @@ public class AdministradorController extends BaseController {
                                     RedirectAttributes redirectAttributes) {
         
         // Usar el servicio para crear el reporte
-        adminReportService.createReport(reporte, userId, redirectAttributes);
+        reportService.createReportByAdmin(reporte, userId, redirectAttributes);
         
         return "redirect:/admin/reports";
     }

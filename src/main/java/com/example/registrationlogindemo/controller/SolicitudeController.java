@@ -1,7 +1,7 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Solicitude;
-import com.example.registrationlogindemo.service.UserSolicitudeService;
+import com.example.registrationlogindemo.service.SolicitudeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,12 +20,12 @@ import java.io.IOException;
 public class SolicitudeController {
 
     @Autowired
-    private UserSolicitudeService userSolicitudeService;
+    private SolicitudeService solicitudeService;
 
     @GetMapping("/newsolicitude")
     public ModelAndView newSolicitude(@AuthenticationPrincipal UserDetails userDetails) {
         // Delegamos la preparación del formulario al servicio
-        return userSolicitudeService.prepareNewSolicitudeForm(userDetails);
+        return solicitudeService.prepareNewSolicitudeForm(userDetails);
     }
 
     @PostMapping("/newsolicitude")
@@ -39,14 +39,14 @@ public class SolicitudeController {
         }
 
         // Delegamos la creación de la solicitud al servicio
-        return userSolicitudeService.createSolicitude(solicitud, imagen, msg, userDetails);
+        return solicitudeService.createSolicitude(solicitud, imagen, msg, userDetails);
     }
 
     @GetMapping("/editsolicitude/{id}")
     public ModelAndView showEditSolicitudeForm(@PathVariable("id") int id,
                                                @AuthenticationPrincipal UserDetails userDetails) {
         // Delegamos la preparación del formulario de edición al servicio
-        return userSolicitudeService.prepareEditSolicitudeForm(id, userDetails);
+        return solicitudeService.prepareEditSolicitudeForm(id, userDetails);
     }
 
     @PostMapping("/editsolicitude/{id}")
@@ -61,7 +61,7 @@ public class SolicitudeController {
         }
 
         // Delegamos la actualización de la solicitud al servicio
-        return userSolicitudeService.updateSolicitude(id, solicitude, imagen, msg, userDetails);
+        return solicitudeService.updateSolicitude(id, solicitude, imagen, msg, userDetails);
     }
 
     @PostMapping("/solicitude/{id}/messages")
@@ -70,13 +70,13 @@ public class SolicitudeController {
                               @AuthenticationPrincipal UserDetails userDetails,
                               RedirectAttributes redirectAttributes) {
         // Delegamos el envío del mensaje al servicio
-        return userSolicitudeService.sendMessage(id, messageContent, userDetails, redirectAttributes);
+        return solicitudeService.sendMessage(id, messageContent, userDetails, redirectAttributes);
     }
 
     @GetMapping("/deletesolicitude/{id}")
     public String deleteSolicitude(@PathVariable("id") long id,
                                    @AuthenticationPrincipal UserDetails userDetails) {
         // Delegamos la eliminación de la solicitud al servicio
-        return userSolicitudeService.deleteSolicitude(id, userDetails);
+        return solicitudeService.deleteSolicitude(id, userDetails);
     }
 }

@@ -9,11 +9,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Set;
+
 /**
- * Servicio para centralizar operaciones relacionadas con autenticación y registro de usuarios.
- * Gestiona el flujo de login, registro, validación de credenciales y redirección basada en roles.
+ * Servicio centralizado para todas las operaciones relacionadas con autenticación y acceso de usuarios.
+ * Gestiona el flujo de login, registro, validación de credenciales, redirección basada en roles,
+ * verificación del usuario actual y sus permisos.
  */
 public interface AuthService {
+    
+    // ======= Métodos para registro y validación =======
     
     /**
      * Maneja el registro de un nuevo usuario validando datos y guardando en la base de datos
@@ -31,6 +36,8 @@ public interface AuthService {
      * @return true si las credenciales son únicas, false en caso contrario
      */
     boolean validateUniqueCredentials(String email, String username, BindingResult result);
+    
+    // ======= Métodos para manejo de sesiones y redirección =======
     
     /**
      * Procesa el login exitoso y determina la redirección adecuada
@@ -56,4 +63,37 @@ public interface AuthService {
      * @return ModelAndView con la vista de error y los datos del error
      */
     ModelAndView handleError(HttpServletRequest request);
+    
+    // ======= Métodos para verificar el usuario actual y sus roles =======
+    
+    /**
+     * Obtiene el usuario actualmente autenticado
+     * @return Usuario autenticado o null si no hay autenticación
+     */
+    User getCurrentUser();
+    
+    /**
+     * Verifica si hay un usuario autenticado actualmente
+     * @return true si hay un usuario autenticado, false en caso contrario
+     */
+    boolean isAuthenticated();
+    
+    /**
+     * Obtiene el nombre de usuario actual
+     * @return Nombre de usuario o null si no está autenticado
+     */
+    String getCurrentUsername();
+    
+    /**
+     * Verifica si el usuario autenticado tiene un rol específico
+     * @param role Rol a verificar (sin el prefijo "ROLE_")
+     * @return true si tiene el rol, false en caso contrario
+     */
+    boolean hasRole(String role);
+    
+    /**
+     * Obtiene todos los roles del usuario actual
+     * @return Conjunto de nombres de roles (sin el prefijo "ROLE_")
+     */
+    Set<String> getCurrentUserRoles();
 }

@@ -2,7 +2,7 @@ package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.AuthenticationService;
+import com.example.registrationlogindemo.service.AuthService;
 import com.example.registrationlogindemo.service.BreadcrumbService;
 import com.example.registrationlogindemo.service.FileStorageService;
 import com.example.registrationlogindemo.service.NotificationService;
@@ -32,7 +32,7 @@ public abstract class BaseController {
     protected BreadcrumbService breadcrumbService;
     
     @Autowired
-    protected AuthenticationService authenticationService;
+    protected AuthService authService;
     
     @Autowired
     protected NotificationService notificationService;
@@ -42,7 +42,7 @@ public abstract class BaseController {
      * @return Usuario autenticado o null si no hay autenticación
      */
     protected User getCurrentUser() {
-        return authenticationService.getCurrentUser();
+        return authService.getCurrentUser();
     }
 
     /**

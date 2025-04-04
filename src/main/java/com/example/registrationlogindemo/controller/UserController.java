@@ -209,26 +209,30 @@ public class UserController {
     }
 
     @PostMapping("/updatesolicitude/{id}")
-    public ModelAndView updateSolicitude(@PathVariable("id") int id, @RequestParam String categoria,
-                                         @RequestParam String barrio, @RequestParam String calle,
-                                         @RequestParam String numeroDeCasa, @RequestParam MultipartFile file,
-                                         @RequestParam String currentImageUrl, RedirectAttributes msg) {
-        User user = getAuthenticatedUser();
-        Optional<Solicitude> opt = solicitudeRepository.findById(id);
-        if (opt.isPresent() && opt.get().getUser().getId() == user.getId()) {
-            Solicitude s = opt.get();
-            s.setCategoria(categoria); s.setBarrio(barrio); s.setCalle(calle); s.setNumeroDeCasa(numeroDeCasa);
-            try {
-                if (!file.isEmpty()) {
-                    String filename = file.getOriginalFilename().replace(" ", "_");
-                    Files.write(Paths.get(UPLOAD_DIR + filename), file.getBytes());
-                    s.setImagen(filename);
-                } else s.setImagen(currentImageUrl);
-                solicitudeRepository.save(s);
-                msg.addFlashAttribute("success", "Solicitud actualizada");
-            } catch (IOException e) { msg.addFlashAttribute("error", "Error con imagen"); }
-        }
-        return new ModelAndView("redirect:/user/view-requests");
+    public String updateSolicitude(@PathVariable("id") int id, 
+                                @RequestParam String categoria,
+                                @RequestParam String barrio, 
+                                @RequestParam String calle,
+                                @RequestParam String numeroDeCasa, 
+                                @RequestParam MultipartFile file,
+                                @RequestParam String currentImageUrl, 
+                                RedirectAttributes msg) throws IOException {
+        // Obtener el usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        
+        // Crear objeto solicitud con los datos actualizados
+        Solicitude solicitude = new Solicitude();
+        solicitude.setId(id);
+        solicitude.setCategoria(categoria);
+        solicitude.setBarrio(barrio);
+        solicitude.setCalle(calle); 
+        solicitude.setNumeroDeCasa(numeroDeCasa);
+        
+        // Delegar la actualización al servicio consolidado
+        solicitudeService.updateSolicitude(id, solicitude, file, msg, userDetails);
+        
+        return "redirect:/user/view-requests";
     }
 
     @GetMapping("/report-problem")

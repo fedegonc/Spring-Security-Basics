@@ -5,30 +5,51 @@ import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.UserService;
+import com.example.registrationlogindemo.service.*;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implementación consolidada del servicio de usuarios
+ * que maneja tanto operaciones regulares como administrativas
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private NotificationService notificationService;
+    
+    @Autowired
+    private FileStorageService fileStorageService;
+    
+    @Autowired
+    private RoleManagementService roleManagementService;
+    
+    @Autowired
+    private ValidationService validationService;
+
+    private static final String IMAGE_UPLOAD_DIR = "./src/main/resources/static/img/";
 
     // Constructor para inyección de dependencias
     public UserServiceImpl(UserRepository userRepository,
@@ -39,12 +60,19 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // ======= Métodos básicos de acceso a datos =======
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+    
     // Método privado para convertir una entidad User a un DTO UserDto
     private UserDto convertEntityToDto(User user) {
         UserDto userDto = new UserDto();
         String[] name = user.getName().split(" ");
-        userDto.setFirstName(name[0]);
-        userDto.setLastName(name[1]);
+        userDto.setFirstName(name.length > 0 ? name[0] : "");
+        userDto.setLastName(name.length > 1 ? name[1] : "");
         userDto.setEmail(user.getEmail());
 
         return userDto;
@@ -115,16 +143,19 @@ public class UserServiceImpl implements UserService {
     }
 
     // Método para obtener un usuario por su ID
+    @Override
     public User get(Long id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElse(null);
     }
 
     // Método para listar todos los roles
+    @Override
     public List<Role> listRoles() {
         return roleRepository.findAll();
     }
 
     // Método para guardar un usuario en la base de datos
+    @Override
     public void save(User user) {
         userRepository.save(user);
     }
@@ -141,16 +172,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
+    // ======= Métodos para operaciones de usuarios regulares =======
+
     @Override
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
+
     @Override
     @Transactional
     public void eliminarEntidad(Long id) {
         userRepository.deleteById(id);
     }
 
+    @Override
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
@@ -159,6 +194,7 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
     @Override
     public boolean debeMostrarLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -171,6 +207,7 @@ public class UserServiceImpl implements UserService {
         return true; // Si el usuario no está autenticado, mostrar el botón de login
     }
 
+    @Override
     public Optional<User> getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
@@ -180,17 +217,14 @@ public class UserServiceImpl implements UserService {
         return Optional.empty();
     }
 
-    private static final String IMAGE_UPLOAD_DIR = "./src/main/resources/static/img/";
-
-
     @Override
     public Optional<User> findUserById(Long id) {
         return userRepository.findById(id);
     }
 
-
-    public void updateUserProfile(User user, MultipartFile fileImage, String currentProfileImageUrl) throws IOException, IOException {
-        if (!fileImage.isEmpty()) {
+    @Override
+    public void updateUserProfile(User user, MultipartFile fileImage, String currentProfileImageUrl) throws IOException {
+        if (fileImage != null && !fileImage.isEmpty()) {
             String originalFilename = fileImage.getOriginalFilename();
             if (originalFilename != null) {
                 String modifiedFilename = originalFilename.replace(" ", "_");
@@ -218,5 +252,165 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return true;
+    }
+
+    // ======= Métodos para operaciones administrativas =======
+    
+    @Override
+    public boolean updateUserByAdmin(long id, User user, MultipartFile fileImage, 
+                                   String currentProfileImage, String roleValue, 
+                                   RedirectAttributes msg) throws IOException {
+        try {
+            // Verificar si el usuario existe
+            Optional<User> userExistente = userRepository.findById(id);
+            if (!userExistente.isPresent()) {
+                notificationService.addErrorMessage(msg, "Usuario no encontrado con ID: " + id);
+                return false;
+            }
+            
+            User userActual = userExistente.get();
+            
+            // Verificar si el email o username ya están en uso por otro usuario
+            if (!userActual.getEmail().equals(user.getEmail()) && 
+                !validationService.validateUniqueEmail(user.getEmail(), msg)) {
+                return false;
+            }
+            
+            if (!userActual.getUsername().equals(user.getUsername()) && 
+                !validationService.validateUniqueUsername(user.getUsername(), msg)) {
+                return false;
+            }
+            
+            // Actualizar atributos básicos
+            userActual.setName(user.getName());
+            userActual.setEmail(user.getEmail());
+            userActual.setUsername(user.getUsername());
+            
+            // Manejar la imagen de perfil (si se proporciona una nueva)
+            if (fileImage != null && !fileImage.isEmpty()) {
+                if (!fileStorageService.isValidImageFile(fileImage)) {
+                    notificationService.addErrorMessage(msg, "Por favor, sube solo imágenes (jpg, jpeg, png, gif)");
+                    return false;
+                }
+                
+                String imageName = fileStorageService.storeImage(fileImage, currentProfileImage);
+                userActual.setProfileImage(imageName);
+            }
+            
+            // Manejar roles si se proporcionan
+            if (roleValue != null && !roleValue.isEmpty()) {
+                List<String> roleNames = Arrays.stream(roleValue.split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toList());
+                
+                // Usar RoleManagementService para asignar roles
+                roleManagementService.setUserRoles(userActual, roleNames, msg);
+            }
+            
+            // Guardar el usuario actualizado
+            userRepository.save(userActual);
+            
+            notificationService.addSuccessMessage(msg, "Usuario actualizado exitosamente");
+            return true;
+            
+        } catch (Exception e) {
+            notificationService.addErrorMessage(msg, "Error al actualizar el usuario: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean createUserByAdmin(User user, String password, String confirmPassword, 
+                                    MultipartFile fileImage, String roleValue, 
+                                    RedirectAttributes msg) throws IOException {
+        try {
+            // Validaciones básicas
+            if (!password.equals(confirmPassword)) {
+                notificationService.addErrorMessage(msg, "Las contraseñas no coinciden");
+                return false;
+            }
+            
+            // Validar unicidad de email y username
+            if (!validationService.validateUniqueEmail(user.getEmail(), msg)) {
+                return false;
+            }
+            
+            if (!validationService.validateUniqueUsername(user.getUsername(), msg)) {
+                return false;
+            }
+            
+            // Validar fortaleza de la contraseña
+            if (!validationService.validatePasswordStrength(password, msg)) {
+                return false;
+            }
+            
+            // Encriptar la contraseña
+            user.setPassword(passwordEncoder.encode(password));
+            
+            // Manejar la imagen de perfil
+            if (fileImage != null && !fileImage.isEmpty()) {
+                if (!fileStorageService.isValidImageFile(fileImage)) {
+                    notificationService.addErrorMessage(msg, "Por favor, sube solo imágenes (jpg, jpeg, png, gif)");
+                    return false;
+                }
+                
+                String imageName = fileStorageService.storeImage(fileImage, null);
+                user.setProfileImage(imageName);
+            }
+            
+            // Guardar el usuario
+            User savedUser = userRepository.save(user);
+            
+            // Manejar roles si se proporcionan
+            if (roleValue != null && !roleValue.isEmpty()) {
+                List<String> roleNames = Arrays.stream(roleValue.split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toList());
+                
+                // Usar RoleManagementService para asignar roles
+                roleManagementService.setUserRoles(savedUser, roleNames, msg);
+            } else {
+                // Asignar rol de administrador por defecto
+                roleManagementService.assignRoleToUser(savedUser, "ROLE_ADMIN", msg);
+            }
+            
+            notificationService.addSuccessMessage(msg, "Usuario administrador creado exitosamente");
+            return true;
+            
+        } catch (Exception e) {
+            notificationService.addErrorMessage(msg, "Error al crear el usuario: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean deleteUserByAdmin(int id, RedirectAttributes redirectAttributes) {
+        try {
+            // Verificar si el usuario existe
+            Optional<User> userOpt = userRepository.findById((long) id);
+            if (!userOpt.isPresent()) {
+                notificationService.addErrorMessage(redirectAttributes, "Usuario no encontrado");
+                return false;
+            }
+            
+            User user = userOpt.get();
+            
+            // Eliminar la imagen de perfil asociada (si existe)
+            String imageName = user.getProfileImage();
+            if (imageName != null && !imageName.isEmpty()) {
+                fileStorageService.deleteImage(imageName);
+            }
+            
+            // Eliminar el usuario
+            userRepository.deleteById((long) id);
+            
+            notificationService.addSuccessMessage(redirectAttributes, "Usuario eliminado exitosamente");
+            return true;
+            
+        } catch (Exception e) {
+            notificationService.addErrorMessage(redirectAttributes, 
+                "Error al eliminar el usuario: " + e.getMessage());
+            return false;
+        }
     }
 }
