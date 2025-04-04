@@ -7,16 +7,17 @@
 </head>
 <body>
 
-<div th:fragment="solicitudes-tarjetas">
+<div th:fragment="solicitudes-tarjetas(titulo, showHeader, showActions, varName, path)">
     <div class="mb-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-3">
+        <!-- Cabecera configurable -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-3" th:if="${showHeader == true}">
             <div class="flex items-center">
                 <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-3" aria-hidden="true">
                     <i class="bi bi-card-list text-green-600 text-2xl"></i>
                 </div>
-                <h2 class="text-xl md:text-2xl font-bold text-gray-800">Solicitudes Recientes</h2>
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800" th:text="${titulo ?: 'Solicitudes Recientes'}">Solicitudes Recientes</h2>
             </div>
-            <a th:href="@{/user/view-requests}" 
+            <a th:href="${path ?: '/user/view-requests'}" 
                class="flex items-center text-green-700 hover:text-green-800 text-base font-medium px-3 py-2 rounded-md hover:bg-green-50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                aria-label="Ver todas las solicitudes">
                 Ver todas <i class="bi bi-arrow-right ml-1" aria-hidden="true"></i>
@@ -24,29 +25,36 @@
         </div>
         
         <!-- Contenedor de tarjetas -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="region" aria-label="Lista de solicitudes recientes">
-            <!-- Tarjetas de solicitudes -->
-            <div th:each="solicitud : ${solicitude}" 
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="region" aria-label="Lista de solicitudes">
+            <!-- Tarjetas de solicitudes - utiliza la variable pasada como parámetro o por defecto 'solicitude' -->
+            <div th:each="solicitud : ${__${varName ?: 'solicitude'}__}" 
                  class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:border-green-300 focus-within:ring-2 focus-within:ring-green-500"
                  th:attr="aria-label=${'Solicitud número ' + solicitud.id + ', estado: ' + solicitud.estado}">
-                <div class="border-l-4 h-2" th:classappend="${solicitud.estado == 'En proceso' ? 'border-yellow-500' : solicitud.estado == 'Completada' ? 'border-green-500' : 'border-red-500'}"></div>
+                <div class="border-l-4 h-2" th:classappend="${solicitud.estado == 'EN_ESPERA' ? 'border-yellow-500' : solicitud.estado == 'ACEPTADA' ? 'border-green-500' : solicitud.estado == 'RECHAZADA' ? 'border-red-500' : solicitud.estado == 'EN_REVISION' ? 'border-blue-500' : 'border-gray-500'}"></div>
                 <div class="p-5">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-lg font-semibold text-gray-800" th:text="${'Solicitud #' + solicitud.id}">Solicitud #12345</h3>
                         <span class="px-3 py-1 text-sm rounded-full font-medium" 
-                              th:classappend="${solicitud.estado == 'En proceso' ? 'bg-yellow-100 text-yellow-800' : solicitud.estado == 'Completada' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}"
+                              th:classappend="${
+                                solicitud.estado == 'ACEPTADA' ? 'bg-green-100 text-green-800' : 
+                                solicitud.estado == 'RECHAZADA' ? 'bg-red-100 text-red-800' : 
+                                solicitud.estado == 'EN_ESPERA' ? 'bg-yellow-100 text-yellow-800' : 
+                                solicitud.estado == 'EN_REVISION' ? 'bg-blue-100 text-blue-800' : 
+                                'bg-gray-100 text-gray-800'}"
                               th:text="${solicitud.estado}">Estado</span>
                     </div>
                     <div class="flex items-center mb-3">
                         <i class="bi bi-calendar3 text-gray-500 mr-2" aria-hidden="true"></i>
-                        <p class="text-base text-gray-600" th:text="${#strings.replace(solicitud.fecha, 'T', ' ')}" th:attr="aria-label=${'Fecha: ' + #strings.replace(solicitud.fecha, 'T', ' ')}">Fecha: 15/10/2023</p>
+                        <p class="text-base text-gray-600" th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}" th:attr="aria-label=${'Fecha: ' + #temporals.format(solicitud.fecha, 'dd/MM/yyyy')}">Fecha: 15/10/2023</p>
                     </div>
                     <div class="flex items-center mb-4">
-                        <i class="bi bi-recycle text-gray-500 mr-2" aria-hidden="true"></i>
-                        <span class="text-base text-gray-600" th:text="${'Material: ' + solicitud.material}" th:attr="aria-label=${'Material: ' + solicitud.material}">Material: Plástico</span>
+                        <i class="bi bi-tag text-gray-500 mr-2" aria-hidden="true"></i>
+                        <span class="text-base text-gray-600" th:text="${'Categoría: ' + solicitud.categoria}" th:attr="aria-label=${'Categoría: ' + solicitud.categoria}">Categoría: Plástico</span>
                     </div>
                     <div class="mt-4 flex justify-end">
-                        <a th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" 
+                        <!-- Acciones personalizables según el contexto -->
+                        <a th:if="${showActions == true}" 
+                           th:href="@{${path ?: '/user'} + '/editsolicitude/' + ${solicitud.id}}" 
                            class="flex items-center text-green-700 hover:text-green-800 text-base font-medium px-3 py-2 rounded-md hover:bg-green-50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                            th:attr="aria-label=${'Ver detalles de la solicitud número ' + solicitud.id}">
                             Detalles <i class="bi bi-eye ml-1" aria-hidden="true"></i>
@@ -56,22 +64,23 @@
             </div>
             
             <!-- Tarjeta de ejemplo si no hay solicitudes -->
-            <div th:if="${#lists.isEmpty(solicitude)}" 
+            <div th:if="${#lists.isEmpty(__${varName ?: 'solicitude'}__)}" 
                  class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 flex flex-col items-center justify-center text-center h-56"
-                 aria-label="No hay solicitudes recientes">
+                 aria-label="No hay solicitudes">
                 <i class="bi bi-inbox text-gray-400 text-5xl mb-3" aria-hidden="true"></i>
-                <p class="text-gray-600 text-lg mb-2">No tienes solicitudes recientes</p>
-                <a th:href="@{/user/newsolicitude}" 
+                <p class="text-gray-600 text-lg mb-2">No hay solicitudes para mostrar</p>
+                <a th:if="${showActions == true}" 
+                   th:href="@{${path ?: '/user'} + '/newsolicitude'}" 
                    class="mt-4 text-green-700 hover:text-green-800 text-base font-medium px-4 py-2 rounded-md hover:bg-green-50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                   aria-label="Crear tu primera solicitud de reciclaje">
-                    Crear tu primera solicitud <i class="bi bi-plus-circle ml-1" aria-hidden="true"></i>
+                   aria-label="Crear una nueva solicitud de reciclaje">
+                    Crear solicitud <i class="bi bi-plus-circle ml-1" aria-hidden="true"></i>
                 </a>
             </div>
         </div>
         
         <!-- Botón de nueva solicitud -->
-        <div class="mt-8 text-center">
-            <a th:href="@{/user/newsolicitude}" 
+        <div class="mt-8 text-center" th:if="${showActions == true}">
+            <a th:href="@{${path ?: '/user'} + '/newsolicitude'}" 
                class="inline-flex items-center px-5 py-3 bg-green-600 text-white text-lg font-medium rounded-md hover:bg-green-700 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                aria-label="Crear una nueva solicitud de reciclaje">
                 <i class="bi bi-plus-circle mr-2" aria-hidden="true"></i> Nueva Solicitud

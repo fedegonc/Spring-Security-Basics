@@ -83,27 +83,12 @@ public class DashboardServiceImpl implements DashboardService {
         reportesPorEstado.put("En proceso", 0);
         reportesPorEstado.put("Resueltos", 0);
         
-        // Obtener reportes y contar por estado
+        // Obtener reportes
         List<Report> reportes = reportRepository.findAll();
-        for (Report reporte : reportes) {
-            String estado = reporte.getStatus();
-            if (estado == null) {
-                estado = "Pendientes";
-            }
-            
-            // Categorizar los estados en tres grupos principales
-            if (estado.equalsIgnoreCase("Pendiente") || estado.equalsIgnoreCase("Nuevo")) {
-                reportesPorEstado.put("Pendientes", reportesPorEstado.get("Pendientes") + 1);
-            } else if (estado.equalsIgnoreCase("En proceso") || estado.equalsIgnoreCase("Revisando")) {
-                reportesPorEstado.put("En proceso", reportesPorEstado.get("En proceso") + 1);
-            } else if (estado.equalsIgnoreCase("Resuelto") || estado.equalsIgnoreCase("Completado") || 
-                      estado.equalsIgnoreCase("Cerrado")) {
-                reportesPorEstado.put("Resueltos", reportesPorEstado.get("Resueltos") + 1);
-            } else {
-                // Por defecto, consideramos pendiente cualquier otro estado
-                reportesPorEstado.put("Pendientes", reportesPorEstado.get("Pendientes") + 1);
-            }
-        }
+        
+        // Como la entidad Report no tiene un campo de estado, 
+        // asumiremos que todos los reportes están en estado "Pendientes" para simplificar
+        reportesPorEstado.put("Pendientes", reportes.size());
         
         return reportesPorEstado;
     }

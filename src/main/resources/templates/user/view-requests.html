@@ -96,85 +96,9 @@
       </div>
     </div>
 
-    <!-- Solicitudes -->
+    <!-- Solicitudes - Utilizando fragmento existente -->
     <div class="glass-card">
-      <h2 class="h4 mb-4" th:text="#{solicitudes.titulo}">Solicitudes</h2>
-      
-      <!-- Mensaje si no hay solicitudes -->
-      <div class="text-center py-5" th:if="${solicitudes == null || #lists.isEmpty(solicitudes)}">
-        <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
-        <h3 class="mt-3 h4">No tienes solicitudes</h3>
-        <p class="text-muted">¡Comienza creando tu primera solicitud de reciclaje!</p>
-        <a th:href="@{/user/newsolicitude}" class="btn btn-primary mt-3">
-          <i class="bi bi-plus-circle me-2"></i>Nueva Solicitud
-        </a>
-      </div>
-      
-      <!-- Lista de solicitudes -->
-      <div class="row g-4" th:if="${solicitudes != null && !#lists.isEmpty(solicitudes)}">
-        <div class="col-md-6 col-lg-4" th:each="solicitud : ${solicitudes}">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden solicitud-card">
-            <!-- Indicador de estado -->
-            <div class="card-status-indicator" th:classappend="${
-                solicitud.estado == 'ACEPTADA' ? 'bg-success' : 
-                solicitud.estado == 'RECHAZADA' ? 'bg-danger' : 
-                solicitud.estado == 'EN_ESPERA' ? 'bg-warning' : 
-                solicitud.estado == 'EN_REVISION' ? 'bg-info' : 
-                'bg-secondary'}" style="height: 5px;"></div>
-                
-            <div class="card-body p-0">
-              <div class="row g-0">
-                <!-- Columna de imagen -->
-                <div class="col-4 d-flex align-items-center justify-content-center p-3">
-                  <img th:if="${solicitud.imagen != null}" 
-                       th:src="@{/img/{img}(img=${solicitud.imagen})}" 
-                       th:alt="'Imagen de la solicitud #' + ${solicitud.id}"
-                       class="img-thumbnail" 
-                       style="max-height: 100px; object-fit: cover;">
-                  <i th:if="${solicitud.imagen == null}" class="bi bi-image text-muted" style="font-size: 3rem;"></i>
-                </div>
-                
-                <!-- Columna de información -->
-                <div class="col-8 p-3">
-                  <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h3 class="card-title h5 mb-0">
-                      Solicitud #<span th:text="${solicitud.id}">123</span>
-                    </h3>
-                    <span class="badge" th:classappend="${
-                        solicitud.estado == 'ACEPTADA' ? 'text-bg-success' : 
-                        solicitud.estado == 'RECHAZADA' ? 'text-bg-danger' : 
-                        solicitud.estado == 'EN_ESPERA' ? 'text-bg-warning' : 
-                        solicitud.estado == 'EN_REVISION' ? 'text-bg-info' : 
-                        'text-bg-secondary'}" 
-                          th:text="${solicitud.estado}" role="status">Estado</span>
-                  </div>
-                  
-                  <p class="card-text mb-1">
-                    <i class="bi bi-calendar-event me-2"></i>
-                    <span class="date-field" th:text="${solicitud.fecha}">01/01/2023</span>
-                  </p>
-                  
-                  <p class="card-text mb-1">
-                    <i class="bi bi-tag me-2"></i>
-                    <span th:text="${solicitud.categoria}">Categoría</span>
-                  </p>
-                  
-                  <p class="card-text mb-3">
-                    <i class="bi bi-geo-alt me-2"></i>
-                    <span th:text="${solicitud.barrio} + ', ' + ${solicitud.calle} + ' ' + ${solicitud.numeroDeCasa}">Ubicación</span>
-                  </p>
-                  
-                  <a class="btn btn-sm btn-primary w-100" 
-                     th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" 
-                     aria-label="Ver detalles de la solicitud #' + ${solicitud.id}">
-                      <i class="bi bi-eye me-2"></i>Ver detalles
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas}"></div>
     </div>
   </main>
 

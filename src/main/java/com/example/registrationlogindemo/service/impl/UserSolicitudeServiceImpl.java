@@ -83,7 +83,7 @@ public class UserSolicitudeServiceImpl implements UserSolicitudeService {
         User usuario = userRepository.findByUsername(userDetails.getUsername());
         
         // Establecer la fecha actual
-        solicitude.setFechaCreacion(LocalDateTime.now());
+        solicitude.setFecha(LocalDateTime.now());
         
         // Asociar la solicitud con el usuario actual
         solicitude.setUser(usuario);
@@ -107,12 +107,10 @@ public class UserSolicitudeServiceImpl implements UserSolicitudeService {
             Files.copy(imagen.getInputStream(), filePath);
         }
         
-        // Guardar la solicitud
+        // Guardar la solicitud en la base de datos
         solicitudeService.save(solicitude);
         
-        // Agregar mensaje de éxito
         redirectAttributes.addFlashAttribute("exito", "Solicitud creada con éxito");
-        
         return "redirect:/user/welcome";
     }
     
@@ -133,7 +131,7 @@ public class UserSolicitudeServiceImpl implements UserSolicitudeService {
                 mv.addObject("solicitude", solicitude);
                 
                 // Obtener los mensajes asociados a esta solicitud
-                List<Message> messages = messageService.findMessagesBySolicitudeId(id);
+                List<Message> messages = messageService.findMessagesBySolicitude(solicitude);
                 mv.addObject("messages", messages);
                 
                 // Agregar organizaciones al modelo

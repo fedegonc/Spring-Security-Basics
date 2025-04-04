@@ -53,19 +53,19 @@ public class AdminSolicitudeServiceImpl implements AdminSolicitudeService {
             Solicitude solicitudeActual = solicitudeExistente.get();
             
             // Actualizar atributos básicos
-            solicitudeActual.setTitle(solicitude.getTitle());
-            solicitudeActual.setDescription(solicitude.getDescription());
-            solicitudeActual.setStatus(solicitude.getStatus());
+            solicitudeActual.setCategoria(solicitude.getCategoria());
+            solicitudeActual.setDescripcion(solicitude.getDescripcion());
+            solicitudeActual.setEstado(solicitude.getEstado());
             
             // Manejar la imagen (si se proporciona una nueva)
             if (imagem != null && !imagem.isEmpty()) {
                 // Utilizar el servicio de almacenamiento de archivos para manejar la imagen
-                String imageName = fileStorageService.storeImage(imagem, solicitudeActual.getImage());
-                solicitudeActual.setImage(imageName);
+                String imageName = fileStorageService.storeImage(imagem, solicitudeActual.getImagen());
+                solicitudeActual.setImagen(imageName);
             }
             
             // Actualizar fecha de modificación
-            solicitudeActual.setUpdatedAt(LocalDateTime.now());
+            solicitudeActual.setFecha(LocalDateTime.now());
             
             // Guardar la solicitud actualizada
             solicitudeRepository.save(solicitudeActual);
@@ -83,18 +83,18 @@ public class AdminSolicitudeServiceImpl implements AdminSolicitudeService {
     public boolean createSolicitude(Solicitude solicitude, MultipartFile imagem, RedirectAttributes msg) throws IOException {
         try {
             // Establecer la fecha de creación
-            solicitude.setCreatedAt(LocalDateTime.now());
+            solicitude.setFecha(LocalDateTime.now());
             
             // Manejar la imagen (si se proporciona)
             if (imagem != null && !imagem.isEmpty()) {
                 String imageName = fileStorageService.storeImage(imagem, null);
-                solicitude.setImage(imageName);
+                solicitude.setImagen(imageName);
             }
             
             // Guardar la solicitud
             Solicitude savedSolicitude = solicitudeRepository.save(solicitude);
             
-            notificationService.addSuccessMessage(msg, "Solicitud creada exitosamente: " + savedSolicitude.getTitle());
+            notificationService.addSuccessMessage(msg, "Solicitud creada exitosamente: " + savedSolicitude.getCategoria());
             return true;
             
         } catch (Exception e) {
@@ -113,7 +113,7 @@ public class AdminSolicitudeServiceImpl implements AdminSolicitudeService {
             }
             
             // Eliminar la imagen asociada (si existe)
-            String imageName = solicitude.get().getImage();
+            String imageName = solicitude.get().getImagen();
             if (imageName != null && !imageName.isEmpty()) {
                 fileStorageService.deleteImage(imageName);
             }

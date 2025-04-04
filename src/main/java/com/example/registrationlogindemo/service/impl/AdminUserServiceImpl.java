@@ -51,7 +51,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     
     @Override
     public boolean updateUser(long id, User user, MultipartFile fileImage, 
-                             String currentProfileImageUrl, String roleValue, 
+                             String currentProfileImage, String roleValue, 
                              RedirectAttributes msg) throws IOException {
         try {
             // Verificar si el usuario existe
@@ -65,14 +65,12 @@ public class AdminUserServiceImpl implements AdminUserService {
             
             // Verificar si el email o username ya están en uso por otro usuario
             if (!userActual.getEmail().equals(user.getEmail()) && 
-                !validationService.isEmailUnique(user.getEmail())) {
-                notificationService.addErrorMessage(msg, "El email ya está en uso por otro usuario");
+                !validationService.validateUniqueEmail(user.getEmail(), msg)) {
                 return false;
             }
             
             if (!userActual.getUsername().equals(user.getUsername()) && 
-                !validationService.isUsernameUnique(user.getUsername())) {
-                notificationService.addErrorMessage(msg, "El nombre de usuario ya está en uso");
+                !validationService.validateUniqueUsername(user.getUsername(), msg)) {
                 return false;
             }
             
@@ -88,8 +86,8 @@ public class AdminUserServiceImpl implements AdminUserService {
                     return false;
                 }
                 
-                String imageName = fileStorageService.storeImage(fileImage, currentProfileImageUrl);
-                userActual.setProfileImageUrl(imageName);
+                String imageName = fileStorageService.storeImage(fileImage, currentProfileImage);
+                userActual.setProfileImage(imageName);
             }
             
             // Manejar roles si se proporcionan
@@ -115,7 +113,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
     
     @Override
-    public boolean createAdminUser(User user, String password, String confirmPassword,
+    public boolean createAdminUser(User user, String password, String confirmPassword, 
                                   MultipartFile fileImage, String roleValue, 
                                   RedirectAttributes msg) throws IOException {
         try {
@@ -126,20 +124,16 @@ public class AdminUserServiceImpl implements AdminUserService {
             }
             
             // Validar unicidad de email y username
-            if (!validationService.isEmailUnique(user.getEmail())) {
-                notificationService.addErrorMessage(msg, "El email ya está en uso");
+            if (!validationService.validateUniqueEmail(user.getEmail(), msg)) {
                 return false;
             }
             
-            if (!validationService.isUsernameUnique(user.getUsername())) {
-                notificationService.addErrorMessage(msg, "El nombre de usuario ya está en uso");
+            if (!validationService.validateUniqueUsername(user.getUsername(), msg)) {
                 return false;
             }
             
             // Validar fortaleza de la contraseña
-            if (!validationService.isStrongPassword(password)) {
-                notificationService.addErrorMessage(msg, 
-                    "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas y números");
+            if (!validationService.validatePasswordStrength(password, msg)) {
                 return false;
             }
             
@@ -154,7 +148,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                 }
                 
                 String imageName = fileStorageService.storeImage(fileImage, null);
-                user.setProfileImageUrl(imageName);
+                user.setProfileImage(imageName);
             }
             
             // Guardar el usuario
@@ -195,7 +189,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             User user = userOpt.get();
             
             // Eliminar la imagen de perfil asociada (si existe)
-            String imageName = user.getProfileImageUrl();
+            String imageName = user.getProfileImage();
             if (imageName != null && !imageName.isEmpty()) {
                 fileStorageService.deleteImage(imageName);
             }

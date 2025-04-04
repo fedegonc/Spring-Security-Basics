@@ -50,9 +50,8 @@ public class AdminReportServiceImpl implements AdminReportService {
             
             // Actualizar campos del reporte manteniendo los que no se modifican
             Report reporteActual = reporteExistente.get();
-            reporteActual.setTitle(report.getTitle());
-            reporteActual.setDescription(report.getDescription());
-            reporteActual.setStatus(report.getStatus());
+            reporteActual.setProblema(report.getProblema());
+            reporteActual.setDescripcion(report.getDescripcion());
             
             // Guardar el reporte actualizado
             reportRepository.save(reporteActual);

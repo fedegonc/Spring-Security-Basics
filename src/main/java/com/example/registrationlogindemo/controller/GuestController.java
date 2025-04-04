@@ -1,7 +1,7 @@
 package com.example.registrationlogindemo.controller;
 
 import com.example.registrationlogindemo.entity.Report;
-import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.service.GuestService;
 import com.example.registrationlogindemo.service.ReportService;
 import com.example.registrationlogindemo.service.UserService;
 import jakarta.validation.Valid;
@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Optional;
-
 @Controller
 public class GuestController {
 
@@ -26,29 +24,31 @@ public class GuestController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private GuestService guestService;
 
     @GetMapping({"", "/", "/index"})
     public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("guest/index");
+        
+        // Verificar si el usuario está autenticado y redirigir si es necesario
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticated = authentication != null && authentication.isAuthenticated()
-                && !(authentication.getPrincipal() instanceof String
-                && authentication.getPrincipal().equals("anonymousUser"));
-        if (isAuthenticated) {
+        if (guestService.isUserAuthenticated(authentication)) {
             return new ModelAndView("redirect:/init");
         }
+        
         return mv;
     }
 
     @GetMapping("/ambiental")
     public ModelAndView ambiental() {
-        ModelAndView mv = new ModelAndView("guest/ambiental");
-        return mv;
+        return new ModelAndView("guest/ambiental");
     }
 
     @GetMapping("/report")
     public ModelAndView newReport() {
-        return  new ModelAndView("user/report-problem");
+        return new ModelAndView("user/report-problem");
     }
 
     @PostMapping("/report")
@@ -57,18 +57,16 @@ public class GuestController {
             BindingResult result,
             RedirectAttributes msg,
             @AuthenticationPrincipal UserDetails currentUser) {
-        if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "El formulario contiene errores. Por favor, corrige los campos.");
-            return "redirect:/report/form"; 
+            
+        // Delegar la lógica de negocio al servicio
+        boolean reportSubmitted = guestService.submitReport(report, result, msg);
+        
+        // Si hay error de validación, redirigir al formulario
+        if (!reportSubmitted && result.hasErrors()) {
+            return "redirect:/report/form";
         }
-        Optional<User> authenticatedUserOpt = userService.getAuthenticatedUser();
-        if (authenticatedUserOpt.isPresent()) {
-            report.setUser(authenticatedUserOpt.get());
-            reportService.saveReport(report);
-            msg.addFlashAttribute("exito", "Reporte realizado con éxito.");
-        } else {
-            msg.addFlashAttribute("error", "No se pudo encontrar el usuario actual.");
-        }
+        
+        // En cualquier otro caso, redirigir a la página principal
         return "redirect:/init";
     }
 }
