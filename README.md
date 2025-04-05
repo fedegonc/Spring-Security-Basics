@@ -128,6 +128,113 @@ src/main/
   - Autorización basada en roles con Spring Security.
   - Validación y sanitización de entradas.
 
+## Mapeo de Endpoints y Plantillas Thymeleaf
+
+### Controladores y Endpoints
+
+#### AuthController
+| Método | Endpoint | Función |
+|--------|----------|---------|
+| GET | `/error` | Página de error |
+| GET | `/register` | Formulario de registro |
+| POST | `/register/save` | Procesamiento de registro |
+| GET | `/login` | Página de inicio de sesión |
+| GET | `/init` | Redirección inicial según el rol del usuario |
+
+#### GuestController
+| Método | Endpoint | Función |
+|--------|----------|---------|
+| GET | `/`, `/index` | Página principal pública |
+| GET | `/ambiental` | Información ambiental |
+| GET | `/report` | Formulario de reporte para invitados |
+| POST | `/report` | Procesamiento de reportes de invitados |
+
+#### UserController
+| Método | Endpoint | Función |
+|--------|----------|---------|
+| GET | `/user/welcome` | Dashboard del usuario |
+| GET/POST | `/user/profile` | Ver/actualizar perfil de usuario |
+| GET | `/user/delet/{id}` | Eliminar usuario |
+| GET | `/user/logout` | Cerrar sesión |
+| GET | `/user/users` | Listar usuarios (para usuarios con permisos) |
+| GET | `/user/construction`, etc. | Páginas estáticas en construcción |
+| GET | `/user/view-requests` | Ver solicitudes del usuario |
+| POST | `/user/updatesolicitude/{id}` | Actualizar una solicitud |
+| GET | `/user/report-problem` | Formulario para reportar problemas |
+| POST | `/user/report` | Enviar reporte de problema |
+| POST | `/user/change-password` | Cambiar contraseña |
+
+#### SolicitudeController
+| Método | Endpoint | Función |
+|--------|----------|---------|
+| GET | `/user/newsolicitude` | Nueva solicitud |
+| POST | `/user/newsolicitude` | Procesar nueva solicitud |
+| GET | `/user/editsolicitude/{id}` | Editar solicitud existente |
+| POST | `/user/editsolicitude/{id}` | Actualizar solicitud existente |
+| POST | `/user/solicitude/{id}/messages` | Enviar mensaje en una solicitud |
+| GET | `/user/deletesolicitude/{id}` | Eliminar solicitud |
+
+#### OrgController
+| Método | Endpoint | Función |
+|--------|----------|---------|
+| GET | `/org/dashboard` | Panel de organización |
+| GET | `/org/solicitudes` | Ver solicitudes de la organización |
+| GET | `/org/editsolicitude/{id}` | Editar solicitud |
+| GET | `/org/deletsolicitude/{id}` | Eliminar solicitud |
+| POST | `/org/editsolicitude/{id}` | Procesar edición de solicitud |
+| GET | `/org/profile` | Ver perfil de organización |
+| POST | `/org/profile` | Actualizar perfil de organización |
+| POST | `/org/change-password` | Cambiar contraseña |
+
+#### AdministradorController
+| Método | Endpoint | Función |
+|--------|----------|---------|
+| GET | `/admin/dashboard` | Panel de administración |
+| GET | `/admin/profile` | Ver perfil de administrador |
+| GET | `/admin/edit/{id}` | Editar usuario |
+| POST | `/admin/edit/{id}` | Actualizar usuario |
+| GET | `/admin/reports` | Ver reportes |
+| GET | `/admin/report/{id}` | Ver reporte específico |
+| POST | `/admin/report/{id}` | Actualizar reporte |
+| GET | `/admin/solicitudes` | Ver solicitudes |
+| GET | `/admin/solicitudes/edit/{id}` | Editar solicitud |
+| POST | `/admin/solicitudes/edit/{id}` | Actualizar solicitud |
+| GET | `/admin/solicitudes/delete/{id}` | Eliminar solicitud |
+| GET | `/admin/users` | Gestionar usuarios |
+
+### Plantillas Thymeleaf
+
+#### Plantillas Principales
+| Carpeta | Plantilla | Descripción |
+|---------|-----------|-------------|
+| `/` | `index.html` | Página de inicio |
+| `guest/` | `index.html`, `login.html`, `register.html` | Páginas para invitados |
+| `user/` | `profile.html`, `report-problem.html`, etc. | Páginas para usuarios normales |
+| `org/` | `dashboard.html`, `profile.html` | Páginas para organizaciones |
+| `admin/` | `dashboard.html`, `users.html`, etc. | Páginas administrativas |
+| `solicitude/` | `newsolicitude.html`, `editsolicitude.html` | Plantillas de solicitudes |
+| `fragments/` | `header.html`, `messages.html`, etc. | Componentes reutilizables |
+
+#### Fragmentos Reutilizables
+| Carpeta | Fragmento | Descripción |
+|---------|-----------|-------------|
+| `fragments/layout/` | `head.html`, `footer.html`, etc. | Componentes estructurales |
+| `fragments/headers/` | `admin_header.html`, `user_header.html`, etc. | Cabeceras específicas por rol |
+| `fragments/user/` | `navbar-user.html`, `profile-form.html`, etc. | Componentes de usuario |
+| `fragments/solicitudes/` | `formulario-solicitud.html`, `vista-solicitudes.html`, etc. | Componentes de solicitudes |
+
+## Observaciones de la Arquitectura
+
+- **Redundancia de Funcionalidad**: Existe duplicación de endpoints similares en diferentes controladores (ej. cambio de contraseña).
+- **Fragmentación Excesiva**: La separación por roles crea muchas plantillas y controladores similares.
+- **Oportunidades de Consolidación**: Potencial para unificar funcionalidades comunes como gestión de perfiles y contraseñas.
+
+### Propuestas de Simplificación (Futuras)
+
+1. **Unificar controladores por funcionalidad** en lugar de por rol
+2. **Consolidar fragmentos comunes** entre los diferentes tipos de usuarios
+3. **Estandarizar la estructura de endpoints** para acciones similares
+
 ## Requisitos del Sistema
 - Java 11 o superior
 - Maven 3.6+

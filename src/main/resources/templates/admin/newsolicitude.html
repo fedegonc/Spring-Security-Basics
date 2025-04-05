@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/layout/head :: head}">
     <meta charset="UTF-8">
@@ -10,7 +10,8 @@
 
 <body class="app-background d-flex flex-column min-vh-100">
     
-    <div th:replace="~{fragments/headers/admin_header :: header}"></div>
+    <!-- Header adaptable -->
+    <div th:replace="~{fragments/header :: header}"></div>
     
     <!-- Contenido principal -->
     <main id="main-content" class="content-container">

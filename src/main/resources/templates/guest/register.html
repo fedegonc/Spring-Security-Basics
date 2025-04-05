@@ -5,10 +5,9 @@
     <title>Registro de Usuario</title>
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="app-background d-flex flex-column min-vh-100">
 
-<!-- Usar directamente el guest header en lugar del navbar-info -->
-<div th:replace="~{fragments/headers/guest_header :: header}"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
 

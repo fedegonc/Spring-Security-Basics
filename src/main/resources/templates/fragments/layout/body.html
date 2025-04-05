@@ -4,11 +4,8 @@
     <!-- Fragmento body que incluye la estructura básica de la página -->
     <div th:fragment="body(contenido, tipoUsuario)" class="d-flex flex-column min-vh-100">
         
-        <!-- Header según tipo de usuario -->
-        <div th:if="${tipoUsuario == 'guest'}" th:replace="~{fragments/headers/guest_header :: header}"></div>
-        <div th:if="${tipoUsuario == 'user'}" th:replace="~{fragments/headers/user_header :: header}"></div>
-        <div th:if="${tipoUsuario == 'org'}" th:replace="~{fragments/headers/org_header :: header}"></div>
-        <div th:if="${tipoUsuario == 'admin'}" th:replace="~{fragments/headers/admin_header :: header}"></div>
+        <!-- Header unificado que adapta su contenido según el rol del usuario -->
+        <div th:replace="~{fragments/header :: header}"></div>
         
         <!-- Contenido principal -->
         <main class="flex-grow-1 py-4">
