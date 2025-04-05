@@ -2,18 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <!-- Fragmento de breadcrumb reutilizable -->
-    <nav th:fragment="breadcrumb(items)" aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb bg-light shadow-sm rounded p-2">
+    <nav th:fragment="breadcrumb(items)" aria-label="breadcrumb" class="mb-4">
+        <ol class="flex flex-wrap items-center py-2 px-4 bg-white/70 backdrop-blur-sm rounded-lg shadow-sm">
             <li th:each="item, iterStat : ${items}" 
-                th:class="${iterStat.last} ? 'breadcrumb-item active' : 'breadcrumb-item'"
+                class="flex items-center"
                 th:aria-current="${iterStat.last} ? 'page' : null">
                 
-                <!-- Ícono para el primer elemento (Dashboard) -->
-                <i th:if="${iterStat.first}" class="bi bi-house"></i>
+                <!-- Ícono para el primer elemento (Inicio) -->
+                <i th:if="${iterStat.first}" class="bi bi-house mr-1 text-primary"></i>
                 
                 <!-- Link o texto según sea el último elemento o no -->
-                <a th:if="${!iterStat.last}" th:href="${item.url}" th:text="${item.text}">Enlace</a>
-                <span th:if="${iterStat.last}" th:text="${item.text}">Texto</span>
+                <a th:if="${!iterStat.last}" 
+                   th:href="${item.url}" 
+                   th:text="${item.text}"
+                   class="text-primary hover:text-primary/80 transition-colors duration-200">Enlace</a>
+                
+                <span th:if="${iterStat.last}" 
+                      th:text="${item.text}"
+                      class="text-gray-600 font-medium">Texto</span>
+                
+                <!-- Separador excepto para el último elemento -->
+                <span th:if="${!iterStat.last}" class="mx-2 text-gray-400">/</span>
             </li>
         </ol>
     </nav>

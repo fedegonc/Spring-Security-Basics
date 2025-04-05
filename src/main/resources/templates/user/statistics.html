@@ -13,18 +13,8 @@
 <!-- Contenido principal -->
 <main class="content-container">
     <div class="container">
-        <!-- Breadcrumbs -->
-        <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb bg-light shadow-sm rounded p-2">
-                <li class="breadcrumb-item">
-                    <i class="bi bi-house"></i>
-                    <a th:href="@{/user/welcome}">Inicio</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    <i class="bi bi-graph-up"></i> Estadísticas
-                </li>
-            </ol>
-        </nav>
+        <!-- Reemplazamos la implementación manual por el fragmento reutilizable -->
+        <div th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
 
         <!-- Título de la página -->
         <div class="glass-effect text-center mb-4">

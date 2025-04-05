@@ -122,7 +122,7 @@ public class SolicitudeServiceImpl implements SolicitudeService {
         // Configurar breadcrumbs
         mv.addObject("breadcrumbItems", 
             breadcrumbService.createCustomBreadcrumbs(
-                new String[]{"Dashboard", "/user/welcome"},
+                new String[]{"Inicio", "/user/welcome"},
                 new String[]{"Nueva Solicitud", "/user/newsolicitude"}
             )
         );

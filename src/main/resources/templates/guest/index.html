@@ -7,254 +7,213 @@
     <title>Inicio - Reciclaje Sólido</title>
     
     <!-- Estilos -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/tailwind/tailwind.min.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/custom-styles.css}">
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-image: url('/img/fondo__app.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-transition {
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-transition:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
-<body class="app-background">
-    <!-- Skip link para accesibilidad -->
-    <a href="#main-content" class="sr-only-focusable bg-primary text-white px-4 py-2 rounded-md z-50">
-        Saltar al contenido principal
-    </a>
-    
-    <!-- Navbar con estilo glass card -->
-    <nav class="navbar navbar-expand-lg navbar-glass guest-navbar">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <i class="bi bi-recycle"></i> RSU - Residuo Sólido Urbano
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGuestContent">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarGuestContent">
-                <ul class="navbar-nav ms-auto">
-                    <!-- Selector de idioma -->
-                    <li class="nav-item me-2">
-                        <a class="nav-link" th:href="@{?language=es}">
-                            <img src="/img/uruguay.png" alt="Español" height="20" class="rounded">
-                        </a>
-                    </li>
-                    <li class="nav-item me-3">
-                        <a class="nav-link" th:href="@{?language=pt}">
-                            <img src="/img/brasil.png" alt="Português" height="20" class="rounded">
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/login}">
-                            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Contenido Principal -->
-    <main id="main-content" class="content-container">
-        <div class="container">
-            <!-- Banner Principa   l -->
-            <section class="mb-5">
-                <div class="glass-card">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6">
-                            <h1 class="display-5 fw-bold mb-3">Sistema de Comunicación para Reciclaje</h1>
-                            <p class="lead">Conectando comunidades con centros de acopio para un futuro más limpio y sostenible a través de la gestión eficiente de residuos sólidos.</p>
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
-                                <a th:href="@{/login}" class="btn btn-primary btn-lg px-4 me-md-2">Solicitar Recolección</a>
-                                <a th:href="@{/register}" class="btn btn-outline-secondary btn-lg px-4">¿Estás registrado?</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 mt-4 mt-lg-0">
-                            <img src="/img/rivera.jpg" alt="Imagen de Rivera - Frontera de la Paz" class="img-fluid rounded">
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Sección Nosotros -->
-            <section id="nosotros" class="mb-5">
-                <div class="glass-card">
-                    <h2 class="fs-1 fw-bold mb-4">Sobre Nosotros</h2>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p>El Proyecto Frontera de la Paz Sustentable es una iniciativa que facilita la comunicación entre la comunidad y los centros de acopio de materiales reciclables. Esta aplicación web es una pieza más del proyecto integral, sirviendo como puente digital para conectar a ciudadanos con los servicios de reciclaje disponibles en su área.</p>
-                            <p>Nuestro equipo está formado por profesionales comprometidos con el medio ambiente y el desarrollo sostenible, trabajando en colaboración con comunidades, empresas y gobiernos locales.</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h4 class="mb-3">Nuestros Patrocinadores</h4>
-                            <div class="row g-3">
-                                <div class="col-6 text-center">
-                                    <a href="#" class="d-block" title="Asociación de Catadores">
-                                        <img src="/img/asc.jpg" alt="Asociación de Catadores" class="img-fluid rounded shadow-sm" style="max-height: 120px;">
-                                    </a>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <a href="#" class="d-block" title="Cooperativa RENACER">
-                                        <img src="/img/ds.png" alt="Cooperativa RENACER" class="img-fluid rounded shadow-sm" style="max-height: 120px;">
-                                    </a>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <a href="#" class="d-block" title="Frontera de la Paz">
-                                        <img src="/img/logoprojeto.png" alt="Frontera de la Paz" class="img-fluid rounded shadow-sm" style="max-height: 120px;">
-                                    </a>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <a href="#" class="d-block" title="Prefeitura Municipal">
-                                        <img src="/img/pm.jpg" alt="Prefeitura Municipal" class="img-fluid rounded shadow-sm" style="max-height: 120px;">
-                                    </a>
-                                </div>
-                                <div class="col-12 text-center mt-2">
-                                    <a href="#" class="d-block" title="Rivera">
-                                        <img src="/img/riviera.png" alt="Rivera" class="img-fluid rounded shadow-sm" style="max-width: 250px;">
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Sección Servicios -->
-            <section id="servicios" class="mb-5">
-                <div class="glass-card">
-                    <h2 class="fs-1 fw-bold mb-4">Nuestros Servicios</h2>
-                    <div class="row g-4">
-                        <div class="col-md-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <i class="bi bi-building text-primary" style="font-size: 2.5rem;"></i>
-                                    <h3 class="card-title fs-4 mt-3">Centros de Acopio y Reciclaje</h3>
-                                    <p class="card-text">Implementamos y conectamos centros de acopio y reciclaje adaptados a las necesidades de cada comunidad.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <i class="bi bi-lightbulb text-primary" style="font-size: 2.5rem;"></i>
-                                    <h3 class="card-title fs-4 mt-3">Educación Ambiental y Buenas Prácticas</h3>
-                                    <p class="card-text">Ofrecemos programas educativos para concientizar sobre la importancia de las buenas prácticas en el manejo de residuos.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <i class="bi bi-people text-primary" style="font-size: 2.5rem;"></i>
-                                    <h3 class="card-title fs-4 mt-3">Inclusión Social</h3>
-                                    <p class="card-text">Promovemos la inclusión social a través de iniciativas que integran a todos los sectores de la comunidad en proyectos sostenibles.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Sección Contacto -->
-            <section id="contacto" class="mb-5">
-                <div class="glass-card">
-                    <h2 class="fs-1 fw-bold mb-4">Contacto</h2>
-                    <div class="row">
-                        <div class="col-md-6 mb-4 mb-md-0">
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                <h3 class="fs-4 mb-4">¿Necesitas ayuda o información?</h3>
-                                <p class="text-center mb-4">Contáctanos directamente a través de WhatsApp para una respuesta rápida.</p>
-                                <a href="https://wa.me/59891620374" target="_blank" class="btn btn-success btn-lg d-flex align-items-center gap-2">
-                                    <i class="bi bi-whatsapp fs-4"></i>
-                                    <span>Contactar por WhatsApp</span>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h3 class="fs-4 mb-3">Información de Contacto</h3>
-                            <ul class="list-unstyled">
-                                <li class="mb-2">
-                                    <i class="bi bi-geo-alt text-primary me-2"></i> Frontera de la Paz - Rivera/Santana
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-envelope text-primary me-2"></i> info@fronteradelapaz.org
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-telephone text-primary me-2"></i> +598 091 620 374
-                                </li>
-                            </ul>
-                            <div class="mt-4">
-                                <h4 class="fs-5 mb-3">Síguenos en redes sociales</h4>
-                                <div class="d-flex gap-3">
-                                    <a href="#" class="text-primary fs-4" aria-label="Facebook">
-                                        <i class="bi bi-facebook"></i>
-                                    </a>
-                                    <a href="#" class="text-primary fs-4" aria-label="Twitter">
-                                        <i class="bi bi-twitter"></i>
-                                    </a>
-                                    <a href="#" class="text-primary fs-4" aria-label="Instagram">
-                                        <i class="bi bi-instagram"></i>
-                                    </a>
-                                    <a href="#" class="text-primary fs-4" aria-label="LinkedIn">
-                                        <i class="bi bi-linkedin"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+
+<body class="bg-cover bg-fixed">
+    <div class="min-h-screen flex flex-col">
+        <!-- Navbar con estilo glass card -->
+        <nav class="glass-card sticky top-0 z-10 py-4 mb-6">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center">
+                    <a href="/" class="flex items-center text-white no-underline">
+                        <img src="/img/logov4.png" alt="Logo" class="h-7 w-7 mr-2">
+                        <span class="text-lg font-semibold">RSU - Residuo Sólido Urbano</span>
+                    </a>
+                    
+                    <!-- Menú móvil -->
+                    <div class="flex md:hidden">
+                        <button id="mobileMenuButton" type="button" class="text-white hover:text-green-400 focus:outline-none">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
                     </div>
                     
-                    <!-- Sección de Ubicaciones -->
-                    <div class="mt-5">
-                        <h3 class="fs-4 mb-4">Nuestras Ubicaciones</h3>
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="card h-100 border-0 shadow-sm">
-                                    <div class="card-header bg-primary text-white">
-                                        <h5 class="mb-0">Asociación de Catadores Novo Horizonte</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <p><i class="bi bi-geo-alt text-primary me-2"></i> Rua Washington Muniz, 350 - Jardins, Sant'Ana do Livramento</p>
-                                        <p><i class="bi bi-telephone text-primary me-2"></i> Contacto: +55 (55) 3242-1234</p>
-                                        <div class="ratio ratio-16x9 mt-3">
-                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3458.7553026652395!2d-55.51480492374903!3d-30.89498757440887!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a9fe3f7907c833%3A0xc0e4e7f2f41fd363!2sR.%20Washington%20Muniz%2C%20350%20-%20Jardins%2C%20Sant&#39;Ana%20do%20Livramento%20-%20RS%2C%2097576-380%2C%20Brasil!5e0!3m2!1ses!2suy!4v1711949761646!5m2!1ses!2suy" 
-                                                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" 
-                                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
-                                        </div>
-                                    </div>
+                    <!-- Menú desktop -->
+                    <div class="hidden md:flex items-center space-x-4">
+                        <!-- Selector de idioma -->
+                        <a th:href="@{?language=es}" class="text-white hover:text-green-400 mx-2">
+                            <img src="/img/uruguay.png" alt="Español" class="h-5 w-5 rounded">
+                        </a>
+                        <a th:href="@{?language=pt}" class="text-white hover:text-green-400 mx-2">
+                            <img src="/img/brasil.png" alt="Português" class="h-5 w-5 rounded">
+                        </a>
+                        
+                        <!-- Iniciar sesión -->
+                        <a th:href="@{/login}" class="px-4 py-2 text-white border border-green-400 rounded hover:bg-green-400 hover:text-black transition duration-300">
+                            Iniciar Sesión
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Menú móvil expandible -->
+                <div id="mobileMenu" class="md:hidden hidden mt-4 space-y-4">
+                    <div class="flex justify-center space-x-4 pb-2">
+                        <a th:href="@{?language=es}" class="text-white hover:text-green-400">
+                            <img src="/img/uruguay.png" alt="Español" class="h-6 w-6 rounded">
+                        </a>
+                        <a th:href="@{?language=pt}" class="text-white hover:text-green-400">
+                            <img src="/img/brasil.png" alt="Português" class="h-6 w-6 rounded">
+                        </a>
+                    </div>
+                    <div class="flex justify-center">
+                        <a th:href="@{/login}" class="w-full text-center px-4 py-2 text-white border border-green-400 rounded hover:bg-green-400 hover:text-black transition duration-300">
+                            Iniciar Sesión
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Contenido Principal -->
+        <main class="flex-grow px-4 py-6">
+            <div class="max-w-7xl mx-auto">
+                <!-- Banner Principal -->
+                <section class="mb-12">
+                    <div class="glass-card p-8">
+                        <div class="flex flex-col lg:flex-row items-center">
+                            <div class="lg:w-1/2 mb-6 lg:mb-0 lg:pr-6">
+                                <h1 class="text-3xl md:text-4xl font-bold mb-4 text-white">Sistema de Comunicación para Reciclaje</h1>
+                                <p class="text-lg text-gray-200 mb-6">Conectando comunidades con centros de acopio para un futuro más limpio y sostenible a través de la gestión eficiente de residuos sólidos.</p>
+                                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                                    <a th:href="@{/login}" class="px-6 py-3 bg-green-500 text-white font-semibold rounded shadow hover:bg-green-600 transition duration-300 text-center">
+                                        Solicitar Recolección
+                                    </a>
+                                    <a th:href="@{/register}" class="px-6 py-3 border border-white text-white font-semibold rounded hover:bg-white hover:text-black transition duration-300 text-center">
+                                        ¿Estás registrado?
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="card h-100 border-0 shadow-sm">
-                                    <div class="card-header bg-primary text-white">
-                                        <h5 class="mb-0">Cooperativa Renacer del Norte</h5>
+                            <div class="lg:w-1/2">
+                                <img src="/img/rivera.jpg" alt="Imagen de Rivera - Frontera de la Paz" class="rounded shadow-lg w-full">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Sección Nosotros -->
+                <section id="nosotros" class="mb-12">
+                    <div class="glass-card p-8">
+                        <h2 class="text-3xl font-bold mb-6 text-white">Sobre Nosotros</h2>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <p class="text-gray-200 mb-4">En Reciclaje Sólido, estamos comprometidos con la preservación ambiental a través de la gestión responsable de residuos sólidos urbanos, promoviendo la circularidad y sostenibilidad en la frontera entre Brasil y Uruguay.</p>
+                                <p class="text-gray-200">Nuestro equipo está formado por profesionales comprometidos con el medio ambiente y el desarrollo sostenible, trabajando en colaboración con comunidades, empresas y gobiernos locales.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-4 text-white">Nuestros Patrocinadores</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="text-center bg-white bg-opacity-10 p-4 rounded">
+                                        <a href="#" class="block" title="Asociación de Catadores">
+                                            <img src="/img/asc.jpg" alt="Asociación de Catadores" class="max-h-24 mx-auto rounded shadow">
+                                        </a>
                                     </div>
-                                    <div class="card-body">
-                                        <p><i class="bi bi-geo-alt text-primary me-2"></i> Camino Paso del Enano s/n, Rivera</p>
-                                        <p><i class="bi bi-telephone text-primary me-2"></i> Contacto: +598 091 620 374</p>
-                                        <p><i class="bi bi-clock text-primary me-2"></i> Horario: Lunes a Viernes 7:00 - 17:00</p>
-                                        <div class="ratio ratio-16x9 mt-3">
-                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d108745.31979607193!2d-55.60418389453124!3d-30.90293!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a9ff8e6f3446a5%3A0x6c7c1dbfb92c3a4a!2sPaso%20del%20Enano%20-%20IDR!5e0!3m2!1ses!2suy!4v1711949864125!5m2!1ses!2suy" 
-                                                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" 
-                                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
-                                        </div>
+                                    <div class="text-center bg-white bg-opacity-10 p-4 rounded">
+                                        <a href="#" class="block" title="Prefeitura Municipal">
+                                            <img src="/img/pm.jpg" alt="Santana do Livramento" class="max-h-24 mx-auto rounded shadow">
+                                        </a>
+                                    </div>
+                                    <div class="text-center bg-white bg-opacity-10 p-4 rounded">
+                                        <a href="#" class="block" title="Proyecto Frontera">
+                                            <img src="/img/logoprojeto.png" alt="Frontera de la Paz" class="max-h-24 mx-auto rounded shadow">
+                                        </a>
+                                    </div>
+                                    <div class="text-center bg-white bg-opacity-10 p-4 rounded">
+                                        <a href="#" class="block" title="Intendencia Departamental">
+                                            <img src="/img/riviera.png" alt="Rivera" class="max-h-24 mx-auto rounded shadow">
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
-    </main>
-    
-    <!-- Footer -->
-    <div class="bg-dark text-white text-center py-3 mt-auto">
-        <footer>
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center text-muted small flex-wrap">
-                    <a href="#" class="text-light text-decoration-none">
-                        <i class="bi bi-recycle"></i> Sistema de Comunicación para Reciclaje - Frontera de la Paz Sustentable
-                    </a>
-                    <div>
-                        <a href="#" class="text-light me-2" aria-label="Política de privacidad">Privacidad</a>
-                        <a href="#" class="text-light me-2" aria-label="Términos de servicio">Términos</a>
-                        <a href="#" class="text-light" aria-label="Contacto">Contacto</a>
+                </section>
+                
+                <!-- Sección Servicios -->
+                <section id="servicios" class="mb-12">
+                    <div class="glass-card p-8">
+                        <h2 class="text-3xl font-bold mb-6 text-white">Nuestros Servicios</h2>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="bg-white bg-opacity-10 rounded-lg shadow-lg p-6 transition duration-300 hover:transform hover:scale-105">
+                                <div class="text-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 mx-auto text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2 text-white text-center">Recolección Programada</h3>
+                                <p class="text-gray-200 text-center">Coordina la recogida de tus materiales reciclables con nuestros operadores autorizados.</p>
+                            </div>
+                            <div class="bg-white bg-opacity-10 rounded-lg shadow-lg p-6 transition duration-300 hover:transform hover:scale-105">
+                                <div class="text-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 mx-auto text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2 text-white text-center">Certificación</h3>
+                                <p class="text-gray-200 text-center">Obtén certificados de correcto manejo de residuos para tu empresa o institución.</p>
+                            </div>
+                            <div class="bg-white bg-opacity-10 rounded-lg shadow-lg p-6 transition duration-300 hover:transform hover:scale-105">
+                                <div class="text-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 mx-auto text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2 text-white text-center">Educación Ambiental</h3>
+                                <p class="text-gray-200 text-center">Programas de concientización y capacitación para un correcto manejo de residuos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-black text-white py-4 border-t border-gray-800">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <a href="#" class="flex items-center text-white no-underline">
+                            <img src="/img/logov4.png" alt="Logo" class="h-6 w-6 mr-2">
+                            <span class="text-sm">Sistema de Comunicación para Reciclaje - Frontera de la Paz Sustentable</span>
+                        </a>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-sm text-gray-300 hover:text-white">Privacidad</a>
+                        <a href="#" class="text-sm text-gray-300 hover:text-white">Términos</a>
+                        <a href="#" class="text-sm text-gray-300 hover:text-white">Contacto</a>
                     </div>
                 </div>
             </div>
@@ -262,6 +221,17 @@
     </div>
     
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

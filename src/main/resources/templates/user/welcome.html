@@ -1,96 +1,86 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout/head :: head}">
+
+<!-- Usando el fragmento de head del layout base -->
+<head th:replace="~{fragments/layout/base-layout :: head('Bienvenida - Reciclaje Sólido', ~{::extraStyles})}">
     <title>Bienvenida - Reciclaje Sólido</title>
+    <!-- Estilos adicionales específicos de esta página -->
+    <th:block th:fragment="extraStyles">
+        <!-- Aquí irían estilos específicos de la página si fueran necesarios -->
+    </th:block>
 </head>
-<body class="app-background d-flex flex-column min-vh-100">
-    <!-- Navbar con estilo glass card -->
-    <div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Usando el layout base con el contenido específico de esta página -->
+<div th:replace="~{fragments/layout/base-layout :: layout('Bienvenida', ~{::main-content}, ~{::page-scripts})}">
     
-    <main id="main-content" class="content-container glass-effect flex-grow-1">
-        <div class="container">
-            <!-- Breadcrumbs -->
-            <div th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
-            
-            <!-- Sección de bienvenida -->
-            <section class="mb-5">
-                <div class="glass-card">
-                    <div class="row align-items-center">
-                        <div class="col-lg-8">
-                            <h1 class="display-5 fw-bold mb-3">¡Bienvenido, <span th:text="${user != null ? user.name : 'Usuario'}">Usuario</span>!</h1>
-                            <p class="lead">Gestiona todas tus solicitudes de reciclaje desde un solo lugar.</p>
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
-                                <a th:href="@{/user/newsolicitude}" class="btn btn-primary btn-lg px-4 me-md-2">
-                                    <i class="bi bi-plus-circle me-2"></i>Nueva Solicitud
-                                </a>
-                                <a th:href="@{/user/view-requests}" class="btn btn-outline-secondary btn-lg px-4">
-                                    <i class="bi bi-list-check me-2"></i>Mis Solicitudes
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 mt-4 mt-lg-0 text-center">
-                            <i class="bi bi-recycle text-primary" style="font-size: 8rem;"></i>
+    <!-- Contenido principal específico de esta página -->
+    <div th:fragment="main-content">
+        <!-- Eliminamos la línea duplicada de breadcrumbs ya que está en base-layout -->
+        
+        <!-- Sección de bienvenida -->
+        <section class="mb-6">
+            <div class="glass-card">
+                <div class="flex flex-col lg:flex-row items-center">
+                    <div class="lg:w-2/3">
+                        <h1 class="text-4xl font-bold mb-3">¡Bienvenido, <span th:text="${user != null ? user.name : 'Usuario'}">Usuario</span>!</h1>
+                        <p class="text-xl text-gray-600">Gestiona todas tus solicitudes de reciclaje desde un solo lugar.</p>
+                        <div class="flex flex-col sm:flex-row gap-3 mt-6">
+                            <a th:href="@{/user/newsolicitude}" class="btn btn-primary text-center">
+                                <i class="bi bi-plus-circle mr-2"></i>Nueva Solicitud
+                            </a>
+                            <a th:href="@{/user/view-requests}" class="btn btn-outline btn-outline-primary text-center">
+                                <i class="bi bi-list-check mr-2"></i>Mis Solicitudes
+                            </a>
                         </div>
                     </div>
+                    <div class="lg:w-1/3 mt-6 lg:mt-0 text-center">
+                        <i class="bi bi-recycle text-primary text-8xl"></i>
+                    </div>
                 </div>
-            </section>
-            
-            <!-- Acciones rápidas -->
-            <section class="mb-5">
-                <div class="glass-card">
-                    <h2 class="fs-1 fw-bold mb-4">Acciones Rápidas</h2>
+            </div>
+        </section>
+        
+        <!-- Acciones rápidas -->
+        <section class="mb-6">
+            <div class="glass-card">
+                <h2 class="text-3xl font-bold mb-6">Acciones Rápidas</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <i class="bi bi-bar-chart-line text-primary text-4xl"></i>
+                        <h3 class="text-xl font-medium mt-3">Mis Estadísticas</h3>
+                        <p class="text-gray-600 my-3">Revisa el resumen y estado de tus solicitudes de reciclaje.</p>
+                        <a href="#" class="btn btn-outline btn-outline-primary mt-2">Ver estadísticas</a>
+                    </div>
                     
-                    <div class="row g-4">
-                        <div class="col-md-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <i class="bi bi-bar-chart-line text-primary" style="font-size: 2.5rem;"></i>
-                                    <h3 class="card-title fs-4 mt-3">Mis Estadísticas</h3>
-                                    <p class="card-text">Revisa el resumen y estado de tus solicitudes de reciclaje.</p>
-                                    <a href="#" class="btn btn-outline-primary mt-3">Ver estadísticas</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <i class="bi bi-book text-primary" style="font-size: 2.5rem;"></i>
-                                    <h3 class="card-title fs-4 mt-3">Recursos</h3>
-                                    <p class="card-text">Consulta guías y consejos para un reciclaje más efectivo.</p>
-                                    <a href="#" class="btn btn-outline-primary mt-3">Ver recursos</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-4">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <i class="bi bi-geo-alt text-primary" style="font-size: 2.5rem;"></i>
-                                    <h3 class="card-title fs-4 mt-3">Puntos de Reciclaje</h3>
-                                    <p class="card-text">Encuentra los centros de reciclaje más cercanos a tu ubicación.</p>
-                                    <a href="#" class="btn btn-outline-primary mt-3">Ver mapa</a>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <i class="bi bi-book text-primary text-4xl"></i>
+                        <h3 class="text-xl font-medium mt-3">Recursos</h3>
+                        <p class="text-gray-600 my-3">Consulta guías y consejos para un reciclaje más efectivo.</p>
+                        <a href="#" class="btn btn-outline btn-outline-primary mt-2">Ver recursos</a>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <i class="bi bi-geo-alt text-primary text-4xl"></i>
+                        <h3 class="text-xl font-medium mt-3">Puntos de Reciclaje</h3>
+                        <p class="text-gray-600 my-3">Encuentra los centros de reciclaje más cercanos a tu ubicación.</p>
+                        <a href="#" class="btn btn-outline btn-outline-primary mt-2">Ver mapa</a>
                     </div>
                 </div>
-            </section>
-            
-            <!-- Solicitudes Recientes -->
-            <section class="mb-5">
-                <div class="glass-card">
-                    <div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas('Solicitudes Recientes', true, true, 'solicitude', '/user')}"></div>
-                </div>
-            </section>
-            
-        </div>
-    </main>
-    
-    <!-- Footer -->
-    <div th:replace="~{fragments/layout/footer :: footer}"></div>
-    
-    <!-- JavaScript de Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+            </div>
+        </section>
+        
+        <!-- Solicitudes Recientes -->
+        <section class="mb-6">
+            <div class="glass-card">
+                <div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas('Solicitudes Recientes', true, true, ${solicitude}, '/user')}"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts específicos de esta página -->
+    <th:block th:fragment="page-scripts">
+        <!-- Aquí irían scripts específicos de la página si fueran necesarios -->
+    </th:block>
+</div>
 </html>

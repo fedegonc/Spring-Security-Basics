@@ -1,50 +1,26 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Información sobre materiales reciclables y cómo prepararlos">
-    <title>Materiales Reciclables - Reciclaje Sólido</title>
-    
-    <!-- Estilos -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-
+<head th:replace="~{fragments/layout/head :: head}">
+    <title>Materiales Reciclables</title>
     <style>
+        /* Estilos específicos para esta página */
         .material-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        
         .material-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
-        
-        .icon-container {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-bottom: 1rem;
-        }
-        
-        .material-instructions {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
+        .category-heading {
+            border-left: 4px solid #4CAF50;
+            padding-left: 10px;
         }
     </style>
 </head>
 
 <body class="app-background">
-    <!-- Incluir la barra de navegación -->
-    <div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+    <!-- Reemplazamos el navbar-user por el header común -->
+    <div th:replace="~{fragments/header :: header}"></div>
     
     <!-- Skip link para accesibilidad -->
     <a href="#main-content" class="sr-only-focusable bg-primary text-white px-4 py-2 rounded-md z-50">

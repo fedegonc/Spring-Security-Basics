@@ -12,17 +12,8 @@
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
 
 <div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
-            <li class="breadcrumb-item">
-                <a th:href="@{/index}" class="text-decoration-none">
-                    <i class="bi bi-house"></i>
-                    <span th:text="#{breadcrumb.home}">Inicio</span>
-                </a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.register}">Registro</li>
-        </ol>
-    </nav>
+    <!-- Reemplazamos la implementación manual por el fragmento reutilizable -->
+    <div th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
 </div>
 
 <!-- Formulario de registro insertado directamente en lugar de usar el fragmento que no existe -->

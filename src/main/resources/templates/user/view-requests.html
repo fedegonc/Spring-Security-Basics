@@ -1,40 +1,23 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/layout/head :: head}">
+<!-- Usando el fragmento de head del layout base -->
+<head th:replace="~{fragments/layout/base-layout :: head('Mis Solicitudes', ~{::extraStyles})}">
   <title>Mis Solicitudes</title>
+  <!-- Estilos adicionales específicos de esta página -->
+  <th:block th:fragment="extraStyles">
+    <!-- Aquí irían estilos específicos de la página si fueran necesarios -->
+  </th:block>
 </head>
 
-<body class="d-flex flex-column min-vh-100">
-  <!-- Skip link para accesibilidad -->
-  <a href="#main-content" class="visually-hidden-focusable bg-primary text-white px-4 py-2 position-absolute">
-    Saltar al contenido principal
-  </a>
-
-  <!-- Navbar -->
-  <div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
-
-  <!-- Alertas de mensajes -->
-  <div th:replace="~{fragments/messages :: message-alerts}"></div>
-
-  <!-- Contenido principal -->
-  <main id="main-content" class="container flex-grow-1 py-4">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-      <ol class="breadcrumb bg-light shadow-sm rounded p-3">
-        <li class="breadcrumb-item">
-          <i class="bi bi-house"></i>
-          <a th:href="@{/user/welcome}" th:text="#{breadcrumb.welcome}">Inicio</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.historyRequest}">
-          Mis Solicitudes
-        </li>
-      </ol>
-    </nav>
-
+<!-- Usando el layout base con el contenido específico de esta página -->
+<div th:replace="~{fragments/layout/base-layout :: layout('Mis Solicitudes', ~{::main-content}, ~{::page-scripts})}">
+  
+  <!-- Contenido principal específico de esta página -->
+  <div th:fragment="main-content">
     <!-- Título y botón de nueva solicitud -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1 class="h2 mb-0 fw-bold">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">
         <i class="bi bi-list-check me-2 text-primary"></i>Mis Solicitudes
       </h1>
       <a th:href="@{/user/newsolicitude}" class="btn btn-primary">
@@ -43,54 +26,42 @@
     </div>
 
     <!-- Información -->
-    <div class="alert alert-info mb-4" role="alert">
-      <i class="bi bi-info-circle-fill me-2"></i>
+    <div class="bg-info/10 border-l-4 border-info p-4 mb-4 rounded" role="alert">
+      <i class="bi bi-info-circle-fill mr-2"></i>
       <span th:text="#{info_viewrequests}">Aquí puedes ver todas tus solicitudes de reciclaje y su estado actual.</span>
     </div>
 
     <!-- Métricas -->
-    <div class="glass-card mb-4">
-      <h2 class="h4 mb-4">Resumen de Solicitudes</h2>
-      <div class="row g-4">
+    <div class="glass-card mb-6">
+      <h2 class="text-xl font-semibold mb-4">Resumen de Solicitudes</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Solicitudes Activas -->
-        <div class="col-md-4">
-          <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body text-center p-4">
-              <i class="bi bi-hourglass-split text-primary mb-3" style="font-size: 2.5rem;"></i>
-              <h3 class="card-title h5">Solicitudes Activas</h3>
-              <p class="card-text display-5 fw-bold my-3" id="active-requests-count">0</p>
-              <div class="progress" role="progressbar" aria-label="Progreso de solicitudes activas">
-                <div class="progress-bar bg-primary" style="width: 0%;" id="active-progress"></div>
-              </div>
-            </div>
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+          <i class="bi bi-hourglass-split text-primary mb-3 text-4xl"></i>
+          <h3 class="text-lg font-medium">Solicitudes Activas</h3>
+          <p class="text-4xl font-bold my-3" id="active-requests-count">0</p>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-primary h-2.5 rounded-full" style="width: 0%;" id="active-progress"></div>
           </div>
         </div>
         
         <!-- Total de Solicitudes -->
-        <div class="col-md-4">
-          <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body text-center p-4">
-              <i class="bi bi-clipboard-check text-info mb-3" style="font-size: 2.5rem;"></i>
-              <h3 class="card-title h5">Total de Solicitudes</h3>
-              <p class="card-text display-5 fw-bold my-3" id="total-requests-count">0</p>
-              <div class="progress" role="progressbar" aria-label="Progreso total de solicitudes">
-                <div class="progress-bar bg-info" style="width: 100%;"></div>
-              </div>
-            </div>
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+          <i class="bi bi-clipboard-check text-info mb-3 text-4xl"></i>
+          <h3 class="text-lg font-medium">Total de Solicitudes</h3>
+          <p class="text-4xl font-bold my-3" id="total-requests-count">0</p>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-info h-2.5 rounded-full w-full"></div>
           </div>
         </div>
         
         <!-- Solicitudes Completadas -->
-        <div class="col-md-4">
-          <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body text-center p-4">
-              <i class="bi bi-check-circle text-success mb-3" style="font-size: 2.5rem;"></i>
-              <h3 class="card-title h5">Solicitudes Completadas</h3>
-              <p class="card-text display-5 fw-bold my-3" id="completed-requests-count">0</p>
-              <div class="progress" role="progressbar" aria-label="Progreso de solicitudes completadas">
-                <div class="progress-bar bg-success" style="width: 0%;" id="completed-progress"></div>
-              </div>
-            </div>
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+          <i class="bi bi-check-circle text-success mb-3 text-4xl"></i>
+          <h3 class="text-lg font-medium">Solicitudes Completadas</h3>
+          <p class="text-4xl font-bold my-3" id="completed-requests-count">0</p>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-success h-2.5 rounded-full" style="width: 0%;" id="completed-progress"></div>
           </div>
         </div>
       </div>
@@ -98,66 +69,13 @@
 
     <!-- Solicitudes - Utilizando fragmento existente -->
     <div class="glass-card">
-      <div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas('Mis Solicitudes', true, true, 'solicitudes', '/user')}"></div>
+      <div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas('Mis Solicitudes', true, true, ${solicitudes}, '/user')}"></div>
     </div>
-  </main>
+  </div>
 
-  <!-- Footer -->
-  <div th:replace="~{fragments/layout/footer :: footer}"></div>
-
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Formatear fechas
-      const dateFields = document.querySelectorAll('.date-field');
-      dateFields.forEach(field => {
-        const rawDate = field.textContent.trim();
-        if (rawDate) {
-          const date = new Date(rawDate);
-          if (!isNaN(date)) {
-            const day = date.getDate().toString().padStart(2, '0');
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const year = date.getFullYear();
-            field.textContent = `${day}/${month}/${year}`;
-          }
-        }
-      });
-      
-      // Calcular contadores
-      const solicitudes = document.querySelectorAll('.solicitud-card');
-      const totalCount = solicitudes.length;
-      let activeCount = 0;
-      let completedCount = 0;
-      
-      solicitudes.forEach(solicitud => {
-        const statusBadge = solicitud.querySelector('.badge');
-        if (statusBadge) {
-          const estado = statusBadge.textContent.trim();
-          // Estados activos: EN_ESPERA, EN_REVISION o cualquier otro que no sea ACEPTADA o RECHAZADA
-          if (estado === 'EN_ESPERA' || estado === 'EN_REVISION' || 
-              (estado !== 'ACEPTADA' && estado !== 'RECHAZADA')) {
-            activeCount++;
-          } else if (estado === 'ACEPTADA') {
-            completedCount++;
-          }
-        }
-      });
-      
-      // Actualizar contadores
-      document.getElementById('total-requests-count').textContent = totalCount;
-      document.getElementById('active-requests-count').textContent = activeCount;
-      document.getElementById('completed-requests-count').textContent = completedCount;
-      
-      // Actualizar barras de progreso
-      if (totalCount > 0) {
-        const activePercent = (activeCount / totalCount) * 100;
-        const completedPercent = (completedCount / totalCount) * 100;
-        
-        document.getElementById('active-progress').style.width = activePercent + '%';
-        document.getElementById('completed-progress').style.width = completedPercent + '%';
-      }
-    });
-  </script>
-</body>
+  <!-- Scripts específicos de esta página -->
+  <th:block th:fragment="page-scripts">
+    <script src="/js/view-requests.js"></script>
+  </th:block>
+</div>
 </html>

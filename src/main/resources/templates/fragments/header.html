@@ -1,223 +1,203 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-  <!-- Header adaptable a todos los roles -->
   <header th:fragment="header" class="bg-black shadow-lg mb-3">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
-        <!-- Logo (a la izquierda) -->
+        <!-- Logo -->
         <div class="flex items-center">
-          <a class="flex items-center text-green-400 no-underline" href="/">
+          <a class="flex items-center text-green-400 no-underline font-montserrat" href="/">
             <img src="/img/logov4.png" alt="Logo" class="h-7 w-7">
             <span class="ml-2 text-base font-medium text-white" th:text="#{index.title}">Reciclaje Sólido</span>
           </a>
         </div>
-        
-        <!-- Área derecha: Navegación + Idioma y Usuario -->
-        <div class="flex items-center">
-          <!-- Navegación - Solo visible en desktop, ahora a la derecha -->
-          <div class="hidden md:flex items-center space-x-1 mr-4">
-            <!-- Enlaces principales basados en rol -->
-            <div class="flex items-center space-x-1">
-              <!-- Para USUARIOS -->
-              <th:block sec:authorize="hasRole('ROLE_USER')">
-                <a class="text-gray-300 hover:text-white text-sm px-3 py-2 rounded hover:bg-gray-800 no-underline" th:href="@{/user/welcome}">Dashboard</a>
-                <a class="text-gray-300 hover:text-white text-sm px-3 py-2 rounded hover:bg-gray-800 no-underline" th:href="@{/user/view-requests}" th:text="#{solicitudes}">Solicitudes</a>
-              </th:block>
-              
-              <!-- Para ORGANIZACIÓN -->
-              <th:block sec:authorize="hasRole('ROLE_ORG')">
-                <a class="text-gray-300 hover:text-white text-sm px-3 py-2 rounded hover:bg-gray-800 no-underline" th:href="@{/org/welcome}">Dashboard</a>
-                <a class="text-gray-300 hover:text-white text-sm px-3 py-2 rounded hover:bg-gray-800 no-underline" th:href="@{/org/solicitudes}" th:text="#{solicitudes}">Solicitudes</a>
-              </th:block>
-              
-              <!-- Para ADMINISTRADORES -->
-              <th:block sec:authorize="hasRole('ROLE_ADMIN')">
-                <a class="text-gray-300 hover:text-white text-sm px-3 py-2 rounded hover:bg-gray-800 no-underline" th:href="@{/admin/welcome}">Dashboard</a>
-                <a class="text-gray-300 hover:text-white text-sm px-3 py-2 rounded hover:bg-gray-800 no-underline" th:href="@{/admin/usuarios}">Usuarios</a>
-                <a class="text-gray-300 hover:text-white text-sm px-3 py-2 rounded hover:bg-gray-800 no-underline" th:href="@{/admin/solicitudes}" th:text="#{solicitudes}">Solicitudes</a>
-              </th:block>
-            </div>
-          </div>
-          
-          <!-- Idioma y Usuario -->
-          <div class="flex items-center space-x-3">
-            <!-- Selector de idioma -->
-            <div class="relative inline-block text-left">
-              <button id="languageDropdown" class="flex items-center text-gray-300 hover:text-white text-sm p-1 rounded hover:bg-gray-800">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                </svg>
-              </button>
-              <div id="language-dropdown-menu" class="hidden absolute right-0 mt-2 w-36 origin-top-right rounded-md bg-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 z-[9999]">
-                <div class="py-1 text-sm" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                  <a th:href="@{''(language=es)}" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white no-underline" role="menuitem">
-                    <img src="/img/uruguay.png" class="h-4 w-4 mr-2" alt="Español"> Español
-                  </a>
-                  <a th:href="@{''(language=pt)}" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white no-underline" role="menuitem">
-                    <img src="/img/brasil.png" class="h-4 w-4 mr-2" alt="Português"> Português
-                  </a>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Usuario autenticado -->
-            <div sec:authorize="isAuthenticated()" class="relative inline-block text-left">
-              <button id="userDropdownButton" class="flex text-sm bg-gray-800 rounded-full focus:outline-none" type="button" aria-expanded="false" aria-haspopup="true">
-                <span class="sr-only">Menú de usuario</span>
-                <img src="/img/default-profile.jpg" class="h-8 w-8 rounded-full object-cover" alt="Avatar">
-              </button>
-              <div id="user-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 z-[9999] text-sm">
-                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button">
-                  <div class="px-4 py-2 text-gray-400">
-                    <span sec:authentication="name">Usuario</span>
-                  </div>
-                  <a class="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white no-underline" sec:authorize="hasRole('ROLE_USER')" th:href="@{/user/profile}" role="menuitem">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    <span th:text="#{perfil}">Perfil de Usuario</span>
-                  </a>
-                  <a class="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white no-underline" sec:authorize="hasRole('ROLE_ORG')" th:href="@{/org/profile}" role="menuitem">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                    <span th:text="#{perfil}">Perfil de Organización</span>
-                  </a>
-                  <a class="block px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white no-underline" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/profile}" role="menuitem">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <span th:text="#{perfil}">Perfil de Admin</span>
-                  </a>
-                  <div class="border-t border-gray-800 my-1"></div>
-                  <form th:action="@{/logout}" method="post" class="block">
-                    <button type="submit" class="w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-800 hover:text-white" role="menuitem">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                      <span th:text="#{salir}">Cerrar Sesión</span>
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Botones de autenticación para usuarios no logueados -->
-            <div sec:authorize="!isAuthenticated()" class="hidden md:flex items-center space-x-2">
-              <a th:href="@{/login}" class="text-white bg-gray-800 hover:bg-gray-700 text-sm px-3 py-1.5 rounded no-underline">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                </svg>
-                <span th:text="#{button.login}">Ingresar</span>
-              </a>
-              <a th:href="@{/register}" class="text-white bg-green-700 hover:bg-green-600 text-sm px-3 py-1.5 rounded no-underline">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                </svg>
-                <span th:text="#{button.register}">Registrarse</span>
-              </a>
-            </div>
-            
-            <!-- Botón hamburguesa para móvil -->
-            <button class="md:hidden p-1 text-gray-300 hover:text-white hover:bg-gray-800 rounded" 
-                    id="mobile-menu-button" type="button" aria-controls="mobile-menu" aria-expanded="false">
-              <span class="sr-only">Abrir menú</span>
-              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-              </svg>
-            </button>
-          </div>
+
+        <!-- Botón móvil de menú hamburguesa -->
+        <div class="flex md:hidden items-center">
+          <button id="mobileMenuButton" type="button" class="text-gray-300 hover:text-white focus:outline-none">
+            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
         </div>
-        
-        <!-- Menú móvil -->
-        <div class="hidden md:hidden" id="mobile-menu">
-          <div class="px-2 pt-2 pb-3 space-y-1">
-            <!-- Links para usuarios -->
+
+        <!-- Navegación y Menús (versión desktop) -->
+        <div id="desktopNavigation" class="hidden md:flex items-center space-x-4">
+          <!-- Navegación Desktop -->
+          <nav class="flex items-center space-x-4 font-montserrat">
             <th:block sec:authorize="hasRole('ROLE_USER')">
-              <a class="block px-3 py-2 text-base text-gray-300 rounded hover:bg-gray-800 hover:text-white no-underline" th:href="@{/user/welcome}">Dashboard</a>
-              <a class="block px-3 py-2 text-base text-gray-300 rounded hover:bg-gray-800 hover:text-white no-underline" th:href="@{/user/view-requests}" th:text="#{solicitudes}">Solicitudes</a>
-              <a class="block px-3 py-2 text-base text-gray-300 rounded hover:bg-gray-800 hover:text-white no-underline" th:href="@{/user/report-problem}" th:text="#{reportar}">Reportar Problema</a>
+              <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/user/welcome}">Inicio</a>
+              <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/user/view-requests}" th:text="#{solicitudes}">Solicitudes</a>
             </th:block>
             
-            <!-- Links para organizaciones -->
-            <th:block sec:authorize="hasRole('ROLE_ORG')">
-              <a class="block px-3 py-2 text-base text-gray-300 rounded hover:bg-gray-800 hover:text-white no-underline" th:href="@{/org/welcome}">Dashboard</a>
-              <a class="block px-3 py-2 text-base text-gray-300 rounded hover:bg-gray-800 hover:text-white no-underline" th:href="@{/org/solicitudes}" th:text="#{solicitudes}">Solicitudes</a>
+            <th:block sec:authorize="hasRole('ROLE_ORGANIZATION')">
+              <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/org/welcome}">Inicio</a>
+              <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/org/solicitudes}" th:text="#{solicitudes}">Solicitudes</a>
             </th:block>
             
-            <!-- Links para administradores -->
             <th:block sec:authorize="hasRole('ROLE_ADMIN')">
-              <a class="block px-3 py-2 text-base text-gray-300 rounded hover:bg-gray-800 hover:text-white no-underline" th:href="@{/admin/welcome}">Dashboard</a>
-              <a class="block px-3 py-2 text-base text-gray-300 rounded hover:bg-gray-800 hover:text-white no-underline" th:href="@{/admin/usuarios}">Usuarios</a>
-              <a class="block px-3 py-2 text-base text-gray-300 rounded hover:bg-gray-800 hover:text-white no-underline" th:href="@{/admin/solicitudes}" th:text="#{solicitudes}">Solicitudes</a>
+              <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/admin/dashboard}">Inicio</a>
+              <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/admin/users}">Usuarios</a>
+              <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/admin/solicitudes}" th:text="#{solicitudes}">Solicitudes</a>
             </th:block>
-            
-            <!-- Botones de login/registro para usuarios no autenticados en móvil -->
-            <div sec:authorize="!isAuthenticated()" class="pt-2 space-y-2">
-              <a th:href="@{/login}" class="block text-center text-white bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded no-underline">
-                <span th:text="#{button.login}">Ingresar</span>
-              </a>
-              <a th:href="@{/register}" class="block text-center text-white bg-green-700 hover:bg-green-600 px-3 py-2 rounded no-underline">
-                <span th:text="#{button.register}">Registrarse</span>
-              </a>
+          </nav>
+
+          <!-- Menús de Idioma y Usuario -->
+          <div class="flex items-center space-x-4">
+            <!-- Menú de Idioma -->
+            <div class="relative">
+              <button id="languageDropdown" type="button" class="flex items-center text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800 font-montserrat">
+                <span>Idioma</span>
+              </button>
+              <div id="language-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-gray-900 rounded-md shadow-lg font-montserrat">
+                <div class="py-1">
+                  <a href="?language=es" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <img src="/img/uruguay.png" class="h-4 w-4 mr-2" alt="Español">
+                    <span>Español</span>
+                  </a>
+                  <a href="?language=pt" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <img src="/img/brasil.png" class="h-4 w-4 mr-2" alt="Português">
+                    <span>Português</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Menú de Usuario -->
+            <div sec:authorize="isAuthenticated()" class="relative">
+              <button id="userDropdownButton" type="button" class="flex items-center text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800 font-montserrat">
+                <img src="/img/default-profile.jpg" class="h-8 w-8 rounded-full mr-2" alt="Avatar">
+                <span sec:authentication="name">Usuario</span>
+              </button>
+              <div id="user-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-gray-900 rounded-md shadow-lg font-montserrat">
+                <div class="py-1">
+                  <a sec:authorize="hasRole('ROLE_USER')" th:href="@{/user/profile}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                    </svg>
+                    <span th:text="#{perfil}">Perfil</span>
+                  </a>
+                  <div class="border-t border-gray-700 my-1"></div>
+                  <a th:href="@{/logout}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    <span th:text="#{logout}">Cerrar sesión</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
       
-      <script>
-        // Menú hamburguesa
-        document.getElementById('mobile-menu-button')?.addEventListener('click', function() {
-          document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
+      <!-- Menú móvil (expandible) -->
+      <div id="mobileMenu" class="hidden md:hidden py-2 font-montserrat">
+        <!-- Enlaces de navegación móvil -->
+        <nav class="flex flex-col space-y-2">
+          <th:block sec:authorize="hasRole('ROLE_USER')">
+            <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/user/welcome}">Inicio</a>
+            <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/user/view-requests}" th:text="#{solicitudes}">Solicitudes</a>
+          </th:block>
+          
+          <th:block sec:authorize="hasRole('ROLE_ORGANIZATION')">
+            <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/org/welcome}">Inicio</a>
+            <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/org/solicitudes}" th:text="#{solicitudes}">Solicitudes</a>
+          </th:block>
+          
+          <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/admin/dashboard}">Inicio</a>
+            <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/admin/users}">Usuarios</a>
+            <a class="text-gray-300 hover:text-white px-3 py-2 rounded hover:bg-gray-800" th:href="@{/admin/solicitudes}" th:text="#{solicitudes}">Solicitudes</a>
+          </th:block>
+        </nav>
         
+        <!-- Opciones móviles -->
+        <div class="mt-4 border-t border-gray-800 pt-4">
+          <!-- Selector de idioma móvil -->
+          <div class="px-3 py-2">
+            <p class="text-sm font-medium text-gray-400">Idioma</p>
+            <div class="mt-2 space-y-2">
+              <a href="?language=es" class="flex items-center text-gray-300 hover:text-white">
+                <img src="/img/uruguay.png" class="h-4 w-4 mr-2" alt="Español">
+                <span>Español</span>
+              </a>
+              <a href="?language=pt" class="flex items-center text-gray-300 hover:text-white">
+                <img src="/img/brasil.png" class="h-4 w-4 mr-2" alt="Português">
+                <span>Português</span>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Opciones de usuario móvil -->
+          <div sec:authorize="isAuthenticated()" class="px-3 py-2 mt-2">
+            <p class="text-sm font-medium text-gray-400">Usuario</p>
+            <div class="mt-2 space-y-2">
+              <a sec:authorize="hasRole('ROLE_USER')" th:href="@{/user/profile}" class="flex items-center text-gray-300 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                </svg>
+                <span th:text="#{perfil}">Perfil</span>
+              </a>
+              <a th:href="@{/logout}" class="flex items-center text-gray-300 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                <span th:text="#{logout}">Cerrar sesión</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Script para los dropdowns integrado directamente en el header -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
         // Menú de idioma
-        document.getElementById('languageDropdown')?.addEventListener('click', function(e) {
-          e.stopPropagation();
-          document.getElementById('language-dropdown-menu').classList.toggle('hidden');
-                
-          // Cerrar menú de usuario si está abierto
-          const userMenu = document.getElementById('user-dropdown-menu');
-          if (userMenu && !userMenu.classList.contains('hidden')) {
-            userMenu.classList.add('hidden');
-          }
-        });
+        var languageBtn = document.getElementById('languageDropdown');
+        var languageMenu = document.getElementById('language-dropdown-menu');
+        
+        if (languageBtn && languageMenu) {
+          languageBtn.onclick = function(e) {
+            e.preventDefault();
+            languageMenu.classList.toggle('hidden');
+          };
+        }
         
         // Menú de usuario
-        document.getElementById('userDropdownButton')?.addEventListener('click', function(e) {
-          e.stopPropagation();
-          document.getElementById('user-dropdown-menu').classList.toggle('hidden');
-          
-          // Cerrar menú de idioma si está abierto
-          const langMenu = document.getElementById('language-dropdown-menu');
-          if (langMenu && !langMenu.classList.contains('hidden')) {
-            langMenu.classList.add('hidden');
+        var userBtn = document.getElementById('userDropdownButton');
+        var userMenu = document.getElementById('user-dropdown-menu');
+        
+        if (userBtn && userMenu) {
+          userBtn.onclick = function(e) {
+            e.preventDefault();
+            userMenu.classList.toggle('hidden');
+          };
+        }
+        
+        // Cerrar al hacer clic fuera
+        document.onclick = function(e) {
+          if (languageBtn && languageMenu && !languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
+            languageMenu.classList.add('hidden');
           }
-        });
-        
-        // Cerrar menús al hacer clic en cualquier lugar
-        document.addEventListener('click', function() {
-          const menus = [
-            document.getElementById('language-dropdown-menu'),
-            document.getElementById('user-dropdown-menu')
-          ];
           
-          menus.forEach(menu => {
-            if (menu && !menu.classList.contains('hidden')) {
-              menu.classList.add('hidden');
-            }
-          });
-        });
+          if (userBtn && userMenu && !userBtn.contains(e.target) && !userMenu.contains(e.target)) {
+            userMenu.classList.add('hidden');
+          }
+        };
         
-        // Evitar que los clics dentro de los menús los cierren
-        document.querySelectorAll('#language-dropdown-menu, #user-dropdown-menu').forEach(menu => {
-          menu?.addEventListener('click', function(e) {
-            e.stopPropagation();
-          });
-        });
-      </script>
-    </header>
-  </body>
+        // Manejo del menú móvil
+        var mobileMenuBtn = document.getElementById('mobileMenuButton');
+        var mobileMenu = document.getElementById('mobileMenu');
+        
+        if (mobileMenuBtn && mobileMenu) {
+          mobileMenuBtn.onclick = function() {
+            mobileMenu.classList.toggle('hidden');
+          };
+        }
+      });
+    </script>
+  </header>
+</body>
 </html>

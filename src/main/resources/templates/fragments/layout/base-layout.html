@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:fragment="head(title, extraStyles)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Reciclaje Sólido</title>
+    
+    <!-- Tailwind CSS - Versión local minificada -->
+    <link rel="stylesheet" th:href="@{/css/tailwind/tailwind.min.css}">
+    
+    <!-- Estilos personalizados consolidados -->
+    <link rel="stylesheet" th:href="@{/css/custom-styles.css}">
+    
+    <!-- Scripts principales -->
+    <script th:src="@{/js/header.js}" defer></script>
+    
+    <!-- Espacio para CSS adicional específico de cada página -->
+    <th:block th:replace="${extraStyles ?: ''}"></th:block>
+</head>
+
+<body>
+    <!-- Layout base para todas las páginas de la aplicación -->
+    <div th:fragment="layout(title, content, scripts)" class="app-background flex flex-col min-h-screen">
+        <!-- Enlace para saltar al contenido principal - accesibilidad -->
+        <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+        
+        <!-- Header común -->
+        <header>
+            <div th:replace="~{fragments/header :: header}"></div>
+        </header>
+        
+        <!-- Contenido principal -->
+        <main id="main-content" class="flex-grow px-4 py-6">
+            <div class="container mx-auto">
+                <!-- Alertas y mensajes -->
+                <div th:replace="~{fragments/messages :: message-alerts}"></div>
+                
+                <!-- Breadcrumbs -->
+                <div th:if="${breadcrumbItems != null}" th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
+                
+                <!-- Contenido específico de cada página -->
+                <div th:replace="${content}"></div>
+            </div>
+        </main>
+        
+        <!-- Footer común -->
+        <footer>
+            <div th:replace="~{fragments/layout/footer :: footer}"></div>
+        </footer>
+        
+        <!-- Espacio para scripts adicionales específicos de cada página -->
+        <th:block th:replace="${scripts ?: ''}"></th:block>
+    </div>
+</body>
+</html>

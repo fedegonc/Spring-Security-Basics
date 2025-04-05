@@ -1,28 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 
 <head th:replace="~{fragments/layout/head :: head}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <title>Panel de Usuario</title>
+    <title>Contacto</title>
 </head>
 
-<body class=" d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100">
+
+<!-- Reemplazamos el navbar-user por el header común -->
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-light shadow-sm rounded p-1.5"> <!-- Padding reducido -->
-            <li class="breadcrumb-item">
-                <i class="bi bi-house"></i>
-                <a th:href="@{/user/welcome}"
-                   th:text="#{breadcrumb.welcome}">Bienvenida</a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page" th:text="#{breadcrumb.welcome}">Welcome</li>
-        </ol>
-    </nav>
+    <!-- Reemplazamos la implementación manual por el fragmento reutilizable -->
+    <div th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
 </div>
-
-<div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
 
 <div th:replace="~{fragments/messages :: message-alerts}"></div>
 

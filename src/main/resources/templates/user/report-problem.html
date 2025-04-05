@@ -4,6 +4,7 @@
 <head th:replace="~{fragments/layout/head :: head}">
   <title>Reportar Problema</title>
   <style>
+    /* Estilos específicos para esta página, si fueran necesarios */
     .app-background {
       background: url('/img/background.jpg') no-repeat center center fixed;
       background-size: cover;
@@ -35,26 +36,16 @@
 </head>
 
 <body class="app-background d-flex flex-column min-vh-100">
-  <!-- Navbar -->
-  <div th:replace="~{fragments/user/navbar-user :: navbar-user}"></div>
+  <!-- Reemplazamos el navbar-user por el header común -->
+  <div th:replace="~{fragments/header :: header}"></div>
 
   <!-- Contenido principal -->
   <main class="content-container">
     <div class="container">
-      <!-- Breadcrumbs -->
-      <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb bg-light shadow-sm rounded p-2">
-          <li class="breadcrumb-item">
-            <i class="bi bi-house"></i>
-            <a th:href="@{/user/welcome}">Inicio</a>
-          </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            <i class="bi bi-exclamation-triangle"></i> Reportar Problema
-          </li>
-        </ol>
-      </nav>
-
       <div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+      <!-- Reemplazamos la implementación manual por el fragmento reutilizable -->
+      <div th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
 
       <!-- Sección principal de reporte -->
       <section class="mb-5 glass-effect">

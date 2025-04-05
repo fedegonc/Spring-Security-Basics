@@ -1,171 +1,193 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/layout/head :: head}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Página de nueva solicitud para la aplicación de Reciclaje Sólido">
+<!-- Usando el fragmento de head del layout base -->
+<head th:replace="~{fragments/layout/base-layout :: head('Nueva Solicitud - Reciclaje Sólido', ~{::extraStyles})}">
     <title>Nueva Solicitud - Reciclaje Sólido</title>
+    <!-- Estilos adicionales específicos de esta página -->
+    <th:block th:fragment="extraStyles">
+        <!-- Aquí irían estilos específicos de la página si fueran necesarios -->
+    </th:block>
 </head>
 
-<body class="app-background d-flex flex-column min-vh-100">
+<!-- Usando el layout base con el contenido específico de esta página -->
+<div th:replace="~{fragments/layout/base-layout :: layout('Nueva Solicitud', ~{::main-content}, ~{::page-scripts})}">
     
-    <div th:replace="~{fragments/header :: header}"></div>
-    
-    <!-- Contenido principal -->
-    <main id="main-content" class="content-container">
-        <div class="container">
-            <div th:replace="~{fragments/messages :: message-alerts}"></div>
-            
-            <!-- Sección de formulario -->
-            <section class="mb-5">
-                <div class="glass-card">
-                    <div class="row align-items-center mb-4">
-                        <div class="col-lg-8">
-                            <h1 class="display-5 fw-bold mb-3">Nueva Solicitud de Reciclaje</h1>
-                            <p class="lead">Complete los campos para registrar su solicitud de reciclaje.</p>
+    <!-- Contenido principal específico de esta página -->
+    <div th:fragment="main-content">
+        <!-- Eliminamos la línea duplicada de breadcrumbs ya que está en base-layout -->
+        
+        <!-- Sección de formulario de nueva solicitud -->
+        <section>
+            <div class="glass-card">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                        <i class="bi bi-plus-circle text-green-600 text-2xl"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold">Nueva Solicitud de Reciclaje</h1>
+                </div>
+                
+                <form th:action="@{/user/newsolicitude}" method="post" th:object="${solicitud}" enctype="multipart/form-data" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Primera columna -->
+                        <div class="space-y-6">
+                            <!-- Tipo de material -->
+                            <div>
+                                <label for="categoria" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Tipo de Material <span class="text-red-500">*</span>
+                                </label>
+                                <select id="categoria" th:field="*{categoria}" 
+                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        required>
+                                    <option value="">Seleccione una categoría</option>
+                                    <option value="PLASTICO">Plástico</option>
+                                    <option value="PAPEL">Papel</option>
+                                    <option value="VIDRIO">Vidrio</option>
+                                    <option value="METAL">Metal</option>
+                                    <option value="ELECTRONICO">Electrónico</option>
+                                    <option value="ORGANICO">Orgánico</option>
+                                    <option value="OTROS">Otros</option>
+                                </select>
+                                <p th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}" 
+                                   class="mt-1 text-sm text-red-600"></p>
+                            </div>
+                            
+                            <!-- Peso aproximado -->
+                            <div>
+                                <label for="peso" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Peso Aproximado (kg) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="number" id="peso" th:field="*{peso}" step="0.01" min="0.01" 
+                                       class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       required>
+                                <p th:if="${#fields.hasErrors('peso')}" th:errors="*{peso}" 
+                                   class="mt-1 text-sm text-red-600"></p>
+                            </div>
+                            
+                            <!-- Tamaño -->
+                            <div>
+                                <label for="tamanio" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Tamaño <span class="text-red-500">*</span>
+                                </label>
+                                <select id="tamanio" th:field="*{tamanio}" 
+                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        required>
+                                    <option value="">Seleccione un tamaño</option>
+                                    <option value="PEQUEÑO">Pequeño</option>
+                                    <option value="MEDIANO">Mediano</option>
+                                    <option value="GRANDE">Grande</option>
+                                </select>
+                                <p th:if="${#fields.hasErrors('tamanio')}" th:errors="*{tamanio}" 
+                                   class="mt-1 text-sm text-red-600"></p>
+                            </div>
+                            
+                            <!-- Imagen -->
+                            <div>
+                                <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Imagen de Referencia <span class="text-red-500">*</span>
+                                </label>
+                                <input type="file" id="fileInput" name="file" 
+                                       class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       accept="image/*" required>
+                            </div>
                         </div>
-                        <div class="col-lg-4 mt-4 mt-lg-0 text-center">
-                            <i class="bi bi-recycle text-primary" style="font-size: 5rem;"></i>
+                        
+                        <!-- Segunda columna -->
+                        <div class="space-y-6">
+                            <!-- Descripción -->
+                            <div>
+                                <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Descripción <span class="text-red-500">*</span>
+                                </label>
+                                <textarea id="descripcion" th:field="*{descripcion}" rows="4" 
+                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        required></textarea>
+                                <p th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" 
+                                   class="mt-1 text-sm text-red-600"></p>
+                            </div>
+                            
+                            <!-- Dirección de destino -->
+                            <div>
+                                <label for="destino" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Dirección de Recogida <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="destino" th:field="*{destino}" 
+                                       class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       required>
+                                <p th:if="${#fields.hasErrors('destino')}" th:errors="*{destino}" 
+                                   class="mt-1 text-sm text-red-600"></p>
+                            </div>
                         </div>
                     </div>
                     
-                    <form method="post" enctype="multipart/form-data" th:action="@{/user/newsolicitude}" th:object="${solicitud}">
-                        <!-- Información de material -->
-                        <h4 class="mb-3 mt-4"><i class="bi bi-recycle me-2"></i>Información del Material</h4>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="categoria" class="form-label">Categoría <span class="text-danger">*</span></label>
-                                <select class="form-select" id="categoria" th:field="*{categoria}" required>
-                                    <option value="">Seleccione una opción</option>
-                                    <option value="Residuo Orgánico">Residuo Orgánico</option>
-                                    <option value="Residuo Inorgánico">Residuo Inorgánico</option>
-                                    <option value="Residuo Peligroso">Residuo Peligroso</option>
-                                    <option value="Material Reciclable">Material Reciclable</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="file" class="form-label">Imagen <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" id="file" name="file" accept="image/*" required>
-                            </div>
+                    <!-- Fechas y horas -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                        <div>
+                            <label for="diasDisponibles" class="block text-sm font-medium text-gray-700 mb-1">
+                                Días Disponibles para Recogida <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="diasDisponibles" th:field="*{diasDisponibles}" 
+                                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                   placeholder="Ej: Lunes, Miércoles y Viernes" required>
+                            <p th:if="${#fields.hasErrors('diasDisponibles')}" th:errors="*{diasDisponibles}" 
+                               class="mt-1 text-sm text-red-600"></p>
                         </div>
                         
-                        <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripción <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="descripcion" th:field="*{descripcion}" rows="3" required 
-                                     placeholder="Describa el material a reciclar"></textarea>
+                        <div>
+                            <label for="horaRecoleccion" class="block text-sm font-medium text-gray-700 mb-1">
+                                Horario de Recogida <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="horaRecoleccion" th:field="*{horaRecoleccion}" 
+                                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                   placeholder="Ej: Entre 9:00 y 12:00" required>
+                            <p th:if="${#fields.hasErrors('horaRecoleccion')}" th:errors="*{horaRecoleccion}" 
+                               class="mt-1 text-sm text-red-600"></p>
                         </div>
-                        
-                        <!-- Información de ubicación -->
-                        <h4 class="mb-3 mt-4"><i class="bi bi-geo-alt me-2"></i>Información de Ubicación</h4>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="calle" class="form-label">Calle <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="calle" th:field="*{calle}" required>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="barrio" class="form-label">Barrio <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="barrio" th:field="*{barrio}" required>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="numeroDeCasa" class="form-label">Número de Casa <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="numeroDeCasa" th:field="*{numeroDeCasa}" required>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="referenciaLocal" class="form-label">Referencia del Local <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="referenciaLocal" th:field="*{referenciaLocal}" required>
-                            </div>
-                        </div>
-                        
-                        <!-- Información de recolección -->
-                        <h4 class="mb-3 mt-4"><i class="bi bi-calendar-check me-2"></i>Información de Recolección</h4>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="horaRecoleccion" class="form-label">Hora de Recolección <span class="text-danger">*</span></label>
-                                <select class="form-select" id="horaRecoleccion" th:field="*{horaRecoleccion}" required>
-                                    <option value="">Seleccione una opción</option>
-                                    <option value="Mañana (8:00 - 12:00)">Mañana (8:00 - 12:00)</option>
-                                    <option value="Tarde (13:00 - 17:00)">Tarde (13:00 - 17:00)</option>
-                                    <option value="Noche (18:00 - 21:00)">Noche (18:00 - 21:00)</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="diasDisponibles" class="form-label">Días Disponibles <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="diasDisponibles" th:field="*{diasDisponibles}" required 
-                                       placeholder="Ej: Lunes, Miércoles, Viernes">
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="telefono" class="form-label">Teléfono <span class="text-danger">*</span></label>
-                                <input type="tel" class="form-control" id="telefono" th:field="*{telefono}" required>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="destino" class="form-label">Destino <span class="text-danger">*</span></label>
-                                <select class="form-select" id="destino" th:field="*{destino}" required>
-                                    <option value="">Seleccione una organización</option>
-                                    <option th:each="org : ${organizaciones}" 
-                                            th:value="${org.username}" 
-                                            th:text="${org.name + ' (' + org.username + ')'}">
-                                        Nombre de la organización
-                                    </option>
-                                </select>
-                                <div class="form-text text-info" th:if="${organizaciones == null || #lists.isEmpty(organizaciones)}">
-                                    No hay organizaciones disponibles. Por favor, contacte al administrador.
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Información adicional -->
-                        <h4 class="mb-3 mt-4"><i class="bi bi-info-circle me-2"></i>Información Adicional</h4>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="peso" class="form-label">Peso (aproximado)</label>
-                                <input type="text" class="form-control" id="peso" th:field="*{peso}" 
-                                       placeholder="Ej: 5kg, 10kg, etc.">
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="tamanio" class="form-label">Tamaño (aproximado)</label>
-                                <input type="text" class="form-control" id="tamanio" th:field="*{tamanio}" 
-                                       placeholder="Ej: pequeño, mediano, grande">
-                            </div>
-                        </div>
-                        
-                        <!-- Botones de acción -->
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a th:href="@{/user/welcome}" class="btn-modern">
-                                <i class="bi bi-x-circle me-2"></i>Cancelar
-                            </a>
-                            <button type="submit" class="btn-modern btn-primary-modern">
-                                <i class="bi bi-check-circle me-2"></i>Guardar Solicitud
-                            </button>
-                        </div>
-                        
-                        <p class="small text-muted mt-3">
-                            <i class="bi bi-info-circle me-1"></i> Los campos marcados con <span class="text-danger">*</span> son obligatorios
-                        </p>
-                    </form>
-                </div>
-            </section>
-        </div>
-    </main>
+                    </div>
+                    
+                    <!-- Comentarios adicionales (opcional) -->
+                    <div>
+                        <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">
+                            Comentarios Adicionales (opcional)
+                        </label>
+                        <textarea id="descripcionAdicional" name="descripcionAdicional" rows="3" 
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"></textarea>
+                    </div>
+                    
+                    <!-- Botones de acción -->
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <a th:href="@{/user/welcome}" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i class="bi bi-arrow-left mr-2"></i> Cancelar
+                        </a>
+                        <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i class="bi bi-send mr-2"></i> Enviar Solicitud
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
 
-    <div th:replace="~{fragments/layout/footer :: footer}"></div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <!-- Scripts específicos de esta página -->
+    <th:block th:fragment="page-scripts">
+        <script>
+            // Script para previsualizar la imagen subida
+            document.addEventListener('DOMContentLoaded', function() {
+                const fileInput = document.getElementById('fileInput');
+                
+                fileInput.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            // Puedes agregar código aquí para mostrar una vista previa si lo deseas
+                            console.log('Imagen cargada');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+        </script>
+    </th:block>
+</div>
 </html>

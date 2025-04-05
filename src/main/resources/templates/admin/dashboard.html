@@ -1,458 +1,476 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/layout/head :: head}"><title>Panel de Control - Admin</title></head>
-<body class="app-background d-flex flex-column min-vh-100">
-  <div th:replace="~{fragments/header :: header}"></div>
-  <div class="container mt-4 flex-grow-1">
-    <!-- Breadcrumbs -->
-    <div th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
+
+<!-- Usando el fragmento de head del layout base -->
+<head th:replace="~{fragments/layout/base-layout :: head('Panel de Control - Admin', ~{::extraStyles})}">
+    <title>Panel de Control - Admin</title>
+    <!-- Estilos adicionales específicos de esta página -->
+    <th:block th:fragment="extraStyles">
+        <!-- Aquí irían estilos específicos de la página si fueran necesarios -->
+    </th:block>
+</head>
+
+<!-- Usando el layout base con el contenido específico de esta página -->
+<div th:replace="~{fragments/layout/base-layout :: layout('Panel de Control', ~{::main-content}, ~{::page-scripts})}">
     
-    <div class="row g-4">
-      <!-- Panel lateral -->
-      <div class="col-md-4">
-        <div class="glass-card h-100">
-          <h2>Panel</h2>
-          <img src="/img/logo.png" width="128">
-          <div class="alert alert-info">Gestiona usuarios, roles y más.</div>
-          <div id="clock" class="clock text-center mt-auto fs-4"></div>
+    <!-- Contenido principal específico de esta página -->
+    <div th:fragment="main-content">
+        <!-- Contenido principal -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Panel lateral -->
+            <div class="md:col-span-1">
+                <div class="glass-card h-full flex flex-col">
+                    <h2 class="text-xl font-bold mb-4">Panel</h2>
+                    <img src="/img/logo.png" width="128" class="mx-auto mb-4">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded mb-4">
+                        <p class="text-blue-700">Gestiona usuarios, roles y más.</p>
+                    </div>
+                    <div id="clock" class="text-center mt-auto text-2xl font-mono"></div>
+                </div>
+            </div>
+            
+            <!-- Panel principal -->
+            <div class="md:col-span-3">
+                <div class="glass-card h-full">
+                    <h3 class="text-lg font-bold mb-4">Resumen</h3>
+                    
+                    <!-- Tarjetas de resumen -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-white p-4 rounded-lg shadow text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            <p>Usuarios: <span class="font-bold" th:text="${totalUsers}">120</span></p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <p>Solicitudes: <span class="font-bold" th:text="${totalSolicitudes}">15</span></p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <p>Problemas: <span class="font-bold" th:text="${totalReportes}">8</span></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Filtro de período -->
+                    <div class="bg-white rounded-lg shadow mb-6">
+                        <div class="bg-gray-700 text-white p-3 rounded-t-lg">
+                            <h5 class="font-medium flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                                </svg>
+                                Filtrar datos por período
+                            </h5>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex flex-wrap justify-center gap-2">
+                                <button class="px-3 py-1 text-sm border border-blue-500 rounded bg-blue-500 text-white tiempo-filtro active" data-dias="7">7 días</button>
+                                <button class="px-3 py-1 text-sm border border-blue-300 rounded hover:bg-blue-50 tiempo-filtro" data-dias="30">30 días</button>
+                                <button class="px-3 py-1 text-sm border border-blue-300 rounded hover:bg-blue-50 tiempo-filtro" data-dias="0">Total</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gráficos -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Gráfico de registros de usuarios por día -->
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="bg-blue-600 text-white p-3 rounded-t-lg">
+                                <h5 class="font-medium flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                                    </svg>
+                                    Registros <span id="periodo-usuarios">(últimos 7 días)</span>
+                                </h5>
+                            </div>
+                            <div class="p-4"><canvas id="usersChart" height="200"></canvas></div>
+                        </div>
+                        
+                        <!-- Gráfico de accesos de usuarios -->
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="bg-green-600 text-white p-3 rounded-t-lg">
+                                <h5 class="font-medium flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                    </svg>
+                                    Accesos <span id="periodo-accesos">(últimos 7 días)</span>
+                                </h5>
+                            </div>
+                            <div class="p-4"><canvas id="accessChart" height="200"></canvas></div>
+                        </div>
+                        
+                        <!-- Gráfico de solicitudes por día -->
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="bg-cyan-600 text-white p-3 rounded-t-lg">
+                                <h5 class="font-medium flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    Solicitudes <span id="periodo-solicitudes">(últimos 7 días)</span>
+                                </h5>
+                            </div>
+                            <div class="p-4"><canvas id="solicitudesChart" height="200"></canvas></div>
+                        </div>
+                        
+                        <!-- Gráfico de reportes por día -->
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="bg-yellow-500 text-white p-3 rounded-t-lg">
+                                <h5 class="font-medium flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    Reportes <span id="periodo-reportes">(últimos 7 días)</span>
+                                </h5>
+                            </div>
+                            <div class="p-4"><canvas id="reportesChart" height="200"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <!-- Panel principal -->
-      <div class="col-md-8">
-        <div class="glass-card h-100">
-          <h3>Resumen</h3>
-          <div class="row g-3 mb-4">
-            <div class="col">
-              <div class="card h-100 text-center">
-                <i class="bi bi-people-fill fs-1"></i>
-                <p>Usuarios: <b th:text="${totalUsers}">120</b></p>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card h-100 text-center">
-                <i class="bi bi-clipboard-plus-fill fs-1"></i>
-                <p>Solicitudes: <b th:text="${totalSolicitudes}">15</b></p>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card h-100 text-center">
-                <i class="bi bi-exclamation-triangle-fill fs-1"></i>
-                <p>Problemas: <b th:text="${totalReportes}">8</b></p>
-              </div>
-            </div>
-          </div>
-          <div class="card mb-3">
-            <div class="card-header bg-secondary text-white">
-              <h5 class="mb-0"><i class="bi bi-funnel me-2"></i>Filtrar datos por período</h5>
-            </div>
-            <div class="card-body">
-              <div class="d-flex flex-wrap justify-content-center gap-2">
-                <button class="btn btn-sm btn-outline-primary tiempo-filtro active" data-dias="7">7 días</button>
-                <button class="btn btn-sm btn-outline-primary tiempo-filtro" data-dias="30">30 días</button>
-                <button class="btn btn-sm btn-outline-primary tiempo-filtro" data-dias="0">Total</button>
-              </div>
-            </div>
-          </div>
-          <div class="row g-4">
-            <!-- Gráfico de registros de usuarios por día -->
-            <div class="col-md-6 mb-4">
-              <div class="card h-100">
-                <div class="card-header bg-primary text-white">
-                  <h5 class="mb-0">
-                    <i class="bi bi-person-plus me-2"></i>Registros <span id="periodo-usuarios">(últimos 7 días)</span>
-                  </h5>
-                </div>
-                <div class="card-body"><canvas id="usersChart" height="200"></canvas></div>
-              </div>
-            </div>
-            
-            <!-- Nuevo gráfico de accesos de usuarios -->
-            <div class="col-md-6 mb-4">
-              <div class="card h-100">
-                <div class="card-header bg-success text-white">
-                  <h5 class="mb-0">
-                    <i class="bi bi-person-check me-2"></i>Accesos <span id="periodo-accesos">(últimos 7 días)</span>
-                  </h5>
-                </div>
-                <div class="card-body"><canvas id="accessChart" height="200"></canvas></div>
-              </div>
-            </div>
-            
-            <!-- Gráfica de solicitudes por día -->
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-header bg-info text-white">
-                  <h5 class="mb-0">
-                    <i class="bi bi-clipboard-plus me-2"></i>Solicitudes <span id="periodo-solicitudes">(últimos 7 días)</span>
-                  </h5>
-                </div>
-                <div class="card-body"><canvas id="solicitudesChart" height="200"></canvas></div>
-              </div>
-            </div>
-            
-            <!-- Gráfica de reportes de problemas -->
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-header bg-warning text-dark">
-                  <h5 class="mb-0">
-                    <i class="bi bi-exclamation-triangle me-2"></i>Reportes <span id="periodo-reportes">(últimos 7 días)</span>
-                  </h5>
-                </div>
-                <div class="card-body"><canvas id="reportesChart" height="200"></canvas></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-  <div th:replace="~{fragments/layout/footer :: footer}"></div>
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
-  <script th:inline="javascript">
-    document.addEventListener('DOMContentLoaded', () => {
-      const totalUsuarios = /*[[${totalUsers}]]*/ 0,
-            totalSolicitudes = /*[[${totalSolicitudes}]]*/ 0,
-            totalReportes = /*[[${totalReportes}]]*/ 0;
-      
-      // Estimación para accesos - multiplicamos por un factor para simular que hay más accesos que usuarios
-      const totalAccesos = totalUsuarios * 5;
-      
-      let usersChart, accessChart, solicitudesChart, reportesChart, periodoActual = 7;
-
-      const getInterval = d => d <= 30 ? 1 : d <= 90 ? 3 : d <= 180 ? 7 : d <= 365 ? 15 : d <= 730 ? 30 : 90,
-            getTextoFiltro = d => d === 0 ? "(datos totales)" : d <= 30 ? `(últimos ${d} días)` :
-              d === 90 ? "(últimos 3 meses)" : d === 180 ? "(últimos 6 meses)" :
-              d === 365 ? "(último año)" : d === 730 ? "(últimos 2 años)" :
-              d === 1825 ? "(últimos 5 años)" : "(período personalizado)",
-            actualizarTextosPeriodo = d => {
-              const txt = getTextoFiltro(d);
-              ["periodo-usuarios", "periodo-accesos", "periodo-solicitudes", "periodo-reportes"]
-                .forEach(id => document.getElementById(id).textContent = txt);
-            },
-            getStepSize = total => {
-              // Garantizar un step size adecuado y nunca negativo
-              if (total <= 0) return 1; 
-              if (total <= 10) return 1;
-              if (total <= 50) return 5;
-              if (total <= 100) return 10;
-              if (total <= 500) return 50;
-              if (total <= 1000) return 100;
-              return Math.ceil(total / 20);
-            };
-
-      function crearChart(id, etiquetas, labelText, data, bgColor, borderColor, stepSize, titleText, extra = {}) {
-        return new Chart(document.getElementById(id).getContext('2d'), {
-          type: 'bar',
-          data: { 
-            labels: etiquetas, 
-            datasets: [{ 
-              label: labelText, 
-              data, 
-              backgroundColor: bgColor, 
-              borderColor, 
-              borderWidth: 1 
-            }] 
-          },
-          options: Object.assign({
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: { 
-              yAxes: [{ 
-                ticks: { 
-                  beginAtZero: true,
-                  min: 0, // Garantizar que no hay valores negativos
-                  precision: 0, // Solo números enteros
-                  stepSize 
-                } 
-              }] 
-            },
-            title: { display: true, text: titleText }
-          }, extra)
-        });
-      }
-
-      function generarFechas(d) {
-        if (d === 0) return ["Total"];
-        const intervalo = getInterval(d), fechas = [], hoy = new Date();
-        for (let i = Math.min(d - 1, Math.ceil(d / intervalo) * intervalo); i >= 0; i -= intervalo) {
-          let f = new Date();
-          f.setDate(hoy.getDate() - i);
-          fechas.push(f.toLocaleDateString('es-ES', { 
-            day: d > 180 ? '2-digit' : 'numeric', 
-            month: 'short', 
-            year: d > 365 ? 'numeric' : undefined 
-          }));
-        }
-        return fechas;
-      }
-
-      // Función mejorada para generar datos diarios de usuarios registrados
-      function generarDatosUsuarios(total, d) {
-        if (d === 0) return [total];
-        if (total <= 0) return Array(d).fill(0); // Protección contra totales negativos
-        
-        // Distribuir el total en días, asegurando números positivos
-        const distribuciones = [];
-        let totalRestante = total;
-        
-        // Crear una distribución realista para registros diarios
-        // Más registros en días específicos (ej: lunes, miércoles)
-        const diaPatron = [0.2, 0.15, 0.25, 0.1, 0.05, 0.1, 0.15]; // Lun a Dom
-        
-        const intervalo = getInterval(d);
-        if (intervalo > 1) {
-          // Para intervalos largos, crear distribución por intervalos
-          const puntos = Math.ceil(d / intervalo);
-          for (let i = 0; i < puntos; i++) {
-            // Asignar entre 0 y el total restante, con cierta variabilidad
-            const valorMax = Math.max(1, Math.floor(totalRestante / (puntos - i)));
-            const valor = Math.min(
-              totalRestante,
-              Math.max(0, Math.floor(valorMax * (0.5 + Math.random())))
-            );
-            distribuciones.push(valor);
-            totalRestante -= valor;
-          }
-          
-          // Si quedó algo sin distribuir, agregarlo al último punto
-          if (totalRestante > 0) {
-            distribuciones[distribuciones.length - 1] += totalRestante;
-          }
-        } else {
-          // Para intervalos diarios, usar patrón semanal
-          const hoy = new Date();
-          for (let i = 0; i < d; i++) {
-            const fecha = new Date();
-            fecha.setDate(hoy.getDate() - (d - 1) + i);
-            const diaSemana = fecha.getDay(); // 0 = Domingo, 1 = Lunes, etc.
+    
+    <!-- Scripts específicos de esta página -->
+    <th:block th:fragment="page-scripts">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+        <script th:inline="javascript">
+          document.addEventListener('DOMContentLoaded', () => {
+              const totalUsuarios = /*[[${totalUsers}]]*/ 0,
+                    totalSolicitudes = /*[[${totalSolicitudes}]]*/ 0,
+                    totalReportes = /*[[${totalReportes}]]*/ 0;
+              
+              // Estimación para accesos - multiplicamos por un factor para simular que hay más accesos que usuarios
+              const totalAccesos = totalUsuarios * 5;
+              
+              let usersChart, accessChart, solicitudesChart, reportesChart, periodoActual = 7;
             
-            // Calcular factor basado en día de la semana
-            const factorDia = diaPatron[(diaSemana + 6) % 7]; // Ajustar para que 0 = Lunes
-            
-            // Agregar aleatoriedad pero respetar patrón semanal
-            const factor = factorDia * (0.7 + Math.random() * 0.6);
-            
-            // Calcular valor proporcional para este día
-            const valorIdeal = total / d;
-            const valor = Math.floor(valorIdeal * factor * d / 7);
-            
-            // Garantizar que no excedemos el total restante
-            const valorFinal = Math.min(totalRestante, Math.max(0, valor));
-            distribuciones.push(valorFinal);
-            totalRestante -= valorFinal;
-          }
-          
-          // Si quedó algo sin distribuir, distribuirlo equitativamente
-          if (totalRestante > 0) {
-            const diasConValor = distribuciones.filter(v => v > 0).length || 1;
-            const extra = Math.ceil(totalRestante / diasConValor);
-            
-            for (let i = 0; i < distribuciones.length && totalRestante > 0; i++) {
-              if (distribuciones[i] > 0) {
-                const sumar = Math.min(extra, totalRestante);
-                distribuciones[i] += sumar;
-                totalRestante -= sumar;
+              const getInterval = d => d <= 30 ? 1 : d <= 90 ? 3 : d <= 180 ? 7 : d <= 365 ? 15 : d <= 730 ? 30 : 90,
+                    getTextoFiltro = d => d === 0 ? "(datos totales)" : d <= 30 ? `(últimos ${d} días)` :
+                        d <= 90 ? "(últimos 3 meses)" : d <= 180 ? "(últimos 6 meses)" :
+                        d <= 365 ? "(último año)" : "(últimos 2 años)";
+              
+              const actualizarTextosPeriodo = d => {
+                document.getElementById('periodo-usuarios').textContent = getTextoFiltro(d);
+                document.getElementById('periodo-accesos').textContent = getTextoFiltro(d);
+                document.getElementById('periodo-solicitudes').textContent = getTextoFiltro(d);
+                document.getElementById('periodo-reportes').textContent = getTextoFiltro(d);
+              };
+              
+              const getStepSize = total => {
+                  if (total <= 5) return 1;
+                  if (total <= 20) return 2;
+                  if (total <= 50) return 5;
+                  if (total <= 100) return 10;
+                  if (total <= 500) return 50;
+                  if (total <= 1000) return 100;
+                  return Math.ceil(total / 20);
+              };
+              
+              function crearChart(id, etiquetas, labelText, data, bgColor, borderColor, stepSize, titleText, extra = {}) {
+                  const ctx = document.getElementById(id).getContext('2d');
+                  
+                  const defaultConfig = {
+                      type: 'bar',
+                      data: {
+                          labels: etiquetas,
+                          datasets: [{
+                              label: labelText,
+                              data: data,
+                              backgroundColor: bgColor,
+                              borderColor: borderColor,
+                              borderWidth: 1
+                          }]
+                      },
+                      options: {
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          title: {
+                              display: false,
+                              text: titleText
+                          },
+                          scales: {
+                              yAxes: [{
+                                  ticks: {
+                                      beginAtZero: true,
+                                      stepSize: stepSize
+                                  }
+                              }]
+                          },
+                          ...extra
+                      }
+                  };
+                  
+                  return new Chart(ctx, defaultConfig);
               }
-            }
-          }
-        }
-        
-        return distribuciones;
-      }
-
-      // Función para generar datos de accesos (más que registros y con patrón diferente)
-      function generarDatosAccesos(total, d) {
-        if (d === 0) return [total];
-        if (total <= 0) return Array(d).fill(0);
-        
-        // Patrón de accesos: más actividad en días laborables, picos en mediados de semana
-        const diaPatron = [0.25, 0.2, 0.3, 0.15, 0.05, 0.02, 0.03]; // Lun a Dom (más actividad laboral)
-        
-        const distribuciones = [];
-        let totalRestante = total;
-        
-        const intervalo = getInterval(d);
-        if (intervalo > 1) {
-          const puntos = Math.ceil(d / intervalo);
-          for (let i = 0; i < puntos; i++) {
-            const valorMax = Math.max(1, Math.floor(totalRestante / (puntos - i)));
-            const valor = Math.min(
-              totalRestante,
-              Math.max(0, Math.floor(valorMax * (0.7 + Math.random() * 0.6)))
-            );
-            distribuciones.push(valor);
-            totalRestante -= valor;
-          }
-        } else {
-          const hoy = new Date();
-          for (let i = 0; i < d; i++) {
-            const fecha = new Date();
-            fecha.setDate(hoy.getDate() - (d - 1) + i);
-            const diaSemana = fecha.getDay();
-            
-            const factorDia = diaPatron[(diaSemana + 6) % 7];
-            const factor = factorDia * (0.8 + Math.random() * 0.4);
-            
-            const valorIdeal = total / d;
-            const valor = Math.floor(valorIdeal * factor * d / 7);
-            
-            const valorFinal = Math.min(totalRestante, Math.max(0, valor));
-            distribuciones.push(valorFinal);
-            totalRestante -= valorFinal;
-          }
-        }
-        
-        // Distribuir el restante
-        if (totalRestante > 0) {
-          const extra = Math.ceil(totalRestante / distribuciones.length);
-          for (let i = 0; i < distribuciones.length && totalRestante > 0; i++) {
-            const sumar = Math.min(extra, totalRestante);
-            distribuciones[i] += sumar;
-            totalRestante -= sumar;
-          }
-        }
-        
-        return distribuciones;
-      }
-
-      // Función para solicitudes y reportes (similar a la anterior pero con otro patrón)
-      function generarDatos(d, total) {
-        if (d === 0) return [total];
-        if (total <= 0) return Array(d).fill(0);
-        
-        const distribuciones = [];
-        let totalRestante = total;
-        
-        const intervalo = getInterval(d);
-        if (intervalo > 1) {
-          const puntos = Math.ceil(d / intervalo);
-          const semilla = [0.05, 0.08, 0.12, 0.15, 0.2, 0.25, 0.15];
-          
-          for (let i = 0; i < puntos; i++) {
-            const factor = semilla[i % semilla.length] * (0.8 + Math.random() * 0.4);
-            const valorIdeal = total / puntos;
-            const valor = Math.floor(valorIdeal * factor * puntos / semilla.length);
-            
-            const valorFinal = Math.min(totalRestante, Math.max(0, valor));
-            distribuciones.push(valorFinal);
-            totalRestante -= valorFinal;
-          }
-        } else {
-          for (let i = 0; i < d; i++) {
-            const factor = 0.5 + Math.random() * 0.5;
-            const valorIdeal = total / d;
-            const valor = Math.floor(valorIdeal * factor * d / 7);
-            
-            const valorFinal = Math.min(totalRestante, Math.max(0, valor));
-            distribuciones.push(valorFinal);
-            totalRestante -= valorFinal;
-          }
-        }
-        
-        // Distribuir el restante
-        if (totalRestante > 0) {
-          const extra = Math.ceil(totalRestante / distribuciones.length);
-          for (let i = 0; i < distribuciones.length && totalRestante > 0; i++) {
-            const sumar = Math.min(extra, totalRestante);
-            distribuciones[i] += sumar;
-            totalRestante -= sumar;
-          }
-        }
-        
-        return distribuciones;
-      }
-
-      const actualizarGraficas = d => { periodoActual = d; inicializarGraficas(d); };
-      
-      function inicializarGraficas(d) {
-        if (usersChart) usersChart.destroy();
-        if (accessChart) accessChart.destroy();
-        if (solicitudesChart) solicitudesChart.destroy();
-        if (reportesChart) reportesChart.destroy();
-        
-        actualizarTextosPeriodo(d);
-        
-        const etiquetas = generarFechas(d),
-              datosUsuarios = generarDatosUsuarios(totalUsuarios, d),
-              datosAccesos = generarDatosAccesos(totalAccesos, d),
-              datosSolicitudes = generarDatos(d, totalSolicitudes),
-              datosReportes = generarDatos(d, totalReportes);
-        
-        usersChart = crearChart(
-          'usersChart', 
-          etiquetas, 
-          'Usuarios registrados por día', 
-          datosUsuarios,
-          'rgba(13, 110, 253, 0.5)', 
-          'rgba(13, 110, 253, 1)', 
-          getStepSize(Math.max(1, Math.ceil(totalUsuarios / (d === 0 ? 1 : d)))),
-          'Usuarios registrados por día', 
-          {
-            tooltips: {
-              callbacks: {
-                title: (items, data) => 'Fecha: ' + data.labels[items[0].index],
-                label: item => 'Nuevos registros: ' + item.yLabel
+              
+              function generarFechas(d) {
+                  const hoy = new Date();
+                  const fechas = [];
+                  // Si d = 0, mostrar algo genérico
+                  if (d === 0) return ['Datos Totales'];
+                  
+                  for (let i = d - 1; i >= 0; i--) {
+                      const fecha = new Date();
+                      fecha.setDate(hoy.getDate() - i);
+                      fechas.push(fecha.toLocaleDateString('es-ES', {day: 'numeric', month: 'short'}));
+                  }
+                  
+                  return fechas;
               }
-            }
-          }
-        );
-        
-        accessChart = crearChart(
-          'accessChart', 
-          etiquetas, 
-          'Accesos por día', 
-          datosAccesos,
-          'rgba(25, 135, 84, 0.5)', 
-          'rgba(25, 135, 84, 1)', 
-          getStepSize(Math.max(1, Math.ceil(totalAccesos / (d === 0 ? 1 : d)))),
-          'Accesos de usuarios por día', 
-          {
-            tooltips: {
-              callbacks: {
-                title: (items, data) => 'Fecha: ' + data.labels[items[0].index],
-                label: item => 'Accesos: ' + item.yLabel
+              
+              <!-- Función mejorada para generar datos diarios de usuarios registrados -->
+              function generarDatosUsuarios(total, d) {
+                  if (d === 0) return [total]; // Si es datos totales, devolver solo un valor
+                  
+                  // Reglas específicas para simular un patrón de crecimiento de usuarios realista
+                  // Los pesos indican la importancia de cada fase en la distribución
+                  const fases = [
+                      { // Fase inicial baja (primeros usuarios iniciales)
+                          pesoInicial: 0.15,
+                          diasPorcentaje: 0.2 // Primeros 20% de días
+                      },
+                      { // Fase de crecimiento acelerado (crecimiento viral o promociones)
+                          pesoInicial: 0.45,
+                          diasPorcentaje: 0.3 // Siguiente 30% de días
+                      },
+                      { // Fase de estabilización (crecimiento normal)
+                          pesoInicial: 0.3,
+                          diasPorcentaje: 0.3 // Siguiente 30% de días
+                      },
+                      { // Fase de madurez (saturación de mercado)
+                          pesoInicial: 0.1,
+                          diasPorcentaje: 0.2 // Últimos 20% de días
+                      }
+                  ];
+                  
+                  // Calcular cuántos usuarios se asignan a cada fase
+                  const usuariosPorFase = [];
+                  let totalAsignado = 0;
+                  
+                  for (let i = 0; i < fases.length; i++) {
+                      const fase = fases[i];
+                      // Para la última fase, asignar todos los usuarios restantes
+                      let usuariosFase;
+                      if (i === fases.length - 1) {
+                          usuariosFase = total - totalAsignado;
+                      } else {
+                          usuariosFase = Math.round(total * fase.pesoInicial);
+                          totalAsignado += usuariosFase;
+                      }
+                      usuariosPorFase.push(usuariosFase);
+                  }
+                  
+                  // Calcular días en cada fase
+                  const diasPorFase = [];
+                  let diasTotalesAsignados = 0;
+                  
+                  for (let i = 0; i < fases.length; i++) {
+                      const fase = fases[i];
+                      // Para la última fase, asignar todos los días restantes
+                      let diasFase;
+                      if (i === fases.length - 1) {
+                          diasFase = d - diasTotalesAsignados;
+                      } else {
+                          diasFase = Math.round(d * fase.diasPorcentaje);
+                          diasTotalesAsignados += diasFase;
+                      }
+                      diasPorFase.push(diasFase);
+                  }
+                  
+                  // Distribución diaria simulada por fase
+                  const distribuciones = [];
+                  let faseActual = 0;
+                  let diasEnFaseActual = 0;
+                  let usuariosRestantes = usuariosPorFase[0];
+                  
+                  for (let dia = 0; dia < d; dia++) {
+                      // Cambiar fase si hemos completado los días de esta fase
+                      if (diasEnFaseActual >= diasPorFase[faseActual] && faseActual < fases.length - 1) {
+                          faseActual++;
+                          diasEnFaseActual = 0;
+                          usuariosRestantes = usuariosPorFase[faseActual];
+                      }
+                      
+                      // Calcular cuántos usuarios se añadieron este día
+                      const maxPorDia = Math.max(1, Math.ceil(usuariosRestantes / (diasPorFase[faseActual] - diasEnFaseActual)));
+                      
+                      // Añadir variabilidad para hacer el gráfico más interesante
+                      const variabilidad = 0.5; // Puede variar hasta 50% arriba o abajo
+                      const factorVariabilidad = 1 + (Math.random() * variabilidad * 2 - variabilidad);
+                      
+                      let usuariosDia = Math.round(maxPorDia * factorVariabilidad);
+                      
+                      // No puede ser mayor que los usuarios restantes
+                      usuariosDia = Math.min(usuariosDia, usuariosRestantes);
+                      
+                      distribuciones.push(usuariosDia);
+                      usuariosRestantes -= usuariosDia;
+                      diasEnFaseActual++;
+                  }
+                  
+                  return distribuciones;
               }
-            }
-          }
-        );
-        
-        solicitudesChart = crearChart(
-          'solicitudesChart', 
-          etiquetas, 
-          'Solicitudes por día', 
-          datosSolicitudes,
-          'rgba(13, 202, 240, 0.5)', 
-          'rgba(13, 202, 240, 1)', 
-          getStepSize(Math.max(1, Math.ceil(totalSolicitudes / (d === 0 ? 1 : d)))), 
-          'Solicitudes de recolección diarias'
-        );
-        
-        reportesChart = crearChart(
-          'reportesChart', 
-          etiquetas, 
-          'Reportes por día', 
-          datosReportes,
-          'rgba(255, 193, 7, 0.5)', 
-          'rgba(255, 193, 7, 1)', 
-          getStepSize(Math.max(1, Math.ceil(totalReportes / (d === 0 ? 1 : d)))), 
-          'Reportes de problemas diarios'
-        );
-      }
-
-      document.querySelectorAll('.tiempo-filtro').forEach(btn => btn.addEventListener('click', function () {
-        document.querySelectorAll('.tiempo-filtro').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        actualizarGraficas(parseInt(this.getAttribute('data-dias')));
-      }));
-
-      const updateClock = () => {
-        let now = new Date();
-        document.getElementById('clock').textContent = now.toTimeString().slice(0, 8);
-      };
-      setInterval(updateClock, 1000); updateClock();
-      inicializarGraficas(periodoActual);
-    });
-  </script>
-</body>
+              
+              function generarDatosAccesos(total, d) {
+                  if (d === 0) return [total];
+                  
+                  // Patrón con picos más altos en días laborables
+                  const distribucion = [];
+                  const mediaAccesosDiarios = total / d;
+                  
+                  for (let i = 0; i < d; i++) {
+                      const factorDiaSemana = [0.7, 1.2, 1.4, 1.3, 1.5, 0.8, 0.6][i % 7]; // Factor por día (Lun a Dom)
+                      const factorAleatorio = 0.8 + Math.random() * 0.4; // Variación adicional
+                      
+                      let accesos = Math.round(mediaAccesosDiarios * factorDiaSemana * factorAleatorio);
+                      distribucion.push(accesos);
+                  }
+                  
+                  // Ajustar para que sume exactamente el total
+                  const sumaActual = distribucion.reduce((a, b) => a + b, 0);
+                  const factor = total / sumaActual;
+                  
+                  return distribucion.map(v => Math.round(v * factor));
+              }
+              
+              function generarDatos(d, total) {
+                  if (d === 0) return [total];
+                  
+                  // Para otros datos, usamos una distribución más simple
+                  const distribuciones = [];
+                  let totalRestante = total;
+                  
+                  for (let i = 0; i < d; i++) {
+                      if (i === d - 1) {
+                          // Último día, asignar lo que queda
+                          distribuciones.push(totalRestante);
+                      } else {
+                          // Calcular valor basado en la media teórica con algo de varianza
+                          const factor = 0.5 + Math.random() * 0.5;
+                          const valorIdeal = total / d;
+                          const valor = Math.floor(valorIdeal * factor * d / 7);
+                          
+                          const valorFinal = Math.min(totalRestante, Math.max(0, valor));
+                          distribuciones.push(valorFinal);
+                          totalRestante -= valorFinal;
+                      }
+                  }
+                  
+                  return distribuciones;
+              }
+              
+              const actualizarGraficas = d => { periodoActual = d; inicializarGraficas(d); };
+              
+              function inicializarGraficas(d) {
+                  if (usersChart) usersChart.destroy();
+                  if (accessChart) accessChart.destroy();
+                  if (solicitudesChart) solicitudesChart.destroy();
+                  if (reportesChart) reportesChart.destroy();
+                  
+                  actualizarTextosPeriodo(d);
+                  
+                  const etiquetas = generarFechas(d),
+                      datosUsuarios = generarDatosUsuarios(totalUsuarios, d),
+                      datosAccesos = generarDatosAccesos(totalAccesos, d),
+                      datosSolicitudes = generarDatos(d, totalSolicitudes),
+                      datosReportes = generarDatos(d, totalReportes);
+                  
+                  usersChart = crearChart(
+                      'usersChart', 
+                      etiquetas, 
+                      'Usuarios registrados por día', 
+                      datosUsuarios,
+                      'rgba(59, 130, 246, 0.5)', 
+                      'rgba(59, 130, 246, 1)', 
+                      getStepSize(Math.max(1, Math.ceil(totalUsuarios / (d === 0 ? 1 : d)))),
+                      'Usuarios registrados por día', 
+                      {
+                          tooltips: {
+                              callbacks: {
+                                  title: (items, data) => 'Fecha: ' + data.labels[items[0].index],
+                                  label: item => 'Nuevos registros: ' + item.yLabel
+                              }
+                          }
+                      }
+                  );
+                  
+                  accessChart = crearChart(
+                      'accessChart', 
+                      etiquetas, 
+                      'Accesos por día', 
+                      datosAccesos,
+                      'rgba(16, 185, 129, 0.5)', 
+                      'rgba(16, 185, 129, 1)', 
+                      getStepSize(Math.max(1, Math.ceil(totalAccesos / (d === 0 ? 1 : d)))),
+                      'Accesos de usuarios por día', 
+                      {
+                          tooltips: {
+                              callbacks: {
+                                  title: (items, data) => 'Fecha: ' + data.labels[items[0].index],
+                                  label: item => 'Accesos: ' + item.yLabel
+                              }
+                          }
+                      }
+                  );
+                  
+                  solicitudesChart = crearChart(
+                      'solicitudesChart', 
+                      etiquetas, 
+                      'Solicitudes por día', 
+                      datosSolicitudes,
+                      'rgba(6, 182, 212, 0.5)', 
+                      'rgba(6, 182, 212, 1)', 
+                      getStepSize(Math.max(1, Math.ceil(totalSolicitudes / (d === 0 ? 1 : d)))), 
+                      'Solicitudes de recolección diarias'
+                  );
+                  
+                  reportesChart = crearChart(
+                      'reportesChart', 
+                      etiquetas, 
+                      'Reportes por día', 
+                      datosReportes,
+                      'rgba(245, 158, 11, 0.5)', 
+                      'rgba(245, 158, 11, 1)', 
+                      getStepSize(Math.max(1, Math.ceil(totalReportes / (d === 0 ? 1 : d)))), 
+                      'Reportes de problemas diarios'
+                  );
+              }
+              
+              // Configurar los botones de filtro
+              document.querySelectorAll('.tiempo-filtro').forEach(btn => btn.addEventListener('click', function () {
+                  document.querySelectorAll('.tiempo-filtro').forEach(b => {
+                      b.classList.remove('active');
+                      b.classList.remove('bg-blue-500');
+                      b.classList.remove('text-white');
+                      b.classList.remove('border-blue-500');
+                      b.classList.add('border-blue-300');
+                      b.classList.add('hover:bg-blue-50');
+                  });
+                  this.classList.add('active');
+                  this.classList.add('bg-blue-500');
+                  this.classList.add('text-white');
+                  this.classList.add('border-blue-500');
+                  this.classList.remove('hover:bg-blue-50');
+                  this.classList.remove('border-blue-300');
+                  actualizarGraficas(parseInt(this.getAttribute('data-dias')));
+              }));
+              
+              // Actualizar reloj
+              const updateClock = () => {
+                  let now = new Date();
+                  document.getElementById('clock').textContent = now.toTimeString().slice(0, 8);
+              };
+              setInterval(updateClock, 1000); 
+              updateClock();
+              
+              // Inicializar gráficas
+              inicializarGraficas(periodoActual);
+          });
+        </script>
+    </th:block>
+</div>
 </html>

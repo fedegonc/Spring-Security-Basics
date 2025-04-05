@@ -1,55 +1,38 @@
-/**
- * Script para la funcionalidad del header
- * Gestiona los menús desplegables de navegación, idioma y usuario
- */
-document.addEventListener('DOMContentLoaded', function() {
-  // Menú hamburguesa
-  document.getElementById('mobile-menu-button')?.addEventListener('click', function() {
-    document.getElementById('mobile-menu').classList.toggle('hidden');
-  });
+// Script para los menús desplegables - Versión simplificada
+window.addEventListener('DOMContentLoaded', function() {
+  console.log('Menu dropdown script loaded');
   
   // Menú de idioma
-  document.getElementById('languageDropdown')?.addEventListener('click', function(e) {
-    e.stopPropagation();
-    document.getElementById('language-dropdown-menu').classList.toggle('hidden');
-          
-    // Cerrar menú de usuario si está abierto
-    const userMenu = document.getElementById('user-dropdown-menu');
-    if (userMenu && !userMenu.classList.contains('hidden')) {
-      userMenu.classList.add('hidden');
-    }
-  });
+  var languageButton = document.getElementById('languageDropdown');
+  var languageMenu = document.getElementById('language-dropdown-menu');
+  
+  if (languageButton && languageMenu) {
+    languageButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      languageMenu.classList.toggle('hidden');
+    });
+  }
   
   // Menú de usuario
-  document.getElementById('userDropdownButton')?.addEventListener('click', function(e) {
-    e.stopPropagation();
-    document.getElementById('user-dropdown-menu').classList.toggle('hidden');
-    
-    // Cerrar menú de idioma si está abierto
-    const langMenu = document.getElementById('language-dropdown-menu');
-    if (langMenu && !langMenu.classList.contains('hidden')) {
-      langMenu.classList.add('hidden');
+  var userButton = document.getElementById('userDropdownButton');
+  var userMenu = document.getElementById('user-dropdown-menu');
+  
+  if (userButton && userMenu) {
+    userButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      userMenu.classList.toggle('hidden');
+    });
+  }
+  
+  // Cerrar al hacer clic fuera
+  document.addEventListener('click', function(event) {
+    if (languageMenu && !languageButton.contains(event.target) && !languageMenu.contains(event.target)) {
+      languageMenu.classList.add('hidden');
     }
-  });
-  
-  // Cerrar menús al hacer clic en cualquier lugar
-  document.addEventListener('click', function() {
-    const menus = [
-      document.getElementById('language-dropdown-menu'),
-      document.getElementById('user-dropdown-menu')
-    ];
-    
-    menus.forEach(menu => {
-      if (menu && !menu.classList.contains('hidden')) {
-        menu.classList.add('hidden');
-      }
-    });
-  });
-  
-  // Evitar que los clics dentro de los menús los cierren
-  document.querySelectorAll('#language-dropdown-menu, #user-dropdown-menu').forEach(menu => {
-    menu?.addEventListener('click', function(e) {
-      e.stopPropagation();
-    });
+    if (userMenu && !userButton.contains(event.target) && !userMenu.contains(event.target)) {
+      userMenu.classList.add('hidden');
+    }
   });
 });

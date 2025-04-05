@@ -18,7 +18,7 @@ public class BreadcrumbServiceImpl implements BreadcrumbService {
     /**
      * Crea una lista de elementos para el breadcrumb con configuración personalizada
      * @param baseUrl URL base para los elementos del breadcrumb (ej: "/admin", "/user", "/org")
-     * @param homeName Nombre de la página principal (ej: "Dashboard", "Inicio")
+     * @param homeName Nombre de la página principal (ej: "Inicio")
      * @param items Elementos adicionales del breadcrumb (texto)
      * @return Lista de mapas con texto y url para cada elemento
      */
@@ -89,8 +89,8 @@ public class BreadcrumbServiceImpl implements BreadcrumbService {
                                                   Map<String, String> urlLabels) {
         List<Map<String, String>> breadcrumbItems = new ArrayList<>();
         
-        // Agregar el elemento home/dashboard
-        String homeName = urlLabels.getOrDefault("home", "Dashboard");
+        // Agregar el elemento home/inicio
+        String homeName = urlLabels.getOrDefault("home", "Inicio");
         breadcrumbItems.add(Map.of("text", homeName, "url", urlPrefix + "/dashboard"));
         
         // Procesar la URL actual

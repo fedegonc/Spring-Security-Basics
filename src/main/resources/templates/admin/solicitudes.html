@@ -71,7 +71,6 @@
                                     solicitud.estado == 'RECHAZADA' ? 'text-bg-danger' : 
                                     solicitud.estado == 'EN_ESPERA' ? 'text-bg-warning' : 
                                     solicitud.estado == 'EN_REVISION' ? 'text-bg-info' : 
-                                    solicitud.estado == 'COMPLETADA' ? 'text-bg-primary' : 
                                     'text-bg-secondary'}" 
                                     th:text="${solicitud.estado}">
                                 </span>
@@ -81,7 +80,7 @@
                             <td>
                                 <div class="btn-group" role="group" aria-label="Acciones para solicitud">
                                     <a class="btn btn-sm btn-primary" 
-                                       th:href="${isOrganizacion != null && isOrganizacion ? '/org/editsolicitude/' + solicitud.id : '/admin/editsolicitude/' + solicitud.id}" 
+                                       th:href="${isOrganizacion != null && isOrganizacion ? '/org/editsolicitud/' + solicitud.id : '/admin/editsolicitud/' + solicitud.id}" 
                                        aria-label="Editar solicitud">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
@@ -119,97 +118,75 @@
         <div id="cardView" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-4 d-none" th:if="${solicitudes != null and !#lists.isEmpty(solicitudes)}">
             <div class="col" th:each="solicitud : ${solicitudes}">
                 <div class="card h-100 glass-card">
-                    <div class="card-status-indicator" th:classappend="${
-                        solicitud.estado == 'ACEPTADA' ? 'bg-success' : 
-                        solicitud.estado == 'RECHAZADA' ? 'bg-danger' : 
-                        solicitud.estado == 'EN_ESPERA' ? 'bg-warning' : 
-                        solicitud.estado == 'EN_REVISION' ? 'bg-info' : 
-                        solicitud.estado == 'COMPLETADA' ? 'bg-primary' : 
-                        'bg-secondary'}">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Solicitud #<span th:text="${solicitud.id}"></span></span>
+                        <span class="badge rounded-pill" th:classappend="${
+                            solicitud.estado == 'ACEPTADA' ? 'bg-success' : 
+                            solicitud.estado == 'RECHAZADA' ? 'bg-danger' : 
+                            solicitud.estado == 'EN_ESPERA' ? 'bg-warning' : 
+                            solicitud.estado == 'EN_REVISION' ? 'bg-info' : 
+                            'bg-secondary'}" 
+                            th:text="${solicitud.estado}">
+                        </span>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <!-- Columna de imagen (33%) -->
-                            <div class="col-4 d-flex align-items-center">
-                                <img th:if="${solicitud.imagen != null}" 
-                                     th:src="@{/img/{img}(img=${solicitud.imagen})}" 
-                                     th:alt="'Imagen de solicitud de ' + ${solicitud.categoria}" 
-                                     class="img-thumbnail" 
-                                     style="max-height: 100px; width: 100%; object-fit: cover;">
-                                <div th:if="${solicitud.imagen == null}" class="text-center w-100">
-                                    <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
-                                </div>
-                            </div>
-                            
-                            <!-- Columna de datos (66%) -->
-                            <div class="col-8">
-                                <h5 class="card-title">
-                                    Solicitud #<span th:text="${solicitud.id}"></span>
-                                </h5>
-                                <p class="card-text">
-                                    <span class="badge" th:classappend="${
-                                        solicitud.categoria == 'PLASTICO' ? 'text-bg-primary' : 
-                                        solicitud.categoria == 'PAPEL' ? 'text-bg-warning' : 
-                                        solicitud.categoria == 'VIDRIO' ? 'text-bg-success' : 
-                                        solicitud.categoria == 'METAL' ? 'text-bg-secondary' : 
-                                        solicitud.categoria == 'ORGANICO' ? 'text-bg-success' : 
-                                        'text-bg-dark'}" 
-                                        th:text="${solicitud.categoria}">
-                                    </span>
-                                </p>
-                                <p class="card-text">
-                                    <i class="bi bi-person me-1"></i> 
-                                    <span th:text="${solicitud.user != null ? solicitud.user.username : 'N/A'}"></span>
-                                </p>
-                                <p class="card-text">
-                                    <i class="bi bi-calendar me-1"></i> 
-                                    <span th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}"></span>
-                                </p>
-                                <p class="card-text">
-                                    <i class="bi bi-geo-alt me-1"></i> 
-                                    <span th:text="${solicitud.barrio + ', ' + solicitud.calle + ' ' + solicitud.numeroDeCasa}"></span>
-                                </p>
-                            </div>
+                        <h5 class="card-title">
+                            <span class="badge" th:classappend="${
+                                solicitud.categoria == 'PLASTICO' ? 'bg-primary' : 
+                                solicitud.categoria == 'PAPEL' ? 'bg-warning' : 
+                                solicitud.categoria == 'VIDRIO' ? 'bg-success' : 
+                                solicitud.categoria == 'METAL' ? 'bg-secondary' : 
+                                solicitud.categoria == 'ORGANICO' ? 'bg-success' : 
+                                'bg-dark'}" 
+                                th:text="${solicitud.categoria}">
+                            </span>
+                        </h5>
+                        <ul class="list-group list-group-flush mt-3">
+                            <li class="list-group-item bg-transparent">
+                                <i class="bi bi-person-fill text-primary me-2"></i>
+                                <strong>Usuario:</strong> <span th:text="${solicitud.user != null ? solicitud.user.username : 'N/A'}"></span>
+                            </li>
+                            <li class="list-group-item bg-transparent">
+                                <i class="bi bi-calendar-event text-primary me-2"></i>
+                                <strong>Fecha:</strong> <span th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}"></span>
+                            </li>
+                            <li class="list-group-item bg-transparent">
+                                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                                <strong>Ubicación:</strong> <span th:text="${solicitud.barrio + ', ' + solicitud.calle + ' ' + solicitud.numeroDeCasa}"></span>
+                            </li>
+                            <li class="list-group-item bg-transparent">
+                                <i class="bi bi-chat-left-text-fill text-primary me-2"></i>
+                                <strong>Descripción:</strong> <span th:text="${solicitud.descripcion != null && !solicitud.descripcion.isEmpty() ? solicitud.descripcion : 'Sin descripción'}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="d-flex justify-content-between">
+                            <a class="btn btn-sm btn-primary" 
+                               th:href="${isOrganizacion != null && isOrganizacion ? '/org/editsolicitud/' + solicitud.id : '/admin/editsolicitud/' + solicitud.id}" 
+                               aria-label="Editar solicitud">
+                                <i class="bi bi-pencil-square me-1"></i>Editar
+                            </a>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModalCard' + ${solicitud.id}" aria-label="Eliminar solicitud">
+                                <i class="bi bi-trash me-1"></i>Eliminar
+                            </button>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="badge" th:classappend="${
-                                solicitud.estado == 'ACEPTADA' ? 'text-bg-success' : 
-                                solicitud.estado == 'RECHAZADA' ? 'text-bg-danger' : 
-                                solicitud.estado == 'EN_ESPERA' ? 'text-bg-warning' : 
-                                solicitud.estado == 'EN_REVISION' ? 'text-bg-info' : 
-                                solicitud.estado == 'COMPLETADA' ? 'text-bg-primary' : 
-                                'text-bg-secondary'}" 
-                                th:text="${solicitud.estado}">
-                            </span>
-                            <div class="btn-group" role="group" aria-label="Acciones para solicitud">
-                                <a class="btn btn-sm btn-primary" 
-                                   th:href="${isOrganizacion != null && isOrganizacion ? '/org/editsolicitude/' + solicitud.id : '/admin/editsolicitude/' + solicitud.id}" 
-                                   aria-label="Editar solicitud">
-                                    <i class="bi bi-pencil-square me-1"></i>Editar
-                                </a>
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModalCard' + ${solicitud.id}" aria-label="Eliminar solicitud">
-                                    <i class="bi bi-trash me-1"></i>Eliminar
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Modal de confirmación para eliminar (vista tarjetas) -->
-                        <div class="modal fade" th:id="'deleteModalCard' + ${solicitud.id}" tabindex="-1" th:aria-labelledby="'deleteModalCardLabel' + ${solicitud.id}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" th:id="'deleteModalCardLabel' + ${solicitud.id}">Confirmar eliminación</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        ¿Está seguro que desea eliminar la solicitud #<span th:text="${solicitud.id}"></span>? Esta acción no puede deshacerse.
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <a th:href="${isOrganizacion != null && isOrganizacion ? '/org/deletsolicitude/' + solicitud.id : '/admin/deletsolicitude/' + solicitud.id}" class="btn btn-danger">Eliminar</a>
-                                    </div>
+                    
+                    <!-- Modal de confirmación para eliminar (vista tarjetas) -->
+                    <div class="modal fade" th:id="'deleteModalCard' + ${solicitud.id}" tabindex="-1" th:aria-labelledby="'deleteModalCardLabel' + ${solicitud.id}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" th:id="'deleteModalCardLabel' + ${solicitud.id}">Confirmar eliminación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Está seguro que desea eliminar la solicitud #<span th:text="${solicitud.id}"></span>? Esta acción no puede deshacerse.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <a th:href="${isOrganizacion != null && isOrganizacion ? '/org/deletsolicitude/' + solicitud.id : '/admin/deletsolicitude/' + solicitud.id}" class="btn btn-danger">Eliminar</a>
                                 </div>
                             </div>
                         </div>

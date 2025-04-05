@@ -1,0 +1,100 @@
+/* =================================================================
+   BRIDGE STYLES - COMPATIBILIDAD BOOTSTRAP/TAILWIND
+   Este archivo actúa como puente durante la transición de Bootstrap a Tailwind
+   Asegura que los componentes de ambos frameworks funcionen bien juntos
+================================================================== */
+
+/* COMPATIBILIDAD ENTRE FRAMEWORKS */
+/* Asegura que las tarjetas glass se vean bien con ambos frameworks */
+.glass-card {
+    background-color: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 0.5rem !important;
+}
+
+/* Asegura que los componentes Bootstrap se vean bien con fondos glass */
+.glass-card .card-header {
+    background-color: rgba(33, 37, 41, 0.8) !important;
+    color: white !important;
+    border-top-left-radius: 0.5rem !important;
+    border-top-right-radius: 0.5rem !important;
+}
+
+.glass-card .list-group-item {
+    background-color: transparent !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Fondos de aplicación */
+.app-background {
+    background: linear-gradient(to bottom right, #ebf5ff, #f0fdf4) !important;
+    min-height: 100vh !important;
+}
+
+/* Compatibilidad de bordes */
+.rounded-tailwind {
+    border-radius: 0.25rem !important;
+}
+
+/* Evitar conflictos de flexbox */
+.flex-container {
+    display: flex !important;
+}
+
+.flex-column-container {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Asegurar consistencia en espaciado */
+.gap-2 {
+    gap: 0.5rem !important;
+}
+
+.gap-4 {
+    gap: 1rem !important;
+}
+
+/* Corregir problemas específicos en tablas */
+.table-hover tbody tr:hover td {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Mejorar visualización de botones en dropdowns */
+.dropdown-menu .dropdown-item:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Mejoras de accesibilidad para elementos interactivos */
+@media (hover: hover) {
+    .btn:hover {
+        filter: brightness(0.9);
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s ease;
+    }
+}
+
+/* Focus visible para accesibilidad */
+.btn:focus-visible,
+.form-control:focus-visible,
+.nav-link:focus-visible {
+    outline: 2px solid #3b82f6 !important;
+    outline-offset: 2px !important;
+}
+
+/* Correcciones específicas para la página de solicitudes */
+.card-view-compatibility .card {
+    height: 100% !important;
+    transition: transform 0.2s ease;
+}
+
+/* Correcciones específicas para la página de reportes */
+.chart-container {
+    min-height: 250px;
+}

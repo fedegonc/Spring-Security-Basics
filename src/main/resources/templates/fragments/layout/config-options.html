@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!-- Fragmento para configurar opciones de carga de recursos -->
+<div th:fragment="use-minified-tailwind">
+    <!-- Usar versión completa minificada de Tailwind -->
+    <link rel="stylesheet" th:href="@{/css/tailwind/tailwind.min.css}">
+    <link rel="stylesheet" th:href="@{/css/custom-styles.css}">
+</div>
+
+<!-- Fragmento alternativo con versión ligera si se necesita en el futuro -->
+<div th:fragment="use-lite-tailwind">
+    <!-- Usar versión ligera (no la usamos ahora, pero queda como opción) -->
+    <link rel="stylesheet" th:href="@{/css/tailwind-lite/tailwind-lite.min.css}">
+    <link rel="stylesheet" th:href="@{/css/custom-styles.css}">
+</div>
+</html>

@@ -1,169 +1,260 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/layout/head :: head}">
-    <title>Reportes</title>
+    <title>Reportes - Panel de Administración</title>
 </head>
 
 <body class="app-background d-flex flex-column min-vh-100">
+    
+    <!-- Header adaptable según el rol -->
+    <div th:replace="~{fragments/header :: header}"></div>
 
-<div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/messages :: message-alerts}"></div>
 
-<!-- Contenido principal -->
-<div class="container mt-4 flex-grow-1">
-    <div class="row g-4">
-        <!-- Panel lateral (33%) -->
-        <div class="col-12 col-md-4">
-            <div class="glass-card h-100 d-flex flex-column">
-                <h2 class="fs-4 fw-bold mb-4">Gestión de Reportes</h2>
-                
-                <div class="alert alert-info" role="alert">
-                    <h4 class="alert-heading">Información</h4>
-                    <p>En esta sección puedes gestionar los reportes y problemas reportados por los usuarios del sistema.</p>
-                    <hr>
-                    <p>Los reportes nos ayudan a mejorar la calidad del servicio y resolver incidencias.</p>
-                </div>
-                
-                <!-- Información de usuario -->
-                <div class="card border-0 shadow-sm mt-3">
+    <main id="main-content" class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2">
+                <i class="bi bi-bar-chart-line-fill me-2"></i> Informes y Estadísticas
+            </h1>
+        </div>
+
+        <!-- Mensaje cuando no hay datos -->
+        <div class="mt-4" th:if="${reportData == null or reportData.isEmpty()}">
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-info-circle me-2"></i>No hay datos suficientes para generar informes.
+            </div>
+        </div>
+
+        <!-- Contenido de reportes -->
+        <div class="row mt-4" th:unless="${reportData == null or reportData.isEmpty()}">
+            <!-- Tarjeta de estadísticas generales -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 glass-card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-clipboard-data me-2"></i>Estadísticas Generales
+                        </h5>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title fs-5">Usuario Actual</h5>
-                        <div class="d-flex align-items-center mt-3">
-                            <i class="bi bi-person-circle fs-1 text-primary me-3"></i>
-                            <div>
-                                <p class="mb-0 small text-muted" th:text="#{info_usuario}">Información del Usuario</p>
-                                <h6 th:text="${username}" class="mb-0 fs-5">Nombre de Usuario</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-people-fill text-primary me-2"></i>Total de Usuarios</span>
+                                <span class="badge bg-primary rounded-pill" th:text="${reportData.totalUsers}">0</span>
+                            </li>
+                            <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-file-earmark-text text-success me-2"></i>Total de Solicitudes</span>
+                                <span class="badge bg-success rounded-pill" th:text="${reportData.totalRequests}">0</span>
+                            </li>
+                            <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-building text-info me-2"></i>Total de Organizaciones</span>
+                                <span class="badge bg-info rounded-pill" th:text="${reportData.totalOrganizations}">0</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de categorías -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 glass-card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-tags-fill me-2"></i>Solicitudes por Categoría
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de estados -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 glass-card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-list-check me-2"></i>Solicitudes por Estado
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de tendencia temporal -->
+            <div class="col-md-12 mb-4">
+                <div class="card glass-card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-graph-up me-2"></i>Tendencia de Solicitudes
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="trendChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de informes descargables -->
+            <div class="col-md-12 mb-4">
+                <div class="card glass-card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-download me-2"></i>Informes Descargables
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="d-grid">
+                                    <a href="/admin/reports/download/users" class="btn btn-outline-primary">
+                                        <i class="bi bi-people me-2"></i>Informe de Usuarios
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="d-grid">
+                                    <a href="/admin/reports/download/requests" class="btn btn-outline-success">
+                                        <i class="bi bi-file-earmark-text me-2"></i>Informe de Solicitudes
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="d-grid">
+                                    <a href="/admin/reports/download/summary" class="btn btn-outline-info">
+                                        <i class="bi bi-file-earmark-bar-graph me-2"></i>Informe Resumen
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Filtros rápidos -->
-                <div class="card border-0 shadow-sm mt-3">
-                    <div class="card-body">
-                        <h5 class="card-title fs-6 mb-3">Filtros Rápidos</h5>
-                        <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Todos los reportes
-                                <span class="badge bg-primary rounded-pill">12</span>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Sin resolver
-                                <span class="badge bg-danger rounded-pill">5</span>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Resueltos
-                                <span class="badge bg-success rounded-pill">7</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
-        
-        <!-- Contenido principal (66%) -->
-        <div class="col-12 col-md-8">
-            <div class="glass-card">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fs-5 fw-bold mb-0">Lista de Reportes</h3>
-                    <div>
-                        <button class="btn btn-sm btn-outline-secondary me-2">
-                            <i class="bi bi-filter"></i> Filtrar
-                        </button>
-                        <button class="btn btn-sm btn-primary">
-                            <i class="bi bi-download me-1"></i> Exportar
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Tabla de reportes mejorada -->
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col" class="rounded-start">ID</th>
-                                <th scope="col">Usuario</th>
-                                <th scope="col">Asunto</th>
-                                <th scope="col">Estado</th>
-                                <th scope="col">Fecha</th>
-                                <th scope="col" class="rounded-end text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="reporte: ${reportes}" class="align-middle">
-                                <td th:text="${reporte.id}" class="fw-bold"></td>
-                                <td th:text="${reporte.user.name}"></td>
-                                <td th:text="${reporte.problema}"></td>
-                                <td>
-                                    <span class="badge bg-warning">PENDIENTE</span>
-                                </td>
-                                <td>[[${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}]]</td>
-                                <td class="text-center">
-                                    <div class="btn-group btn-group-sm" role="group">
-                                        <a class="btn btn-outline-primary btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" th:href="@{/admin/reportview/{id}(id=${reporte.id})}">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a class="btn btn-outline-success btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" th:href="@{/admin/reportedit/{id}(id=${reporte.id})}">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                        <a class="btn btn-outline-danger btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" th:href="@{/admin/reportdelete/{id}(id=${reporte.id})}"
-                                           onclick="return confirm('¿Estás seguro de que deseas eliminar este reporte?');">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Datos ficticios para previsualizar -->
-                            <tr class="align-middle" th:if="${reportes == null or #lists.isEmpty(reportes)}">
-                                <td class="fw-bold">1</td>
-                                <td>usuario1</td>
-                                <td>Problema con el sistema de reciclaje</td>
-                                <td><span class="badge bg-warning">PENDIENTE</span></td>
-                                <td>22/03/2025</td>
-                                <td class="text-center">
-                                    <div class="btn-group btn-group-sm" role="group">
-                                        <a class="btn btn-outline-primary btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" href="#">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a class="btn btn-outline-success btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" href="#">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                        <a class="btn btn-outline-danger btn-sm" style="padding: 0.15rem 0.4rem; font-size: 0.7rem;" href="#">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Paginación -->
-                <nav aria-label="Paginación de reportes" class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-                        </li>
-                        <li class="page-item active" aria-current="page">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Siguiente</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
-</div>
+    </main>
 
-<div th:replace="~{fragments/layout/footer :: footer}"></div>
+    <div th:replace="~{fragments/layout/footer :: footer}"></div>
 
+    <!-- Script para Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Solo intentar crear los gráficos si hay datos disponibles
+        if ([[${reportData != null}]]) {
+            // Datos para el gráfico de categorías
+            const categoryData = {
+                labels: [[${reportData.categoryLabels}]],
+                datasets: [{
+                    label: 'Solicitudes por Categoría',
+                    data: [[${reportData.categoryValues}]],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.7)',  // Azul (Plástico)
+                        'rgba(255, 206, 86, 0.7)',  // Amarillo (Papel)
+                        'rgba(75, 192, 192, 0.7)',  // Verde (Vidrio)
+                        'rgba(153, 102, 255, 0.7)', // Púrpura (Metal)
+                        'rgba(255, 159, 64, 0.7)',  // Naranja (Orgánico)
+                        'rgba(201, 203, 207, 0.7)'  // Gris (Otros)
+                    ],
+                    borderWidth: 1
+                }]
+            };
+            
+            // Datos para el gráfico de estados
+            const statusData = {
+                labels: [[${reportData.statusLabels}]],
+                datasets: [{
+                    label: 'Solicitudes por Estado',
+                    data: [[${reportData.statusValues}]],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.7)',   // Verde (Aceptada)
+                        'rgba(220, 53, 69, 0.7)',   // Rojo (Rechazada)
+                        'rgba(255, 193, 7, 0.7)',   // Amarillo (En Espera)
+                        'rgba(23, 162, 184, 0.7)',  // Cyan (En Revisión)
+                        'rgba(108, 117, 125, 0.7)'  // Gris (Otros)
+                    ],
+                    borderWidth: 1
+                }]
+            };
+            
+            // Datos para el gráfico de tendencia
+            const trendData = {
+                labels: [[${reportData.timeLabels}]],
+                datasets: [{
+                    label: 'Solicitudes por Fecha',
+                    data: [[${reportData.timeValues}]],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            };
+            
+            // Configuración para gráficos de tipo pie
+            const pieConfig = {
+                type: 'pie',
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        }
+                    }
+                }
+            };
+            
+            // Configuración para gráfico de línea
+            const lineConfig = {
+                type: 'line',
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // Crear gráfico de categorías
+            new Chart(
+                document.getElementById('categoryChart'),
+                {
+                    ...pieConfig,
+                    data: categoryData
+                }
+            );
+            
+            // Crear gráfico de estados
+            new Chart(
+                document.getElementById('statusChart'),
+                {
+                    ...pieConfig,
+                    data: statusData
+                }
+            );
+            
+            // Crear gráfico de tendencia
+            new Chart(
+                document.getElementById('trendChart'),
+                {
+                    ...lineConfig,
+                    data: trendData
+                }
+            );
+        }
+    });
+    </script>
 </body>
 </html>

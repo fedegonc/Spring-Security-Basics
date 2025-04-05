@@ -9,105 +9,112 @@
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container mt-4 flex-grow-1">
+<div th:replace="~{fragments/messages :: message-alerts}"></div>
+
+<main id="main-content" class="container mt-4 mb-4 flex-grow-1">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+        </ol>
+    </nav>
+
     <div class="row g-4">
         <!-- Panel lateral (33%) -->
-        <div class="col-12 col-md-4">
-            <div class="glass-card h-100 d-flex flex-column">
-                <h2 class="fs-4 fw-bold mb-4">Gestión de Usuarios</h2>
+        <div class="col-12 col-lg-4">
+            <div class="glass-card h-100 p-4">
+                <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Gestión de Usuarios</h2>
                 
-                <div class="alert alert-info" role="alert">
-                    <h4 class="alert-heading">Información</h4>
-                    <p>En esta sección puedes administrar los usuarios registrados en el sistema, editar sus perfiles y asignar roles.</p>
-                    <hr>
-                    <p>El control de usuarios es fundamental para mantener la seguridad del sistema.</p>
+                <!-- Información -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded shadow-sm mb-4">
+                    <h4 class="font-bold text-blue-700 mb-2">Información</h4>
+                    <p class="text-gray-700 mb-2">En esta sección puedes administrar los usuarios registrados, editar sus perfiles y asignar roles.</p>
+                    <p class="text-gray-700 text-sm">El control de usuarios es fundamental para mantener la seguridad del sistema.</p>
                 </div>
                 
-                <!-- Panel de estadísticas simples -->
-                <div class="card border-0 shadow-sm mt-3">
-                    <div class="card-body">
-                        <h5 class="card-title fs-5">Resumen de Usuarios</h5>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div class="text-center">
-                                <i class="bi bi-shield-lock fs-2 text-primary"></i>
-                                <p class="mb-0 mt-2">Administradores</p>
-                                <p class="fs-5 fw-bold">1</p>
+                <!-- Panel de estadísticas -->
+                <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                    <h5 class="text-gray-800 font-semibold mb-3">Resumen de Usuarios</h5>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="text-center">
+                            <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 mb-2">
+                                <i class="bi bi-shield-lock text-blue-600"></i>
                             </div>
-                            <div class="text-center">
-                                <i class="bi bi-people fs-2 text-success"></i>
-                                <p class="mb-0 mt-2">Total Usuarios</p>
-                                <p class="fs-5 fw-bold" th:text="${users.size()}">120</p>
+                            <p class="text-xs text-gray-600">Administradores</p>
+                            <p class="font-bold text-lg text-gray-800">1</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-green-100 mb-2">
+                                <i class="bi bi-people text-green-600"></i>
                             </div>
-                            <div class="text-center">
-                                <i class="bi bi-person-check fs-2 text-info"></i>
-                                <p class="mb-0 mt-2">Activos</p>
-                                <p class="fs-5 fw-bold">98</p>
+                            <p class="text-xs text-gray-600">Total</p>
+                            <p class="font-bold text-lg text-gray-800" th:text="${users.size()}">5</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-cyan-100 mb-2">
+                                <i class="bi bi-person-check text-cyan-600"></i>
                             </div>
+                            <p class="text-xs text-gray-600">Activos</p>
+                            <p class="font-bold text-lg text-gray-800">98</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Búsqueda avanzada -->
-                <div class="card border-0 shadow-sm mt-3">
-                    <div class="card-body">
-                        <h5 class="card-title fs-6 mb-3">Búsqueda Avanzada</h5>
-                        
-                        <form method="post" action="buscarPorNombre" class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                <input type="text" class="form-control" name="buscarPorNombre" placeholder="Buscar por nombre..." aria-label="Buscar por nombre">
-                                <button type="submit" class="btn btn-primary">Buscar</button>
+                <!-- Búsqueda -->
+                <div class="bg-white rounded-lg shadow-sm p-4">
+                    <h5 class="text-gray-800 font-semibold mb-3">Búsqueda</h5>
+                    <div class="mb-3">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="bi bi-search text-gray-400"></i>
                             </div>
-                        </form>
-                        
-                        <form method="post" action="buscarPorCategoria">
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-tags"></i></span>
-                                <input type="text" class="form-control" name="buscarPorCategoria" placeholder="Buscar por categoría..." aria-label="Buscar por categoría">
-                                <button type="submit" class="btn btn-primary">Buscar</button>
-                            </div>
-                        </form>
+                            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Buscar usuario...">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Contenido principal (66%) -->
-        <div class="col-12 col-md-8">
-            <div class="glass-card">
+        <div class="col-12 col-lg-8">
+            <div class="glass-card p-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fs-5 fw-bold mb-0">Lista de Usuarios</h3>
-                    <a th:href="@{/admin/crear-usuario}" class="btn btn-primary btn-sm">
-                        <i class="bi bi-person-plus"></i> Crear Usuario
+                    <h3 class="text-xl font-bold text-gray-800">Lista de Usuarios</h3>
+                    <a th:href="@{/admin/newuser}" class="btn btn-primary">
+                        <i class="bi bi-person-plus me-2"></i> Crear Usuario
                     </a>
                 </div>
                 
-                <!-- Tabla de usuarios mejorada -->
+                <!-- Tabla de usuarios -->
                 <div class="table-responsive">
-                    <table class="table table-hover border-0">
-                        <caption class="visually-hidden">Lista de usuarios registrados en el sistema</caption>
+                    <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th scope="col" class="rounded-start">ID</th>
+                                <th scope="col">ID</th>
                                 <th scope="col">Usuario</th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Roles</th>
-                                <th scope="col" class="rounded-end text-center">Acciones</th>
+                                <th scope="col" class="text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="user: ${users}" class="align-middle">
-                                <td th:text="${user.id}" class="fw-bold"></td>
-                                <td>
+                            <tr th:each="user: ${users}">
+                                <td th:text="${user.id}" class="align-middle">1</td>
+                                <td class="align-middle">
                                     <div class="d-flex align-items-center">
-                                        <i class="bi bi-person-circle me-2 text-secondary"></i>
-                                        <span th:text="${user.username}"></span>
+                                        <div class="flex-shrink-0 me-2">
+                                            <span class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 32px; height: 32px;">
+                                                <i class="bi bi-person"></i>
+                                            </span>
+                                        </div>
+                                        <span th:text="${user.username}">admin</span>
                                     </div>
                                 </td>
-                                <td th:text="${user.name}"></td>
-                                <td th:text="${user.email}"></td>
-                                <td>
+                                <td th:text="${user.name}" class="align-middle">Federico G</td>
+                                <td th:text="${user.email}" class="align-middle">correo@ejemplo.com</td>
+                                <td class="align-middle">
                                     <div class="position-relative">
                                         <span th:text="${#strings.length(user.roles.toString()) > 20} ? ${#strings.substring(user.roles.toString(), 0, 20) + '...'} : ${user.roles}" class="roles-text"></span>
                                         <button th:if="${#strings.length(user.roles.toString()) > 20}" 
@@ -118,14 +125,13 @@
                                         </button>
                                     </div>
                                 </td>
-                                <td class="text-center">
-                                    <a class="btn btn-sm btn-outline-primary me-1" th:href="@{/admin/edit/{id}(id=${user.id})}" 
-                                       aria-label="Editar usuario">
+                                <td class="align-middle text-center">
+                                    <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-sm btn-outline-primary me-1" title="Editar">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a class="btn btn-sm btn-outline-danger" th:href="@{/admin/deletuser/{id}(id=${user.id})}" 
+                                    <a th:href="@{/admin/users/delete/{id}(id=${user.id})}" 
                                        onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');"
-                                       aria-label="Eliminar usuario">
+                                       class="btn btn-sm btn-outline-danger" title="Eliminar">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -157,9 +163,9 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 
-<div th:replace="~{fragments/layout/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script>
     function expandirTexto(boton) {
@@ -167,7 +173,7 @@
         const contenedor = boton.parentElement;
         const spanTexto = contenedor.querySelector('span');
         
-        if (boton.textContent === 'Ver más') {
+        if (boton.textContent.trim() === 'Ver más') {
             spanTexto.textContent = textoCompleto;
             boton.textContent = 'Ver menos';
             contenedor.classList.add('expandido');
