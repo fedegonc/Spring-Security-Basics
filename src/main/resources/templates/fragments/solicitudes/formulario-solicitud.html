@@ -26,7 +26,7 @@
                         <div class="form-group">
                             <label for="file" class="form-label" th:text="#{newRequest.wasteImage}">Imagen del Residuo *</label>
                             <img id="previewImage" src="/img/thumbnail-default.jpg" class="mx-auto mb-2 rounded" style="max-width: 200px;" alt="img"/>
-                            <input type="file" class="form-control" id="file" name="file" required>
+                            <input type="file" class="form-control" id="file" name="file" required onchange="previewFile()">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -142,6 +142,23 @@
         </div>
     </div>
 </div>
+
+<script>
+function previewFile() {
+    const fileInput = document.getElementById('file');
+    const previewImage = document.getElementById('previewImage');
+    
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+        }
+        
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+}
+</script>
 
 </body>
 </html>

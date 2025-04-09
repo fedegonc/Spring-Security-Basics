@@ -53,7 +53,7 @@ public abstract class BaseController {
      * @throws IOException Si ocurre un error al procesar el archivo
      */
     protected String handleImageUpload(MultipartFile file, String currentImageName) throws IOException {
-        return fileStorageService.storeImage(file, currentImageName);
+        return fileStorageService.handleImageUpload(file, currentImageName);
     }
 
     /**

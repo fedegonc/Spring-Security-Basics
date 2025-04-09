@@ -15,64 +15,70 @@
     
     <!-- Contenido principal específico de esta página -->
     <div th:fragment="main-content">
-        <!-- Eliminamos la línea duplicada de breadcrumbs ya que está en base-layout -->
-        
-        <!-- Sección de bienvenida -->
-        <section class="mb-6">
-            <div class="glass-card">
-                <div class="flex flex-col lg:flex-row items-center">
-                    <div class="lg:w-2/3">
-                        <h1 class="text-4xl font-bold mb-3">¡Bienvenido, <span th:text="${user != null ? user.name : 'Usuario'}">Usuario</span>!</h1>
-                        <p class="text-xl text-gray-600">Gestiona todas tus solicitudes de reciclaje desde un solo lugar.</p>
-                        <div class="flex flex-col sm:flex-row gap-3 mt-6">
-                            <a th:href="@{/user/newsolicitude}" class="btn btn-primary text-center">
-                                <i class="bi bi-plus-circle mr-2"></i>Nueva Solicitud
+        <!-- Sección de bienvenida - Layout 33/66 más compacto -->
+        <section class="mb-3">
+            <div class="glass-card p-3">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="w-full md:w-2/3 order-2 md:order-1 pl-0 md:pl-2">
+                        <h1 class="text-2xl md:text-3xl font-bold mb-1">¡Bienvenido, <span th:text="${user != null ? user.name : 'Usuario'}">Usuario</span>!</h1>
+                        <p class="text-sm md:text-base text-gray-600 mb-2">Gestiona todas tus solicitudes de reciclaje desde un solo lugar.</p>
+                        <div class="flex gap-1 mb-0">
+                            <a th:href="@{/user/newsolicitude}" class="btn btn-primary text-center text-xs px-2 py-1">
+                                <i class="bi bi-plus-circle mr-1"></i>Nueva Solicitud
                             </a>
-                            <a th:href="@{/user/view-requests}" class="btn btn-outline btn-outline-primary text-center">
-                                <i class="bi bi-list-check mr-2"></i>Mis Solicitudes
+                            <a th:href="@{/user/view-requests}" class="btn btn-outline btn-outline-primary text-center text-xs px-2 py-1">
+                                <i class="bi bi-list-check mr-1"></i>Mis Solicitudes
                             </a>
                         </div>
                     </div>
-                    <div class="lg:w-1/3 mt-6 lg:mt-0 text-center">
-                        <i class="bi bi-recycle text-primary text-8xl"></i>
+                    <div class="w-full md:w-1/3 order-1 md:order-2 mb-2 md:mb-0 text-center flex justify-center">
+                        <i class="bi bi-recycle text-primary text-5xl md:text-7xl"></i>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Acciones rápidas -->
-        <section class="mb-6">
-            <div class="glass-card">
-                <h2 class="text-3xl font-bold mb-6">Acciones Rápidas</h2>
+        <!-- Acciones rápidas - Reorganizadas con la regla 33/66 -->
+        <section class="mb-3">
+            <div class="glass-card p-3">
+                <h2 class="text-xl font-bold mb-2">Acciones Rápidas</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                        <i class="bi bi-bar-chart-line text-primary text-4xl"></i>
-                        <h3 class="text-xl font-medium mt-3">Mis Estadísticas</h3>
-                        <p class="text-gray-600 my-3">Revisa el resumen y estado de tus solicitudes de reciclaje.</p>
-                        <a href="#" class="btn btn-outline btn-outline-primary mt-2">Ver estadísticas</a>
+                <div class="flex flex-col md:flex-row gap-2">
+                    <!-- Columna 33% -->
+                    <div class="w-full md:w-1/3">
+                        <div class="bg-white rounded-lg shadow-md p-2 text-center h-full">
+                            <i class="bi bi-bar-chart-line text-primary text-2xl"></i>
+                            <h3 class="text-base font-medium mt-1">Mis Estadísticas</h3>
+                            <p class="text-gray-600 my-1 text-xs">Revisa el resumen y estado de tus solicitudes de reciclaje.</p>
+                            <a href="#" class="btn btn-outline btn-outline-primary btn-sm text-xs px-2 py-1 mt-1">Ver estadísticas</a>
+                        </div>
                     </div>
                     
-                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                        <i class="bi bi-book text-primary text-4xl"></i>
-                        <h3 class="text-xl font-medium mt-3">Recursos</h3>
-                        <p class="text-gray-600 my-3">Consulta guías y consejos para un reciclaje más efectivo.</p>
-                        <a href="#" class="btn btn-outline btn-outline-primary mt-2">Ver recursos</a>
-                    </div>
-                    
-                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                        <i class="bi bi-geo-alt text-primary text-4xl"></i>
-                        <h3 class="text-xl font-medium mt-3">Puntos de Reciclaje</h3>
-                        <p class="text-gray-600 my-3">Encuentra los centros de reciclaje más cercanos a tu ubicación.</p>
-                        <a href="#" class="btn btn-outline btn-outline-primary mt-2">Ver mapa</a>
+                    <!-- Columna 66% con dos tarjetas apiladas -->
+                    <div class="w-full md:w-2/3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 h-full">
+                            <div class="bg-white rounded-lg shadow-md p-2 text-center">
+                                <i class="bi bi-book text-primary text-2xl"></i>
+                                <h3 class="text-base font-medium mt-1">Recursos</h3>
+                                <p class="text-gray-600 my-1 text-xs">Consulta guías y consejos para un reciclaje más efectivo.</p>
+                                <a href="#" class="btn btn-outline btn-outline-primary btn-sm text-xs px-2 py-1 mt-1">Ver recursos</a>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow-md p-2 text-center">
+                                <i class="bi bi-geo-alt text-primary text-2xl"></i>
+                                <h3 class="text-base font-medium mt-1">Puntos de Reciclaje</h3>
+                                <p class="text-gray-600 my-1 text-xs">Encuentra los centros de reciclaje más cercanos a tu ubicación.</p>
+                                <a href="#" class="btn btn-outline btn-outline-primary btn-sm text-xs px-2 py-1 mt-1">Ver mapa</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Solicitudes Recientes -->
-        <section class="mb-6">
-            <div class="glass-card">
+        <!-- Solicitudes Recientes - Layout 66/33 -->
+        <section class="mb-3">
+            <div class="glass-card p-3">
                 <div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas('Solicitudes Recientes', true, true, ${solicitude}, '/user')}"></div>
             </div>
         </section>

@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <!-- Fragmento de breadcrumb reutilizable -->
-    <nav th:fragment="breadcrumb(items)" aria-label="breadcrumb" class="mb-4">
-        <ol class="flex flex-wrap items-center py-2 px-4 bg-white/70 backdrop-blur-sm rounded-lg shadow-sm">
+    <nav th:fragment="breadcrumb(items)" aria-label="breadcrumb" class="mb-2">
+        <ol class="flex flex-wrap items-center py-1 px-2 text-sm">
             <li th:each="item, iterStat : ${items}" 
                 class="flex items-center"
                 th:aria-current="${iterStat.last} ? 'page' : null">

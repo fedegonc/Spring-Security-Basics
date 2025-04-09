@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title}">Reciclaje Sólido</title>
     
+    <!-- Preconexiones para mejora de rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Fuente Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
     <!-- Tailwind CSS - Versión local minificada -->
     <link rel="stylesheet" th:href="@{/css/tailwind/tailwind.min.css}">
     
@@ -13,6 +20,13 @@
     
     <!-- Scripts principales -->
     <script th:src="@{/js/header.js}" defer></script>
+    
+    <!-- Estilo inline para asegurar que Montserrat se aplique -->
+    <style>
+        body, html {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
     
     <!-- Espacio para CSS adicional específico de cada página -->
     <th:block th:replace="${extraStyles ?: ''}"></th:block>

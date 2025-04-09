@@ -1,6 +1,7 @@
 package com.example.registrationlogindemo.service.impl;
 
 import com.example.registrationlogindemo.service.FileStorageService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +18,10 @@ import java.util.UUID;
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+    
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     
     /**
      * Maneja la subida de imágenes y devuelve el nombre del archivo
@@ -32,7 +36,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             String originalFilename = file.getOriginalFilename();
             if (originalFilename != null) {
                 // Crear directorios si no existen
-                Path uploadDirectory = Paths.get(UPLOAD_DIR);
+                Path uploadDirectory = Paths.get(uploadDir);
                 if (!Files.exists(uploadDirectory)) {
                     Files.createDirectories(uploadDirectory);
                 }
@@ -43,7 +47,7 @@ public class FileStorageServiceImpl implements FileStorageService {
                 
                 // Guardar el archivo
                 byte[] bytes = file.getBytes();
-                Path path = Paths.get(UPLOAD_DIR + modifiedFilename);
+                Path path = Paths.get(uploadDir + "/" + modifiedFilename);
                 Files.write(path, bytes);
                 return modifiedFilename;
             }
@@ -71,7 +75,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     public boolean deleteImage(String imageName) {
         if (imageName != null && !imageName.isEmpty()) {
             try {
-                Path path = Paths.get(UPLOAD_DIR + imageName);
+                Path path = Paths.get(uploadDir + "/" + imageName);
                 if (Files.exists(path)) {
                     Files.delete(path);
                     return true;
@@ -91,7 +95,7 @@ public class FileStorageServiceImpl implements FileStorageService {
      */
     @Override
     public String getImagePath(String imageName) {
-        return UPLOAD_DIR + imageName;
+        return uploadDir + "/" + imageName;
     }
     
     /**
@@ -117,6 +121,11 @@ public class FileStorageServiceImpl implements FileStorageService {
             return false;
         }
         
+        // Verificar tamaño del archivo
+        if (file.getSize() > MAX_FILE_SIZE) {
+            return false;
+        }
+        
         String contentType = file.getContentType();
         if (contentType == null) {
             return false;
@@ -124,5 +133,42 @@ public class FileStorageServiceImpl implements FileStorageService {
         
         // Validar tipos de contenido de imágenes comunes
         return contentType.startsWith("image/");
+    }
+    
+    /**
+     * Obtiene el mensaje de error específico si la validación de la imagen falla
+     * @param file La imagen que falló la validación
+     * @return El mensaje de error específico
+     */
+    @Override
+    public String getValidationErrorMessage(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return "No se ha seleccionado ninguna imagen";
+        }
+
+        if (file.getSize() > MAX_FILE_SIZE) {
+            return "La imagen es demasiado grande. El tamaño máximo permitido es 5MB";
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            return "El archivo no es una imagen válida. Formatos aceptados: JPEG, PNG, GIF";
+        }
+
+        return "Error desconocido al validar la imagen";
+    }
+    
+    /**
+     * Maneja la subida de imágenes y devuelve el nombre del archivo
+     * Este método es un alias para storeImage para mantener compatibilidad con el código existente
+     * @param file Archivo a subir
+     * @param currentImageName Nombre de imagen actual (si existe)
+     * @return Nombre del archivo subido o el nombre actual si no se sube ninguno
+     * @throws IOException Si ocurre un error al procesar el archivo
+     */
+    @Override
+    public String handleImageUpload(MultipartFile file, String currentImageName) throws IOException {
+        // Simplemente llamamos al método existente para reutilizar código
+        return storeImage(file, currentImageName);
     }
 }

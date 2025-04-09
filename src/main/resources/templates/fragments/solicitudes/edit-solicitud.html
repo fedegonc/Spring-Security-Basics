@@ -81,6 +81,23 @@
                                 </div>
                             </div>
 
+                            <!-- Organización destinataria -->
+                            <div class="mb-3">
+                                <label for="organization" class="form-label">Organización destinataria</label>
+                                <select class="form-select" id="organization" name="organization" required>
+                                    <option value="">Seleccione una organización</option>
+                                    <option th:each="org : ${organizations}" 
+                                            th:value="${org.id}" 
+                                            th:text="${org.name}"
+                                            th:selected="${solicitude.organization != null && solicitude.organization.id == org.id}">
+                                        Nombre de la organización
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor seleccione una organización destinataria.
+                                </div>
+                            </div>
+
                             <!-- Ubicación -->
                             <div class="mb-4">
                                 <h3 class="h5 mb-3">Ubicación</h3>
@@ -110,8 +127,19 @@
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Destino (campo requerido que faltaba) -->
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-12">
+                                        <label for="destino" class="form-label">Destino</label>
+                                        <input type="text" class="form-control" id="destino" name="destino" 
+                                               th:value="${solicitude.destino}" placeholder="Ej: Punto de reciclaje" required>
+                                        <div class="invalid-feedback">
+                                            Por favor ingrese el destino.
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
                             <!-- Botones de acción -->
                             <div class="d-flex justify-content-between align-items-center mt-4">
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">

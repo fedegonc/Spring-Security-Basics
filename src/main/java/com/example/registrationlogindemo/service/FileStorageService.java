@@ -46,4 +46,21 @@ public interface FileStorageService {
      * @return true si es una imagen válida, false en caso contrario
      */
     boolean isValidImageFile(MultipartFile file);
+    
+    /**
+     * Obtiene el mensaje de error específico si la validación de la imagen falla
+     * @param file La imagen que falló la validación
+     * @return El mensaje de error específico
+     */
+    String getValidationErrorMessage(MultipartFile file);
+    
+    /**
+     * Maneja la subida de imágenes y devuelve el nombre del archivo
+     * Este método es un alias para storeImage para mantener compatibilidad con el código existente
+     * @param file Archivo a subir
+     * @param currentImageName Nombre de imagen actual (si existe)
+     * @return Nombre del archivo subido o el nombre actual si no se sube ninguno
+     * @throws IOException Si ocurre un error al procesar el archivo
+     */
+    String handleImageUpload(MultipartFile file, String currentImageName) throws IOException;
 }

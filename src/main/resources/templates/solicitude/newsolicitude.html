@@ -27,17 +27,30 @@
                     <h1 class="text-3xl font-bold">Nueva Solicitud de Reciclaje</h1>
                 </div>
                 
-                <form th:action="@{/user/newsolicitude}" method="post" th:object="${solicitud}" enctype="multipart/form-data" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form th:action="@{/user/newsolicitude}" method="post" th:object="${solicitud}" enctype="multipart/form-data" class="space-y-4">
+                    <!-- Selección de Organización -->
+                    <div class="mb-4">
+                        <label for="organization" class="block text-sm font-medium text-gray-700 mb-1">
+                            Organización Destinataria <span class="text-red-500">*</span>
+                        </label>
+                        <select id="organization" th:field="*{organization}" 
+                                class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                required>
+                            <option value="">Seleccione una organización</option>
+                            <option th:each="org : ${organizations}" th:value="${org.id}" th:text="${org.name}"></option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Primera columna -->
-                        <div class="space-y-6">
+                        <div class="space-y-4">
                             <!-- Tipo de material -->
                             <div>
                                 <label for="categoria" class="block text-sm font-medium text-gray-700 mb-1">
                                     Tipo de Material <span class="text-red-500">*</span>
                                 </label>
                                 <select id="categoria" th:field="*{categoria}" 
-                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                         required>
                                     <option value="">Seleccione una categoría</option>
                                     <option value="PLASTICO">Plástico</option>
@@ -52,106 +65,124 @@
                                    class="mt-1 text-sm text-red-600"></p>
                             </div>
                             
-                            <!-- Peso aproximado -->
-                            <div>
-                                <label for="peso" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Peso Aproximado (kg) <span class="text-red-500">*</span>
-                                </label>
-                                <input type="number" id="peso" th:field="*{peso}" step="0.01" min="0.01" 
-                                       class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-                                       required>
-                                <p th:if="${#fields.hasErrors('peso')}" th:errors="*{peso}" 
-                                   class="mt-1 text-sm text-red-600"></p>
-                            </div>
-                            
-                            <!-- Tamaño -->
-                            <div>
-                                <label for="tamanio" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Tamaño <span class="text-red-500">*</span>
-                                </label>
-                                <select id="tamanio" th:field="*{tamanio}" 
-                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-                                        required>
-                                    <option value="">Seleccione un tamaño</option>
-                                    <option value="PEQUEÑO">Pequeño</option>
-                                    <option value="MEDIANO">Mediano</option>
-                                    <option value="GRANDE">Grande</option>
-                                </select>
-                                <p th:if="${#fields.hasErrors('tamanio')}" th:errors="*{tamanio}" 
-                                   class="mt-1 text-sm text-red-600"></p>
+                            <!-- Peso y Tamaño en la misma fila -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="peso" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Peso (kg) <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="number" id="peso" th:field="*{peso}" step="0.01" min="0.01" 
+                                           class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           required>
+                                </div>
+                                <div>
+                                    <label for="tamanio" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Tamaño <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="tamanio" th:field="*{tamanio}" 
+                                            class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                            required>
+                                        <option value="">Seleccione</option>
+                                        <option value="PEQUEÑO">Pequeño</option>
+                                        <option value="MEDIANO">Mediano</option>
+                                        <option value="GRANDE">Grande</option>
+                                    </select>
+                                </div>
                             </div>
                             
                             <!-- Imagen -->
                             <div>
                                 <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Imagen de Referencia <span class="text-red-500">*</span>
+                                    Imagen <span class="text-red-500">*</span>
                                 </label>
-                                <input type="file" id="fileInput" name="file" 
-                                       class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                <input type="file" id="fileInput" name="file" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
                                        accept="image/*" required>
                             </div>
                         </div>
                         
                         <!-- Segunda columna -->
-                        <div class="space-y-6">
+                        <div class="space-y-4">
                             <!-- Descripción -->
                             <div>
                                 <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">
                                     Descripción <span class="text-red-500">*</span>
                                 </label>
-                                <textarea id="descripcion" th:field="*{descripcion}" rows="4" 
-                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-                                        required></textarea>
+                                <textarea id="descripcion" th:field="*{descripcion}" rows="2"
+                                          class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                          required></textarea>
                                 <p th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" 
                                    class="mt-1 text-sm text-red-600"></p>
                             </div>
                             
-                            <!-- Dirección de destino -->
+                            <!-- Teléfono y dirección en la misma fila -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Teléfono <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="telefono" th:field="*{telefono}" 
+                                           class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           placeholder="Ej: 099123456" required>
+                                </div>
+                                <div>
+                                    <label for="calle" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Calle <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="calle" th:field="*{calle}" 
+                                           class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           required>
+                                </div>
+                            </div>
+                            
+                            <!-- Número, barrio y destino en la misma fila -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="numeroDeCasa" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Número <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="numeroDeCasa" th:field="*{numeroDeCasa}" 
+                                           class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           required>
+                                </div>
+                                <div>
+                                    <label for="barrio" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Barrio <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="barrio" th:field="*{barrio}" 
+                                           class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           required>
+                                </div>
+                            </div>
                             <div>
                                 <label for="destino" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Dirección de Recogida <span class="text-red-500">*</span>
+                                    Destino <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="destino" th:field="*{destino}" 
-                                       class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-                                       required>
-                                <p th:if="${#fields.hasErrors('destino')}" th:errors="*{destino}" 
-                                   class="mt-1 text-sm text-red-600"></p>
+                                       class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       placeholder="Ej: Punto de reciclaje" required>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Fechas y horas -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    <!-- Días y horarios en la misma fila -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <div>
                             <label for="diasDisponibles" class="block text-sm font-medium text-gray-700 mb-1">
-                                Días Disponibles para Recogida <span class="text-red-500">*</span>
+                                Días Disponibles <span class="text-red-500">*</span>
                             </label>
                             <input type="text" id="diasDisponibles" th:field="*{diasDisponibles}" 
-                                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                   class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                    placeholder="Ej: Lunes, Miércoles y Viernes" required>
-                            <p th:if="${#fields.hasErrors('diasDisponibles')}" th:errors="*{diasDisponibles}" 
-                               class="mt-1 text-sm text-red-600"></p>
                         </div>
                         
                         <div>
                             <label for="horaRecoleccion" class="block text-sm font-medium text-gray-700 mb-1">
-                                Horario de Recogida <span class="text-red-500">*</span>
+                                Horario <span class="text-red-500">*</span>
                             </label>
                             <input type="text" id="horaRecoleccion" th:field="*{horaRecoleccion}" 
-                                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-                                   placeholder="Ej: Entre 9:00 y 12:00" required>
-                            <p th:if="${#fields.hasErrors('horaRecoleccion')}" th:errors="*{horaRecoleccion}" 
-                               class="mt-1 text-sm text-red-600"></p>
+                                   class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                   placeholder="Ej: 9:00 a 12:00" required>
                         </div>
-                    </div>
-                    
-                    <!-- Comentarios adicionales (opcional) -->
-                    <div>
-                        <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">
-                            Comentarios Adicionales (opcional)
-                        </label>
-                        <textarea id="descripcionAdicional" name="descripcionAdicional" rows="3" 
-                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"></textarea>
                     </div>
                     
                     <!-- Botones de acción -->
@@ -160,7 +191,7 @@
                             <i class="bi bi-arrow-left mr-2"></i> Cancelar
                         </a>
                         <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            <i class="bi bi-send mr-2"></i> Enviar Solicitud
+                            <i class="bi bi-send mr-2"></i> Enviar
                         </button>
                     </div>
                 </form>
