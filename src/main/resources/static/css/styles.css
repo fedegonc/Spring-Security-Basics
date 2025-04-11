@@ -1,0 +1,131 @@
+/* Estilos mínimos necesarios que complementan a Tailwind */
+
+/* Fondo principal y colores base */
+body {
+  background-color: #f8f9fa;
+  color: #2d3748;
+}
+
+/* Texto con leve tono verde oscuro */
+p, h1, h2, h3, h4, h5, h6 {
+  color: #1e3a29;
+}
+
+/* Enlaces y efectos hover */
+a {
+  color: #2b6cb0;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #4299e1;
+  text-decoration: underline;
+}
+
+/* Botones */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+/* Botón azul - acciones estándar */
+.btn-primary {
+  background-color: #3182ce;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2c5282;
+}
+
+/* Botón rojo - acciones peligrosas */
+.btn-danger {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c53030;
+}
+
+/* Botón verde - acciones especiales */
+.btn-special {
+  background-color: #2f855a;
+  color: white;
+}
+
+.btn-special:hover {
+  background-color: #276749;
+}
+
+/* Botón inverso - solo para footer y casos especiales */
+.btn-inverse {
+  background-color: transparent;
+  border: 1px solid currentColor;
+}
+
+/* Efecto glass-card más sutil sin bordes visibles */
+.glass-card {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Animaciones personalizadas */
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+}
+
+/* Support para Tailwind */
+@media (min-width: 640px) {
+  .sm\:flex-row {
+    flex-direction: row !important;
+  }
+  
+  .sm\:space-y-0 {
+    margin-top: 0 !important;
+  }
+  
+  .sm\:space-x-4 > * + * {
+    margin-left: 1rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  
+  .md\:text-4xl {
+    font-size: 2.25rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:flex-row {
+    flex-direction: row !important;
+  }
+  
+  .lg\:w-1\/2 {
+    width: 50% !important;
+  }
+  
+  .lg\:mb-0 {
+    margin-bottom: 0 !important;
+  }
+  
+  .lg\:pr-6 {
+    padding-right: 1.5rem !important;
+  }
+}
