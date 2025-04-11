@@ -66,12 +66,18 @@ public class AuthController implements ErrorController {
 
     @GetMapping("/login")
     public String loginForm() {
+        // Verificar si el usuario ya está autenticado
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {
+            // Si es un usuario registrado, redirigir a su página correspondiente
+            return "redirect:/init";
+        }
         return "guest/login";
     }
 
     @GetMapping("/init")
-    public ModelAndView welcomePage(RedirectAttributes msg, HttpSession session, 
-                                   HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView handleInitRedirect(RedirectAttributes msg, HttpSession session, 
+                                  HttpServletRequest request, HttpServletResponse response) {
         // Delegamos toda la lógica de redirección post-login al AuthService
         return authService.handleSuccessfulLogin(msg, session, request, response);
     }

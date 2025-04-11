@@ -70,17 +70,29 @@
     </main>
     
     <footer class="bg-white shadow-inner text-text py-6 mt-auto">
-        <div class="container mx-auto px-4 text-center">
-            <p th:text="#{footer.copy}">Sistema de Comunicación para Reciclaje 2025</p>
-            <div class="mt-2 flex justify-center space-x-4">
-                <a href="?language=es" class="text-sm text-gray-500 hover:text-green-600">
-                    <img src="/img/uruguay.png" class="h-4 w-4 inline mr-1" alt="Español">
-                    <span th:text="#{label.lang.es}">Español</span>
-                </a>
-                <a href="?language=pt" class="text-sm text-gray-500 hover:text-green-600">
-                    <img src="/img/brasil.png" class="h-4 w-4 inline mr-1" alt="Português">
-                    <span th:text="#{label.lang.pt}">Português</span>
-                </a>
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <p th:text="#{footer.copy}">Sistema de Comunicación para Reciclaje 2025</p>
+                    <div class="mt-2 flex justify-center md:justify-start space-x-4">
+                        <a href="?language=es" class="text-sm text-gray-500 hover:text-green-600">
+                            <img src="/img/uruguay.png" class="h-4 w-4 inline mr-1" alt="Español">
+                            <span th:text="#{label.lang.es}">Español</span>
+                        </a>
+                        <a href="?language=pt" class="text-sm text-gray-500 hover:text-green-600">
+                            <img src="/img/brasil.png" class="h-4 w-4 inline mr-1" alt="Português">
+                            <span th:text="#{label.lang.pt}">Português</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                    <a href="https://docs.google.com/forms/d/13XOdjWwIJ40QLGfsxKvvEaoyyerS8RDhiw1ZMT0A3MA/prefill" target="_blank" class="text-sm text-center px-4 py-2 border border-blue-500 text-blue-400 hover:bg-blue-900 hover:text-white rounded transition duration-200">
+                        Encuesta de usabilidad
+                    </a>
+                    <a th:href="@{/report}" class="text-sm text-center px-4 py-2 border border-gray-500 text-gray-300 hover:bg-gray-800 hover:text-white rounded transition duration-200">
+                        Reportar problema
+                    </a>
+                </div>
             </div>
         </div>
     </footer>

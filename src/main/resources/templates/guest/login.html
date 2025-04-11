@@ -10,6 +10,7 @@
                 width: 100%;
             }
         </style>
+        <script defer src="/js/password-toggle.js"></script>
     </th:block>
 </head>
 <body>
@@ -23,7 +24,6 @@
                     </div>
                     <h1 class="text-2xl font-bold mt-2">RSU – Reciclaje Sólido</h1>
                 </div>
-                <p class="mt-2 text-white/80" th:text="#{login.description}">Un proyecto para la gestión inteligente de residuos reciclables conectando comunidades con centros de acopio.</p>
                 <div class="mt-6 flex justify-center">
                     <img src="/img/ilustration.jpeg" alt="Ilustración Reciclaje" class="w-full rounded-lg shadow-lg">
                 </div>
@@ -96,14 +96,7 @@
                             Conectamos comunidades con centros de reciclaje para una gestión inteligente de residuos.
                         </p>
                     </div>
-                    
-                    <!-- Texto de confianza -->
-                    <div class="mt-6 text-center">
-                        <p class="text-sm text-gray-600" th:text="#{login.security}">
-                            <i class="bi bi-shield-check text-green-600"></i>
-                            Tu información está protegida. Usamos conexiones seguras.
-                        </p>
-                    </div>
+
                 </div>
             </div>
         </div>
