@@ -107,11 +107,18 @@
 			<artifactId>thumbnailator</artifactId>
 			<version>0.4.14</version>
 		</dependency>
+		
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
             <version>10.1.19</version>
         </dependency>
+
+		<dependency>
+ 	 		<groupId>nz.net.ultraq.thymeleaf</groupId>
+  			<artifactId>thymeleaf-layout-dialect</artifactId>
+ 			<version>3.0.0</version>
+		</dependency>
 
     </dependencies>
 

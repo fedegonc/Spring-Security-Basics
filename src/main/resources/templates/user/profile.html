@@ -1,332 +1,361 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-
-<!-- Usando el fragmento de head del layout base -->
-<head th:replace="~{fragments/layout/base-layout :: head('Mi Perfil - Reciclaje Sólido', ~{::extraStyles})}">
-    <title>Mi Perfil - Reciclaje Sólido</title>
-    <!-- Estilos adicionales específicos de esta página -->
-    <th:block th:fragment="extraStyles">
-        <!-- Aquí irían estilos específicos de la página si fueran necesarios -->
-    </th:block>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/shared/layout}">
+<head>
+    <title th:text="#{profile.title}">Mi Perfil - RSU Reciclaje</title>
+    <meta name="description" content="Gestiona tu información personal y configuración de cuenta">
+    <th:block layout:fragment="head"></th:block>
 </head>
-
-<!-- Usando el layout base con el contenido específico de esta página -->
-<div th:replace="~{fragments/layout/base-layout :: layout('Mi Perfil', ~{::main-content}, ~{::page-scripts})}">
-    
-    <!-- Contenido principal específico de esta página -->
-    <div th:fragment="main-content">
-        <!-- Sección de perfil -->
-        <section>
+<body>
+    <section layout:fragment="content" class="container mx-auto px-4 py-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Breadcrumb -->
+            <nav class="flex mb-6" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                    <li>
+                        <a th:href="@{/}" class="hover:text-green-600">
+                            <i class="bi bi-house-door"></i> <span th:text="#{breadcrumb.home}">Inicio</span>
+                        </a>
+                    </li>
+                    <li class="flex items-center">
+                        <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        <a th:href="@{/user/welcome}" class="ml-1 hover:text-green-600">
+                            <span th:text="#{breadcrumb.dashboard}">Panel Principal</span>
+                        </a>
+                    </li>
+                    <li class="flex items-center">
+                        <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="ml-1 text-green-600 font-medium" th:text="#{breadcrumb.profile}">Mi Perfil</span>
+                    </li>
+                </ol>
+            </nav>
+            
+            <!-- Encabezado de la página -->
             <div class="flex items-center mb-6">
-                <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                    <i class="bi bi-person-circle text-blue-600 text-2xl"></i>
+                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                    <i class="bi bi-person-circle text-green-600 text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800">Mi Perfil</h1>
-                    <p class="text-gray-600">Administra y actualiza tu información personal</p>
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-800" th:text="#{profile.heading}">Mi Perfil</h1>
+                    <p class="text-sm text-gray-600" th:text="#{profile.subtitle}">Administra y actualiza tu información personal</p>
                 </div>
             </div>
             
             <!-- Formulario de edición de perfil -->
-            <form method="post" enctype="multipart/form-data" th:action="@{/user/profile}" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Datos del Usuario -->
+            <form method="post" enctype="multipart/form-data" th:action="@{/user/profile}" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Datos del Usuario (2/3) -->
                     <div class="md:col-span-2">
-                        <div class="glass-card h-full">
-                            <h2 class="text-xl font-semibold mb-4 flex items-center">
-                                <i class="bi bi-person mr-2 text-blue-600"></i>
-                                Datos Personales
+                        <div class="bg-white rounded-lg shadow-md p-4 h-full">
+                            <h2 class="text-lg font-semibold mb-3 flex items-center text-gray-800">
+                                <i class="bi bi-person mr-2 text-green-600"></i>
+                                <span th:text="#{profile.personal.data}">Datos Personales</span>
                             </h2>
                             
                             <div class="space-y-4">
+                                <!-- Username -->
                                 <div>
-                                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1" th:text="#{profile.username}">
                                         Nombre de Usuario <span class="text-red-500">*</span>
                                     </label>
-                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                    <div class="relative rounded-md shadow-sm">
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <i class="bi bi-person text-gray-400"></i>
                                         </div>
-                                        <input type="text" id="username" name="username" th:value="${user.username}"
-                                            class="pl-10 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        <input type="text" id="username" name="username" th:value="${user.username}" 
+                                            class="pl-10 block w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
                                             required>
                                     </div>
                                 </div>
                                 
+                                <!-- Full Name -->
                                 <div>
-                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1" th:text="#{profile.fullname}">
                                         Nombre Completo <span class="text-red-500">*</span>
                                     </label>
-                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                    <div class="relative rounded-md shadow-sm">
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i class="bi bi-person-vcard text-gray-400"></i>
+                                            <i class="bi bi-person-badge text-gray-400"></i>
                                         </div>
-                                        <input type="text" id="name" name="name" th:value="${user.name}"
-                                            class="pl-10 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        <input type="text" id="name" name="name" th:value="${user.name}" 
+                                            class="pl-10 block w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
                                             required>
                                     </div>
                                 </div>
                                 
+                                <!-- Email -->
                                 <div>
-                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1" th:text="#{profile.email}">
                                         Correo Electrónico <span class="text-red-500">*</span>
                                     </label>
-                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                    <div class="relative rounded-md shadow-sm">
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <i class="bi bi-envelope text-gray-400"></i>
                                         </div>
-                                        <input type="email" id="email" name="email" th:value="${user.email}"
-                                            class="pl-10 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        <input type="email" id="email" name="email" th:value="${user.email}" 
+                                            class="pl-10 block w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
                                             required>
                                     </div>
                                 </div>
+                                
+                                <!-- Tipo de Usuario -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" th:text="#{profile.user.type}">
+                                        Tipo de Usuario
+                                    </label>
+                                    <div class="relative rounded-md shadow-sm mb-2">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="bi bi-shield-check text-gray-400"></i>
+                                        </div>
+                                        <input type="text" th:value="${#strings.listJoin(user.userRoles, ', ')}" class="pl-10 block w-full py-2 px-3 border border-gray-200 bg-gray-50 rounded-md text-gray-500" disabled readonly>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <p class="text-xs text-gray-500 mr-2" th:text="#{profile.role.info}">Este campo no se puede modificar directamente.</p>
+                                        <a href="#" class="text-xs text-green-600 hover:text-green-700 flex items-center">
+                                            <i class="bi bi-envelope-paper mr-1"></i>
+                                            <span th:text="#{profile.role.request}">Solicitar cambio</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Botones de guardar cambios -->
+                                <div class="flex justify-end pt-4">
+                                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-md shadow-sm transition flex items-center">
+                                        <i class="bi bi-check-circle mr-2"></i>
+                                        <span th:text="#{profile.save.changes}">Guardar Cambios</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Imagen de Perfil -->
-                    <div class="text-center">
-                        <div class="glass-card h-full flex flex-col items-center justify-between">
-                            <h2 class="text-xl font-semibold mb-4 self-start flex items-center">
-                                <i class="bi bi-image mr-2 text-blue-600"></i>
-                                Imagen de Perfil
+                    <!-- Imagen de Perfil (1/3) -->
+                    <div class="md:col-span-1">
+                        <div class="bg-white rounded-lg shadow-md p-4 h-full">
+                            <h2 class="text-lg font-semibold mb-3 flex items-center text-gray-800">
+                                <i class="bi bi-image mr-2 text-green-600"></i>
+                                <span th:text="#{profile.image}">Imagen de Perfil</span>
                             </h2>
                             
-                            <div class="mb-4">
-                                <img th:if="${user.profileImage != null}" th:src="@{/img/{img}(img=${user.profileImage})}" alt="Imagen de perfil" 
-                                     id="currentProfileImage" class="w-40 h-40 object-cover rounded-full mx-auto shadow-md border-4 border-white">
-                                <img th:if="${user.profileImage == null}" th:src="@{/img/descargas.jpeg}" alt="Imagen de perfil por defecto" 
-                                     id="defaultProfileImage" class="w-40 h-40 object-cover rounded-full mx-auto shadow-md border-4 border-white">
-                            </div>
-                            
-                            <div class="w-full">
-                                <label for="file" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Cambiar imagen de perfil
-                                </label>
-                                <input type="file" id="file" name="file" accept="image/*" onchange="previewFile()"
-                                       class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                                <input type="hidden" name="currentProfileImageUrl" th:value="${user.profileImage}">
+                            <div class="flex flex-col items-center">
+                                <!-- Imagen actual -->
+                                <div class="mb-4 w-32 h-32 relative">
+                                    <img th:if="${user.profileImage != null && user.profileImage != 'default-profile.jpg'}" 
+                                         th:src="@{'/uploads/profiles/' + ${user.profileImage}}" 
+                                         id="currentProfileImage"
+                                         alt="Imagen de perfil" 
+                                         class="w-full h-full object-cover rounded-full border-4 border-green-100">
+                                    
+                                    <img th:if="${user.profileImage == null || user.profileImage == 'default-profile.jpg'}" 
+                                         th:src="@{/img/default-profile.jpg}" 
+                                         id="defaultProfileImage"
+                                         alt="Imagen de perfil predeterminada" 
+                                         class="w-full h-full object-cover rounded-full border-4 border-green-100">
+                                </div>
                                 
-                                <p class="mt-2 text-xs text-gray-500">Formatos aceptados: JPG, PNG, GIF. Máximo 5MB.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Botones de acción -->
-                <div class="flex justify-end space-x-3">
-                    <button type="submit" class="tw-btn-primary">
-                        <i class="bi bi-save mr-2"></i>
-                        Guardar Cambios
-                    </button>
-                </div>
-            </form>
-            
-            <!-- Sección de contraseña -->
-            <div class="glass-card mt-8">
-                <h2 class="text-xl font-semibold mb-4 flex items-center">
-                    <i class="bi bi-shield-lock mr-2 text-blue-600"></i>
-                    Seguridad
-                </h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="text-lg font-medium mb-3">Cambiar Contraseña</h3>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Contraseña Actual <span class="text-red-500">*</span>
-                                </label>
-                                <div class="mt-1 relative rounded-md shadow-sm">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="bi bi-lock text-gray-400"></i>
-                                    </div>
-                                    <input type="password" id="currentPassword"
-                                           class="pl-10 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Nueva Contraseña <span class="text-red-500">*</span>
-                                </label>
-                                <div class="mt-1 relative rounded-md shadow-sm">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="bi bi-key text-gray-400"></i>
-                                    </div>
-                                    <input type="password" id="newPassword"
-                                           class="pl-10 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                                </div>
-                                <p class="mt-1 text-xs text-gray-500">Mínimo 8 caracteres, incluya números y símbolos para mayor seguridad.</p>
-                            </div>
-                            
-                            <div>
-                                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Confirmar Nueva Contraseña <span class="text-red-500">*</span>
-                                </label>
-                                <div class="mt-1 relative rounded-md shadow-sm">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="bi bi-key-fill text-gray-400"></i>
-                                    </div>
-                                    <input type="password" id="confirmPassword"
-                                           class="pl-10 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <button type="button" onclick="submitPasswordChange()" class="tw-btn-primary">
-                                    <i class="bi bi-shield-check mr-2"></i>
-                                    Actualizar Contraseña
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="border-t md:border-t-0 md:border-l border-gray-200 pt-4 md:pt-0 md:pl-6">
-                        <h3 class="text-lg font-medium mb-3">Zona de Peligro</h3>
-                        
-                        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <i class="bi bi-exclamation-triangle-fill text-red-600"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-red-700">
-                                        La eliminación de la cuenta es permanente y no se puede deshacer. 
-                                        Todos sus datos, incluyendo solicitudes e informaciones, se eliminarán permanentemente.
+                                <!-- Selector de archivo -->
+                                <div class="w-full">
+                                    <label for="file" class="block text-sm font-medium text-gray-700 mb-2 text-center" th:text="#{profile.change.image}">
+                                        Cambiar imagen
+                                    </label>
+                                    <input type="file" id="file" name="file" accept="image/jpeg,image/png,image/gif" 
+                                           class="hidden" onchange="previewFile()">
+                                    <label for="file" class="cursor-pointer w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                        <i class="bi bi-upload mr-2"></i>
+                                        <span th:text="#{profile.select.file}">Seleccionar archivo</span>
+                                    </label>
+                                    <p class="mt-1 text-xs text-gray-500 text-center" th:text="#{profile.image.formats}">
+                                        Formatos aceptados: JPG, PNG, GIF. Máximo 5MB.
                                     </p>
                                 </div>
                             </div>
-                            
-                            <div class="mt-4">
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" 
-                                        class="inline-flex items-center px-4 py-2 border border-red-600 rounded-md shadow-sm text-sm font-medium text-red-600 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                    <i class="bi bi-trash mr-2"></i>
-                                    Eliminar mi cuenta
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
+            </form>
+            
+            <!-- Sección de Cambio de Contraseña -->
+            <div class="mt-6">
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <h2 class="text-lg font-semibold mb-3 flex items-center text-gray-800">
+                        <i class="bi bi-key mr-2 text-green-600"></i>
+                        <span th:text="#{profile.change.password}">Cambiar Contraseña</span>
+                    </h2>
+                    
+                    <form id="passwordForm" method="post" th:action="@{/user/change-password}" class="space-y-4">
+                        <input type="hidden" id="hiddenCurrentPassword" name="currentPassword">
+                        <input type="hidden" id="hiddenNewPassword" name="newPassword">
+                        <input type="hidden" id="hiddenConfirmPassword" name="confirmPassword">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Contraseña Actual -->
+                            <div>
+                                <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-1" th:text="#{profile.current.password}">
+                                    Contraseña Actual <span class="text-red-500">*</span>
+                                </label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="bi bi-lock text-gray-400"></i>
+                                    </div>
+                                    <input type="password" id="currentPassword" 
+                                           class="pl-10 block w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                </div>
+                            </div>
+                            
+                            <!-- Nueva Contraseña -->
+                            <div>
+                                <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-1" th:text="#{profile.new.password}">
+                                    Nueva Contraseña <span class="text-red-500">*</span>
+                                </label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="bi bi-lock-fill text-gray-400"></i>
+                                    </div>
+                                    <input type="password" id="newPassword" 
+                                           class="pl-10 block w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500" th:text="#{profile.password.requirements}">
+                                    Mínimo 8 caracteres, incluya números y símbolos para mayor seguridad.
+                                </p>
+                            </div>
+                            
+                            <!-- Confirmar Nueva Contraseña -->
+                            <div>
+                                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1" th:text="#{profile.confirm.password}">
+                                    Confirmar Nueva Contraseña <span class="text-red-500">*</span>
+                                </label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="bi bi-lock-fill text-gray-400"></i>
+                                    </div>
+                                    <input type="password" id="confirmPassword" 
+                                           class="pl-10 block w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button type="button" onclick="submitPasswordChange()" class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-md shadow-sm transition flex items-center">
+                                <i class="bi bi-key-fill mr-2"></i>
+                                <span th:text="#{profile.update.password}">Actualizar Contraseña</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </section>
-    </div>
-    
-    <!-- Scripts específicos de esta página -->
-    <th:block th:fragment="page-scripts">
-        <!-- Formulario oculto para cambio de contraseña -->
-        <form id="passwordForm" method="post" th:action="@{/user/change-password}" class="hidden">
-            <input type="hidden" name="currentPassword" id="hiddenCurrentPassword">
-            <input type="hidden" name="newPassword" id="hiddenNewPassword">
-            <input type="hidden" name="confirmPassword" id="hiddenConfirmPassword">
-        </form>
-        
-        <!-- Modal de confirmación de eliminación -->
-        <div class="fixed inset-0 overflow-y-auto hidden" id="deleteConfirmModal" aria-labelledby="deleteConfirmModalLabel" tabindex="-1" role="dialog">
-            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                
-                <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <div class="bg-red-600 px-4 py-3 text-white">
-                        <h3 class="text-lg font-medium flex items-center" id="deleteConfirmModalLabel">
-                            <i class="bi bi-exclamation-triangle-fill mr-2"></i>
-                            Confirmación de Eliminación
-                        </h3>
-                    </div>
+            
+            <!-- Zona de Peligro -->
+            <div class="mt-6">
+                <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-red-500">
+                    <h2 class="text-lg font-semibold mb-3 flex items-center text-gray-800">
+                        <i class="bi bi-exclamation-triangle-fill mr-2 text-red-500"></i>
+                        <span th:text="#{profile.danger.zone}">Zona de Peligro</span>
+                    </h2>
                     
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <p class="mb-1">¿Estás seguro de que deseas eliminar tu cuenta?</p>
-                        <p class="mb-0 text-red-600 font-semibold">Esta acción es irreversible y todos tus datos, incluidas tus solicitudes e informaciones, se perderán permanentemente.</p>
-                    </div>
+                    <p class="text-gray-600 mb-4" th:text="#{profile.delete.warning}">
+                        La eliminación de la cuenta es permanente y no se puede deshacer. Todos sus datos, incluyendo solicitudes e informaciones, se eliminarán permanentemente.
+                    </p>
                     
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <a th:href="@{/user/delete/{id}(id=${user.id})}" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    <div class="flex justify-end">
+                        <button type="button" onclick="openDeleteModal()" class="bg-white hover:bg-red-50 text-red-600 font-medium px-4 py-2 rounded-md border border-red-300 shadow-sm transition flex items-center">
                             <i class="bi bi-trash mr-2"></i>
-                            Eliminar Cuenta
+                            <span th:text="#{profile.delete.account}">Eliminar Cuenta</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal de confirmación de eliminación -->
+            <div id="deleteConfirmModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+                    <div class="text-center">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                            <i class="bi bi-exclamation-triangle-fill text-red-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2" th:text="#{profile.confirm.delete}">¿Está seguro de eliminar su cuenta?</h3>
+                        <p class="text-sm text-gray-500" th:text="#{profile.delete.confirmation}">
+                            Esta acción no se puede deshacer. Se eliminarán permanentemente todos sus datos, solicitudes e información asociada.
+                        </p>
+                    </div>
+                    <div class="mt-5 sm:mt-6 flex flex-col sm:flex-row-reverse gap-3">
+                        <a th:href="@{/user/delete-account}" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm">
+                            <i class="bi bi-trash mr-2"></i>
+                            <span th:text="#{profile.delete}">Eliminar</span>
                         </a>
                         <button type="button" onclick="closeDeleteModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                             <i class="bi bi-x-circle mr-2"></i>
-                            Cancelar
+                            <span th:text="#{profile.cancel}">Cancelar</span>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <script>
-            function previewFile() {
-                const fileInput = document.getElementById('file');
-                const file = fileInput.files[0];
-                
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const currentImage = document.getElementById('currentProfileImage');
-                        if (currentImage) {
-                            currentImage.src = e.target.result;
-                        } else {
-                            const defaultImage = document.getElementById('defaultProfileImage');
-                            if (defaultImage) {
-                                defaultImage.src = e.target.result;
-                            }
+    </section>
+    
+    <!-- Scripts específicos -->
+    <script>
+        function previewFile() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const currentImage = document.getElementById('currentProfileImage');
+                    if (currentImage) {
+                        currentImage.src = e.target.result;
+                    } else {
+                        const defaultImage = document.getElementById('defaultProfileImage');
+                        if (defaultImage) {
+                            defaultImage.src = e.target.result;
                         }
                     }
-                    reader.readAsDataURL(file);
                 }
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function submitPasswordChange() {
+            // Validación básica
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                alert('Por favor, complete todos los campos de contraseña.');
+                return false;
             }
             
-            function submitPasswordChange() {
-                // Validación básica
-                const currentPassword = document.getElementById('currentPassword').value;
-                const newPassword = document.getElementById('newPassword').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-                
-                if (!currentPassword || !newPassword || !confirmPassword) {
-                    alert('Por favor, complete todos los campos de contraseña.');
-                    return false;
-                }
-                
-                if (newPassword !== confirmPassword) {
-                    alert('La nueva contraseña y la confirmación no coinciden.');
-                    return false;
-                }
-                
-                if (newPassword.length < 8) {
-                    alert('La nueva contraseña debe tener al menos 8 caracteres.');
-                    return false;
-                }
-                
-                // Transferir valores al formulario oculto
-                document.getElementById('hiddenCurrentPassword').value = currentPassword;
-                document.getElementById('hiddenNewPassword').value = newPassword;
-                document.getElementById('hiddenConfirmPassword').value = confirmPassword;
-                
-                // Enviar formulario
-                document.getElementById('passwordForm').submit();
+            if (newPassword !== confirmPassword) {
+                alert('La nueva contraseña y la confirmación no coinciden.');
+                return false;
             }
             
-            // Funciones para el modal
-            function openDeleteModal() {
-                document.getElementById('deleteConfirmModal').classList.remove('hidden');
+            if (newPassword.length < 8) {
+                alert('La nueva contraseña debe tener al menos 8 caracteres.');
+                return false;
             }
             
-            function closeDeleteModal() {
-                document.getElementById('deleteConfirmModal').classList.add('hidden');
-            }
+            // Transferir valores al formulario oculto
+            document.getElementById('hiddenCurrentPassword').value = currentPassword;
+            document.getElementById('hiddenNewPassword').value = newPassword;
+            document.getElementById('hiddenConfirmPassword').value = confirmPassword;
             
-            // Event listeners para el modal
-            document.addEventListener('DOMContentLoaded', function() {
-                const modalTriggers = document.querySelectorAll('[data-bs-toggle="modal"]');
-                modalTriggers.forEach(trigger => {
-                    trigger.addEventListener('click', function() {
-                        const targetId = this.getAttribute('data-bs-target').replace('#', '');
-                        document.getElementById(targetId).classList.remove('hidden');
-                    });
-                });
-            });
-        </script>
-    </th:block>
-</div>
+            // Enviar formulario
+            document.getElementById('passwordForm').submit();
+        }
+        
+        // Funciones para el modal
+        function openDeleteModal() {
+            document.getElementById('deleteConfirmModal').classList.remove('hidden');
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deleteConfirmModal').classList.add('hidden');
+        }
+    </script>
+</body>
 </html>
