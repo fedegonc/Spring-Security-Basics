@@ -5,7 +5,9 @@ import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.service.OrgService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -30,9 +32,19 @@ public class OrgController {
     private OrgService orgService;
 
     @GetMapping("/dashboard")
-    public ModelAndView organizationDashboard(@AuthenticationPrincipal UserDetails userDetails) {
-        // Delegamos toda la lógica al servicio
-        return orgService.getDashboardData(userDetails);
+    public ModelAndView welcomePage() {
+        ModelAndView mv = new ModelAndView("user/welcome");
+
+        try {
+            // Obtener el usuario actual
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
+        }
+
+        return mv;
     }
     
     @GetMapping("/solicitudes")

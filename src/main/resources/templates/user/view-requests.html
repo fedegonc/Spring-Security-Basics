@@ -1,81 +1,80 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-
-<!-- Usando el fragmento de head del layout base -->
-<head th:replace="~{fragments/layout/base-layout :: head('Mis Solicitudes', ~{::extraStyles})}">
-  <title>Mis Solicitudes</title>
-  <!-- Estilos adicionales específicos de esta página -->
-  <th:block th:fragment="extraStyles">
-    <!-- Aquí irían estilos específicos de la página si fueran necesarios -->
-  </th:block>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/shared/layout}">
+<head>
+    <title th:text="#{solicitudes}">Mis Solicitudes</title>
+    <meta name="description" content="Historial de solicitudes de reciclaje">
+    <th:block layout:fragment="head"></th:block>
 </head>
 
-<!-- Usando el layout base con el contenido específico de esta página -->
-<div th:replace="~{fragments/layout/base-layout :: layout('Mis Solicitudes', ~{::main-content}, ~{::page-scripts})}">
-  
-  <!-- Contenido principal específico de esta página -->
-  <div th:fragment="main-content">
-    <!-- Título y botón de nueva solicitud -->
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">
-        <i class="bi bi-list-check me-2 text-primary"></i>Mis Solicitudes
-      </h1>
-      <a th:href="@{/user/newsolicitude}" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-2"></i>Nueva Solicitud
-      </a>
-    </div>
-
-    <!-- Información -->
-    <div class="bg-info/10 border-l-4 border-info p-4 mb-4 rounded" role="alert">
-      <i class="bi bi-info-circle-fill mr-2"></i>
-      <span th:text="#{info_viewrequests}">Aquí puedes ver todas tus solicitudes de reciclaje y su estado actual.</span>
-    </div>
-
-    <!-- Métricas -->
-    <div class="glass-card mb-6">
-      <h2 class="text-xl font-semibold mb-4">Resumen de Solicitudes</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Solicitudes Activas -->
-        <div class="bg-white rounded-lg shadow p-4 text-center">
-          <i class="bi bi-hourglass-split text-primary mb-3 text-4xl"></i>
-          <h3 class="text-lg font-medium">Solicitudes Activas</h3>
-          <p class="text-4xl font-bold my-3" id="active-requests-count">0</p>
-          <div class="w-full bg-gray-200 rounded-full h-2.5">
-            <div class="bg-primary h-2.5 rounded-full" style="width: 0%;" id="active-progress"></div>
-          </div>
+<body>
+<section layout:fragment="content" class="py-4 px-4">
+    <div class="max-w-7xl mx-auto">
+        <!-- Título y botón de nueva solicitud -->
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl md:text-2xl font-bold text-gray-800 flex items-center">
+                <i class="bi bi-list-check mr-2 text-green-600"></i>
+                <span th:text="#{solicitudes}">Mis Solicitudes</span>
+            </h1>
+            <a th:href="@{/user/newsolicitude}" class="bg-green-600 hover:bg-green-700 text-white font-medium px-3 py-1.5 rounded-md shadow-sm transition text-sm flex items-center">
+                <i class="bi bi-plus-circle mr-1"></i>
+                <span th:text="#{newRequest.title}">Nueva Solicitud</span>
+            </a>
         </div>
-        
-        <!-- Total de Solicitudes -->
-        <div class="bg-white rounded-lg shadow p-4 text-center">
-          <i class="bi bi-clipboard-check text-info mb-3 text-4xl"></i>
-          <h3 class="text-lg font-medium">Total de Solicitudes</h3>
-          <p class="text-4xl font-bold my-3" id="total-requests-count">0</p>
-          <div class="w-full bg-gray-200 rounded-full h-2.5">
-            <div class="bg-info h-2.5 rounded-full w-full"></div>
-          </div>
-        </div>
-        
-        <!-- Solicitudes Completadas -->
-        <div class="bg-white rounded-lg shadow p-4 text-center">
-          <i class="bi bi-check-circle text-success mb-3 text-4xl"></i>
-          <h3 class="text-lg font-medium">Solicitudes Completadas</h3>
-          <p class="text-4xl font-bold my-3" id="completed-requests-count">0</p>
-          <div class="w-full bg-gray-200 rounded-full h-2.5">
-            <div class="bg-success h-2.5 rounded-full" style="width: 0%;" id="completed-progress"></div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Solicitudes - Utilizando fragmento existente -->
-    <div class="glass-card">
-      <div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas('Mis Solicitudes', true, true, ${solicitudes}, '/user')}"></div>
-    </div>
-  </div>
+        <!-- Información -->
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded shadow-sm">
+            <div class="flex items-start">
+                <i class="bi bi-info-circle-fill text-blue-500 mr-2 mt-0.5"></i>
+                <span class="text-gray-700 text-sm" th:text="#{info_viewrequests}">
+                    Aquí puedes ver todas tus solicitudes de reciclaje y su estado actual.
+                </span>
+            </div>
+        </div>
 
-  <!-- Scripts específicos de esta página -->
-  <th:block th:fragment="page-scripts">
-    <script src="/js/view-requests.js"></script>
-  </th:block>
-</div>
+        <!-- Resumen de métricas -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800" th:text="#{metrics.title}">Resumen de Solicitudes</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Activas -->
+                <div class="bg-gray-50 rounded-lg shadow-sm p-4 text-center">
+                    <i class="bi bi-hourglass-split text-blue-600 mb-3 text-3xl"></i>
+                    <h3 class="text-sm font-medium text-gray-700" th:text="#{metric.active}">Solicitudes Activas</h3>
+                    <p class="text-3xl font-bold my-2 text-gray-800" id="active-requests-count">0</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full" style="width: 0%;" id="active-progress"></div>
+                    </div>
+                </div>
+
+                <!-- Totales -->
+                <div class="bg-gray-50 rounded-lg shadow-sm p-4 text-center">
+                    <i class="bi bi-clipboard-check text-green-600 mb-3 text-3xl"></i>
+                    <h3 class="text-sm font-medium text-gray-700" th:text="#{metric.total}">Total de Solicitudes</h3>
+                    <p class="text-3xl font-bold my-2 text-gray-800" id="total-requests-count">0</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-green-600 h-2 rounded-full w-full"></div>
+                    </div>
+                </div>
+
+                <!-- Completadas -->
+                <div class="bg-gray-50 rounded-lg shadow-sm p-4 text-center">
+                    <i class="bi bi-check-circle text-green-500 mb-3 text-3xl"></i>
+                    <h3 class="text-sm font-medium text-gray-700" th:text="#{metric.completed}">Solicitudes Completadas</h3>
+                    <p class="text-3xl font-bold my-2 text-gray-800" id="completed-requests-count">0</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-green-500 h-2 rounded-full" style="width: 0%;" id="completed-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjetas de Solicitudes -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas('Mis Solicitudes', true, true, ${solicitudes}, '/user')}"></div>
+        </div>
+    </div>
+</section>
+</body>
 </html>

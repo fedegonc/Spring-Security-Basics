@@ -55,7 +55,7 @@ public class AdministradorController extends BaseController {
 
     @GetMapping("/dashboard")
     public ModelAndView getDashboard() {
-        ModelAndView mv = new ModelAndView("admin/dashboard");
+        ModelAndView mv = new ModelAndView("user/welcome");
         
         // Obtener métricas del dashboard usando el servicio
         Map<String, Object> metrics = dashboardService.getDashboardMetrics();

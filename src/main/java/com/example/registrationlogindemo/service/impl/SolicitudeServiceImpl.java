@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -106,28 +107,27 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     
     @Override
     public ModelAndView prepareNewSolicitudeForm(UserDetails userDetails) {
-        ModelAndView mv = new ModelAndView("solicitude/newsolicitude");
-        
-        // Obtener el usuario de la base de datos
-        User usuario = userRepository.findByUsername(userDetails.getUsername());
-        mv.addObject("user", usuario);
-        
-        // Obtener todas las organizaciones (usuarios con rol ROLE_ORGANIZATION)
-        List<User> organizaciones = userRepository.findByRoleName("ROLE_ORGANIZATION");
-        mv.addObject("organizaciones", organizaciones);
-        
-        // Agregar una nueva solicitud vacía al modelo
-        mv.addObject("solicitud", new Solicitude());
-        
-        // Configurar breadcrumbs
-        mv.addObject("breadcrumbItems", 
-            breadcrumbService.createCustomBreadcrumbs(
-                new String[]{"Inicio", "/user/welcome"},
-                new String[]{"Nueva Solicitud", "/user/newsolicitude"}
-            )
-        );
-        
-        return mv;
+        try {
+            // Obtener el usuario actual
+            User user = userRepository.findByUsername(userDetails.getUsername());
+            if (user == null) {
+                throw new RuntimeException("Usuario no encontrado");
+            }
+            
+            ModelAndView modelAndView = new ModelAndView("solicitude/newsolicitude");
+            
+            // Establecer el nombre de la página actual para los breadcrumbs en el header
+            modelAndView.addObject("currentPage", "Nueva Solicitud");
+            
+            // Agregar información necesaria para el formulario
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("solicitud", new Solicitude());
+            
+            return modelAndView;
+        } catch (Exception e) {
+            logger.error("Error al preparar formulario de nueva solicitud: {}", e.getMessage(), e);
+            throw new RuntimeException("Error al preparar formulario de nueva solicitud", e);
+        }
     }
     
     @Override

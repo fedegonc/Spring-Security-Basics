@@ -1,46 +1,27 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/shared/layout}">
 <head>
-    <title th:text="#{welcome.title}">Bienvenido - RSU Reciclaje</title>
+    <title th:text="#{breadcrumb.welcome}">Página principal - RSU Reciclaje</title>
     <meta name="description" content="Panel de usuario para gestionar solicitudes de reciclaje">
     <th:block layout:fragment="head"></th:block>
 </head>
 <body>
-    <!-- Header con breadcrumb -->
-    <header class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-2">
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2 text-sm text-gray-500">
-                    <li>
-                        <a th:href="@{/}" class="hover:text-green-600">
-                            <i class="bi bi-house-door"></i> <span th:text="#{breadcrumb.home}">Inicio</span>
-                        </a>
-                    </li>
-                    <li class="flex items-center">
-                        <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                        <span class="ml-1 text-green-600 font-medium" th:text="#{breadcrumb.dashboard}">Panel Principal</span>
-                    </li>
-                </ol>
-            </nav>
-        </div>
-    </header>
-
     <section layout:fragment="content" class="py-4 px-4">
         <div class="max-w-7xl mx-auto">
             <!-- Sección de bienvenida -->
             <div class="bg-white rounded-lg shadow-md p-4 mb-4">
                 <div class="flex flex-col md:flex-row items-center">
                     <div class="w-full md:w-2/3 mb-3 md:mb-0 md:pr-4">
-                        <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-2" th:text="#{welcome.greeting}">¡Bienvenido, <span th:text="${user != null ? user.name : 'Usuario'}">Usuario</span>!</h1>
-                        <p class="text-gray-600 mb-3 text-sm" th:text="#{welcome.subtitle}">Gestiona todas tus solicitudes de reciclaje desde un solo lugar.</p>
+                        <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-2" th:text="#{message.user.welcome}">
+                            Inicio de sesión exitoso como usuario.
+                        </h1>
+                        <p class="text-gray-600 mb-3 text-sm" th:text="#{info_welcome}">En esta sección se puede ver las solicitudes activas que posee.</p>
                         <div class="flex flex-wrap gap-2">
                             <a th:href="@{/user/newsolicitude}" class="bg-green-600 hover:bg-green-700 text-white font-medium px-3 py-1.5 rounded-md shadow-sm transition text-sm">
-                                <i class="bi bi-plus-circle mr-1"></i> <span th:text="#{welcome.new.request}">Nueva Solicitud</span>
+                                <i class="bi bi-plus-circle mr-1"></i> <span th:text="#{newRequest.title}">Nueva Solicitud</span>
                             </a>
                             <a th:href="@{/user/view-requests}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-3 py-1.5 rounded-md shadow-sm transition text-sm">
-                                <i class="bi bi-list-check mr-1"></i> <span th:text="#{welcome.my.requests}">Mis Solicitudes</span>
+                                <i class="bi bi-list-check mr-1"></i> <span th:text="#{Solicitudes}">Solicitudes</span>
                             </a>
                         </div>
                     </div>
@@ -52,17 +33,17 @@
             
             <!-- Acciones rápidas -->
             <div class="bg-white rounded-lg shadow-md p-4 mb-4">
-                <h2 class="text-lg font-bold text-gray-800 mb-3" th:text="#{welcome.quick.actions}">Acciones Rápidas</h2>
+                <h2 class="text-lg font-bold text-gray-800 mb-3">Acciones Rápidas</h2>
                 
                 <div class="flex flex-col md:flex-row gap-3">
-                    <!-- Columna 33% -->
+                    <!-- Estadísticas -->
                     <div class="w-full md:w-1/3">
                         <div class="bg-gray-50 rounded-lg p-3 text-center h-full">
                             <i class="bi bi-bar-chart-line text-green-600 text-xl"></i>
-                            <h3 class="text-base font-medium mt-1 mb-1" th:text="#{welcome.statistics}">Mis Estadísticas</h3>
-                            <p class="text-gray-600 mb-2 text-xs" th:text="#{welcome.statistics.desc}">Revisa el resumen y estado de tus solicitudes de reciclaje.</p>
+                            <h3 class="text-base font-medium mt-1 mb-1">Mis Estadísticas</h3>
+                            <p class="text-gray-600 mb-2 text-xs">Revisa el resumen y estado de tus solicitudes de reciclaje.</p>
                             <a href="#" class="text-green-600 hover:text-green-800 font-medium text-sm">
-                                <span th:text="#{welcome.view.statistics}">Ver estadísticas</span> <i class="bi bi-arrow-right"></i>
+                                Ver estadísticas <i class="bi bi-arrow-right"></i>
                             </a>
                         </div>
                     </div>
@@ -72,19 +53,19 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 h-full">
                             <div class="bg-gray-50 rounded-lg p-3 text-center">
                                 <i class="bi bi-book text-green-600 text-xl"></i>
-                                <h3 class="text-base font-medium mt-1 mb-1" th:text="#{welcome.resources}">Recursos</h3>
-                                <p class="text-gray-600 mb-2 text-xs" th:text="#{welcome.resources.desc}">Consulta guías y consejos para un reciclaje más efectivo.</p>
+                                <h3 class="text-base font-medium mt-1 mb-1" th:text="#{button.resources}">Recursos</h3>
+                                <p class="text-gray-600 mb-2 text-xs">Consulta guías y consejos para un reciclaje más efectivo.</p>
                                 <a href="#" class="text-green-600 hover:text-green-800 font-medium text-sm">
-                                    <span th:text="#{welcome.view.resources}">Ver recursos</span> <i class="bi bi-arrow-right"></i>
+                                    Ver recursos <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
                             
                             <div class="bg-gray-50 rounded-lg p-3 text-center">
                                 <i class="bi bi-geo-alt text-green-600 text-xl"></i>
-                                <h3 class="text-base font-medium mt-1 mb-1" th:text="#{welcome.recycling.points}">Puntos de Reciclaje</h3>
-                                <p class="text-gray-600 mb-2 text-xs" th:text="#{welcome.recycling.points.desc}">Encuentra los centros de reciclaje más cercanos a tu ubicación.</p>
+                                <h3 class="text-base font-medium mt-1 mb-1">Puntos de Reciclaje</h3>
+                                <p class="text-gray-600 mb-2 text-xs">Encuentra los centros de reciclaje más cercanos a tu ubicación.</p>
                                 <a href="#" class="text-green-600 hover:text-green-800 font-medium text-sm">
-                                    <span th:text="#{welcome.view.map}">Ver mapa</span> <i class="bi bi-arrow-right"></i>
+                                    Ver mapa <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -92,25 +73,25 @@
                 </div>
             </div>
             
-            <!-- Solicitudes Recientes -->
+            <!-- Solicitudes -->
             <div class="bg-white rounded-lg shadow-md p-4 mb-4">
-                <h2 class="text-lg font-bold text-gray-800 mb-3" th:text="#{welcome.recent.requests}">Solicitudes Recientes</h2>
+                <h2 class="text-lg font-bold text-gray-800 mb-3" th:text="#{Solicitudes}">Solicitudes</h2>
                 
                 <!-- Si hay solicitudes -->
                 <div th:if="${solicitude != null && !solicitude.empty}" class="overflow-hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         <div th:each="sol : ${solicitude}" class="bg-gray-50 rounded-lg p-3 border-l-4 border-green-500">
                             <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-base font-medium text-gray-800" th:text="${sol.title}">Título de solicitud</h3>
-                                <span th:class="${sol.status == 'PENDIENTE' ? 'bg-yellow-100 text-yellow-800' : (sol.status == 'COMPLETADO' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')} + ' px-2 py-0.5 rounded-full text-xs font-medium'" th:text="${sol.status}">Estado</span>
+                                <h3 class="text-base font-medium text-gray-800" th:text="${sol.categoria}">Categoría de solicitud</h3>
+                                <span th:class="${sol.estado == 'EN_ESPERA' ? 'bg-yellow-100 text-yellow-800' : (sol.estado == 'COMPLETADA' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')} + ' px-2 py-0.5 rounded-full text-xs font-medium'" th:text="${sol.estado}">Estado</span>
                             </div>
-                            <p class="text-gray-600 text-xs mb-2" th:text="${sol.description}">Descripción de la solicitud...</p>
+                            <p class="text-gray-600 text-xs mb-2" th:text="${sol.descripcion}">Descripción de la solicitud...</p>
                             <div class="flex justify-between items-center text-xs">
                                 <span class="text-gray-500">
-                                    <i class="bi bi-calendar"></i> <span th:text="${#dates.format(sol.createdDate, 'dd/MM/yyyy')}">01/01/2025</span>
+                                    <i class="bi bi-calendar"></i> <span th:text="${#temporals.format(sol.fecha, 'dd/MM/yyyy')}">01/01/2025</span>
                                 </span>
                                 <a th:href="@{/user/request/{id}(id=${sol.id})}" class="text-green-600 hover:text-green-800 font-medium">
-                                    <span th:text="#{welcome.view.details}">Ver detalles</span> <i class="bi bi-arrow-right"></i>
+                                    <span th:text="#{boton.leer}">Leer</span> <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -122,31 +103,14 @@
                     <div class="bg-gray-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
                         <i class="bi bi-inbox text-gray-500 text-xl"></i>
                     </div>
-                    <h3 class="text-base font-medium text-gray-800 mb-2" th:text="#{welcome.no.requests}">No tienes solicitudes aún</h3>
-                    <p class="text-gray-600 mb-3 text-sm" th:text="#{welcome.create.first.request}">¡Crea tu primera solicitud de reciclaje para comenzar!</p>
+                    <h3 class="text-base font-medium text-gray-800 mb-2">No tienes solicitudes aún</h3>
+                    <p class="text-gray-600 mb-3 text-sm">¡Crea tu primera solicitud de reciclaje para comenzar!</p>
                     <a th:href="@{/user/newsolicitude}" class="bg-green-600 hover:bg-green-700 text-white font-medium px-3 py-1.5 rounded-md shadow-sm transition text-sm">
-                        <i class="bi bi-plus-circle mr-1"></i> <span th:text="#{welcome.new.request}">Nueva Solicitud</span>
+                        <i class="bi bi-plus-circle mr-1"></i> <span th:text="#{newRequest.title}">Nueva Solicitud</span>
                     </a>
                 </div>
             </div>
         </div>
     </section>
-    
-    <!-- Footer -->
-    <footer class="bg-white shadow-inner py-4">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-sm text-gray-600" th:text="#{footer.copyright}">Sistema de Comunicación para Reciclaje 2025</p>
-            <div class="mt-2 flex justify-center space-x-4">
-                <a href="?language=es" class="text-sm text-gray-500 hover:text-green-600">
-                    <img src="/img/uruguay.png" class="h-4 w-4 inline mr-1" alt="Español">
-                    <span>Español</span>
-                </a>
-                <a href="?language=pt" class="text-sm text-gray-500 hover:text-green-600">
-                    <img src="/img/brasil.png" class="h-4 w-4 inline mr-1" alt="Português">
-                    <span>Português</span>
-                </a>
-            </div>
-        </div>
-    </footer>
 </body>
 </html>

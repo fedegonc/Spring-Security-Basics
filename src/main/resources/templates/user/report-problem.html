@@ -1,107 +1,151 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{fragments/layout/head :: head}">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/shared/layout}">
+<head>
   <title>Reportar Problema</title>
-  <style>
-    /* Estilos específicos para esta página, si fueran necesarios */
-    .app-background {
-      background: url('/img/background.jpg') no-repeat center center fixed;
-      background-size: cover;
-      min-height: 100vh;
-    }
-    
-    .glass-effect {
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      padding: 20px;
-      margin-bottom: 30px;
-    }
-    
-    .glass-card {
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-  </style>
+  <meta name="description" content="Reporte un problema o incidencia en el sistema">
+  <th:block layout:fragment="head">
+    <style>
+      /* Estilos específicos para esta página, si fueran necesarios */
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+      
+      .glass-card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+        padding: 20px;
+      }
+      
+      .info-tip {
+        background-color: #e8f4f8;
+        border-left: 4px solid #3498db;
+        padding: 12px;
+        margin-bottom: 16px;
+        border-radius: 4px;
+      }
+    </style>
+  </th:block>
 </head>
-
-<body class="app-background d-flex flex-column min-vh-100">
-  <!-- Reemplazamos el navbar-user por el header común -->
-  <div th:replace="~{fragments/header :: header}"></div>
-
-  <!-- Contenido principal -->
-  <main class="content-container">
-    <div class="container">
-      <div th:replace="~{fragments/messages :: message-alerts}"></div>
-
-      <!-- Reemplazamos la implementación manual por el fragmento reutilizable -->
-      <div th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
-
-      <!-- Sección principal de reporte -->
-      <section class="mb-5 glass-effect">
-        <div class="row mb-4">
-          <div class="col-12 text-center">
-            <h1 class="display-5 fw-bold mb-3">Reportar Problema</h1>
-            <p class="lead">
-              Si encuentras algún problema con el sistema, por favor repórtalo a continuación. 
-              Nuestro equipo lo revisará lo antes posible.
-            </p>
-          </div>
+<body>
+  <section layout:fragment="content" class="container mx-auto px-4 py-8">
+    <!-- Sección principal de reporte -->
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
+      <div class="mb-6 text-center">
+        <h1 class="text-2xl font-bold text-gray-800 mb-3">¿Encontraste algún problema?</h1>
+        <p class="text-gray-600">
+          Contanos qué pasó y te ayudaremos a solucionarlo lo antes posible.
+        </p>
+      </div>
+      
+      <!-- Formulario de reporte simplificado -->
+      <form th:action="@{/user/report-problem}" method="post" class="space-y-6">
+        
+        <!-- Tipo de problema simplificado -->
+        <div class="mb-4">
+          <label for="problemType" class="block text-sm font-medium text-gray-700 mb-1">¿Qué tipo de problema tuviste?</label>
+          <select id="problemType" name="problemType" class="w-full p-2 border border-gray-300 rounded-md">
+            <option value="">Por favor, seleccioná una opción</option>
+            <option value="technical">No puedo hacer algo en la aplicación</option>
+            <option value="display">La aplicación se ve mal o tiene errores visuales</option>
+            <option value="account">Problemas con mi cuenta o acceso</option>
+            <option value="suggestion">Tengo una sugerencia para mejorar algo</option>
+            <option value="other">Otro tipo de problema</option>
+          </select>
         </div>
-
-        <!-- Formulario de Reporte -->
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-8 col-lg-6">
-            <div class="glass-card">
-              <h4 class="card-title mb-4 text-center">
-                <i class="bi bi-exclamation-triangle me-2"></i>Reportar un problema
-              </h4>
-              
-              <div th:if="${param.error}" class="alert alert-danger mb-3" th:text="${param.error}"></div>
-              <div th:if="${param.exito}" class="alert alert-success mb-3" th:text="${param.exito}"></div>
-              
-              <form th:action="@{/user/report}" method="post" style="max-width: 500px; margin: auto;">
-                <label for="problema" class="form-label"><strong>Título del problema:</strong></label>
-                <input type="text" id="problema" name="problema" class="form-control mb-3" 
-                      placeholder="Ej: Error al cargar imágenes" required>
-                
-                <label for="descripcion"><strong>Descripción del problema:</strong></label>
-                <p style="font-size: 14px; color: #555;" class="mt-1 mb-2">
-                  Podés escribir algo como:<br>
-                  - En qué parte de la app ocurrió<br>
-                  - Con qué frecuencia pasa<br>
-                  - Pasos para reproducir el error<br>
-                  - Un ejemplo concreto
-                </p>
-                <textarea id="descripcion" name="descripcion" rows="6" required 
-                         placeholder="Ejemplo: Al intentar subir una imagen en el perfil, aparece un mensaje de error. Me pasó 3 veces en la última hora." 
-                         class="form-control mb-3"></textarea>
-                
-                <button type="submit" class="btn btn-primary w-100 mt-2">
-                  <i class="bi bi-send me-2"></i>Enviar reporte
-                </button>
-              </form>
+        
+        <!-- Título del problema -->
+        <div class="mb-4">
+          <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Título del problema</label>
+          <input type="text" id="title" name="title" class="w-full p-2 border border-gray-300 rounded-md" 
+                 placeholder="Por ejemplo: No puedo subir mi foto de perfil" required>
+        </div>
+        
+        <!-- Descripción del problema con ayuda -->
+        <div class="mb-4">
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Contanos qué ocurrió</label>
+          <div class="info-tip mb-2">
+            <p class="text-sm">Para ayudarnos a entender mejor, podés incluir:</p>
+            <ul class="list-disc pl-5 text-sm">
+              <li>¿Qué estabas haciendo cuando ocurrió?</li>
+              <li>¿En qué parte de la aplicación pasó?</li>
+              <li>¿Ocurrió más de una vez?</li>
+              <li>¿Qué dispositivo estás usando? (celular, computadora)</li>
+            </ul>
+          </div>
+          <textarea id="description" name="description" rows="5" class="w-full p-2 border border-gray-300 rounded-md" 
+                   placeholder="Describí el problema con tus propias palabras..." required></textarea>
+        </div>
+        
+        <!-- Adjuntar imagen simplificado -->
+        <div class="mb-4">
+          <label for="attachment" class="block text-sm font-medium text-gray-700 mb-1">¿Querés enviarnos una captura de pantalla? (opcional)</label>
+          <input type="file" id="attachment" name="attachment" class="w-full p-2 border border-gray-300 rounded-md">
+          <p class="mt-1 text-xs text-gray-500">Una imagen puede ayudarnos a entender mejor el problema</p>
+        </div>
+        
+        <!-- Urgencia simplificada -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">¿Qué tan urgente es este problema para vos?</label>
+          <div class="grid grid-cols-3 gap-4 mt-2">
+            <div class="relative">
+              <input type="radio" id="urgencyLow" name="urgency" value="low" class="sr-only peer" checked>
+              <label for="urgencyLow" class="flex flex-col items-center p-2 bg-white border border-gray-300 rounded-lg peer-checked:border-green-500 peer-checked:bg-green-50 hover:bg-gray-50 cursor-pointer">
+                <span class="text-xl">😊</span>
+                <span class="mt-1 text-sm font-medium">Puede esperar</span>
+              </label>
+            </div>
+            <div class="relative">
+              <input type="radio" id="urgencyMedium" name="urgency" value="medium" class="sr-only peer">
+              <label for="urgencyMedium" class="flex flex-col items-center p-2 bg-white border border-gray-300 rounded-lg peer-checked:border-yellow-500 peer-checked:bg-yellow-50 hover:bg-gray-50 cursor-pointer">
+                <span class="text-xl">🤔</span>
+                <span class="mt-1 text-sm font-medium">Es importante</span>
+              </label>
+            </div>
+            <div class="relative">
+              <input type="radio" id="urgencyHigh" name="urgency" value="high" class="sr-only peer">
+              <label for="urgencyHigh" class="flex flex-col items-center p-2 bg-white border border-gray-300 rounded-lg peer-checked:border-red-500 peer-checked:bg-red-50 hover:bg-gray-50 cursor-pointer">
+                <span class="text-xl">😣</span>
+                <span class="mt-1 text-sm font-medium">No puedo seguir</span>
+              </label>
             </div>
           </div>
         </div>
-      </section>
+        
+        <!-- Términos y condiciones simplificados -->
+        <div class="mb-4">
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <input id="terms" name="terms" type="checkbox" class="h-4 w-4 border-gray-300 rounded" required>
+            </div>
+            <div class="ml-3 text-sm">
+              <label for="terms" class="font-medium text-gray-700">Acepto compartir esta información</label>
+              <p class="text-gray-500">Para poder solucionar tu problema, nuestro equipo revisará la información que nos proporcionás.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Botón de envío mejorado -->
+        <div class="flex justify-center">
+          <button type="submit" class="inline-flex items-center justify-center py-3 px-6 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11h2v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+            </svg>
+            Enviar mi reporte
+          </button>
+        </div>
+      </form>
     </div>
-  </main>
-
-  <!-- Footer -->
-  <div th:replace="~{fragments/layout/footer :: footer}"></div>
-
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </section>
 </body>
 </html>

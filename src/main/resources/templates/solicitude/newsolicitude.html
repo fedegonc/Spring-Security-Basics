@@ -1,22 +1,14 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-
-<!-- Usando el fragmento de head del layout base -->
-<head th:replace="~{fragments/layout/base-layout :: head('Nueva Solicitud - Reciclaje Sólido', ~{::extraStyles})}">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/shared/layout}">
+<head>
     <title>Nueva Solicitud - Reciclaje Sólido</title>
-    <!-- Estilos adicionales específicos de esta página -->
-    <th:block th:fragment="extraStyles">
+    <meta name="description" content="Crear una nueva solicitud de reciclaje">
+    <th:block layout:fragment="head">
         <!-- Aquí irían estilos específicos de la página si fueran necesarios -->
     </th:block>
 </head>
-
-<!-- Usando el layout base con el contenido específico de esta página -->
-<div th:replace="~{fragments/layout/base-layout :: layout('Nueva Solicitud', ~{::main-content}, ~{::page-scripts})}">
-    
-    <!-- Contenido principal específico de esta página -->
-    <div th:fragment="main-content">
-        <!-- Eliminamos la línea duplicada de breadcrumbs ya que está en base-layout -->
-        
+<body>
+    <section layout:fragment="content">
         <!-- Sección de formulario de nueva solicitud -->
         <section>
             <div class="glass-card">
@@ -26,14 +18,14 @@
                     </div>
                     <h1 class="text-3xl font-bold">Nueva Solicitud de Reciclaje</h1>
                 </div>
-                
+
                 <form th:action="@{/user/newsolicitude}" method="post" th:object="${solicitud}" enctype="multipart/form-data" class="space-y-4">
                     <!-- Selección de Organización -->
                     <div class="mb-4">
                         <label for="destino" class="block text-sm font-medium text-gray-700 mb-1">
                             Organización Destinataria <span class="text-red-500">*</span>
                         </label>
-                        <select id="destino" th:field="*{destino}" 
+                        <select id="destino" th:field="*{destino}"
                                 class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                 required>
                             <option value="">Seleccione una organización</option>
@@ -50,7 +42,7 @@
                                 <label for="categoria" class="block text-sm font-medium text-gray-700 mb-1">
                                     Tipo de Material <span class="text-red-500">*</span>
                                 </label>
-                                <select id="categoria" th:field="*{categoria}" 
+                                <select id="categoria" th:field="*{categoria}"
                                         class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                         required>
                                     <option value="">Seleccione una categoría</option>
@@ -61,17 +53,17 @@
                                     <option value="eletronicos">Electrónico</option>
                                     <option value="otros">Otros</option>
                                 </select>
-                                <p th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}" 
+                                <p th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}"
                                    class="mt-1 text-sm text-red-600"></p>
                             </div>
-                            
+
                             <!-- Peso y Tamaño en la misma fila -->
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label for="peso" class="block text-sm font-medium text-gray-700 mb-1">
                                         Peso
                                     </label>
-                                    <input type="text" id="peso" th:field="*{peso}" 
+                                    <input type="text" id="peso" th:field="*{peso}"
                                            class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                            placeholder="Ej: 5 kg">
                                 </div>
@@ -79,7 +71,7 @@
                                     <label for="tamanio" class="block text-sm font-medium text-gray-700 mb-1">
                                         Tamaño
                                     </label>
-                                    <select id="tamanio" th:field="*{tamanio}" 
+                                    <select id="tamanio" th:field="*{tamanio}"
                                             class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
                                         <option value="">Seleccione</option>
                                         <option value="chico">Pequeño</option>
@@ -88,13 +80,13 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <!-- Imagen -->
                             <div>
                                 <label for="file" class="block text-sm font-medium text-gray-700 mb-1">
                                     Imagen <span class="text-red-500">*</span>
                                 </label>
-                                <input type="file" id="file" name="file" 
+                                <input type="file" id="file" name="file"
                                        class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                        accept="image/*" required>
                                 <div id="imagePreview" class="mt-2" style="display: none;">
@@ -102,7 +94,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Segunda columna -->
                         <div class="space-y-4">
                             <!-- Descripción -->
@@ -110,29 +102,29 @@
                                 <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">
                                     Descripción
                                 </label>
-                                <textarea id="descripcion" th:field="*{descripcion}" 
+                                <textarea id="descripcion" th:field="*{descripcion}"
                                           class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                           rows="3" placeholder="Descripción detallada del material a reciclar"></textarea>
-                                <p th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" 
+                                <p th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"
                                    class="mt-1 text-sm text-red-600"></p>
                             </div>
-                            
+
                             <!-- Información de dirección -->
                             <div>
                                 <label for="calle" class="block text-sm font-medium text-gray-700 mb-1">
                                     Calle <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" id="calle" th:field="*{calle}" 
+                                <input type="text" id="calle" th:field="*{calle}"
                                        class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                        placeholder="Nombre de la calle" required>
                             </div>
-                            
+
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label for="barrio" class="block text-sm font-medium text-gray-700 mb-1">
                                         Barrio <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" id="barrio" th:field="*{barrio}" 
+                                    <input type="text" id="barrio" th:field="*{barrio}"
                                            class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                            placeholder="Barrio" required>
                                 </div>
@@ -140,53 +132,53 @@
                                     <label for="numeroDeCasa" class="block text-sm font-medium text-gray-700 mb-1">
                                         Número <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" id="numeroDeCasa" th:field="*{numeroDeCasa}" 
+                                    <input type="text" id="numeroDeCasa" th:field="*{numeroDeCasa}"
                                            class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                            placeholder="Número" required>
                                 </div>
                             </div>
-                            
+
                             <div>
                                 <label for="referenciaLocal" class="block text-sm font-medium text-gray-700 mb-1">
                                     Referencia <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" id="referenciaLocal" th:field="*{referenciaLocal}" 
+                                <input type="text" id="referenciaLocal" th:field="*{referenciaLocal}"
                                        class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                        placeholder="Ej: Casa azul, portón negro" required>
                             </div>
-                            
+
                             <div>
                                 <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">
                                     Teléfono <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" id="telefono" th:field="*{telefono}" 
+                                <input type="text" id="telefono" th:field="*{telefono}"
                                        class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                        placeholder="Número de teléfono" required>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Días y horarios en la misma fila -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <div>
                             <label for="diasDisponibles" class="block text-sm font-medium text-gray-700 mb-1">
                                 Días Disponibles <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" id="diasDisponibles" th:field="*{diasDisponibles}" 
+                            <input type="text" id="diasDisponibles" th:field="*{diasDisponibles}"
                                    class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                    placeholder="Ej: Lunes, Miércoles y Viernes" required>
                         </div>
-                        
+
                         <div>
                             <label for="horaRecoleccion" class="block text-sm font-medium text-gray-700 mb-1">
                                 Horario <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" id="horaRecoleccion" th:field="*{horaRecoleccion}" 
+                            <input type="text" id="horaRecoleccion" th:field="*{horaRecoleccion}"
                                    class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                                    placeholder="Ej: 9:00 a 12:00" required>
                         </div>
                     </div>
-                    
+
                     <!-- Botones de acción -->
                     <div class="flex justify-end space-x-3 pt-4">
                         <a th:href="@{/user/welcome}" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -199,17 +191,17 @@
                 </form>
             </div>
         </section>
-    </div>
+    </section>
 
-    <!-- Scripts específicos de esta página -->
-    <th:block th:fragment="page-scripts">
+    <th:block layout:fragment="scripts">
+        <!-- Scripts específicos de esta página -->
         <script>
             // Script para previsualizar la imagen subida
             document.addEventListener('DOMContentLoaded', function() {
                 const fileInput = document.getElementById('file');
                 const imagePreview = document.getElementById('imagePreview');
                 const preview = document.getElementById('preview');
-                
+
                 fileInput.addEventListener('change', function() {
                     const file = this.files[0];
                     if (file) {
@@ -226,5 +218,5 @@
             });
         </script>
     </th:block>
-</div>
+</body>
 </html>

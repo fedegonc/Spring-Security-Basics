@@ -61,10 +61,8 @@ public class UserController extends BaseController {
             User user = userRepository.findByUsername(username);
             mv.addObject("user", user);
             
-            // Agregar datos para el breadcrumb
-            List<Map<String, String>> breadcrumbItems = new ArrayList<>();
-            breadcrumbItems.add(Map.of("text", "Inicio", "url", "/user/welcome"));
-            mv.addObject("breadcrumbItems", breadcrumbItems);
+            // Establecer el nombre de la página actual para los breadcrumbs en el header
+            mv.addObject("currentPage", "Inicio");
             
             mv.addObject("solicitude", solicitudeService.getSolicitudesByUser(user));
             mv.addObject("username", user.getUsername());
@@ -97,7 +95,7 @@ public class UserController extends BaseController {
         // Si es una solicitud POST, actualizar el perfil
         return updateProfile(user, result, file, currentImg, msg);
     }
-    
+
     /**
      * Método privado para mostrar el perfil del usuario.
      */
@@ -106,21 +104,20 @@ public class UserController extends BaseController {
         
         try {
             // Obtener el usuario actual
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            User user = userRepository.findByUsername(username);
+            User user = getAuthenticatedUser();
             
             if (user != null) {
+                // Si el usuario no tiene imagen de perfil, usar una por defecto
                 if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
                     user.setProfileImage("descargas.jpeg");
                 }
+                
                 mv.addObject("user", user);
                 
-                // Agregar datos para el breadcrumb
-                List<Map<String, String>> breadcrumbItems = new ArrayList<>();
-                breadcrumbItems.add(Map.of("text", "Inicio", "url", "/user/welcome"));
-                breadcrumbItems.add(Map.of("text", "Perfil", "url", "/user/profile"));
-                mv.addObject("breadcrumbItems", breadcrumbItems);
+                // Establecer el nombre de la página actual para los breadcrumbs en el header
+                mv.addObject("currentPage", "Perfil");
+            } else {
+                return new ModelAndView("redirect:/login");
             }
         } catch (Exception e) {
             mv.addObject("error", "Error al cargar el perfil: " + e.getMessage());
@@ -136,57 +133,52 @@ public class UserController extends BaseController {
                                   MultipartFile file, String currentImg,
                                   RedirectAttributes msg) {
         if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "Error al editar usuario.");
+            msg.addFlashAttribute("error", "Por favor, corrija los errores en el formulario");
             return new ModelAndView("redirect:/user/profile");
         }
-
+        
         try {
+            // Obtener el usuario actual
             User currentUser = getAuthenticatedUser();
+            
             if (currentUser != null) {
-                currentUser.setUsername(user.getUsername());
+                // Actualizar solo los campos permitidos
                 currentUser.setName(user.getName());
                 currentUser.setEmail(user.getEmail());
                 
-                // Manejo de imagen de perfil
-                try {
-                    if (file != null && !file.isEmpty()) {
-                        String filename = file.getOriginalFilename().replace(" ", "_");
-                        // Aseguramos que el directorio existe
-                        java.io.File uploadDirectory = new java.io.File(UPLOAD_DIR);
-                        if (!uploadDirectory.exists()) {
-                            uploadDirectory.mkdirs();
-                        }
-                        Files.write(Paths.get(UPLOAD_DIR + filename), file.getBytes());
-                        currentUser.setProfileImage(filename);
-                    } else {
-                        // Si no hay nueva imagen, mantener la imagen actual
-                        currentUser.setProfileImage(currentImg);
+                // Manejar la subida de imagen
+                if (file != null && !file.isEmpty()) {
+                    try {
+                        String fileName = handleImageUpload(file, currentImg);
+                        currentUser.setProfileImage(fileName);
+                    } catch (IOException e) {
+                        msg.addFlashAttribute("error", "Error al subir la imagen: " + e.getMessage());
+                        return new ModelAndView("redirect:/user/profile");
                     }
-                } catch (IOException e) {
-                    msg.addFlashAttribute("error", "Error al procesar la imagen: " + e.getMessage());
-                    // Si hay error con la imagen, mantener la imagen actual
-                    currentUser.setProfileImage(currentImg);
                 }
                 
+                // Guardar los cambios
                 userRepository.save(currentUser);
-                msg.addFlashAttribute("success", "Usuario editado correctamente.");
+                
+                msg.addFlashAttribute("success", "Perfil actualizado con éxito");
             } else {
-                msg.addFlashAttribute("error", "Usuario no encontrado.");
+                msg.addFlashAttribute("error", "Usuario no encontrado");
             }
         } catch (Exception e) {
-            msg.addFlashAttribute("error", "Error al actualizar el usuario: " + e.getMessage());
+            msg.addFlashAttribute("error", "Error al actualizar el perfil: " + e.getMessage());
         }
         
         return new ModelAndView("redirect:/user/profile");
     }
 
-    @GetMapping("/delet/{id}")
+    @DeleteMapping("/deleteUser/{id}")
     public String deleteUser(@PathVariable("id") long id) {
         userService.eliminarEntidad(id);
         return "redirect:/logout";
     }
 
-    @GetMapping("/logout") public String logout() { return "index"; }
+    @GetMapping("/logout")
+    public String logout() { return "index"; }
 
     @GetMapping("/users")
     public String listUsers(Model model) {
@@ -198,6 +190,12 @@ public class UserController extends BaseController {
     public ModelAndView staticPages(HttpServletRequest req) {
         ModelAndView mv = new ModelAndView("user/" + req.getRequestURI().split("/")[2]);
         mv.addObject("user", getAuthenticatedUser());
+        
+        // Establecer el nombre de la página actual para los breadcrumbs
+        String pageName = req.getRequestURI().split("/")[2];
+        String displayName = Character.toUpperCase(pageName.charAt(0)) + pageName.substring(1);
+        mv.addObject("currentPage", displayName);
+        
         return mv;
     }
 
@@ -207,7 +205,18 @@ public class UserController extends BaseController {
         List<Solicitude> solicitudes = solicitudeRepository.findByUser(user);
         if (user != null && (user.getProfileImage() == null || user.getProfileImage().isEmpty()))
             user.setProfileImage("descargas.jpeg");
-        return new ModelAndView("user/view-requests").addObject("solicitudes", solicitudes).addObject("user", user);
+        
+        // Crear un ModelAndView con la página y datos
+        ModelAndView mv = new ModelAndView("user/view-requests");
+        
+        // Establecer el nombre de la página actual para los breadcrumbs en el header
+        mv.addObject("currentPage", "Mis Solicitudes");
+        
+        // Añadir el resto de atributos
+        mv.addObject("solicitudes", solicitudes);
+        mv.addObject("user", user);
+        
+        return mv;
     }
 
     @PostMapping("/updatesolicitude/{id}")

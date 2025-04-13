@@ -50,7 +50,7 @@
                 <div th:replace="~{fragments/messages :: message-alerts}"></div>
                 
                 <!-- Breadcrumbs -->
-                <div th:if="${breadcrumbItems != null}" th:replace="~{fragments/layout/breadcrumb :: breadcrumb(${breadcrumbItems})}"></div>
+                <div th:if="${breadcrumbItems != null}" th:replace="~{fragments/layout/breadcrumb :: breadcrumb(items=${breadcrumbItems})}"></div>
                 
                 <!-- Contenido específico de cada página -->
                 <div th:replace="${content}"></div>

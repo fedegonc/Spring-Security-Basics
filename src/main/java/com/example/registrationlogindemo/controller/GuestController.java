@@ -41,11 +41,6 @@ public class GuestController {
         return mv;
     }
 
-    @GetMapping("/ambiental")
-    public ModelAndView ambiental() {
-        return new ModelAndView("guest/ambiental");
-    }
-
     @GetMapping("/report")
     public ModelAndView newReport() {
         return new ModelAndView("user/report-problem");
