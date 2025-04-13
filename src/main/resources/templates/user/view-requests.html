@@ -37,42 +37,12 @@
         <!-- Resumen de métricas -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <h2 class="text-xl font-semibold mb-4 text-gray-800" th:text="#{metrics.title}">Resumen de Solicitudes</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Activas -->
-                <div class="bg-gray-50 rounded-lg shadow-sm p-4 text-center">
-                    <i class="bi bi-hourglass-split text-blue-600 mb-3 text-3xl"></i>
-                    <h3 class="text-sm font-medium text-gray-700" th:text="#{metric.active}">Solicitudes Activas</h3>
-                    <p class="text-3xl font-bold my-2 text-gray-800" id="active-requests-count">0</p>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-blue-600 h-2 rounded-full" style="width: 0%;" id="active-progress"></div>
-                    </div>
-                </div>
-
-                <!-- Totales -->
-                <div class="bg-gray-50 rounded-lg shadow-sm p-4 text-center">
-                    <i class="bi bi-clipboard-check text-green-600 mb-3 text-3xl"></i>
-                    <h3 class="text-sm font-medium text-gray-700" th:text="#{metric.total}">Total de Solicitudes</h3>
-                    <p class="text-3xl font-bold my-2 text-gray-800" id="total-requests-count">0</p>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-green-600 h-2 rounded-full w-full"></div>
-                    </div>
-                </div>
-
-                <!-- Completadas -->
-                <div class="bg-gray-50 rounded-lg shadow-sm p-4 text-center">
-                    <i class="bi bi-check-circle text-green-500 mb-3 text-3xl"></i>
-                    <h3 class="text-sm font-medium text-gray-700" th:text="#{metric.completed}">Solicitudes Completadas</h3>
-                    <p class="text-3xl font-bold my-2 text-gray-800" id="completed-requests-count">0</p>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-green-500 h-2 rounded-full" style="width: 0%;" id="completed-progress"></div>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="~{fragments/solicitudes-components :: metricas-solicitudes}"></div>
         </div>
 
         <!-- Tarjetas de Solicitudes -->
         <div class="bg-white rounded-lg shadow-md p-6">
-            <div th:replace="~{fragments/user/solicitudes-tarjetas :: solicitudes-tarjetas('Mis Solicitudes', true, true, ${solicitudes}, '/user')}"></div>
+            <div th:replace="~{fragments/solicitudes-components :: solicitudes-tarjetas('Mis Solicitudes', true, true, ${solicitudes}, '/user')}"></div>
         </div>
     </div>
 </section>

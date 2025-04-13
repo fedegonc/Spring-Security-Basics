@@ -9,10 +9,10 @@
 <body>
 <header th:fragment="header" class="bg-black shadow-lg mb-3">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16">
-    <!-- Fragmento 1: Logo y Navegación Desktop -->
-    <div th:replace="~{fragments/header-logo-nav :: fragment}"></div>
-    <!-- Fragmento 2: Menú de Usuario e Idioma (Desktop) -->
-    <div th:replace="~{fragments/header-user-lang :: fragment}"></div>
+    <!-- Logo y Navegación Desktop -->
+    <div th:replace="~{fragments/header-components :: logo-nav}"></div>
+    <!-- Menú de Usuario e Idioma (Desktop) -->
+    <div th:replace="~{fragments/header-components :: user-lang}"></div>
     
     <!-- Botón de menú móvil -->
     <button id="mobileMenuButton" class="md:hidden flex items-center text-white">
@@ -21,11 +21,9 @@
       </svg>
     </button>
   </div>
-  <!-- Fragmento 4: Breadcrumbs -->
-  <div th:replace="~{fragments/header-breadcrumbs :: fragment}"></div>
-  <!-- Fragmento 3: Menú Móvil -->
+  <!-- Menú Móvil -->
   <div id="mobileMenu" class="hidden md:hidden">
-    <div th:replace="~{fragments/header-mobile :: fragment}"></div>
+    <div th:replace="~{fragments/header-components :: mobile-menu}"></div>
   </div>
   <script th:src="@{/js/header.js}"></script>
 </header>

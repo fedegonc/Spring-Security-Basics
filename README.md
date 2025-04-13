@@ -128,6 +128,117 @@ src/main/
   - Autorización basada en roles con Spring Security.
   - Validación y sanitización de entradas.
 
+## Frontend: Estructura y Organización
+
+### Estructura de Templates
+```
+templates/
+├── admin/                        # Vistas para administradores
+│   ├── crear-usuario.html        # Formulario de creación de usuarios
+│   ├── dashboard.html            # Panel principal de administración
+│   ├── edit.html                 # Edición de usuarios
+│   ├── editreport.html           # Edición de reportes
+│   ├── editsolicitude.html       # Edición de solicitudes
+│   ├── newreport.html            # Creación de reportes
+│   ├── newsolicitude.html        # Creación de solicitudes
+│   ├── profile.html              # Perfil de administrador
+│   ├── reports.html              # Listado de reportes
+│   ├── solicitudes.html          # Listado de solicitudes
+│   └── users.html                # Gestión de usuarios
+│
+├── error.html                    # Página de error genérica
+│
+├── fragments/                    # Componentes reutilizables
+│   ├── header-breadcrumbs.html   # Navegación de migas de pan
+│   ├── header-logo-nav.html      # Logo y navegación principal
+│   ├── header-mobile.html        # Menú móvil
+│   ├── header-user-lang.html     # Menú de usuario e idioma
+│   ├── header.html               # Cabecera principal (combina los anteriores)
+│   ├── layout/                   # Componentes de layout
+│   │   ├── body.html             # Estructura del cuerpo
+│   │   ├── breadcrumb.html       # Navegación de migas de pan alternativa
+│   │   ├── config-options.html   # Opciones de configuración
+│   │   └── footer.html           # Pie de página
+│   ├── logo.html                 # Logo de la aplicación
+│   ├── messages.html             # Mensajes del sistema
+│   ├── shared/                   # Layouts compartidos
+│   │   └── layout.html           # Layout principal de la aplicación
+│   ├── solicitudes/              # Componentes de solicitudes
+│   │   ├── dialogo.html          # Diálogos de solicitudes
+│   │   ├── edit-solicitud.html   # Formulario de edición
+│   │   ├── formulario-solicitud.html # Formulario de creación
+│   │   ├── metricas-solicitudes.html # Métricas y estadísticas
+│   │   └── vista-solicitudes.html # Vista de listado
+│   └── user/                     # Componentes de usuario
+│       ├── estadisticas-user.html # Estadísticas de usuario
+│       ├── metricas-user.html    # Métricas de usuario
+│       ├── profile-form.html     # Formulario de perfil
+│       ├── publicaciones-user.html # Publicaciones de usuario
+│       ├── solicitudes-tarjetas.html # Tarjetas de solicitudes
+│       └── usuario-bienvenida.html # Mensaje de bienvenida
+│
+├── guest/                        # Vistas para invitados
+│   ├── error.html                # Página de error para invitados
+│   ├── index.html                # Página principal para invitados
+│   ├── login.html                # Página de inicio de sesión
+│   └── register.html             # Página de registro
+│
+├── org/                          # Vistas para organizaciones
+│   ├── dashboard.html            # Panel principal de organización
+│   └── profile.html              # Perfil de organización
+│
+├── solicitude/                   # Vistas de solicitudes
+│   ├── editsolicitude.html       # Edición de solicitudes
+│   └── newsolicitude.html        # Creación de solicitudes
+│
+└── user/                         # Vistas para usuarios normales
+    ├── profile.html              # Perfil de usuario
+    ├── report-problem.html       # Reporte de problemas
+    ├── view-requests.html        # Visualización de solicitudes
+    └── welcome.html              # Página de bienvenida
+```
+
+### Patrones de Diseño Frontend
+
+#### Sistema de Layouts
+La aplicación utiliza un sistema de layouts basado en Thymeleaf que permite:
+- **Reutilización de código**: Todos los templates extienden de un layout base (`fragments/shared/layout.html`)
+- **Composición de componentes**: Uso de fragmentos para construir interfaces complejas
+- **Consistencia visual**: Estructura unificada en todas las páginas
+
+#### Fragmentos Principales
+1. **Header**: Sistema modular compuesto por:
+   - `header.html`: Contenedor principal que orquesta los demás fragmentos
+   - `header-logo-nav.html`: Logo y navegación principal
+   - `header-user-lang.html`: Menú de usuario e idioma
+   - `header-mobile.html`: Menú para dispositivos móviles
+   - `header-breadcrumbs.html`: Sistema de navegación por migas de pan
+
+2. **Componentes de Solicitudes**:
+   - Formularios reutilizables para creación y edición
+   - Vistas de listado y detalle estandarizadas
+   - Componentes de métricas y estadísticas
+
+3. **Componentes de Usuario**:
+   - Formularios de perfil
+   - Tarjetas de estadísticas
+   - Elementos de bienvenida
+
+#### Estrategia de Estilos
+- **TailwindCSS**: Framework principal para estilos
+- **Componentes personalizados**: Clases específicas para mantener consistencia
+- **Diseño responsive**: Adaptación a diferentes tamaños de pantalla
+
+#### Optimizaciones Implementadas
+- **Reducción de duplicación**: Consolidación de fragmentos comunes
+- **Simplificación de layouts**: Estructura clara y mantenible
+- **Mejora de accesibilidad**: Implementación de elementos como skip links
+
+#### Áreas de Mejora
+- Consolidar fragmentos redundantes (especialmente en cabeceras)
+- Estandarizar la estructura de componentes entre diferentes roles
+- Mejorar la reutilización de código JavaScript
+
 ## Mapeo de Endpoints y Plantillas Thymeleaf
 
 ### Controladores y Endpoints

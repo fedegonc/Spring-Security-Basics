@@ -61,8 +61,8 @@ public class UserController extends BaseController {
             User user = userRepository.findByUsername(username);
             mv.addObject("user", user);
             
-            // Establecer el nombre de la página actual para los breadcrumbs en el header
-            mv.addObject("currentPage", "Inicio");
+            // Ya no es necesario configurar manualmente el breadcrumb
+            // El GlobalControllerAdvice lo hará automáticamente
             
             mv.addObject("solicitude", solicitudeService.getSolicitudesByUser(user));
             mv.addObject("username", user.getUsername());

@@ -91,11 +91,38 @@
         <div class="container mx-auto px-4 pt-4">
             <div th:replace="~{fragments/messages :: message-alerts}"></div>
             
-            <!-- Breadcrumbs -->
-            <div th:if="${breadcrumbItems != null}" th:replace="~{fragments/layout/breadcrumb :: breadcrumb(items=${breadcrumbItems})}"></div>
+            <!-- Breadcrumbs integrados en el layout principal pero en un nivel adecuado -->
+            <nav th:if="${breadcrumbs != null && !breadcrumbs.empty}" aria-label="breadcrumb" class="mb-4 bg-white shadow-sm rounded-md">
+                <ol class="flex flex-wrap items-center py-2 px-4 text-sm">
+                    <li th:each="item, iterStat : ${breadcrumbs}" 
+                        class="flex items-center"
+                        th:aria-current="${iterStat.last} ? 'page' : null">
+                        
+                        <!-- Ícono para el primer elemento (Inicio) -->
+                        <i th:if="${iterStat.first}" class="bi bi-house-door mr-1 text-green-600"></i>
+                        
+                        <!-- Link o texto según sea el último elemento o no -->
+                        <a th:if="${!iterStat.last && item.url != ''}" 
+                           th:href="${item.url}" 
+                           th:text="${item.text}"
+                           class="text-gray-600 hover:text-green-600 transition-colors duration-200">Enlace</a>
+                        
+                        <span th:if="${iterStat.last || item.url == ''}" 
+                              th:text="${item.text}"
+                              class="text-green-600 font-medium">Texto</span>
+                        
+                        <!-- Separador excepto para el último elemento -->
+                        <svg th:if="${!iterStat.last}" class="h-5 w-5 text-gray-400 mx-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </li>
+                </ol>
+            </nav>
         </div>
         
-        <section layout:fragment="content" class="container mx-auto px-4 py-4"></section>
+        <section layout:fragment="content" class="container mx-auto px-4 py-4">
+            <!-- Aquí va el contenido específico de cada página -->
+        </section>
     </main>
     
     <footer class="bg-white shadow-inner text-text py-6 mt-auto">

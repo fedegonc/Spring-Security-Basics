@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<body>
+<!-- 
+  Fragment: info-card
+  Parámetros:
+  - color (String): Color del borde y el ícono (blue, green, yellow, red)
+  - icon (String): Clase del ícono de Bootstrap Icons (ej: "bi-info-circle-fill")
+  - message (String): Mensaje a mostrar
+-->
+<div th:fragment="info-card(color, icon, message)" 
+     th:class="${'bg-' + color + '-50 border-l-4 border-' + color + '-500 p-4 mb-4 rounded shadow-sm'}">
+    <div class="flex items-start">
+        <i th:class="${'bi ' + icon + ' text-' + color + '-500 mr-2 mt-0.5'}"></i>
+        <span class="text-gray-700 text-sm" th:text="${message}">
+            Mensaje informativo
+        </span>
+    </div>
+</div>
+</body>
+</html>

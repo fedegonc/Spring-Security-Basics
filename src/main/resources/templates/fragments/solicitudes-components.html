@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<body>
+
+<!-- Fragmento: Métricas de solicitudes con diseño Tailwind -->
+<div th:fragment="metricas-solicitudes" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- Activas -->
+    <div class="bg-gray-50 rounded-lg shadow-sm p-4 text-center">
+        <i class="bi bi-hourglass-split text-blue-600 mb-3 text-3xl"></i>
+        <h3 class="text-sm font-medium text-gray-700" th:text="#{metric.active}">Solicitudes Activas</h3>
+        <p class="text-3xl font-bold my-2 text-gray-800" id="active-requests-count">0</p>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-blue-600 h-2 rounded-full" style="width: 0%;" id="active-progress"></div>
+        </div>
+    </div>
+
+    <!-- Totales -->
+    <div class="bg-gray-50 rounded-lg shadow-sm p-4 text-center">
+        <i class="bi bi-clipboard-check text-green-600 mb-3 text-3xl"></i>
+        <h3 class="text-sm font-medium text-gray-700" th:text="#{metric.total}">Total de Solicitudes</h3>
+        <p class="text-3xl font-bold my-2 text-gray-800" id="total-requests-count">0</p>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-green-600 h-2 rounded-full w-full"></div>
+        </div>
+    </div>
+
+    <!-- Completadas -->
+    <div class="bg-gray-50 rounded-lg shadow-sm p-4 text-center">
+        <i class="bi bi-check-circle text-green-500 mb-3 text-3xl"></i>
+        <h3 class="text-sm font-medium text-gray-700" th:text="#{metric.completed}">Solicitudes Completadas</h3>
+        <p class="text-3xl font-bold my-2 text-gray-800" id="completed-requests-count">0</p>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-green-500 h-2 rounded-full" style="width: 0%;" id="completed-progress"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Fragmento: Vista de solicitudes en formato tabla -->
+<div th:fragment="vista-solicitudes-tabla" class="overflow-x-auto">
+    <table class="min-w-full bg-white rounded-lg overflow-hidden">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" th:text="#{solicitudes.fecha}">Fecha</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" th:text="#{solicitudes.estado}">Estado</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" th:text="#{solicitudes.accion}">Acción</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            <tr th:each="solicitud : ${solicitudes}" class="hover:bg-gray-50">
+                <td class="px-4 py-3 whitespace-nowrap">
+                    <img th:if="${solicitud.imagen != null && !solicitud.imagen.isEmpty()}" 
+                         th:src="@{'/uploads/' + ${solicitud.imagen}}" 
+                         alt="Imagen de reciclaje" 
+                         class="h-10 w-10 object-cover rounded-md border border-gray-200"
+                         onerror="this.onerror=null; this.src='/img/thumbnail-default.jpg';">
+                    <img th:unless="${solicitud.imagen != null && !solicitud.imagen.isEmpty()}" 
+                         th:src="@{'/img/thumbnail-default.jpg'}" 
+                         alt="Imagen predeterminada" 
+                         class="h-10 w-10 object-cover rounded-md border border-gray-200">
+                </td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700" th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}">01/01/2023</td>
+                <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full" 
+                          th:classappend="${
+                            solicitud.estado == 'ACEPTADA' ? 'bg-green-100 text-green-800' : 
+                            solicitud.estado == 'RECHAZADA' ? 'bg-red-100 text-red-800' : 
+                            solicitud.estado == 'EN_ESPERA' ? 'bg-yellow-100 text-yellow-800' : 
+                            solicitud.estado == 'EN_REVISION' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                          }"
+                          th:text="${solicitud.estado}">Estado</span>
+                </td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm">
+                    <a th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" 
+                       class="inline-flex items-center px-3 py-1 border border-green-600 text-green-600 rounded-md hover:bg-green-50">
+                        <span th:text="#{revisar}">Revisar</span> <i class="bi bi-eye ml-1"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(solicitudes)}">
+                <td colspan="4" class="px-4 py-8 text-center text-gray-500">
+                    <i class="bi bi-inbox text-gray-400 text-3xl mb-2"></i>
+                    <p>No hay solicitudes para mostrar</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Fragmento: Formulario de solicitud -->
+<div th:fragment="formulario-solicitud(action, buttonText)" class="bg-white rounded-lg shadow-md p-6">
+    <form th:action="${action}" method="post" enctype="multipart/form-data" class="space-y-4">
+        <!-- Categoría -->
+        <div>
+            <label for="categoria" class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+            <select id="categoria" name="categoria" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                <option value="">Selecciona una categoría</option>
+                <option value="PLASTICO">Plástico</option>
+                <option value="PAPEL">Papel</option>
+                <option value="VIDRIO">Vidrio</option>
+                <option value="METAL">Metal</option>
+                <option value="ORGANICO">Orgánico</option>
+                <option value="OTRO">Otro</option>
+            </select>
+        </div>
+        
+        <!-- Descripción -->
+        <div>
+            <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+            <textarea id="descripcion" name="descripcion" rows="4" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500" placeholder="Describe los materiales a reciclar..."></textarea>
+        </div>
+        
+        <!-- Imagen -->
+        <div>
+            <label for="file" class="block text-sm font-medium text-gray-700 mb-1">Imagen (opcional)</label>
+            <input type="file" id="file" name="file" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+            <p class="mt-1 text-xs text-gray-500">Formatos permitidos: JPG, PNG. Máximo 5MB.</p>
+        </div>
+        
+        <!-- Botones de acción -->
+        <div class="flex justify-end space-x-3 pt-4">
+            <a th:href="@{/user/view-requests}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                Cancelar
+            </a>
+            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                <i class="bi bi-check-circle mr-1"></i> <span th:text="${buttonText}">Enviar</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Fragmento: Diálogo de confirmación -->
+<div th:fragment="dialogo-confirmacion(id, title, message, confirmButtonText, cancelButtonText, confirmAction)" 
+     th:id="${id}" 
+     class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+        <div class="text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 mb-4">
+                <i class="bi bi-exclamation-triangle-fill text-yellow-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2" th:text="${title}">
+                ¿Está seguro?
+            </h3>
+            <p class="text-sm text-gray-500" th:text="${message}">
+                Esta acción no se puede deshacer.
+            </p>
+        </div>
+        <div class="mt-5 sm:mt-6 flex flex-col sm:flex-row-reverse gap-3">
+            <a th:href="${confirmAction}" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm">
+                <i class="bi bi-check-circle mr-2"></i>
+                <span th:text="${confirmButtonText}">Confirmar</span>
+            </a>
+            <button type="button" th:onclick="'closeDialog(\'' + ${id} + '\')'" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                <i class="bi bi-x-circle mr-2"></i>
+                <span th:text="${cancelButtonText}">Cancelar</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Fragmento: Tarjetas de solicitudes (reutilizando el existente) -->
+<div th:fragment="solicitudes-tarjetas(titulo, showHeader, showActions, solicitudes, path)">
+    <div class="mb-6">
+        <!-- Cabecera configurable -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-3" th:if="${showHeader == true}">
+            <div class="flex items-center">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800" th:text="${titulo ?: 'Solicitudes Recientes'}">Solicitudes Recientes</h2>
+            </div>
+            <a th:href="${path ?: '/user/view-requests'}" 
+               class="text-green-700 hover:text-green-800"
+               aria-label="Ver todas las solicitudes">
+                Ver todas <i class="bi bi-arrow-right ml-1" aria-hidden="true"></i>
+            </a>
+        </div>
+        
+        <!-- Contenedor de tarjetas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="region" aria-label="Lista de solicitudes">
+            <!-- Tarjetas de solicitudes - utiliza la variable pasada como parámetro -->
+            <div th:each="solicitud : ${solicitudes}" 
+                 class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 hover:border-green-300"
+                 th:attr="aria-label=${'Solicitud número ' + solicitud.id + ', estado: ' + solicitud.estado}">
+                <div class="border-l-4 h-2" th:classappend="${
+                    solicitud.estado == 'EN_ESPERA' ? 'border-yellow-500' : 
+                    solicitud.estado == 'ACEPTADA' ? 'border-green-500' : 
+                    solicitud.estado == 'RECHAZADA' ? 'border-red-500' : 
+                    solicitud.estado == 'EN_REVISION' ? 'border-blue-500' : 'border-gray-500'
+                }"></div>
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800" th:text="${'Solicitud #' + solicitud.id}">Solicitud #12345</h3>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full" 
+                              th:classappend="${
+                                solicitud.estado == 'ACEPTADA' ? 'bg-green-100 text-green-800' : 
+                                solicitud.estado == 'RECHAZADA' ? 'bg-red-100 text-red-800' : 
+                                solicitud.estado == 'EN_ESPERA' ? 'bg-yellow-100 text-yellow-800' : 
+                                solicitud.estado == 'EN_REVISION' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                              }"
+                              th:text="${solicitud.estado}">Estado</span>
+                    </div>
+                    
+                    <!-- Miniatura de la imagen de reciclaje -->
+                    <div class="mb-3 flex justify-center">
+                        <img th:if="${solicitud.imagen != null && !solicitud.imagen.isEmpty()}" 
+                             th:src="@{'/uploads/' + ${solicitud.imagen}}" 
+                             alt="Imagen de reciclaje" 
+                             class="h-24 object-cover rounded-md border border-gray-200"
+                             onerror="this.onerror=null; this.src='/img/thumbnail-default.jpg';">
+                        <img th:unless="${solicitud.imagen != null && !solicitud.imagen.isEmpty()}" 
+                             th:src="@{'/img/thumbnail-default.jpg'}" 
+                             alt="Imagen predeterminada" 
+                             class="h-24 object-cover rounded-md border border-gray-200">
+                    </div>
+                    
+                    <div class="flex items-center mb-3">
+                        <i class="bi bi-calendar3 text-gray-500 mr-2" aria-hidden="true"></i>
+                        <p class="text-base text-gray-600" th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}" th:attr="aria-label=${'Fecha: ' + #temporals.format(solicitud.fecha, 'dd/MM/yyyy')}">Fecha: 15/10/2023</p>
+                    </div>
+                    <div class="flex items-center mb-4">
+                        <i class="bi bi-tag text-gray-500 mr-2" aria-hidden="true"></i>
+                        <span class="text-base text-gray-600" th:text="${'Categoría: ' + solicitud.categoria}" th:attr="aria-label=${'Categoría: ' + solicitud.categoria}">Categoría: Plástico</span>
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <!-- Acciones personalizables según el contexto -->
+                        <a th:if="${showActions == true}" 
+                           th:href="@{${path ?: '/user'} + '/editsolicitude/' + ${solicitud.id}}" 
+                           class="inline-flex items-center px-3 py-1 border border-green-600 text-green-600 rounded-md hover:bg-green-50"
+                           th:attr="aria-label=${'Ver detalles de la solicitud número ' + solicitud.id}">
+                            Detalles <i class="bi bi-eye ml-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tarjeta de ejemplo si no hay solicitudes -->
+            <div th:if="${#lists.isEmpty(solicitudes)}" 
+                 class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center text-center h-56"
+                 aria-label="No hay solicitudes">
+                <i class="bi bi-inbox text-gray-400 text-5xl mb-3" aria-hidden="true"></i>
+                <p class="text-gray-600 text-lg mb-2">No hay solicitudes para mostrar</p>
+                <a th:if="${showActions == true}" 
+                   th:href="@{${path ?: '/user'} + '/newsolicitude'}" 
+                   class="inline-flex items-center px-3 py-1 border border-green-600 text-green-600 rounded-md hover:bg-green-50 mt-4"
+                   aria-label="Crear una nueva solicitud de reciclaje">
+                    Crear solicitud <i class="bi bi-plus-circle ml-1" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Botón de nueva solicitud -->
+        <div class="mt-8 text-center" th:if="${showActions == true}">
+            <a th:href="@{${path ?: '/user'} + '/newsolicitude'}" 
+               class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-md shadow-sm transition inline-flex items-center"
+               aria-label="Crear una nueva solicitud de reciclaje">
+                <i class="bi bi-plus-circle mr-2" aria-hidden="true"></i> Nueva Solicitud
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
