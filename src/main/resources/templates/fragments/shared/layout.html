@@ -3,9 +3,13 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title layout:title-pattern="$CONTENT_TITLE - Mi App">Mi App</title>
+    <title layout:title-pattern="$CONTENT_TITLE - RSU Reciclaje">RSU Reciclaje</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Preconexiones para mejora de rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -56,6 +60,20 @@
         .tw-btn-primary:hover {
             background-color: #276749;
         }
+        /* Estilo para el enlace de saltar al contenido - accesibilidad */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #2f855a;
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
     </style>
     
     <!-- Espacio para estilos específicos de cada página -->
@@ -63,10 +81,21 @@
 </head>
 
 <body class="flex flex-col min-h-screen bg-white">
+    <!-- Enlace para saltar al contenido principal - accesibilidad -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
     <header th:replace="~{fragments/header :: header}" class="bg-white shadow-sm"></header>
     
-    <main class="flex-grow bg-subtle">
-        <section layout:fragment="content" class="container mx-auto px-4 py-8"></section>
+    <main id="main-content" class="flex-grow bg-subtle">
+        <!-- Alertas y mensajes -->
+        <div class="container mx-auto px-4 pt-4">
+            <div th:replace="~{fragments/messages :: message-alerts}"></div>
+            
+            <!-- Breadcrumbs -->
+            <div th:if="${breadcrumbItems != null}" th:replace="~{fragments/layout/breadcrumb :: breadcrumb(items=${breadcrumbItems})}"></div>
+        </div>
+        
+        <section layout:fragment="content" class="container mx-auto px-4 py-4"></section>
     </main>
     
     <footer class="bg-white shadow-inner text-text py-6 mt-auto">
@@ -96,5 +125,11 @@
             </div>
         </div>
     </footer>
+    
+    <!-- Scripts principales -->
+    <script th:src="@{/js/header.js}" defer></script>
+    
+    <!-- Espacio para scripts adicionales específicos de cada página -->
+    <th:block layout:fragment="scripts"></th:block>
 </body>
 </html>
