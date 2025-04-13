@@ -1,95 +1,103 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{fragments/layout/head :: head}">
-    <title>Gestión de Usuarios</title>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout/head :: head('Gestión de Usuarios', null)}">
+    <!-- El contenido del <head> se carga desde el fragmento del layout -->
 </head>
+<body>
+<!-- Invoca el layout maestro, pasando:
+     - El título de la página: 'Gestión de Usuarios'
+     - El contenido específico que se define en el fragmento 'content' (definido en este mismo archivo)
+     - Sin scripts adicionales (null) -->
+<div th:replace="~{fragments/layout :: layout('Gestión de Usuarios', 'this::content', null)}"></div>
 
-<body class="app-background d-flex flex-column min-vh-100">
+<!-- Fragmento con el contenido específico para el template admin/users -->
+<div th:fragment="content">
+    <!-- Aquí pegamos el contenido actual de la página de "Usuarios" -->
+    <main id="main-content" class="container mt-4 mb-4 flex-grow-1">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Inicio</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+            </ol>
+        </nav>
 
-<div th:replace="~{fragments/header :: header}"></div>
+        <div class="row g-4">
+            <!-- Panel lateral (33%) -->
+            <div class="col-12 col-lg-4">
+                <div class="glass-card h-100 p-4">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Gestión de Usuarios</h2>
 
-<div th:replace="~{fragments/messages :: message-alerts}"></div>
+                    <!-- Información -->
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded shadow-sm mb-4">
+                        <h4 class="font-bold text-blue-700 mb-2">Información</h4>
+                        <p class="text-gray-700 mb-2">
+                            En esta sección puedes administrar los usuarios registrados, editar sus perfiles y asignar roles.
+                        </p>
+                        <p class="text-gray-700 text-sm">
+                            El control de usuarios es fundamental para mantener la seguridad del sistema.
+                        </p>
+                    </div>
 
-<main id="main-content" class="container mt-4 mb-4 flex-grow-1">
-    <!-- Breadcrumbs -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Inicio</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
-        </ol>
-    </nav>
-
-    <div class="row g-4">
-        <!-- Panel lateral (33%) -->
-        <div class="col-12 col-lg-4">
-            <div class="glass-card h-100 p-4">
-                <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Gestión de Usuarios</h2>
-                
-                <!-- Información -->
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded shadow-sm mb-4">
-                    <h4 class="font-bold text-blue-700 mb-2">Información</h4>
-                    <p class="text-gray-700 mb-2">En esta sección puedes administrar los usuarios registrados, editar sus perfiles y asignar roles.</p>
-                    <p class="text-gray-700 text-sm">El control de usuarios es fundamental para mantener la seguridad del sistema.</p>
-                </div>
-                
-                <!-- Panel de estadísticas -->
-                <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
-                    <h5 class="text-gray-800 font-semibold mb-3">Resumen de Usuarios</h5>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div class="text-center">
-                            <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 mb-2">
-                                <i class="bi bi-shield-lock text-blue-600"></i>
+                    <!-- Panel de estadísticas -->
+                    <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                        <h5 class="text-gray-800 font-semibold mb-3">Resumen de Usuarios</h5>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="text-center">
+                                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 mb-2">
+                                    <i class="bi bi-shield-lock text-blue-600"></i>
+                                </div>
+                                <p class="text-xs text-gray-600">Administradores</p>
+                                <p class="font-bold text-lg text-gray-800">1</p>
                             </div>
-                            <p class="text-xs text-gray-600">Administradores</p>
-                            <p class="font-bold text-lg text-gray-800">1</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-green-100 mb-2">
-                                <i class="bi bi-people text-green-600"></i>
+                            <div class="text-center">
+                                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-green-100 mb-2">
+                                    <i class="bi bi-people text-green-600"></i>
+                                </div>
+                                <p class="text-xs text-gray-600">Total</p>
+                                <p class="font-bold text-lg text-gray-800" th:text="${users.size()}">5</p>
                             </div>
-                            <p class="text-xs text-gray-600">Total</p>
-                            <p class="font-bold text-lg text-gray-800" th:text="${users.size()}">5</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-cyan-100 mb-2">
-                                <i class="bi bi-person-check text-cyan-600"></i>
+                            <div class="text-center">
+                                <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-cyan-100 mb-2">
+                                    <i class="bi bi-person-check text-cyan-600"></i>
+                                </div>
+                                <p class="text-xs text-gray-600">Activos</p>
+                                <p class="font-bold text-lg text-gray-800">98</p>
                             </div>
-                            <p class="text-xs text-gray-600">Activos</p>
-                            <p class="font-bold text-lg text-gray-800">98</p>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Búsqueda -->
-                <div class="bg-white rounded-lg shadow-sm p-4">
-                    <h5 class="text-gray-800 font-semibold mb-3">Búsqueda</h5>
-                    <div class="mb-3">
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <i class="bi bi-search text-gray-400"></i>
+
+                    <!-- Búsqueda -->
+                    <div class="bg-white rounded-lg shadow-sm p-4">
+                        <h5 class="text-gray-800 font-semibold mb-3">Búsqueda</h5>
+                        <div class="mb-3">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="bi bi-search text-gray-400"></i>
+                                </div>
+                                <input type="text"
+                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                                       placeholder="Buscar usuario...">
                             </div>
-                            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Buscar usuario...">
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Contenido principal (66%) -->
-        <div class="col-12 col-lg-8">
-            <div class="glass-card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="text-xl font-bold text-gray-800">Lista de Usuarios</h3>
-                    <a th:href="@{/admin/newuser}" class="btn btn-primary">
-                        <i class="bi bi-person-plus me-2"></i> Crear Usuario
-                    </a>
-                </div>
-                
-                <!-- Tabla de usuarios -->
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
+
+            <!-- Contenido principal (66%) -->
+            <div class="col-12 col-lg-8">
+                <div class="glass-card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Lista de Usuarios</h3>
+                        <a th:href="@{/admin/newuser}" class="btn btn-primary">
+                            <i class="bi bi-person-plus me-2"></i> Crear Usuario
+                        </a>
+                    </div>
+
+                    <!-- Tabla de usuarios -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Usuario</th>
@@ -98,16 +106,16 @@
                                 <th scope="col">Roles</th>
                                 <th scope="col" class="text-center">Acciones</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="user: ${users}">
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${users}">
                                 <td th:text="${user.id}" class="align-middle">1</td>
                                 <td class="align-middle">
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0 me-2">
-                                            <span class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 32px; height: 32px;">
-                                                <i class="bi bi-person"></i>
-                                            </span>
+                            <span class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 32px; height: 32px;">
+                              <i class="bi bi-person"></i>
+                            </span>
                                         </div>
                                         <span th:text="${user.username}">admin</span>
                                     </div>
@@ -117,83 +125,89 @@
                                 <td class="align-middle">
                                     <div class="position-relative">
                                         <span th:text="${#strings.length(user.roles.toString()) > 20} ? ${#strings.substring(user.roles.toString(), 0, 20) + '...'} : ${user.roles}" class="roles-text"></span>
-                                        <button th:if="${#strings.length(user.roles.toString()) > 20}" 
+                                        <button th:if="${#strings.length(user.roles.toString()) > 20}"
                                                 class="btn btn-sm btn-outline-secondary ms-2 btn-ver-mas"
-                                                onclick="expandirTexto(this)" 
+                                                onclick="expandirTexto(this)"
                                                 th:data-texto-completo="${user.roles}">
                                             Ver más
                                         </button>
                                     </div>
                                 </td>
                                 <td class="align-middle text-center">
-                                    <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                                    <a th:href="@{/admin/users/edit/{id}(id=${user.id})}"
+                                       class="btn btn-sm btn-outline-primary me-1" title="Editar">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a th:href="@{/admin/users/delete/{id}(id=${user.id})}" 
+                                    <a th:href="@{/admin/users/delete/{id}(id=${user.id})}"
                                        onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');"
                                        class="btn btn-sm btn-outline-danger" title="Eliminar">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Paginación -->
+                    <nav aria-label="Paginación de usuarios" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                            </li>
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-                
-                <!-- Paginación -->
-                <nav aria-label="Paginación de usuarios" class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-                        </li>
-                        <li class="page-item active" aria-current="page">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Siguiente</a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
+    <!-- Scripts específicos (si hubiese) se pueden definir en un fragmento similar -->
+    <th:block th:fragment="scripts">
+        <!-- Aquí puedes agregar scripts adicionales para esta página -->
+        <script>
+            function expandirTexto(boton) {
+              const textoCompleto = boton.getAttribute('data-texto-completo');
+              const contenedor = boton.parentElement;
+              const spanTexto = contenedor.querySelector('span');
 
-<script>
-    function expandirTexto(boton) {
-        const textoCompleto = boton.getAttribute('data-texto-completo');
-        const contenedor = boton.parentElement;
-        const spanTexto = contenedor.querySelector('span');
-        
-        if (boton.textContent.trim() === 'Ver más') {
-            spanTexto.textContent = textoCompleto;
-            boton.textContent = 'Ver menos';
-            contenedor.classList.add('expandido');
-        } else {
-            spanTexto.textContent = textoCompleto.substring(0, 20) + '...';
-            boton.textContent = 'Ver más';
-            contenedor.classList.remove('expandido');
-        }
-    }
-</script>
-<style>
-    .expandido {
-        position: relative;
-        z-index: 100;
-        background-color: #f8f9fa;
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-</style>
+              if (boton.textContent.trim() === 'Ver más') {
+                spanTexto.textContent = textoCompleto;
+                boton.textContent = 'Ver menos';
+                contenedor.classList.add('expandido');
+              } else {
+                spanTexto.textContent = textoCompleto.substring(0, 20) + '...';
+                boton.textContent = 'Ver más';
+                contenedor.classList.remove('expandido');
+              }
+            }
+        </script>
+        <style>
+            .expandido {
+              position: relative;
+              z-index: 100;
+              background-color: #f8f9fa;
+              padding: 10px;
+              border-radius: 5px;
+              box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+        </style>
+    </th:block>
 
+    <!-- Nota:
+         No es necesario incluir el footer aquí si el layout ya lo incluye -->
+</div>
 </body>
 </html>

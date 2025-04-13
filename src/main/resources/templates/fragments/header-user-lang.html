@@ -1,0 +1,82 @@
+<!-- fragments/header-user-lang.html -->
+<div th:fragment="fragment" class="hidden md:flex items-center space-x-3" xmlns:th="http://www.w3.org/1999/xhtml">
+    <!-- Botón Entrar para usuarios no autenticados -->
+    <a sec:authorize="isAnonymous()" th:href="@{/login}"
+       class="flex items-center text-white font-medium px-5 py-2 text-sm rounded bg-green-600 hover:bg-green-700 transition duration-150 ease-in-out shadow-md hover:shadow-lg font-montserrat">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                  d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                  clip-rule="evenodd"/>
+        </svg>
+        <span th:text="#{button.login}">Entrar</span>
+    </a>
+
+    <!-- Menú de Idioma -->
+    <div class="relative">
+        <button id="languageDropdown" type="button"
+                class="flex items-center text-gray-300 hover:text-white px-2 py-1 text-sm rounded hover:bg-gray-800 font-montserrat">
+            <span>Idioma</span>
+        </button>
+        <div id="language-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-gray-900 rounded-md shadow-lg font-montserrat">
+            <div class="py-1">
+                <a href="?language=es" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <img src="/img/uruguay.png" class="h-4 w-4 mr-2" alt="Español">
+                    <span>Español</span>
+                </a>
+                <a href="?language=pt" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <img src="/img/brasil.png" class="h-4 w-4 mr-2" alt="Português">
+                    <span>Português</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menú de Usuario -->
+    <div class="relative z-50" sec:authorize="isAuthenticated()">
+        <button id="userDropdownButton" type="button"
+                class="flex items-center text-gray-300 hover:text-white px-2 py-1 text-sm rounded hover:bg-gray-800 font-montserrat">
+            <img src="/img/default-profile.jpg" class="h-8 w-8 rounded-full mr-2" alt="Avatar">
+            <span sec:authentication="name">Usuario</span>
+        </button>
+        <div id="user-dropdown-menu" class="hidden absolute right-0 top-full mt-1 w-48 bg-gray-900 rounded-md shadow-lg font-montserrat z-50">
+            <div class="py-1">
+                <!-- Enlaces de Perfil según el rol -->
+                <th:block sec:authorize="hasRole('ROLE_USER')">
+                    <a th:href="@{/user/profile}"
+                       class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                        <span th:text="#{breadcrumb.profile}">Perfil</span>
+                    </a>
+                </th:block>
+                <th:block sec:authorize="hasRole('ROLE_ORGANIZATION')">
+                    <a th:href="@{/org/profile}"
+                       class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                        <span th:text="#{breadcrumb.profile}">Perfil</span>
+                    </a>
+                </th:block>
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/admin/profile}"
+                       class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                        <span th:text="#{breadcrumb.profile}">Perfil</span>
+                    </a>
+                </th:block>
+                <div class="border-t border-gray-700 my-1"></div>
+                <!-- Enlace para cerrar sesión -->
+                <a th:href="@{/logout}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span th:text="#{logout}">Cerrar sesión</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

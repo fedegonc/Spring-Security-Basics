@@ -13,11 +13,20 @@
     <div th:replace="~{fragments/header-logo-nav :: fragment}"></div>
     <!-- Fragmento 2: Menú de Usuario e Idioma (Desktop) -->
     <div th:replace="~{fragments/header-user-lang :: fragment}"></div>
+    
+    <!-- Botón de menú móvil -->
+    <button id="mobileMenuButton" class="md:hidden flex items-center text-white">
+      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
   </div>
   <!-- Fragmento 4: Breadcrumbs -->
   <div th:replace="~{fragments/header-breadcrumbs :: fragment}"></div>
   <!-- Fragmento 3: Menú Móvil -->
-  <div th:replace="~{fragments/header-mobile :: fragment}"></div>
+  <div id="mobileMenu" class="hidden md:hidden">
+    <div th:replace="~{fragments/header-mobile :: fragment}"></div>
+  </div>
   <script th:src="@{/js/header.js}"></script>
 </header>
 <!-- Resto del contenido -->

@@ -30,11 +30,11 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Acciones rápidas -->
             <div class="bg-white rounded-lg shadow-md p-4 mb-4">
                 <h2 class="text-lg font-bold text-gray-800 mb-3">Acciones Rápidas</h2>
-                
+
                 <div class="flex flex-col md:flex-row gap-3">
                     <!-- Estadísticas -->
                     <div class="w-full md:w-1/3">
@@ -47,7 +47,7 @@
                             </a>
                         </div>
                     </div>
-                    
+
                     <!-- Columna 66% con dos tarjetas apiladas -->
                     <div class="w-full md:w-2/3">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 h-full">
@@ -59,7 +59,7 @@
                                     Ver recursos <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
-                            
+
                             <div class="bg-gray-50 rounded-lg p-3 text-center">
                                 <i class="bi bi-geo-alt text-green-600 text-xl"></i>
                                 <h3 class="text-base font-medium mt-1 mb-1">Puntos de Reciclaje</h3>
@@ -72,11 +72,11 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Solicitudes -->
             <div class="bg-white rounded-lg shadow-md p-4 mb-4">
                 <h2 class="text-lg font-bold text-gray-800 mb-3" th:text="#{Solicitudes}">Solicitudes</h2>
-                
+
                 <!-- Si hay solicitudes -->
                 <div th:if="${solicitude != null && !solicitude.empty}" class="overflow-hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Si no hay solicitudes -->
                 <div th:if="${solicitude == null || solicitude.empty}" class="bg-gray-50 rounded-lg p-4 text-center">
                     <div class="bg-gray-100 rounded-full p-3 w-12 h-12 mx-auto mb-3 flex items-center justify-center">

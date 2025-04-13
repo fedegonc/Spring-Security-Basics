@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div th:fragment="fragment" class="flex items-center">
+    <!-- Logo y nombre de marca -->
+    <a class="flex items-center text-green-400 no-underline font-montserrat mr-6" href="/">
+        <img src="/img/logov4.png" alt="Logo" class="h-7 w-7">
+        <span class="ml-2 text-base font-medium text-white" th:text="#{index.title}">Reciclaje Sólido</span>
+    </a>
+
+    <!-- Navegación Desktop - Enlaces específicos del rol -->
+    <nav class="hidden md:flex items-center space-x-3 font-montserrat">
+        <th:block sec:authorize="hasRole('ROLE_USER')">
+            <a class="text-gray-300 hover:text-white px-2 py-1 text-sm rounded hover:bg-gray-800"
+               th:href="@{/user/welcome}">Inicio</a>
+            <a class="text-gray-300 hover:text-white px-2 py-1 text-sm rounded hover:bg-gray-800"
+               th:href="@{/user/view-requests}"
+               th:text="#{solicitudes}">Solicitudes</a>
+        </th:block>
+        <th:block sec:authorize="hasRole('ROLE_ORGANIZATION')">
+            <a class="text-gray-300 hover:text-white px-2 py-1 text-sm rounded hover:bg-gray-800"
+               th:href="@{/org/welcome}">Inicio</a>
+            <a class="text-gray-300 hover:text-white px-2 py-1 text-sm rounded hover:bg-gray-800"
+               th:href="@{/org/solicitudes}"
+               th:text="#{solicitudes}">Solicitudes</a>
+        </th:block>
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a class="text-gray-300 hover:text-white px-2 py-1 text-sm rounded hover:bg-gray-800"
+               th:href="@{/admin/dashboard}">Inicio</a>
+            <a class="text-gray-300 hover:text-white px-2 py-1 text-sm rounded hover:bg-gray-800"
+               th:href="@{/admin/users}">Usuarios</a>
+            <a class="text-gray-300 hover:text-white px-2 py-1 text-sm rounded hover:bg-gray-800"
+               th:href="@{/admin/solicitudes}"
+               th:text="#{solicitudes}">Solicitudes</a>
+        </th:block>
+    </nav>
+</div>
+</body>
+</html>
