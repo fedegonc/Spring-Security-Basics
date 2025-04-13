@@ -1,38 +1,41 @@
-// Script para los menús desplegables - Versión simplificada
-window.addEventListener('DOMContentLoaded', function() {
-  console.log('Menu dropdown script loaded');
-  
+// js/header.js
+document.addEventListener('DOMContentLoaded', function() {
   // Menú de idioma
-  var languageButton = document.getElementById('languageDropdown');
+  var languageBtn = document.getElementById('languageDropdown');
   var languageMenu = document.getElementById('language-dropdown-menu');
-  
-  if (languageButton && languageMenu) {
-    languageButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      event.stopPropagation();
+  if (languageBtn && languageMenu) {
+    languageBtn.onclick = function(e) {
+      e.preventDefault();
       languageMenu.classList.toggle('hidden');
-    });
+    };
   }
-  
+
   // Menú de usuario
-  var userButton = document.getElementById('userDropdownButton');
+  var userBtn = document.getElementById('userDropdownButton');
   var userMenu = document.getElementById('user-dropdown-menu');
-  
-  if (userButton && userMenu) {
-    userButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      event.stopPropagation();
+  if (userBtn && userMenu) {
+    userBtn.onclick = function(e) {
+      e.preventDefault();
       userMenu.classList.toggle('hidden');
-    });
+    };
   }
-  
-  // Cerrar al hacer clic fuera
-  document.addEventListener('click', function(event) {
-    if (languageMenu && !languageButton.contains(event.target) && !languageMenu.contains(event.target)) {
+
+  // Cerrar dropdowns al hacer clic fuera
+  document.addEventListener('click', function(e) {
+    if (languageBtn && languageMenu && !languageBtn.contains(e.target) && !languageMenu.contains(e.target)) {
       languageMenu.classList.add('hidden');
     }
-    if (userMenu && !userButton.contains(event.target) && !userMenu.contains(event.target)) {
+    if (userBtn && userMenu && !userBtn.contains(e.target) && !userMenu.contains(e.target)) {
       userMenu.classList.add('hidden');
     }
   });
+
+  // Menú móvil
+  var mobileMenuButton = document.getElementById('mobileMenuButton');
+  var mobileMenu = document.getElementById('mobileMenu');
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.onclick = function() {
+      mobileMenu.classList.toggle('hidden');
+    };
+  }
 });

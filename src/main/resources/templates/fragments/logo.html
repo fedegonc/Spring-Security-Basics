@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <body>
-<div th:fragment="logo">
-    <div class="d-flex align-items-center">
-        <img src="/img/logov4.png" alt="logo" class="navbar-logo" style="max-width: 32px; max-height: 32px; object-fit: contain;">
-        <a class="navbar-brand ms-2" th:href="@{/index}" th:text="#{index.title}"></a>
+<div th:fragment="fragment" class="bg-white shadow-sm" th:if="${currentPage != null}">
+    <div class="max-w-7xl mx-auto px-4 py-2">
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                <li>
+                    <a th:href="@{/}" class="hover:text-green-600">
+                        <i class="bi bi-house-door"></i>
+                        <span th:text="#{breadcrumb.home}">Inicio</span>
+                    </a>
+                </li>
+                <!-- Elemento dinámico para la página actual -->
+                <li th:if="${currentPage != null}" class="flex items-center">
+                    <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="ml-1 text-green-600 font-medium" th:text="${currentPage}">Página Actual</span>
+                </li>
+            </ol>
+        </nav>
     </div>
 </div>
 </body>

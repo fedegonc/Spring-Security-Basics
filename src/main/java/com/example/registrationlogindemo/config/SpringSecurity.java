@@ -46,7 +46,7 @@ public class SpringSecurity {
                                         "/error","/gracias","/article/**","/img/**","/construction"
                                         ,"/sostenibilidad","/scripts/**","/ambiental","/noticias"
                                         ,"/materiales","/legislacion","/alianzas","/base","/error",
-                                        "/resources/**", "/templates/fragments/**"
+                                        "/resources/**", "/templates/fragments/**","/js/**"
                                                 ).permitAll()
 
 
