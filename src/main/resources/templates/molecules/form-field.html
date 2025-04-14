@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Field Components</title>
+</head>
+<body>
+
+<!-- Campo de texto con etiqueta -->
+<div th:fragment="text-field(id, label, value, placeholder, required, icon)" class="mb-3">
+    <div th:replace="~{atoms/label :: icon-label(for=${id}, icon=${icon}, text=${label}, required=${required})}"></div>
+    <div class="input-group">
+        <span class="input-group-text" th:if="${icon}">
+            <i th:class="${'bi bi-' + icon}"></i>
+        </span>
+        <input type="text" 
+               th:id="${id}" 
+               th:name="${id}"
+               th:value="${value}"
+               th:placeholder="${placeholder}" 
+               th:required="${required}"
+               class="form-control" />
+    </div>
+</div>
+
+<!-- Campo select con etiqueta -->
+<div th:fragment="select-field(id, label, options, selected, required, icon)" class="mb-3">
+    <div th:replace="~{atoms/label :: icon-label(for=${id}, icon=${icon}, text=${label}, required=${required})}"></div>
+    <div class="input-group">
+        <span class="input-group-text" th:if="${icon}">
+            <i th:class="${'bi bi-' + icon}"></i>
+        </span>
+        <select th:id="${id}" 
+                th:name="${id}" 
+                class="form-select" 
+                th:required="${required}">
+            <option value="" disabled selected th:if="${selected == null}">Seleccionar...</option>
+            <option th:each="option : ${options}" 
+                    th:value="${option.value}" 
+                    th:text="${option.text}"
+                    th:selected="${option.value == selected}"></option>
+        </select>
+    </div>
+</div>
+
+<!-- Campo de archivo con previsualización -->
+<div th:fragment="file-field(id, label, accept, required, icon, previewId)" class="mb-3">
+    <div th:replace="~{atoms/label :: icon-label(for=${id}, icon=${icon}, text=${label}, required=${required})}"></div>
+    <div class="input-group">
+        <span class="input-group-text" th:if="${icon}">
+            <i th:class="${'bi bi-' + icon}"></i>
+        </span>
+        <input type="file" 
+               th:id="${id}" 
+               th:name="${id}" 
+               class="form-control" 
+               th:accept="${accept}"
+               th:required="${required}"
+               th:onchange="${'previewImage(this, \'' + previewId + '\')'}"/>
+    </div>
+    <div class="mt-2" th:if="${previewId}">
+        <img th:id="${previewId}" src="#" alt="Vista previa" style="max-height: 150px; display: none;" class="img-thumbnail"/>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Progress Component</title>
+</head>
+<body>
+
+<!-- Barra de progreso simple -->
+<div th:fragment="progress-bar(value, max, color)" 
+     class="progress" 
+     role="progressbar" 
+     th:aria-valuenow="${value}" 
+     aria-valuemin="0" 
+     th:aria-valuemax="${max}"
+     th:aria-label="${'Progreso: ' + value + ' de ' + max}">
+    <div th:class="${'progress-bar ' + (color ?: 'bg-primary')}" 
+         th:style="${'width: ' + (value * 100 / max) + '%'}">
+        <span th:if="${value > 0}" th:text="${value + '/' + max}"></span>
+    </div>
+</div>
+
+<!-- Barra de progreso con etiqueta -->
+<div th:fragment="labeled-progress(value, max, label, color)" class="mb-3">
+    <div class="d-flex justify-content-between mb-1">
+        <span th:text="${label}">Progreso</span>
+        <span th:text="${value + '/' + max}">0/100</span>
+    </div>
+    <div class="progress" 
+         role="progressbar" 
+         th:aria-valuenow="${value}" 
+         aria-valuemin="0" 
+         th:aria-valuemax="${max}">
+        <div th:class="${'progress-bar ' + (color ?: 'bg-primary')}" 
+             th:style="${'width: ' + (value * 100 / max) + '%'}"></div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -152,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
     
     @Override
     public ModelAndView handleError(HttpServletRequest request) {
-        ModelAndView mv = new ModelAndView("guest/error");
+        ModelAndView mv = new ModelAndView("pages/error");
 
         // Capturar código de estado y mensaje de error
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");

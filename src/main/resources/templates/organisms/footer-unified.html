@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Footer Unificado</title>
+</head>
+<body>
+
+<!-- Footer unificado para toda la aplicación -->
+<footer th:fragment="main-footer" class="py-3 mt-auto">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <small class="text-muted">
+                    Sistema de Comunicación para Reciclaje 2025 &copy; Frontera de la Paz Sustentable
+                </small>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <div class="d-flex justify-content-center justify-content-md-end gap-3">
+                    <a href="#" class="text-muted small">
+                        <span th:text="#{footer.terms}">Términos</span>
+                    </a>
+                    <a href="#" class="text-muted small">
+                        <span th:text="#{footer.privacy}">Privacidad</span>
+                    </a>
+                    <a th:href="@{/report-problem}" class="text-muted small">
+                        <span th:text="#{footer.report}">Reportar problema</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

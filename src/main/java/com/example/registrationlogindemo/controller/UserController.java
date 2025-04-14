@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,26 +52,34 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/welcome")
-    public ModelAndView welcomePage() {
-        ModelAndView mv = new ModelAndView("pages/welcome");
-        
+    public String welcomePage(Model model) {
+        // Proporcionar datos básicos para mantener la consistencia con el template
         try {
-            // Obtener el usuario actual
+            // Obtener el usuario actual de forma simplificada
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            User user = userRepository.findByUsername(username);
-            mv.addObject("user", user);
+            if (authentication != null) {
+                String username = authentication.getName();
+                User user = userRepository.findByUsername(username);
+                if (user != null) {
+                    model.addAttribute("user", user);
+                }
+            }
             
-            // Ya no es necesario configurar manualmente el breadcrumb
-            // El GlobalControllerAdvice lo hará automáticamente
+            // Agregar estadísticas vacías para evitar errores en la plantilla
+            Map<String, Integer> stats = new HashMap<>();
+            stats.put("activeSolicitudes", 0);
+            stats.put("completedSolicitudes", 0);
+            stats.put("totalSolicitudes", 0);
+            model.addAttribute("stats", stats);
             
-            mv.addObject("solicitude", solicitudeService.getSolicitudesByUser(user));
-            mv.addObject("username", user.getUsername());
+            // Lista vacía de solicitudes para evitar errores
+            model.addAttribute("solicitudes", new ArrayList<>());
+            
         } catch (Exception e) {
-            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
+            model.addAttribute("error", "Error al cargar la página: " + e.getMessage());
         }
         
-        return mv;
+        return "pages/welcome";
     }
 
     /**
@@ -200,23 +209,60 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/view-requests")
-    public ModelAndView viewRequests() {
-        User user = getAuthenticatedUser();
-        List<Solicitude> solicitudes = solicitudeRepository.findByUser(user);
-        if (user != null && (user.getProfileImage() == null || user.getProfileImage().isEmpty()))
-            user.setProfileImage("descargas.jpeg");
+    public String viewRequests(Model model) {
+        // Proporcionar datos básicos para mantener la consistencia con el template
+        try {
+            // Obtener el usuario actual de forma simplificada
+            User user = getAuthenticatedUser();
+            if (user != null) {
+                // Asegurar que el usuario tenga una imagen de perfil predeterminada si es null
+                if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
+                    user.setProfileImage("descargas.jpeg");
+                }
+                model.addAttribute("user", user);
+                
+                // Obtener las solicitudes del usuario
+                List<Solicitude> solicitudes = solicitudeRepository.findByUser(user);
+                if (solicitudes == null) {
+                    solicitudes = new ArrayList<>();
+                }
+                model.addAttribute("solicitudes", solicitudes);
+                
+                // Calcular estadísticas básicas
+                Map<String, Integer> stats = new HashMap<>();
+                int activeSolicitudes = 0;
+                int completedSolicitudes = 0;
+                
+                for (Solicitude solicitude : solicitudes) {
+                    if (solicitude.getEstado() != null && solicitude.getEstado().equals("COMPLETADO")) {
+                        completedSolicitudes++;
+                    } else if (solicitude.isActivo()) {
+                        activeSolicitudes++;
+                    }
+                }
+                
+                stats.put("activeSolicitudes", activeSolicitudes);
+                stats.put("completedSolicitudes", completedSolicitudes);
+                stats.put("totalSolicitudes", solicitudes.size());
+                model.addAttribute("stats", stats);
+            }
+            
+            // Establecer el nombre de la página actual para los breadcrumbs en el header
+            model.addAttribute("currentPage", "Mis Solicitudes");
+            
+        } catch (Exception e) {
+            // Asegurar que siempre haya un objeto stats para evitar errores en la vista
+            Map<String, Integer> emptyStats = new HashMap<>();
+            emptyStats.put("activeSolicitudes", 0);
+            emptyStats.put("completedSolicitudes", 0);
+            emptyStats.put("totalSolicitudes", 0);
+            model.addAttribute("stats", emptyStats);
+            model.addAttribute("solicitudes", new ArrayList<>());
+            
+            model.addAttribute("error", "Error al cargar la página: " + e.getMessage());
+        }
         
-        // Crear un ModelAndView con la página y datos
-        ModelAndView mv = new ModelAndView("user/view-requests");
-        
-        // Establecer el nombre de la página actual para los breadcrumbs en el header
-        mv.addObject("currentPage", "Mis Solicitudes");
-        
-        // Añadir el resto de atributos
-        mv.addObject("solicitudes", solicitudes);
-        mv.addObject("user", user);
-        
-        return mv;
+        return "pages/view-requests";
     }
 
     @PostMapping("/updatesolicitude/{id}")

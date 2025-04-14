@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Main hero section organism -->
+<section th:fragment="main-hero(title, description, backgroundImage)" 
+         class="h-screen -mt-16 bg-cover bg-center" 
+         th:style="${(backgroundImage != null) ? 'background-image: url(' + backgroundImage + ');' : 'background-image: url(/img/fondo_app.jpg);'}">
+    <div class="flex justify-center items-center h-full px-4 py-6">
+        <div class="bg-white/90 backdrop-blur-sm rounded-lg shadow-xl p-8 max-w-4xl w-full">
+            <!-- Hero content -->
+            <div th:replace="~{molecules/hero-content :: hero-content(${title}, ${description})}"></div>
+            
+            <!-- Sponsor section -->
+            <div th:replace="~{molecules/sponsors :: sponsor-list}"></div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

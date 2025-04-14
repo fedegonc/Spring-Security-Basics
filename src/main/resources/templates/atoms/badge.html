@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Badge Component</title>
+</head>
+<body>
+
+<!-- Fragmento de badge para estados -->
+<span th:fragment="status-badge(status, text)" 
+      th:class="${'badge ' + 
+                 (status == 'PENDIENTE' ? 'bg-warning' : 
+                  status == 'ACEPTADO' ? 'bg-success' : 
+                  status == 'RECHAZADO' ? 'bg-danger' : 
+                  status == 'COMPLETADO' ? 'bg-info' : 'bg-secondary')}"
+      th:text="${text}">
+    Estado
+</span>
+
+<!-- Badge con icono -->
+<span th:fragment="icon-badge(icon, text, color)" 
+      th:class="${'badge ' + color}">
+    <i th:class="${'bi bi-' + icon + ' me-1'}"></i>
+    <span th:text="${text}">Badge Text</span>
+</span>
+
+</body>
+</html>

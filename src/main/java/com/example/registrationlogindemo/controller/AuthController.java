@@ -46,7 +46,7 @@ public class AuthController implements ErrorController {
             return "redirect:/user/welcome";
         }
         
-        return "guest/register";
+        return "pages/register";
     }
 
     @PostMapping("/register/save")
@@ -58,7 +58,7 @@ public class AuthController implements ErrorController {
         
         if (!registrationSuccessful) {
             model.addAttribute("user", userDto);
-            return "guest/register";
+            return "pages/register";
         }
         
         return "redirect:/login";
@@ -72,7 +72,7 @@ public class AuthController implements ErrorController {
             // Si es un usuario registrado, redirigir a su página correspondiente
             return "redirect:/init";
         }
-        return "guest/login";
+        return "pages/login";
     }
 
     @GetMapping("/init")

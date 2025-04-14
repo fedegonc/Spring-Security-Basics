@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Action buttons component -->
+<div th:fragment="action-buttons" class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 mb-4">
+    <a th:href="@{/login}" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-3 rounded-md shadow transition text-center">
+        <i class="bi bi-recycle mr-1"></i>
+        <span th:text="#{button.request.collection}">Solicitar recolección</span>
+    </a>
+    <a th:href="@{/login}" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3 rounded-md shadow transition text-center">
+        <i class="bi bi-gift mr-1"></i>
+        <span th:text="#{button.donate}">Donar abrigo</span>
+    </a>
+</div>
+</body>
+</html>

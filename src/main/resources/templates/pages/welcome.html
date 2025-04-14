@@ -2,41 +2,152 @@
 <html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragments/shared/layout}">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{templates/user-template}">
 <head>
-    <title th:text="#{breadcrumb.welcome}">Página principal - RSU Reciclaje</title>
+    <title>Inicio - Frontera de la Paz</title>
     <meta name="description" content="Panel de usuario para gestionar solicitudes de reciclaje">
-    <th:block layout:fragment="head"></th:block>
 </head>
 <body>
-    <section layout:fragment="content" class="py-4 px-4">
-        <div class="max-w-7xl mx-auto space-y-6">
-            <!-- Componente de bienvenida (Fragmento consolidado) -->
-            <div th:replace="~{fragments/user-components :: usuario-bienvenida}"></div>
-
-            <!-- Acciones rápidas simplificadas -->
-            <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="text-lg font-bold text-gray-800 mb-3">Acciones Rápidas</h2>
-                <div class="flex flex-col md:flex-row gap-4">
-                    <!-- Tarjeta Estadísticas -->
-                    <a href="#" class="flex-1 bg-gray-50 rounded-lg p-4 text-center shadow hover:bg-gray-100 transition">
-                        <i class="bi bi-bar-chart-line text-green-600 text-2xl mb-1 block"></i>
-                        <span class="block text-sm font-medium text-gray-800">Mis Estadísticas</span>
-                    </a>
-                    <!-- Tarjeta Solicitudes -->
-                    <a href="@{/user/view-requests}" class="flex-1 bg-gray-50 rounded-lg p-4 text-center shadow hover:bg-gray-100 transition">
-                        <i class="bi bi-list-check text-green-600 text-2xl mb-1 block"></i>
-                        <span class="block text-sm font-medium text-gray-800" th:text="#{solicitudes}">Solicitudes</span>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Lista de Solicitudes (Elemento principal) -->
-            <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="text-lg font-bold text-gray-800 mb-4">Solicitudes Recientes</h2>
-                <div th:replace="~{fragments/solicitudes-components :: solicitudes-tarjetas('Solicitudes Recientes', true, true, ${solicitude}, '/user')}"></div>
+    <div layout:fragment="content">
+        <!-- Mensaje de bienvenida -->
+        <div class="glass-card mb-4">
+            <h2 class="h4 mb-3">
+                <i class="bi bi-house-door me-2"></i>
+                <span>Bienvenido</span>,
+                <span th:text="${user != null ? user.name : 'Usuario'}" class="text-primary">Usuario</span>
+            </h2>
+            <p class="mb-3">
+                Desde aquí podrás gestionar tus solicitudes de recolección de materiales reciclables.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a th:href="@{/user/newsolicitude}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    <span>Nueva Solicitud</span>
+                </a>
+                <a th:href="@{/user/view-requests}" class="btn btn-outline-primary">
+                    <i class="bi bi-list-ul me-1"></i>
+                    <span>Ver Solicitudes</span>
+                </a>
             </div>
         </div>
-    </section>
+        
+        <!-- Métricas de solicitudes -->
+        <div class="glass-card mb-4">
+            <h3 class="h5 mb-3">
+                <i class="bi bi-graph-up me-2"></i>Métricas de Solicitudes
+            </h3>
+            
+            <div class="row g-3 mb-3">
+                <!-- Solicitudes activas -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 bg-light">
+                        <div class="card-body text-center">
+                            <div class="text-warning mb-2">
+                                <i class="bi bi-clock-history" style="font-size: 2rem;"></i>
+                            </div>
+                            <h5 class="card-title h6 mb-1">Activas</h5>
+                            <p class="card-text h4 text-warning mb-0" th:text="${stats != null ? stats.activeSolicitudes : 0}">0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solicitudes completadas -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 bg-light">
+                        <div class="card-body text-center">
+                            <div class="text-success mb-2">
+                                <i class="bi bi-check-circle" style="font-size: 2rem;"></i>
+                            </div>
+                            <h5 class="card-title h6 mb-1">Completadas</h5>
+                            <p class="card-text h4 text-success mb-0" th:text="${stats != null ? stats.completedSolicitudes : 0}">0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Total solicitudes -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 bg-light">
+                        <div class="card-body text-center">
+                            <div class="text-primary mb-2">
+                                <i class="bi bi-collection" style="font-size: 2rem;"></i>
+                            </div>
+                            <h5 class="card-title h6 mb-1">Total</h5>
+                            <p class="card-text h4 text-primary mb-0" th:text="${stats != null ? stats.totalSolicitudes : 0}">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Solicitudes recientes -->
+        <div class="glass-card mb-4">
+            <h3 class="h5 mb-3">
+                <i class="bi bi-list-ul me-2"></i>Solicitudes Recientes
+                <span class="badge bg-primary rounded-pill ms-2" th:text="${solicitudes != null ? solicitudes.size() : 0}">0</span>
+            </h3>
+            
+            <div th:if="${solicitudes == null || solicitudes.empty}" class="text-center py-4">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <p class="text-muted mt-2">No tienes solicitudes recientes</p>
+            </div>
+            
+            <div th:if="${solicitudes != null && !solicitudes.empty}" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                <div th:each="solicitud : ${solicitudes}" class="col">
+                    <div class="card solicitud-card mb-3 h-100 shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <span th:class="${'badge ' + 
+                                            (solicitud.estado == 'PENDIENTE' ? 'bg-warning' : 
+                                            solicitud.estado == 'ACEPTADO' ? 'bg-success' : 
+                                            solicitud.estado == 'RECHAZADO' ? 'bg-danger' : 
+                                            solicitud.estado == 'COMPLETADO' ? 'bg-info' : 'bg-secondary')}"
+                                      th:text="${solicitud.estado}">
+                                    Estado
+                                </span>
+                                <span class="ms-2 text-muted">#<span th:text="${solicitud.id}">123</span></span>
+                            </div>
+                            <small th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}">01/01/2025</small>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="row g-0">
+                                <!-- Imagen de la solicitud (si existe) -->
+                                <div class="col-4" th:if="${solicitud.imagen != null && solicitud.imagen != ''}">
+                                    <img th:src="@{'/img/' + ${solicitud.imagen}}" alt="Imagen de solicitud" 
+                                        class="img-thumbnail h-100 object-fit-cover" style="max-height: 100px;">
+                                </div>
+                                
+                                <!-- Información de la solicitud -->
+                                <div th:class="${solicitud.imagen != null && solicitud.imagen != '' ? 'col-8' : 'col-12'}">
+                                    <h5 class="card-title" th:text="${solicitud.categoria}">Categoría</h5>
+                                    <p class="card-text mb-1">
+                                        <i class="bi bi-geo-alt me-1"></i>
+                                        <span th:text="${solicitud.calle + ', ' + solicitud.barrio}">Dirección</span>
+                                    </p>
+                                    <p class="card-text" th:if="${solicitud.descripcion != null && solicitud.descripcion != ''}">
+                                        <small class="text-muted" th:text="${#strings.abbreviate(solicitud.descripcion, 50)}">Descripción</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a th:href="@{/user/viewsolicitude/{id}(id=${solicitud.id})}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye me-1"></i>Ver detalles
+                                </a>
+                                <a th:if="${solicitud.estado == 'PENDIENTE' || solicitud.estado == 'EN_ESPERA'}" 
+                                th:href="@{/user/editsolicitude/{id}(id=${solicitud.id})}" 
+                                class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-pencil me-1"></i>Editar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
