@@ -43,8 +43,15 @@
     
     <!-- Contenedor de alertas (para reemplazar el fragmento message-alerts) -->
     <div th:fragment="message-alerts">
-        <div th:if="${rerror}" th:replace="~{fragments/atoms/alert :: error(${rerror})}"></div>
-        <div th:if="${rexito}" th:replace="~{fragments/atoms/alert :: success(${rexito})}"></div>
+        <!-- Solo mostrar mensajes de error que existan y no estén vacíos o en blanco -->
+        <div th:with="hasError=${(rerror != null && !#strings.isEmpty(#strings.trim(rerror))) || (error != null && !#strings.isEmpty(#strings.trim(error)))}"
+             th:if="${hasError}" 
+             th:replace="~{atoms/alert :: error(${rerror != null ? rerror : error})}"></div>
+        
+        <!-- Solo mostrar mensajes de éxito que existan y no estén vacíos o en blanco -->
+        <div th:with="hasSuccess=${(rexito != null && !#strings.isEmpty(#strings.trim(rexito))) || (success != null && !#strings.isEmpty(#strings.trim(success)))}"
+             th:if="${hasSuccess}" 
+             th:replace="~{atoms/alert :: success(${rexito != null ? rexito : success})}"></div>
     </div>
 </body>
 </html>

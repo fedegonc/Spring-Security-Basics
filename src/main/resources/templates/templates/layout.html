@@ -89,7 +89,7 @@
     <main id="main-content" class="flex-grow bg-subtle">
         <!-- Alertas y mensajes -->
         <div class="container mx-auto px-4 pt-4">
-            <div th:replace="~{atoms/alert :: message-alerts}"></div>
+            <div th:if="${rexito != null || rerror != null}" th:replace="~{atoms/alert :: message-alerts}"></div>
             
             <!-- Breadcrumbs integrados en el layout principal pero en un nivel adecuado -->
             <nav th:if="${breadcrumbs != null && !breadcrumbs.empty}" aria-label="breadcrumb" class="mb-4 bg-white shadow-sm rounded-md">
