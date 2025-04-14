@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/shared/layout}">
+<head>
+    <title layout:title-pattern="$CONTENT_TITLE - Área de Usuario">Área de Usuario</title>
+</head>
+<body>
+    <section layout:fragment="content" class="py-4">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row">
+                <!-- Sidebar de usuario -->
+                <div class="w-full md:w-1/4 mb-4 md:mb-0 md:mr-4">
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="text-center mb-4">
+                            <div class="mb-3">
+                                <img th:if="${userStatus.isAuthenticated() && user != null && user.profileImage != null}" 
+                                     th:src="@{'/images/profile/' + ${user.profileImage}}" 
+                                     alt="Imagen de perfil" 
+                                     class="w-24 h-24 rounded-full mx-auto object-cover border-4 border-green-100">
+                                <div th:unless="${userStatus.isAuthenticated() && user != null && user.profileImage != null}" 
+                                     class="w-24 h-24 rounded-full mx-auto bg-green-100 flex items-center justify-center">
+                                    <i class="bi bi-person text-3xl text-green-600"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-bold" th:text="${userStatus.isAuthenticated() ? userStatus.getUsername() : 'Invitado'}">Nombre de Usuario</h3>
+                        </div>
+                        
+                        <nav class="space-y-1">
+                            <a th:href="@{/user/welcome}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                               th:classappend="${currentPage == 'Inicio' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}">
+                                <i class="bi bi-house-door mr-3 text-lg"></i> Inicio
+                            </a>
+                            <a th:href="@{/user/view-requests}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors"
+                               th:classappend="${currentPage == 'Ver Solicitudes' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}">
+                                <i class="bi bi-list-check mr-3 text-lg"></i> Mis Solicitudes
+                            </a>
+                            <a th:href="@{/user/newsolicitude}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors"
+                               th:classappend="${currentPage == 'Nueva Solicitud' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}">
+                                <i class="bi bi-plus-circle mr-3 text-lg"></i> Nueva Solicitud
+                            </a>
+                            <a th:href="@{/user/profile}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors"
+                               th:classappend="${currentPage == 'Perfil' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}">
+                                <i class="bi bi-person-circle mr-3 text-lg"></i> Mi Perfil
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+                
+                <!-- Contenido principal -->
+                <div class="w-full md:w-3/4">
+                    <div layout:fragment="user-content">
+                        <!-- Aquí irá el contenido específico de cada página de usuario -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

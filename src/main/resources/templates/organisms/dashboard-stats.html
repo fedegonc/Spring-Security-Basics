@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Panel de estadísticas para dashboard -->
+    <div th:fragment="stats-grid(title)" class="mb-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-4" th:text="${title}">Estadísticas</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Utilizando moléculas de stat-card -->
+            <div th:replace="~{fragments/molecules/stat-card :: simple('file-earmark-text', 'Total Solicitudes', ${totalSolicitudes}, 'blue')}"></div>
+            <div th:replace="~{fragments/molecules/stat-card :: simple('check-circle', 'Solicitudes Completadas', ${completedSolicitudes}, 'green')}"></div>
+            <div th:replace="~{fragments/molecules/stat-card :: simple('hourglass-split', 'Solicitudes Pendientes', ${pendingSolicitudes}, 'yellow')}"></div>
+            <div th:replace="~{fragments/molecules/stat-card :: simple('x-circle', 'Solicitudes Rechazadas', ${rejectedSolicitudes}, 'red')}"></div>
+        </div>
+    </div>
+    
+    <!-- Panel de estadísticas con tendencias -->
+    <div th:fragment="trend-stats(title)" class="mb-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-4" th:text="${title}">Tendencias</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Utilizando moléculas de stat-card con tendencias -->
+            <div th:replace="~{fragments/molecules/stat-card :: trend('graph-up', 'Nuevas Solicitudes', ${newSolicitudes}, ${newTrend}, ${newTrendValue}, 'blue')}"></div>
+            <div th:replace="~{fragments/molecules/stat-card :: trend('check2-all', 'Tasa de Completitud', ${completionRate}, ${completionTrend}, ${completionTrendValue}, 'green')}"></div>
+            <div th:replace="~{fragments/molecules/stat-card :: trend('clock-history', 'Tiempo Promedio', ${avgTime}, ${timeTrend}, ${timeTrendValue}, 'purple')}"></div>
+        </div>
+    </div>
+</body>
+</html>

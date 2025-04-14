@@ -30,7 +30,7 @@ public class GuestController {
 
     @GetMapping({"", "/", "/index"})
     public ModelAndView getIndex() {
-        ModelAndView mv = new ModelAndView("guest/index");
+        ModelAndView mv = new ModelAndView("pages/index");
         
         // Verificar si el usuario está autenticado y redirigir si es necesario
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -43,7 +43,7 @@ public class GuestController {
 
     @GetMapping("/report")
     public ModelAndView newReport() {
-        return new ModelAndView("user/report-problem");
+        return new ModelAndView("pages/report-problem");
     }
 
     @PostMapping("/report")

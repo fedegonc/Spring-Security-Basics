@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- 
+    Organismo: Contenedor de formulario
+    Descripción: Estructura para formularios con título, contenido y botones de acción
+    -->
+    
+    <!-- Formulario básico -->
+    <div th:fragment="basic(title, formAction, formContent, submitText, cancelUrl)" class="glass-card p-4">
+        <h3 class="text-xl font-bold text-gray-800 mb-4" th:text="${title}">Título del formulario</h3>
+        
+        <form th:action="${formAction}" method="post" enctype="multipart/form-data">
+            <div class="space-y-4">
+                <div th:replace="${formContent}">Contenido del formulario</div>
+                
+                <div class="flex justify-between mt-6">
+                    <a th:if="${cancelUrl}" th:href="${cancelUrl}" class="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <i class="bi bi-arrow-left mr-1"></i> Cancelar
+                    </a>
+                    <button type="submit" class="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <i class="bi bi-check-circle mr-1"></i> <span th:text="${submitText ?: 'Guardar'}">Guardar</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Formulario con dos columnas -->
+    <div th:fragment="two-columns(title, formAction, leftContent, rightContent, submitText, cancelUrl)" class="glass-card p-4">
+        <h3 class="text-xl font-bold text-gray-800 mb-4" th:text="${title}">Título del formulario</h3>
+        
+        <form th:action="${formAction}" method="post" enctype="multipart/form-data">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div th:replace="${leftContent}">Contenido izquierdo</div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div th:replace="${rightContent}">Contenido derecho</div>
+                </div>
+            </div>
+            
+            <div class="flex justify-between mt-6">
+                <a th:if="${cancelUrl}" th:href="${cancelUrl}" class="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <i class="bi bi-arrow-left mr-1"></i> Cancelar
+                </a>
+                <button type="submit" class="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <i class="bi bi-check-circle mr-1"></i> <span th:text="${submitText ?: 'Guardar'}">Guardar</span>
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Formulario con pestañas -->
+    <div th:fragment="tabbed(title, formAction, tabs, submitText, cancelUrl)" class="glass-card p-4">
+        <h3 class="text-xl font-bold text-gray-800 mb-4" th:text="${title}">Título del formulario</h3>
+        
+        <form th:action="${formAction}" method="post" enctype="multipart/form-data">
+            <!-- Pestañas -->
+            <ul class="nav nav-tabs mb-4" id="formTabs" role="tablist">
+                <li class="nav-item" role="presentation" th:each="tab, stat : ${tabs}">
+                    <button class="nav-link" th:classappend="${stat.first ? 'active' : ''}" 
+                            th:id="${'tab-' + tab.id}" 
+                            data-bs-toggle="tab" 
+                            th:data-bs-target="${'#content-' + tab.id}" 
+                            type="button" 
+                            role="tab" 
+                            th:aria-controls="${'content-' + tab.id}" 
+                            th:aria-selected="${stat.first ? 'true' : 'false'}"
+                            th:text="${tab.label}">Tab</button>
+                </li>
+            </ul>
+            
+            <!-- Contenido de las pestañas -->
+            <div class="tab-content" id="formTabsContent">
+                <div class="tab-pane fade" th:each="tab, stat : ${tabs}"
+                     th:id="${'content-' + tab.id}" 
+                     th:classappend="${stat.first ? 'show active' : ''}" 
+                     th:role="tabpanel" 
+                     th:aria-labelledby="${'tab-' + tab.id}">
+                    <div th:replace="${tab.content}">Contenido de la pestaña</div>
+                </div>
+            </div>
+            
+            <div class="flex justify-between mt-6">
+                <a th:if="${cancelUrl}" th:href="${cancelUrl}" class="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <i class="bi bi-arrow-left mr-1"></i> Cancelar
+                </a>
+                <button type="submit" class="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <i class="bi bi-check-circle mr-1"></i> <span th:text="${submitText ?: 'Guardar'}">Guardar</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

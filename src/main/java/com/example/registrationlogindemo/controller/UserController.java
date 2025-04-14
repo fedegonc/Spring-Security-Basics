@@ -52,7 +52,7 @@ public class UserController extends BaseController {
 
     @GetMapping("/welcome")
     public ModelAndView welcomePage() {
-        ModelAndView mv = new ModelAndView("user/welcome");
+        ModelAndView mv = new ModelAndView("pages/welcome");
         
         try {
             // Obtener el usuario actual
@@ -100,7 +100,7 @@ public class UserController extends BaseController {
      * Método privado para mostrar el perfil del usuario.
      */
     private ModelAndView viewProfile() {
-        ModelAndView mv = new ModelAndView("user/profile");
+        ModelAndView mv = new ModelAndView("pages/profile");
         
         try {
             // Obtener el usuario actual
@@ -134,7 +134,7 @@ public class UserController extends BaseController {
                                   RedirectAttributes msg) {
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Por favor, corrija los errores en el formulario");
-            return new ModelAndView("redirect:/user/profile");
+            return new ModelAndView("redirect:/pages/profile");
         }
         
         try {
@@ -153,7 +153,7 @@ public class UserController extends BaseController {
                         currentUser.setProfileImage(fileName);
                     } catch (IOException e) {
                         msg.addFlashAttribute("error", "Error al subir la imagen: " + e.getMessage());
-                        return new ModelAndView("redirect:/user/profile");
+                        return new ModelAndView("redirect:/pages/profile");
                     }
                 }
                 
@@ -168,7 +168,7 @@ public class UserController extends BaseController {
             msg.addFlashAttribute("error", "Error al actualizar el perfil: " + e.getMessage());
         }
         
-        return new ModelAndView("redirect:/user/profile");
+        return new ModelAndView("redirect:/pages/profile");
     }
 
     @DeleteMapping("/deleteUser/{id}")
@@ -243,12 +243,12 @@ public class UserController extends BaseController {
         // Delegar la actualización al servicio consolidado
         solicitudeService.updateSolicitude(id, solicitude, file, msg, userDetails);
         
-        return "redirect:/user/view-requests";
+        return "redirect:/pages/view-requests";
     }
 
     @GetMapping("/report-problem")
     public String reportProblemForm() {
-        return "user/report-problem";
+        return "pages/report-problem";
     }
     
     @PostMapping("/report")
@@ -271,10 +271,10 @@ public class UserController extends BaseController {
             reportRepository.save(report);
             
             attributes.addFlashAttribute("success", "El problema ha sido reportado correctamente");
-            return "redirect:/user/welcome";
+            return "redirect:/pages/welcome";
         } catch (Exception e) {
             attributes.addFlashAttribute("error", "Ocurrió un error al reportar el problema: " + e.getMessage());
-            return "redirect:/user/report-problem";
+            return "redirect:/pages/report-problem";
         }
     }
     
@@ -284,7 +284,7 @@ public class UserController extends BaseController {
                                 @RequestParam("confirmPassword") String confirmPassword,
                                 RedirectAttributes attributes) {
         
-        return super.changePassword(currentPassword, newPassword, confirmPassword, attributes, "/user/profile");
+        return super.changePassword(currentPassword, newPassword, confirmPassword, attributes, "/pages/profile");
     }
     
     @Override

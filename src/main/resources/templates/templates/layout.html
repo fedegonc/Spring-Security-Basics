@@ -84,12 +84,12 @@
     <!-- Enlace para saltar al contenido principal - accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     
-    <header th:replace="~{fragments/header :: header}" class="bg-white shadow-sm"></header>
+    <header th:replace="~{organisms/header :: header}" class="bg-white shadow-sm"></header>
     
     <main id="main-content" class="flex-grow bg-subtle">
         <!-- Alertas y mensajes -->
         <div class="container mx-auto px-4 pt-4">
-            <div th:replace="~{fragments/messages :: message-alerts}"></div>
+            <div th:replace="~{atoms/alert :: message-alerts}"></div>
             
             <!-- Breadcrumbs integrados en el layout principal pero en un nivel adecuado -->
             <nav th:if="${breadcrumbs != null && !breadcrumbs.empty}" aria-label="breadcrumb" class="mb-4 bg-white shadow-sm rounded-md">

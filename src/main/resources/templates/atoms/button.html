@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- 
+    Átomo: Botón
+    Descripción: Componente básico para botones con diferentes estilos
+    -->
+    
+    <!-- Botón primario -->
+    <a th:fragment="primary(text, url, icon)" 
+       th:href="${url}"
+       class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-800 focus:outline-none focus:border-green-800 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
+        <i th:if="${icon}" th:class="${'bi bi-' + icon + ' mr-2'}"></i>
+        <span th:text="${text}">Texto del botón</span>
+    </a>
+    
+    <!-- Botón secundario -->
+    <a th:fragment="secondary(text, url, icon)" 
+       th:href="${url}"
+       class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:border-blue-300 focus:ring ring-blue-200 disabled:opacity-25 transition ease-in-out duration-150">
+        <i th:if="${icon}" th:class="${'bi bi-' + icon + ' mr-2'}"></i>
+        <span th:text="${text}">Texto del botón</span>
+    </a>
+    
+    <!-- Botón de peligro -->
+    <a th:fragment="danger(text, url, icon)" 
+       th:href="${url}"
+       class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-800 focus:outline-none focus:border-red-800 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">
+        <i th:if="${icon}" th:class="${'bi bi-' + icon + ' mr-2'}"></i>
+        <span th:text="${text}">Texto del botón</span>
+    </a>
+    
+    <!-- Botón de acción para la página de inicio (verde) -->
+    <a th:fragment="action-green(text, url, icon)" 
+       th:href="${url}"
+       class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-3 rounded-md shadow transition text-center">
+        <i th:if="${icon}" th:class="${'bi bi-' + icon + ' mr-1'}"></i>
+        <span th:text="${text}">Acción</span>
+    </a>
+    
+    <!-- Botón de acción para la página de inicio (azul) -->
+    <a th:fragment="action-blue(text, url, icon)" 
+       th:href="${url}"
+       class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3 rounded-md shadow transition text-center">
+        <i th:if="${icon}" th:class="${'bi bi-' + icon + ' mr-1'}"></i>
+        <span th:text="${text}">Acción</span>
+    </a>
+</body>
+</html>

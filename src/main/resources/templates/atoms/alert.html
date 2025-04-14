@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Alerta de éxito -->
+    <div th:fragment="success(message)" 
+         class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded shadow-sm"
+         role="alert">
+        <div class="flex items-start">
+            <i class="bi bi-check-circle-fill text-green-500 mr-2 mt-0.5"></i>
+            <span class="text-sm" th:text="${message}">Mensaje de éxito</span>
+        </div>
+    </div>
+    
+    <!-- Alerta de error -->
+    <div th:fragment="error(message)" 
+         class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded shadow-sm"
+         role="alert">
+        <div class="flex items-start">
+            <i class="bi bi-exclamation-triangle-fill text-red-500 mr-2 mt-0.5"></i>
+            <span class="text-sm" th:text="${message}">Mensaje de error</span>
+        </div>
+    </div>
+    
+    <!-- Alerta de información -->
+    <div th:fragment="info(message)" 
+         class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 rounded shadow-sm"
+         role="alert">
+        <div class="flex items-start">
+            <i class="bi bi-info-circle-fill text-blue-500 mr-2 mt-0.5"></i>
+            <span class="text-sm" th:text="${message}">Mensaje informativo</span>
+        </div>
+    </div>
+    
+    <!-- Alerta de advertencia -->
+    <div th:fragment="warning(message)" 
+         class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 rounded shadow-sm"
+         role="alert">
+        <div class="flex items-start">
+            <i class="bi bi-exclamation-circle-fill text-yellow-500 mr-2 mt-0.5"></i>
+            <span class="text-sm" th:text="${message}">Mensaje de advertencia</span>
+        </div>
+    </div>
+    
+    <!-- Contenedor de alertas (para reemplazar el fragmento message-alerts) -->
+    <div th:fragment="message-alerts">
+        <div th:if="${rerror}" th:replace="~{fragments/atoms/alert :: error(${rerror})}"></div>
+        <div th:if="${rexito}" th:replace="~{fragments/atoms/alert :: success(${rexito})}"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- 
+    Organismo: Panel de estadísticas
+    Descripción: Componente para mostrar estadísticas en formato de tarjetas o paneles
+    -->
+    
+    <!-- Panel de estadísticas básico -->
+    <div th:fragment="basic(title, stats)" class="glass-card p-4 mb-4">
+        <h5 class="text-gray-800 font-semibold mb-3" th:text="${title}">Título del panel</h5>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div th:each="stat : ${stats}" class="text-center">
+                <div th:replace="~{fragments/molecules/stat-card :: basic(${stat.icon}, ${stat.iconColor}, ${stat.label}, ${stat.value})}"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Panel de información -->
+    <div th:fragment="info-panel(title, content, icon)" class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded shadow-sm mb-4">
+        <h4 class="font-bold text-blue-700 mb-2">
+            <i th:if="${icon}" th:class="${'bi bi-' + icon + ' me-2'}"></i>
+            <span th:text="${title}">Título del panel</span>
+        </h4>
+        <div th:replace="${content}">Contenido del panel</div>
+    </div>
+    
+    <!-- Panel lateral con múltiples secciones -->
+    <div th:fragment="sidebar(title, sections)" class="glass-card h-100 p-4">
+        <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2" th:text="${title}">Título del panel</h2>
+        
+        <div th:each="section : ${sections}" class="mb-4">
+            <div th:replace="${section}">Sección</div>
+        </div>
+    </div>
+</body>
+</html>
