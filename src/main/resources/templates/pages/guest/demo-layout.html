@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='user', footerType='simple', metaDescription='Página de demostración del layout con Thymeleaf'">
+
+<head>
+    <title>Demo de Layout</title>
+    
+    <!-- Estilos específicos para esta página -->
+    <th:block layout:fragment="styles">
+        <style>
+            .demo-box {
+                border-radius: 8px;
+                padding: 24px;
+                background-color: white;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            
+            .feature-card {
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            
+            .feature-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .code-block {
+                background-color: #f8f9fa;
+                border-radius: 4px;
+                padding: 16px;
+                border-left: 4px solid #2f855a;
+                font-family: monospace;
+                overflow-x: auto;
+                font-size: 14px;
+                margin: 16px 0;
+            }
+            
+            .tab-content {
+                display: none;
+            }
+            
+            .active-tab {
+                display: block;
+            }
+            
+            .tab-button {
+                padding: 8px 16px;
+                border-radius: 4px 4px 0 0;
+                border-bottom: 2px solid transparent;
+            }
+            
+            .tab-button.active {
+                border-bottom: 2px solid #2f855a;
+                background-color: #f0f9f5;
+            }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <!-- Contenido principal -->
+    <section layout:fragment="content">
+        <div class="container mx-auto px-4 py-6">
+            <div class="demo-box">
+                <h1 class="text-2xl font-bold mb-2 text-green-800">
+                    <i class="bi bi-columns-gap mr-2"></i>Demo de Layout con Thymeleaf
+                </h1>
+                <p class="text-gray-600 mb-6">Este ejemplo muestra cómo utilizar Thymeleaf Layout Dialect con características avanzadas.</p>
+                
+                <!-- Tabs de ejemplo -->
+                <div class="border-b border-gray-200 mb-6">
+                    <div class="flex flex-wrap -mb-px">
+                        <button class="tab-button active mr-2" data-tab="features">
+                            <i class="bi bi-stars mr-1"></i>Características
+                        </button>
+                        <button class="tab-button mr-2" data-tab="usage">
+                            <i class="bi bi-code-slash mr-1"></i>Cómo usar
+                        </button>
+                        <button class="tab-button" data-tab="examples">
+                            <i class="bi bi-file-earmark-text mr-1"></i>Ejemplos
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Contenido de tabs -->
+                <div id="features" class="tab-content active-tab">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="feature-card bg-white p-5 border border-gray-200">
+                            <h3 class="text-lg font-semibold mb-2 text-green-700">
+                                <i class="bi bi-layout-text-sidebar mr-2"></i>Layout Base Flexible
+                            </h3>
+                            <p>Estructura flexible para toda la aplicación con slots claramente definidos.</p>
+                        </div>
+                        
+                        <div class="feature-card bg-white p-5 border border-gray-200">
+                            <h3 class="text-lg font-semibold mb-2 text-green-700">
+                                <i class="bi bi-people mr-2"></i>Headers por Rol
+                            </h3>
+                            <p>Selección automática de headers según el rol del usuario.</p>
+                        </div>
+                        
+                        <div class="feature-card bg-white p-5 border border-gray-200">
+                            <h3 class="text-lg font-semibold mb-2 text-green-700">
+                                <i class="bi bi-translate mr-2"></i>Internacionalización
+                            </h3>
+                            <p>Soporte para múltiples idiomas con cambio dinámico.</p>
+                        </div>
+                        
+                        <div class="feature-card bg-white p-5 border border-gray-200">
+                            <h3 class="text-lg font-semibold mb-2 text-green-700">
+                                <i class="bi bi-arrow-repeat mr-2"></i>Componentes Reutilizables
+                            </h3>
+                            <p>Fragmentos que se pueden reutilizar en múltiples páginas.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="usage" class="tab-content">
+                    <h3 class="text-xl font-semibold mb-3 text-green-800">Cómo implementar este layout</h3>
+                    
+                    <div class="code-block">
+                        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='user'"&gt;
+
+&lt;head&gt;
+    &lt;title&gt;Nombre de mi página&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;section layout:fragment="content"&gt;
+        &lt;!-- Tu contenido aquí --&gt;
+    &lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h4 class="font-semibold mb-2 text-green-700">Opciones disponibles:</h4>
+                        <ul class="list-disc ml-5 text-gray-700">
+                            <li><code>headerType</code>: Tipo de header a utilizar ('user', 'admin', 'org')</li>
+                            <li><code>footerType</code>: Tipo de footer a utilizar ('simple', 'full')</li>
+                            <li><code>metaDescription</code>: Descripción para la etiqueta meta</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="examples" class="tab-content">
+                    <h3 class="text-xl font-semibold mb-3 text-green-800">Ejemplos comunes</h3>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-semibold mb-2 text-green-700">Mensajes de alerta</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-3" role="alert">
+                                <p>Mensaje de éxito</p>
+                            </div>
+                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-3" role="alert">
+                                <p>Mensaje de error</p>
+                            </div>
+                            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-3" role="alert">
+                                <p>Mensaje de advertencia</p>
+                            </div>
+                            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-3" role="alert">
+                                <p>Mensaje informativo</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-semibold mb-2 text-green-700">Breadcrumbs</h4>
+                        <!-- Usando el fragmento de breadcrumb reutilizable -->
+                        <div th:replace="~{fragments/breadcrumb :: breadcrumb}"></div>
+                        
+                        <!-- Ejemplo de visualización estática -->
+                        <div class="mt-3">
+                            <p class="text-sm text-gray-600">Vista previa (estática):</p>
+                            <nav class="text-sm">
+                                <ol class="list-none p-0 inline-flex">
+                                    <li class="flex items-center">
+                                        <a href="#" class="text-blue-500 hover:text-blue-700">Inicio</a>
+                                        <svg class="w-3 h-3 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <a href="#" class="text-blue-500 hover:text-blue-700">Páginas</a>
+                                        <svg class="w-3 h-3 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </li>
+                                    <li class="flex items-center text-gray-500">Demo de Layout</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <a href="/user/layoutdemo" class="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded">
+                        <i class="bi bi-arrow-repeat mr-1"></i>Recargar Demo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Scripts específicos para esta página -->
+    <th:block layout:fragment="scripts">
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Funcionalidad de tabs
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const tabContents = document.querySelectorAll('.tab-content');
+                
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        // Desactivar todos los tabs
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        tabContents.forEach(content => content.classList.remove('active-tab'));
+                        
+                        // Activar el tab seleccionado
+                        button.classList.add('active');
+                        const tabId = button.getAttribute('data-tab');
+                        document.getElementById(tabId).classList.add('active-tab');
+                    });
+                });
+                
+                console.log('Demo de Layout cargado correctamente');
+            });
+        </script>
+    </th:block>
+</body>
+</html>

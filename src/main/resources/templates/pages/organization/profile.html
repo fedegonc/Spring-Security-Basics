@@ -1,0 +1,245 @@
+<!-- Organización Profile usando layout base y organismos -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>Perfil de Organización</title>
+    <meta name="description" content="Gestionar el perfil y la información de la organización">
+</head>
+<body>
+<section layout:fragment="content" class="container mx-auto px-4 py-6">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-4" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="/organization/inicio" class="text-gray-700 hover:text-green-600 inline-flex items-center">
+                    <i class="bi bi-house-door-fill mr-2"></i>
+                    Inicio
+                </a>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <i class="bi bi-chevron-right text-gray-400 mx-1"></i>
+                    <span class="text-gray-500">Perfil de Organización</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+    
+    <h1 class="text-2xl font-bold mb-6 flex items-center text-gray-800">
+        <i class="bi bi-building text-blue-600 mr-2"></i>
+        Perfil de Organización
+    </h1>
+    
+    <!-- Formulario de perfil -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="p-4 border-b bg-gray-50">
+            <h2 class="text-lg font-semibold text-gray-800">Información de la Organización</h2>
+        </div>
+        
+        <form th:action="@{/organization/profile}" method="post" enctype="multipart/form-data" class="p-6">
+            <!-- Imagen de perfil -->
+            <div class="flex flex-col md:flex-row gap-6 mb-6">
+                <div class="flex-none">
+                    <div class="text-center">
+                        <div class="mb-3 relative">
+                            <div class="h-32 w-32 rounded-lg overflow-hidden bg-gray-100 mx-auto">
+                                <img th:if="${organization.imagen != null}" th:src="@{/img/uploads/} + ${organization.imagen}" class="h-full w-full object-cover" alt="Logo">
+                                <div th:unless="${organization.imagen != null}" class="h-full w-full flex items-center justify-center text-gray-400">
+                                    <i class="bi bi-building text-4xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <label for="imagen" class="cursor-pointer bg-blue-50 text-blue-700 px-3 py-1 rounded-md text-sm hover:bg-blue-100 transition">
+                                <i class="bi bi-upload mr-1"></i> Cambiar logo
+                            </label>
+                            <input type="file" id="imagen" name="imagen" class="hidden" accept="image/*">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Formatos: JPG, PNG. Máx 2MB</p>
+                    </div>
+                </div>
+                
+                <div class="flex-grow">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Nombre de la organización -->
+                        <div>
+                            <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre de la Organización <span class="text-red-500">*</span></label>
+                            <input type="text" id="nombre" name="nombre" th:value="${organization.nombre}" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                        
+                        <!-- Tipo de organización -->
+                        <div>
+                            <label for="tipo" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Organización <span class="text-red-500">*</span></label>
+                            <select id="tipo" name="tipo" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                <option value="">Seleccione un tipo</option>
+                                <option value="COOPERATIVA" th:selected="${organization.tipo == 'COOPERATIVA'}">Cooperativa</option>
+                                <option value="ASOCIACION" th:selected="${organization.tipo == 'ASOCIACION'}">Asociación</option>
+                                <option value="EMPRESA" th:selected="${organization.tipo == 'EMPRESA'}">Empresa</option>
+                            </select>
+                        </div>
+                        
+                        <!-- RUT/CNPJ -->
+                        <div>
+                            <label for="rut" class="block text-sm font-medium text-gray-700 mb-1">RUT/CNPJ <span class="text-red-500">*</span></label>
+                            <input type="text" id="rut" name="rut" th:value="${organization.rut}" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                        
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
+                            <input type="email" id="email" name="email" th:value="${organization.email}" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                        
+                        <!-- Teléfono -->
+                        <div>
+                            <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">Teléfono <span class="text-red-500">*</span></label>
+                            <input type="tel" id="telefono" name="telefono" th:value="${organization.telefono}" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                        
+                        <!-- Sitio web -->
+                        <div>
+                            <label for="sitioWeb" class="block text-sm font-medium text-gray-700 mb-1">Sitio Web</label>
+                            <input type="url" id="sitioWeb" name="sitioWeb" th:value="${organization.sitioWeb}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-4 mt-4">
+                <h3 class="text-lg font-medium text-gray-900 mb-3">Ubicación y Contacto</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dirección -->
+                    <div class="md:col-span-2">
+                        <label for="direccion" class="block text-sm font-medium text-gray-700 mb-1">Dirección <span class="text-red-500">*</span></label>
+                        <input type="text" id="direccion" name="direccion" th:value="${organization.direccion}" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    </div>
+                    
+                    <!-- Ciudad -->
+                    <div>
+                        <label for="ciudad" class="block text-sm font-medium text-gray-700 mb-1">Ciudad <span class="text-red-500">*</span></label>
+                        <input type="text" id="ciudad" name="ciudad" th:value="${organization.ciudad}" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    </div>
+                    
+                    <!-- Departamento/Estado -->
+                    <div>
+                        <label for="departamento" class="block text-sm font-medium text-gray-700 mb-1">Departamento/Estado <span class="text-red-500">*</span></label>
+                        <input type="text" id="departamento" name="departamento" th:value="${organization.departamento}" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    </div>
+                    
+                    <!-- Código Postal -->
+                    <div>
+                        <label for="codigoPostal" class="block text-sm font-medium text-gray-700 mb-1">Código Postal</label>
+                        <input type="text" id="codigoPostal" name="codigoPostal" th:value="${organization.codigoPostal}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    </div>
+                    
+                    <!-- País -->
+                    <div>
+                        <label for="pais" class="block text-sm font-medium text-gray-700 mb-1">País <span class="text-red-500">*</span></label>
+                        <select id="pais" name="pais" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <option value="">Seleccione un país</option>
+                            <option value="Uruguay" th:selected="${organization.pais == 'Uruguay'}">Uruguay</option>
+                            <option value="Brasil" th:selected="${organization.pais == 'Brasil'}">Brasil</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-4 mt-4">
+                <h3 class="text-lg font-medium text-gray-900 mb-3">Horarios y Materiales</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Horario de atención -->
+                    <div>
+                        <label for="horarioAtencion" class="block text-sm font-medium text-gray-700 mb-1">Horario de Atención</label>
+                        <input type="text" id="horarioAtencion" name="horarioAtencion" th:value="${organization.horarioAtencion}" placeholder="Ej: Lunes a Viernes 8:00 - 17:00" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    </div>
+                    
+                    <!-- Materiales que procesa -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Materiales que Procesa</label>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="materialPlastico" name="materiales" value="PLASTICO" th:checked="${organization.materiales != null && organization.materiales.contains('PLASTICO')}" class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                                <label for="materialPlastico" class="ml-2 block text-sm text-gray-700">Plástico</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="materialPapel" name="materiales" value="PAPEL" th:checked="${organization.materiales != null && organization.materiales.contains('PAPEL')}" class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                                <label for="materialPapel" class="ml-2 block text-sm text-gray-700">Papel/Cartón</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="materialVidrio" name="materiales" value="VIDRIO" th:checked="${organization.materiales != null && organization.materiales.contains('VIDRIO')}" class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                                <label for="materialVidrio" class="ml-2 block text-sm text-gray-700">Vidrio</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="materialMetal" name="materiales" value="METAL" th:checked="${organization.materiales != null && organization.materiales.contains('METAL')}" class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                                <label for="materialMetal" class="ml-2 block text-sm text-gray-700">Metal</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="materialOrganico" name="materiales" value="ORGANICO" th:checked="${organization.materiales != null && organization.materiales.contains('ORGANICO')}" class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                                <label for="materialOrganico" class="ml-2 block text-sm text-gray-700">Orgánico</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="materialElectronico" name="materiales" value="ELECTRONICO" th:checked="${organization.materiales != null && organization.materiales.contains('ELECTRONICO')}" class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                                <label for="materialElectronico" class="ml-2 block text-sm text-gray-700">Electrónicos</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-4 mt-4">
+                <h3 class="text-lg font-medium text-gray-900 mb-3">Descripción</h3>
+                <div>
+                    <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">Descripción de la Organización</label>
+                    <textarea id="descripcion" name="descripcion" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" th:text="${organization.descripcion}"></textarea>
+                    <p class="mt-1 text-sm text-gray-500">Breve descripción de su organización, misión y actividades principales.</p>
+                </div>
+            </div>
+            
+            <!-- Botones -->
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md shadow-sm transition">
+                    Cancelar
+                </button>
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-sm transition">
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Sección de cambio de contraseña -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="p-4 border-b bg-gray-50">
+            <h2 class="text-lg font-semibold text-gray-800">Cambiar Contraseña</h2>
+        </div>
+        
+        <form th:action="@{/organization/change-password}" method="post" class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-1">Contraseña Actual <span class="text-red-500">*</span></label>
+                    <input type="password" id="currentPassword" name="currentPassword" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+                
+                <div>
+                    <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-1">Nueva Contraseña <span class="text-red-500">*</span></label>
+                    <input type="password" id="newPassword" name="newPassword" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+                
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirmar Contraseña <span class="text-red-500">*</span></label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-sm transition">
+                    Cambiar Contraseña
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

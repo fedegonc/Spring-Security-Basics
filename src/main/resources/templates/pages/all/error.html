@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>Error</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h3>Ha ocurrido un error</h3>
+                        </div>
+                        <div class="card-body">
+                            <p th:if="${errorMessage}" th:text="${errorMessage}">Mensaje de error específico</p>
+                            <p th:unless="${errorMessage}">Lo sentimos, ha ocurrido un error inesperado.</p>
+                            <hr/>
+                            <a href="/inicio" class="btn btn-primary">Volver al inicio</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!-- Página de Administración de Usuarios -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>Administración de Usuarios</title>
+    <meta name="description" content="Gestión de usuarios y roles del sistema de reciclaje">
+</head>
+<body>
+<section layout:fragment="content" class="container mx-auto px-4 py-6">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-4" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="/admin/dashboard" class="text-gray-700 hover:text-green-600 inline-flex items-center">
+                    <i class="bi bi-house-door-fill mr-2"></i>
+                    Inicio
+                </a>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <i class="bi bi-chevron-right text-gray-400 mx-1"></i>
+                    <span class="text-gray-500">Administración de Usuarios</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
+    <h1 class="text-2xl font-bold mb-6 flex items-center text-gray-800">
+        <i class="bi bi-people text-green-600 mr-2"></i>
+        Administración de Usuarios
+    </h1>
+
+    <!-- Sección para crear nuevo rol -->
+    <div class="bg-white p-4 rounded-lg shadow mb-6">
+        <h2 class="text-lg font-semibold mb-3 text-gray-700">Crear Nuevo Rol</h2>
+        <form th:action="@{/admin/crear-rol}" method="post" class="flex flex-wrap items-end">
+            <div class="mr-4 mb-2">
+                <label for="roleName" class="block text-sm font-medium text-gray-700 mb-2">Nombre del Rol</label>
+                <input type="text" id="roleName" name="roleName" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <input type="hidden" name="returnUrl" th:value="${#httpServletRequest.requestURI}">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Crear Rol
+            </button>
+        </form>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <div th:replace="~{organisms/admin-users-table}"></div>
+</section>
+</body>
+</html>

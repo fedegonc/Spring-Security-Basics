@@ -1,0 +1,217 @@
+<!-- Organismo de dashboard de reportes para el administrador -->
+<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+      <i class="bi bi-bar-chart text-green-600 mr-2"></i>
+      Estadísticas del Sistema
+    </h2>
+    <div class="flex gap-2">
+      <button type="button" class="bg-green-50 text-green-700 hover:bg-green-100 px-3 py-1.5 rounded-md text-sm flex items-center">
+        <i class="bi bi-file-earmark-pdf mr-1"></i>
+        Exportar PDF
+      </button>
+      <button type="button" class="bg-green-600 text-white hover:bg-green-700 px-3 py-1.5 rounded-md text-sm flex items-center">
+        <i class="bi bi-arrow-repeat mr-1"></i>
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros de fechas -->
+  <div class="bg-gray-50 p-3 rounded-md mb-4 flex flex-wrap gap-3 items-center">
+    <div class="flex items-center">
+      <span class="text-sm font-medium text-gray-600 mr-2">Periodo:</span>
+      <select class="border-gray-300 rounded-md text-sm bg-white px-3 py-1.5">
+        <option>Último mes</option>
+        <option>Últimos 3 meses</option>
+        <option>Último año</option>
+        <option>Personalizado</option>
+      </select>
+    </div>
+    <div class="flex items-center">
+      <span class="text-sm font-medium text-gray-600 mr-2">Desde:</span>
+      <input type="date" class="border-gray-300 rounded-md text-sm bg-white px-3 py-1.5">
+    </div>
+    <div class="flex items-center">
+      <span class="text-sm font-medium text-gray-600 mr-2">Hasta:</span>
+      <input type="date" class="border-gray-300 rounded-md text-sm bg-white px-3 py-1.5">
+    </div>
+  </div>
+
+  <!-- Métricas principales -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <!-- Solicitudes Activas -->
+    <div class="bg-white border border-gray-200 rounded-lg p-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Solicitudes Activas</p>
+          <p class="text-2xl font-bold text-gray-800" th:text="${activeSolicitudes}">32</p>
+          <p class="text-xs text-green-600">
+            <i class="bi bi-arrow-up"></i> 12% vs. mes anterior
+          </p>
+        </div>
+        <div class="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+          <i class="bi bi-gear-fill text-xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Solicitudes Completadas -->
+    <div class="bg-white border border-gray-200 rounded-lg p-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Solicitudes Completadas</p>
+          <p class="text-2xl font-bold text-gray-800" th:text="${completedSolicitudes}">128</p>
+          <p class="text-xs text-green-600">
+            <i class="bi bi-arrow-up"></i> 8% vs. mes anterior
+          </p>
+        </div>
+        <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+          <i class="bi bi-check-circle-fill text-xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Usuarios Nuevos -->
+    <div class="bg-white border border-gray-200 rounded-lg p-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Usuarios Nuevos</p>
+          <p class="text-2xl font-bold text-gray-800" th:text="${newUsers}">45</p>
+          <p class="text-xs text-green-600">
+            <i class="bi bi-arrow-up"></i> 15% vs. mes anterior
+          </p>
+        </div>
+        <div class="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+          <i class="bi bi-people-fill text-xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tasa de Éxito -->
+    <div class="bg-white border border-gray-200 rounded-lg p-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Tasa de Éxito</p>
+          <p class="text-2xl font-bold text-gray-800" th:text="${successRate + '%'}">92%</p>
+          <p class="text-xs text-green-600">
+            <i class="bi bi-arrow-up"></i> 3% vs. mes anterior
+          </p>
+        </div>
+        <div class="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+          <i class="bi bi-graph-up text-xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos y Análisis -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <!-- Gráfico Solicitudes por Mes -->
+    <div class="border border-gray-200 rounded-lg p-4">
+      <h3 class="text-md font-semibold text-gray-800 mb-4">Solicitudes por Mes</h3>
+      <div class="h-64 bg-gray-50 rounded flex items-center justify-center">
+        <!-- Aquí iría el gráfico, reemplazable por una librería como Chart.js -->
+        <div class="text-center text-gray-500">
+          <i class="bi bi-bar-chart-line text-4xl mb-2"></i>
+          <p>Gráfico de barras - Solicitudes mensuales</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Gráfico Distribución por Material -->
+    <div class="border border-gray-200 rounded-lg p-4">
+      <h3 class="text-md font-semibold text-gray-800 mb-4">Distribución por Material</h3>
+      <div class="h-64 bg-gray-50 rounded flex items-center justify-center">
+        <!-- Aquí iría el gráfico, reemplazable por una librería como Chart.js -->
+        <div class="text-center text-gray-500">
+          <i class="bi bi-pie-chart text-4xl mb-2"></i>
+          <p>Gráfico circular - Distribución por tipo de material</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Rendimiento por Organización -->
+  <div class="border border-gray-200 rounded-lg p-4">
+    <h3 class="text-md font-semibold text-gray-800 mb-4">Rendimiento por Organización</h3>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organización</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Solicitudes</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completadas</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tasa de Éxito</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiempo Promedio</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-8 w-8 mr-3">
+                  <img class="h-8 w-8 rounded-full" src="/img/org-logo.jpg" alt="Logo">
+                </div>
+                <div class="text-sm font-medium text-gray-900">EcoReciclaje Uruguay</div>
+              </div>
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">78</td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">72</td>
+            <td class="px-4 py-3 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="mr-2 w-16 bg-gray-200 rounded-full h-2.5">
+                  <div class="bg-green-600 h-2.5 rounded-full" style="width: 92%"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-900">92%</span>
+              </div>
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">2.3 días</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-8 w-8 mr-3">
+                  <img class="h-8 w-8 rounded-full" src="/img/org-logo2.jpg" alt="Logo">
+                </div>
+                <div class="text-sm font-medium text-gray-900">Cooperativa Verde</div>
+              </div>
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">45</td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">39</td>
+            <td class="px-4 py-3 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="mr-2 w-16 bg-gray-200 rounded-full h-2.5">
+                  <div class="bg-green-600 h-2.5 rounded-full" style="width: 87%"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-900">87%</span>
+              </div>
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">3.1 días</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-8 w-8 mr-3">
+                  <img class="h-8 w-8 rounded-full" src="/img/org-logo3.jpg" alt="Logo">
+                </div>
+                <div class="text-sm font-medium text-gray-900">Recicla Más</div>
+              </div>
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">36</td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">35</td>
+            <td class="px-4 py-3 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="mr-2 w-16 bg-gray-200 rounded-full h-2.5">
+                  <div class="bg-green-600 h-2.5 rounded-full" style="width: 97%"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-900">97%</span>
+              </div>
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">1.8 días</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

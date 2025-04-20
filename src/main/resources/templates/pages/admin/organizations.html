@@ -1,0 +1,181 @@
+<!-- Admin Organizations usando layout base y organismos -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>Gestión de Organizaciones</title>
+    <meta name="description" content="Gestión de organizaciones en el sistema de reciclaje">
+</head>
+<body>
+<section layout:fragment="content" class="container mx-auto px-4 py-6">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-4" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="/admin/dashboard" class="text-gray-700 hover:text-green-600 inline-flex items-center">
+                    <i class="bi bi-house-door-fill mr-2"></i>
+                    Inicio
+                </a>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <i class="bi bi-chevron-right text-gray-400 mx-1"></i>
+                    <span class="text-gray-500">Gestión de Organizaciones</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+    
+    <h1 class="text-2xl font-bold mb-6 flex items-center text-gray-800">
+        <i class="bi bi-building text-blue-600 mr-2"></i>
+        Gestión de Organizaciones
+    </h1>
+    
+    <!-- Filtros de búsqueda -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+        <div class="flex flex-col md:flex-row md:items-end gap-4">
+            <div class="flex-1">
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="bi bi-search text-gray-500"></i>
+                    </div>
+                    <input type="text" id="search" class="pl-10 w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" placeholder="Buscar por nombre, tipo...">
+                </div>
+            </div>
+            <div class="w-full md:w-1/4">
+                <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                <select id="type" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    <option value="">Todos los tipos</option>
+                    <option value="COOPERATIVA">Cooperativa</option>
+                    <option value="ASOCIACION">Asociación</option>
+                    <option value="EMPRESA">Empresa</option>
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <button type="button" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-sm transition">
+                    <i class="bi bi-search mr-1"></i> Buscar
+                </button>
+                <button type="button" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md shadow-sm transition">
+                    <i class="bi bi-arrow-counterclockwise mr-1"></i> Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tabla de organizaciones -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+            <h2 class="text-lg font-semibold text-gray-800">Organizaciones Registradas</h2>
+            <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm shadow-sm transition flex items-center">
+                <i class="bi bi-plus-lg mr-1"></i> Nueva Organización
+            </a>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ubicación</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contacto</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <!-- Iterar sobre organizaciones -->
+                    <tr th:each="org : ${organizations}" th:if="${organizations != null && !organizations.empty}" class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10">
+                                    <img th:if="${org.imagen != null}" th:src="@{/img/uploads/} + ${org.imagen}" class="h-10 w-10 rounded-full object-cover" alt="Logo">
+                                    <div th:unless="${org.imagen != null}" class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                        <i class="bi bi-building"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900" th:text="${org.nombre}">Nombre Organización</div>
+                                    <div class="text-sm text-gray-500" th:text="${org.email}">correo@ejemplo.com</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span th:if="${org.tipo == 'COOPERATIVA'}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Cooperativa</span>
+                            <span th:if="${org.tipo == 'ASOCIACION'}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">Asociación</span>
+                            <span th:if="${org.tipo == 'EMPRESA'}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Empresa</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${org.direccion}">Dirección</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${org.telefono}">Teléfono</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span th:if="${org.activo}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Activo</span>
+                            <span th:unless="${org.activo}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inactivo</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <div class="flex space-x-2">
+                                <a th:href="@{/admin/organizations/} + ${org.id}" class="text-blue-600 hover:text-blue-900">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a th:href="@{/admin/organizations/edit/} + ${org.id}" class="text-green-600 hover:text-green-900">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="text-red-600 hover:text-red-900">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Mensaje si no hay organizaciones -->
+                    <tr th:if="${organizations == null || organizations.empty}">
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                            No hay organizaciones registradas en el sistema
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Paginación simplificada -->
+        <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-gray-700">
+                        Mostrando <span class="font-medium" th:text="${organizations != null ? organizations.size() : 0}">0</span> resultados
+                    </p>
+                </div>
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">1</a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</a>
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mapa de organizaciones -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="p-4 border-b bg-gray-50">
+            <h2 class="text-lg font-semibold text-gray-800">Mapa de Organizaciones</h2>
+        </div>
+        <div class="p-4">
+            <div class="h-80 bg-gray-100 rounded flex items-center justify-center">
+                <!-- Aquí iría el componente de mapa -->
+                <div class="text-center text-gray-500">
+                    <i class="bi bi-geo-alt text-4xl mb-2"></i>
+                    <p>Mapa de ubicaciones</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
