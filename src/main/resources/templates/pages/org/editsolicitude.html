@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='org', footerType='full', currentPage='Editar Solicitud', metaDescription='Editar solicitud de la organización'">
+
+<head>
+    <title>Editar Solicitud - Organización</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .form-group { margin-bottom: 1rem; }
+            .form-control { width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 0.25rem; }
+            .form-control:focus { outline: none; border-color: #4299e1; box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5); }
+            .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="container px-4 py-5 mx-auto">
+            <!-- Encabezado -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-5">
+                <h1 class="text-2xl font-bold text-gray-800">Editar Solicitud</h1>
+                <a th:href="@{/org/solicitudes}" class="text-blue-600 hover:underline">
+                    <i class="fas fa-arrow-left mr-1"></i> Volver a Solicitudes
+                </a>
+            </div>
+            
+            <!-- Mensajes de alerta -->
+            <div th:if="${error}" class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+                <p th:text="${error}">Error</p>
+            </div>
+            <div th:if="${success}" class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded">
+                <p th:text="${success}">Éxito</p>
+            </div>
+            
+            <!-- Formulario de edición -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-5">
+                <form th:action="@{/org/solicitudes/editar}" method="post" enctype="multipart/form-data" th:object="${solicitude}">
+                    <input type="hidden" th:field="*{id}" />
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Título -->
+                        <div class="form-group">
+                            <label for="titulo" class="form-label">Título</label>
+                            <input type="text" id="titulo" th:field="*{titulo}" class="form-control" required />
+                            <div th:if="${#fields.hasErrors('titulo')}" class="text-red-500 text-sm mt-1" th:errors="*{titulo}">Error</div>
+                        </div>
+                        
+                        <!-- Categoría -->
+                        <div class="form-group">
+                            <label for="categoria" class="form-label">Categoría</label>
+                            <select id="categoria" th:field="*{categoria}" class="form-control" required>
+                                <option value="">Seleccione una categoría</option>
+                                <option value="ROPA">Ropa</option>
+                                <option value="ELECTRONICA">Electrónica</option>
+                                <option value="MUEBLES">Muebles</option>
+                                <option value="ALIMENTOS">Alimentos</option>
+                                <option value="OTROS">Otros</option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('categoria')}" class="text-red-500 text-sm mt-1" th:errors="*{categoria}">Error</div>
+                        </div>
+                        
+                        <!-- Descripción -->
+                        <div class="form-group col-span-1 md:col-span-2">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea id="descripcion" th:field="*{descripcion}" class="form-control" rows="4" required></textarea>
+                            <div th:if="${#fields.hasErrors('descripcion')}" class="text-red-500 text-sm mt-1" th:errors="*{descripcion}">Error</div>
+                        </div>
+                        
+                        <!-- Tamaño -->
+                        <div class="form-group">
+                            <label for="tamanio" class="form-label">Tamaño</label>
+                            <select id="tamanio" th:field="*{tamanio}" class="form-control" required>
+                                <option value="">Seleccione un tamaño</option>
+                                <option value="PEQUENO">Pequeño</option>
+                                <option value="MEDIANO">Mediano</option>
+                                <option value="GRANDE">Grande</option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('tamanio')}" class="text-red-500 text-sm mt-1" th:errors="*{tamanio}">Error</div>
+                        </div>
+                        
+                        <!-- Peso -->
+                        <div class="form-group">
+                            <label for="peso" class="form-label">Peso (kg)</label>
+                            <input type="number" id="peso" th:field="*{peso}" class="form-control" step="0.1" min="0" required />
+                            <div th:if="${#fields.hasErrors('peso')}" class="text-red-500 text-sm mt-1" th:errors="*{peso}">Error</div>
+                        </div>
+                        
+                        <!-- Dirección -->
+                        <div class="form-group">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" id="direccion" th:field="*{direccion}" class="form-control" required />
+                            <div th:if="${#fields.hasErrors('direccion')}" class="text-red-500 text-sm mt-1" th:errors="*{direccion}">Error</div>
+                        </div>
+                        
+                        <!-- Teléfono -->
+                        <div class="form-group">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="tel" id="telefono" th:field="*{telefono}" class="form-control" required />
+                            <div th:if="${#fields.hasErrors('telefono')}" class="text-red-500 text-sm mt-1" th:errors="*{telefono}">Error</div>
+                        </div>
+                        
+                        <!-- Imagen -->
+                        <div class="form-group col-span-1 md:col-span-2">
+                            <label for="file" class="form-label">Imagen</label>
+                            <input type="file" id="file" name="file" class="form-control" accept="image/*" />
+                            <div class="text-sm text-gray-500 mt-1">Deje en blanco para mantener la imagen actual</div>
+                            
+                            <!-- Mostrar imagen actual si existe -->
+                            <div th:if="${solicitude.imagen != null && !solicitude.imagen.isEmpty()}" class="mt-2">
+                                <p class="text-sm font-medium mb-1">Imagen actual:</p>
+                                <img th:src="@{'/img/' + ${solicitude.imagen}}" alt="Imagen de la solicitud" class="max-w-xs rounded border" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <a th:href="@{/org/solicitudes}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

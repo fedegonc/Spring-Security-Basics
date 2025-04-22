@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='admin', footerType='full', currentPage='Estadísticas', metaDescription='Estadísticas detalladas del sistema'">
+
+<head>
+    <title>Estadísticas - Administración</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .stats-card:hover { transform: translateY(-2px); transition: all 0.2s; }
+            .chart-container { height: 300px; }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="container px-4 py-5 mx-auto">
+            <!-- Encabezado -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-5">
+                <h1 class="text-2xl font-bold text-gray-800">Estadísticas del Sistema</h1>
+                <p class="text-sm text-gray-500" th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">01/01/2025</p>
+            </div>
+            
+            <!-- Mensajes de alerta -->
+            <div th:if="${error}" class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+                <p th:text="${error}">Error</p>
+            </div>
+            
+            <!-- Resumen de estadísticas -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+                <!-- Total Usuarios -->
+                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-blue-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Usuarios</p>
+                            <p class="text-2xl font-bold text-gray-800" th:text="${totalUsers}">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                            <span class="text-lg">👥</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Administradores -->
+                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-indigo-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Administradores</p>
+                            <p class="text-2xl font-bold text-gray-800" th:text="${totalAdmins}">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                            <span class="text-lg">👨‍💼</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Organizaciones -->
+                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-purple-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Organizaciones</p>
+                            <p class="text-2xl font-bold text-gray-800" th:text="${totalOrgs}">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                            <span class="text-lg">🏢</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Usuarios Regulares -->
+                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-green-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Usuarios Regulares</p>
+                            <p class="text-2xl font-bold text-gray-800" th:text="${totalRegularUsers}">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                            <span class="text-lg">👤</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Estadísticas de Solicitudes y Reportes -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+                <!-- Solicitudes -->
+                <div class="bg-white rounded-lg shadow-sm p-4">
+                    <h2 class="text-lg font-bold mb-3">Solicitudes</h2>
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Solicitudes</p>
+                            <p class="text-2xl font-bold text-gray-800" th:text="${totalSolicitudes}">0</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <!-- Aquí se puede agregar un gráfico de solicitudes por día -->
+                        <div th:if="${solicitudesPorDia != null && !solicitudesPorDia.isEmpty()}" class="h-full">
+                            <table class="min-w-full text-sm">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left py-2">Fecha</th>
+                                        <th class="text-left py-2">Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="entry : ${solicitudesPorDia.entrySet()}" class="border-b hover:bg-gray-50">
+                                        <td class="py-2" th:text="${entry.key}">Fecha</td>
+                                        <td class="py-2" th:text="${entry.value}">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div th:if="${solicitudesPorDia == null || solicitudesPorDia.isEmpty()}" class="flex items-center justify-center h-full">
+                            <p class="text-gray-500">No hay datos de solicitudes disponibles</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reportes -->
+                <div class="bg-white rounded-lg shadow-sm p-4">
+                    <h2 class="text-lg font-bold mb-3">Reportes</h2>
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Reportes</p>
+                            <p class="text-2xl font-bold text-gray-800" th:text="${totalReportes}">0</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <!-- Aquí se puede agregar un gráfico de reportes por estado -->
+                        <div th:if="${reportesPorEstado != null && !reportesPorEstado.isEmpty()}" class="h-full">
+                            <table class="min-w-full text-sm">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left py-2">Estado</th>
+                                        <th class="text-left py-2">Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="entry : ${reportesPorEstado.entrySet()}" class="border-b hover:bg-gray-50">
+                                        <td class="py-2">
+                                            <span th:if="${entry.key == 'PENDING'}" class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pendiente</span>
+                                            <span th:if="${entry.key == 'IN_PROGRESS'}" class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">En Proceso</span>
+                                            <span th:if="${entry.key == 'RESOLVED'}" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Resuelto</span>
+                                            <span th:if="${entry.key == 'CLOSED'}" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Cerrado</span>
+                                        </td>
+                                        <td class="py-2" th:text="${entry.value}">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div th:if="${reportesPorEstado == null || reportesPorEstado.isEmpty()}" class="flex items-center justify-center h-full">
+                            <p class="text-gray-500">No hay datos de reportes disponibles</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Usuarios por Rol -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-5">
+                <h2 class="text-lg font-bold mb-3">Distribución de Usuarios por Rol</h2>
+                <div th:if="${usersByRole != null && !usersByRole.isEmpty()}" class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2">Rol</th>
+                                <th class="text-left py-2">Cantidad</th>
+                                <th class="text-left py-2">Porcentaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="entry : ${usersByRole.entrySet()}" class="border-b hover:bg-gray-50">
+                                <td class="py-2">
+                                    <span th:if="${entry.key == 'ROLE_ADMIN'}" class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Administrador</span>
+                                    <span th:if="${entry.key == 'ROLE_USER'}" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Usuario</span>
+                                    <span th:if="${entry.key == 'ROLE_ORGANIZATION'}" class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">Organización</span>
+                                    <span th:if="${!entry.key.startsWith('ROLE_')}" th:text="${entry.key}">Otro Rol</span>
+                                </td>
+                                <td class="py-2" th:text="${entry.value}">0</td>
+                                <td class="py-2" th:text="${#numbers.formatDecimal(entry.value * 100 / totalUsers, 1, 2) + '%'}" th:if="${totalUsers > 0}">0%</td>
+                                <td class="py-2" th:if="${totalUsers == 0}">0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:if="${usersByRole == null || usersByRole.isEmpty()}" class="text-center py-6">
+                    <p class="text-gray-500">No hay datos de roles disponibles</p>
+                </div>
+            </div>
+            
+            <!-- Usuarios por Día -->
+            <div class="bg-white rounded-lg shadow-sm p-4">
+                <h2 class="text-lg font-bold mb-3">Registro de Usuarios por Día</h2>
+                <div th:if="${usuariosPorDia != null && !usuariosPorDia.isEmpty()}" class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2">Fecha</th>
+                                <th class="text-left py-2">Nuevos Usuarios</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="entry : ${usuariosPorDia.entrySet()}" class="border-b hover:bg-gray-50">
+                                <td class="py-2" th:text="${entry.key}">Fecha</td>
+                                <td class="py-2" th:text="${entry.value}">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:if="${usuariosPorDia == null || usuariosPorDia.isEmpty()}" class="text-center py-6">
+                    <p class="text-gray-500">No hay datos de registro de usuarios disponibles</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

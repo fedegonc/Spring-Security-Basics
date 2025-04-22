@@ -147,4 +147,18 @@ public interface UserService {
      * @return true si se eliminó correctamente, false en caso contrario
      */
     boolean deleteUserByAdmin(int id, RedirectAttributes redirectAttributes);
+    
+    /**
+     * Obtiene un usuario por su ID con sus roles precargados para evitar consultas N+1
+     * @param id ID del usuario
+     * @return Usuario con sus roles precargados o vacío si no existe
+     */
+    Optional<User> findByIdWithRoles(Long id);
+
+    /**
+     * Encuentra usuarios por nombre de rol
+     * @param roleName Nombre del rol (ej. "ROLE_USER", "ROLE_ADMIN")
+     * @return Lista de usuarios que tienen el rol especificado
+     */
+    List<User> findByRoleName(String roleName);
 }

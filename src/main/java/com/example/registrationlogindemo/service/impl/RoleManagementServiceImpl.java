@@ -256,4 +256,17 @@ public class RoleManagementServiceImpl implements RoleManagementService {
         
         return normalized;
     }
+    
+    /**
+     * Convierte una lista de IDs de roles a una cadena separada por comas
+     * @param roleIds Lista de IDs de roles
+     * @return Cadena con los IDs separados por comas, o null si la lista está vacía
+     */
+    @Override
+    public String convertRoleIdsToString(List<Long> roleIds) {
+        if (roleIds == null || roleIds.isEmpty()) {
+            return null;
+        }
+        return String.join(",", roleIds.stream().map(Object::toString).toArray(String[]::new));
+    }
 }

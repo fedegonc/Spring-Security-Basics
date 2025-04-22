@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='user', footerType='simple', currentPage='Nueva Solicitud', metaDescription='Crear una nueva solicitud de reciclaje'">
+
+<head>
+    <title>Nueva Solicitud - Reciclaje</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .required:after {
+                content: " *";
+                color: red;
+            }
+            .dropzone {
+                border: 2px dashed #ccc;
+                border-radius: 5px;
+                padding: 2rem;
+                text-align: center;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .dropzone:hover {
+                background-color: #f8f8f8;
+            }
+            .preview-container {
+                margin-top: 1rem;
+                display: none;
+            }
+            .preview-image {
+                max-width: 100%;
+                max-height: 200px;
+                border-radius: 5px;
+            }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="container px-4 py-5 mx-auto">
+            <!-- Breadcrumbs hardcodeados -->
+            <nav class="flex mb-5" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a th:href="@{/user/inicio}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-green-600">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                            </svg>
+                            Inicio
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <a th:href="@{/user/solicitudes}" class="ml-1 text-sm font-medium text-gray-700 hover:text-green-600 md:ml-2">Mis Solicitudes</a>
+                        </div>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Nueva Solicitud</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- Encabezado -->
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Nueva Solicitud de Reciclaje</h1>
+                <p class="text-gray-600 mt-1">Completa el formulario con los detalles de los materiales que deseas reciclar</p>
+            </div>
+
+            <!-- Mensajes de error/éxito -->
+            <div th:if="${error}" class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+                <span class="font-medium">Error!</span> <span th:text="${error}">Mensaje de error</span>
+            </div>
+            <div th:if="${success}" class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+                <span class="font-medium">Éxito!</span> <span th:text="${success}">Mensaje de éxito</span>
+            </div>
+
+            <!-- Formulario de nueva solicitud -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <form th:action="@{/user/newsolicitude}" method="post" enctype="multipart/form-data" th:object="${solicitud}" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Título -->
+                        <div>
+                            <label for="titulo" class="block text-sm font-medium text-gray-700">Título de la solicitud</label>
+                            <input type="text" id="titulo" name="titulo" th:field="*{titulo}" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Título para tu solicitud">
+                        </div>
+                        
+                        <!-- Categoría -->
+                        <div>
+                            <label for="categoria" class="block text-sm font-medium text-gray-700 required">Categoría</label>
+                            <select id="categoria" name="categoria" th:field="*{categoria}" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                <option value="">Seleccionar categoría</option>
+                                <option value="PAPEL">Papel y cartón</option>
+                                <option value="VIDRIO">Vidrio</option>
+                                <option value="PLASTICO">Plástico</option>
+                                <option value="METAL">Metal</option>
+                                <option value="ORGANICO">Orgánico</option>
+                                <option value="ELECTRONICOS">Electrónicos</option>
+                                <option value="TEXTILES">Textiles</option>
+                                <option value="OTROS">Otros</option>
+                            </select>
+                        </div>
+
+                        <!-- Barrio -->
+                        <div>
+                            <label for="barrio" class="block text-sm font-medium text-gray-700 required">Barrio</label>
+                            <input type="text" id="barrio" name="barrio" th:field="*{barrio}" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Ingresa tu barrio">
+                        </div>
+
+                        <!-- Peso -->
+                        <div>
+                            <label for="peso" class="block text-sm font-medium text-gray-700">Peso aproximado (kg)</label>
+                            <input type="text" id="peso" name="peso" th:field="*{peso}" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Ingresa el peso aproximado">
+                        </div>
+
+                        <!-- Tamaño -->
+                        <div>
+                            <label for="tamanio" class="block text-sm font-medium text-gray-700">Tamaño</label>
+                            <select id="tamanio" name="tamanio" th:field="*{tamanio}" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                <option value="">Seleccionar tamaño</option>
+                                <option value="PEQUEÑO">Pequeño</option>
+                                <option value="MEDIANO">Mediano</option>
+                                <option value="GRANDE">Grande</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <!-- Calle -->
+                        <div>
+                            <label for="calle" class="block text-sm font-medium text-gray-700 required">Calle</label>
+                            <input type="text" id="calle" name="calle" th:field="*{calle}" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Nombre de la calle">
+                        </div>
+
+                        <!-- Número de casa -->
+                        <div>
+                            <label for="numeroDeCasa" class="block text-sm font-medium text-gray-700 required">Número de casa</label>
+                            <input type="text" id="numeroDeCasa" name="numeroDeCasa" th:field="*{numeroDeCasa}" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Número de casa o apartamento">
+                        </div>
+
+                        <!-- Referencia local -->
+                        <div>
+                            <label for="referenciaLocal" class="block text-sm font-medium text-gray-700 required">Referencia local</label>
+                            <input type="text" id="referenciaLocal" name="referenciaLocal" th:field="*{referenciaLocal}" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Punto de referencia cercano">
+                        </div>
+
+                        <!-- Dirección completa -->
+                        <div>
+                            <label for="direccion" class="block text-sm font-medium text-gray-700 required">Dirección completa</label>
+                            <input type="text" id="direccion" name="direccion" th:field="*{direccion}" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Dirección completa">
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div>
+                            <label for="telefono" class="block text-sm font-medium text-gray-700 required">Teléfono de contacto</label>
+                            <input type="text" id="telefono" name="telefono" th:field="*{telefono}" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Teléfono para coordinar la recogida">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <!-- Días disponibles -->
+                        <div>
+                            <label for="diasDisponibles" class="block text-sm font-medium text-gray-700 required">Días disponibles</label>
+                            <input type="text" id="diasDisponibles" name="diasDisponibles" th:field="*{diasDisponibles}" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Ej: Lunes a Viernes, Solo fines de semana">
+                        </div>
+
+                        <!-- Hora de recolección -->
+                        <div>
+                            <label for="horaRecoleccion" class="block text-sm font-medium text-gray-700 required">Hora de recolección</label>
+                            <input type="text" id="horaRecoleccion" name="horaRecoleccion" th:field="*{horaRecoleccion}" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Ej: Mañana (8-12), Tarde (14-18)">
+                        </div>
+
+                        <!-- Destino -->
+                        <div>
+                            <label for="destino" class="block text-sm font-medium text-gray-700 required">Destino preferido</label>
+                            <select id="destino" name="destino" th:field="*{destino}" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                <option value="">Seleccionar destino</option>
+                                <option value="RECICLADORA_LOCAL">Recicladora local</option>
+                                <option value="CENTRO_ACOPIO">Centro de acopio</option>
+                                <option value="PLANTA_TRATAMIENTO">Planta de tratamiento</option>
+                                <option value="CUALQUIERA">Cualquiera</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="mt-6">
+                        <label for="descripcion" class="block text-sm font-medium text-gray-700 required">Descripción detallada</label>
+                        <textarea id="descripcion" name="descripcion" th:field="*{descripcion}" rows="4" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Describe los materiales a reciclar, estado, tamaño, etc."></textarea>
+                    </div>
+
+                    <!-- Subida de imagen -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Imagen de referencia</label>
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md dropzone" id="dropzone">
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600">
+                                    <label for="file" class="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-green-500">
+                                        <span>Sube una imagen</span>
+                                        <input id="file" name="file" type="file" class="sr-only" accept="image/*">
+                                    </label>
+                                    <p class="pl-1">o arrastra y suelta</p>
+                                </div>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF hasta 10MB</p>
+                            </div>
+                        </div>
+                        <div class="preview-container mt-3" id="previewContainer">
+                            <img id="previewImage" src="#" alt="Vista previa" class="preview-image">
+                            <button type="button" id="removeImage" class="mt-2 inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                Eliminar imagen
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="flex justify-end space-x-3">
+                        <!-- Botón para rellenar campos automáticamente (solo para desarrollo) -->
+                        <button type="button" id="fillTestData" class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                            Rellenar datos de prueba
+                        </button>
+                        
+                        <a th:href="@{/user/solicitudes}" class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            Crear Solicitud
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            // Script para manejar la vista previa de la imagen
+            document.addEventListener('DOMContentLoaded', function() {
+                const dropzone = document.getElementById('dropzone');
+                const fileInput = document.getElementById('file');
+                const previewContainer = document.getElementById('previewContainer');
+                const previewImage = document.getElementById('previewImage');
+                const removeButton = document.getElementById('removeImage');
+                const fillTestDataButton = document.getElementById('fillTestData');
+
+                // Función para mostrar la vista previa
+                function showPreview(file) {
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImage.src = e.target.result;
+                            previewContainer.style.display = 'block';
+                            dropzone.classList.add('border-green-500');
+                            dropzone.classList.add('bg-green-50');
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                }
+
+                // Evento de cambio en el input de archivo
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    showPreview(file);
+                });
+
+                // Eventos para arrastrar y soltar
+                dropzone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    dropzone.classList.add('border-green-300');
+                    dropzone.classList.add('bg-green-50');
+                });
+
+                dropzone.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    if (!previewContainer.style.display || previewContainer.style.display === 'none') {
+                        dropzone.classList.remove('border-green-300');
+                        dropzone.classList.remove('bg-green-50');
+                    }
+                });
+
+                dropzone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    const file = e.dataTransfer.files[0];
+                    fileInput.files = e.dataTransfer.files;
+                    showPreview(file);
+                });
+
+                // Evento para eliminar la imagen
+                removeButton.addEventListener('click', function() {
+                    fileInput.value = '';
+                    previewContainer.style.display = 'none';
+                    dropzone.classList.remove('border-green-500');
+                    dropzone.classList.remove('bg-green-50');
+                });
+
+                // Hack para hacer que los input con Thymeleaf se comporten mejor con la validación
+                document.querySelectorAll('input, textarea, select').forEach(function(el) {
+                    el.addEventListener('invalid', function() {
+                        this.classList.add('border-red-500');
+                    });
+                    el.addEventListener('input', function() {
+                        this.classList.remove('border-red-500');
+                    });
+                });
+
+                // Función para rellenar los campos con datos de prueba
+                fillTestDataButton.addEventListener('click', function() {
+                    // Rellenar campos de selección
+                    document.getElementById('categoria').value = 'PAPEL';
+                    document.getElementById('tamanio').value = 'MEDIANO';
+                    document.getElementById('destino').value = 'RECICLADORA_LOCAL';
+                    
+                    // Rellenar campos de texto
+                    document.getElementById('barrio').value = 'Barrio Centro';
+                    document.getElementById('peso').value = '5.5';
+                    document.getElementById('calle').value = 'Av. Principal';
+                    document.getElementById('numeroDeCasa').value = '123';
+                    document.getElementById('referenciaLocal').value = 'Frente al parque central';
+                    document.getElementById('direccion').value = 'Av. Principal 123, Barrio Centro';
+                    document.getElementById('telefono').value = '099123456';
+                    document.getElementById('diasDisponibles').value = 'Lunes a Viernes';
+                    document.getElementById('horaRecoleccion').value = '9:00 - 12:00';
+                    document.getElementById('descripcion').value = 'Cajas de cartón y papeles de oficina para reciclar. Material limpio y seco, aproximadamente 5 kg.';
+                    
+                    // Simular carga de imagen si no hay ninguna cargada
+                    if (!fileInput.files || fileInput.files.length === 0) {
+                        // Crear una imagen de prueba (un canvas con color)
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 400;
+                        canvas.height = 300;
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Dibujar un rectángulo de color verde claro
+                        ctx.fillStyle = '#d1fae5';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Dibujar un texto
+                        ctx.fillStyle = '#065f46';
+                        ctx.font = '20px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('Imagen de prueba para reciclaje', canvas.width/2, canvas.height/2);
+                        
+                        // Convertir el canvas a una URL de datos
+                        const dataUrl = canvas.toDataURL('image/png');
+                        
+                        // Mostrar la imagen en la vista previa
+                        previewImage.src = dataUrl;
+                        previewContainer.style.display = 'block';
+                        dropzone.classList.add('border-green-500');
+                        dropzone.classList.add('bg-green-50');
+                        
+                        // Convertir la URL de datos a un archivo Blob
+                        fetch(dataUrl)
+                            .then(res => res.blob())
+                            .then(blob => {
+                                // Crear un archivo a partir del blob
+                                const file = new File([blob], "test-image.png", { type: "image/png" });
+                                
+                                // Crear un DataTransfer para poder asignar el archivo al input
+                                const dataTransfer = new DataTransfer();
+                                dataTransfer.items.add(file);
+                                fileInput.files = dataTransfer.files;
+                            });
+                    }
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html>

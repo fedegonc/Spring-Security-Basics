@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='admin', footerType='full', currentPage='Editar Usuario', metaDescription='Edición de usuario'">
+
+<head>
+    <title>Editar Usuario - Administración</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .role-checkbox:checked + label {
+                background-color: #3b82f6;
+                color: white;
+            }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="container px-4 py-5 mx-auto">
+            <!-- Encabezado -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-5">
+                <h1 class="text-2xl font-bold text-gray-800">Editar Usuario</h1>
+                <div class="flex space-x-2 mt-3 md:mt-0">
+                    <a th:href="@{/admin/users}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                        Volver a Usuarios
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Mensajes de alerta -->
+            <div th:if="${error}" class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+                <p th:text="${error}">Error</p>
+            </div>
+            <div th:if="${success}" class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded">
+                <p th:text="${success}">Éxito</p>
+            </div>
+            
+            <!-- Formulario de edición -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-5">
+                <form th:action="@{'/admin/users/update/' + ${user.id}}" method="post" enctype="multipart/form-data" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="mb-3">
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                            <input type="text" id="name" name="name" th:value="${user.name}" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="email" name="email" th:value="${user.email}" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Roles</label>
+                        <div class="flex flex-wrap gap-2">
+                            <div th:each="role : ${roles}" class="flex items-center">
+                                <input type="checkbox" th:id="${'role_' + role.id}" name="roleIds" th:value="${role.id}" 
+                                       th:checked="${user.roles.contains(role)}" class="hidden role-checkbox">
+                                <label th:for="${'role_' + role.id}" 
+                                       class="px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition-colors"
+                                       th:text="${#strings.replace(role.name, 'ROLE_', '')}">
+                                    Rol
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="fileImage" class="block text-sm font-medium text-gray-700 mb-1">Imagen de perfil</label>
+                        <input type="file" id="fileImage" name="fileImage" accept="image/*" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <div th:if="${user.profileImage != null && !user.profileImage.isEmpty()}" class="mt-2">
+                            <p class="text-sm text-gray-500">Imagen actual:</p>
+                            <img th:src="@{'/images/' + ${user.profileImage}}" alt="Imagen de perfil" class="mt-1 h-20 w-20 object-cover rounded-full">
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <a th:href="@{/admin/users}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <th:block layout:fragment="scripts">
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const checkboxes = document.querySelectorAll('.role-checkbox');
+                checkboxes.forEach(checkbox => {
+                    const label = document.querySelector(`label[for="${checkbox.id}"]`);
+                    if (checkbox.checked) {
+                        label.classList.add('bg-blue-600', 'text-white');
+                        label.classList.remove('border-gray-300', 'hover:bg-gray-100');
+                    }
+                    
+                    checkbox.addEventListener('change', function() {
+                        if (this.checked) {
+                            label.classList.add('bg-blue-600', 'text-white');
+                            label.classList.remove('border-gray-300', 'hover:bg-gray-100');
+                        } else {
+                            label.classList.remove('bg-blue-600', 'text-white');
+                            label.classList.add('border-gray-300', 'hover:bg-gray-100');
+                        }
+                    });
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html>

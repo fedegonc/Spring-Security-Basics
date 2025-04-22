@@ -34,4 +34,7 @@ public interface SolicitudeRepository extends JpaRepository<Solicitude, Integer>
     List<Solicitude> findByDestinoContaining(String string);
 
     List<Solicitude> findByUserId(long id);
+    
+    // Método para encontrar solicitudes por usuario ordenadas por fecha descendente
+    List<Solicitude> findByUserOrderByFechaDesc(User user);
 }

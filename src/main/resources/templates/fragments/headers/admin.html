@@ -1,0 +1,131 @@
+<!-- Header para administradores -->
+<header th:fragment="header" class="bg-green-800 text-white shadow-lg mb-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16">
+        <!-- Logo y Navegación Desktop -->
+        <div class="flex items-center">
+            <a th:href="@{/}" class="flex items-center">
+                <img th:src="@{/img/logov4.png}" alt="EcoSolicitud Logo" class="h-8 w-auto me-2 d-inline-block align-text-top" />
+                <span class="text-white font-bold text-xl">EcoSolicitud</span>
+            </a>
+            <nav class="hidden md:ml-6 md:flex md:space-x-4">
+                <a th:href="@{/admin/inicio}" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
+                    <i class="bi bi-speedometer2 mr-1"></i>Panel
+                </a>
+                <a th:href="@{/admin/users}" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
+                    <i class="bi bi-people mr-1"></i>Usuarios
+                </a>
+                <a th:href="@{/admin/solicitudes}" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
+                    <i class="bi bi-clipboard-check mr-1"></i>Solicitudes
+                </a>
+                <a th:href="@{/admin/reports}" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
+                    <i class="bi bi-graph-up mr-1"></i>Reportes
+                </a>
+                <a th:href="@{/admin/estadisticas}" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
+                    <i class="bi bi-graph-up mr-1"></i>Estadísticas
+                </a>
+            </nav>
+        </div>
+
+        <!-- Menú de Usuario e Idioma (Desktop) -->
+        <div class="flex items-center">
+            <!-- Autenticado -->
+            <div class="relative ml-3 dropdown" sec:authorize="isAuthenticated()">
+                <div>
+                    <button type="button" id="userMenuButton" class="flex text-sm rounded-full focus:outline-none" 
+                            aria-expanded="false" aria-haspopup="true">
+                        <span class="sr-only">Abrir menú de usuario</span>
+                        <img class="h-8 w-8 rounded-full border border-gray-200 object-cover"
+                             th:src="@{/img/default-profile.jpg}"
+                             alt="Foto de perfil">
+                        <span class="text-white ml-2 mt-1 hidden sm:inline" sec:authentication="name">Usuario</span>
+                    </button>
+                </div>
+                <div id="userMenu" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50 hidden">
+                    <a th:href="@{/admin/profile}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="bi bi-person mr-2"></i>Mi Perfil
+                    </a>
+                    <a th:href="@{/admin/configuration}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="bi bi-gear mr-2"></i>Configuración
+                    </a>
+                    <hr class="my-1">
+                    <a th:href="@{/logout}" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                        <i class="bi bi-box-arrow-right mr-2"></i>Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+
+            <!-- Selector de idioma -->
+            <div class="flex space-x-2 ml-4">
+                <a href="?language=es" class="text-white hover:text-gray-300">
+                    <img th:src="@{/img/uruguay.png}" class="h-5 w-5" alt="Español"/>
+                </a>
+                <a href="?language=pt" class="text-white hover:text-gray-300">
+                    <img th:src="@{/img/brasil.png}" class="h-5 w-5" alt="Português"/>
+                </a>
+            </div>
+        </div>
+
+        <!-- Botón Menú Móvil -->
+        <button id="mobileMenuButton" class="md:hidden flex items-center text-white">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Menú Móvil -->
+    <div id="mobileMenu" class="hidden md:hidden px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-green-700">
+        <a th:href="@{/admin/inicio}" class="text-white hover:bg-green-600 block px-3 py-2 rounded-md text-base font-medium">
+            <i class="bi bi-speedometer2 mr-1"></i>Panel
+        </a>
+        <a th:href="@{/admin/users}" class="text-white hover:bg-green-600 block px-3 py-2 rounded-md text-base font-medium">
+            <i class="bi bi-people mr-1"></i>Usuarios
+        </a>
+        <a th:href="@{/admin/solicitudes}" class="text-white hover:bg-green-600 block px-3 py-2 rounded-md text-base font-medium">
+            <i class="bi bi-clipboard-check mr-1"></i>Solicitudes
+        </a>
+        <a th:href="@{/admin/reports}" class="text-white hover:bg-green-600 block px-3 py-2 rounded-md text-base font-medium">
+            <i class="bi bi-graph-up mr-1"></i>Reportes
+        </a>
+        <hr class="border-gray-600 my-2">
+        <a th:href="@{/admin/profile}" class="text-white hover:bg-green-600 block px-3 py-2 rounded-md text-base font-medium">
+            <i class="bi bi-person mr-1"></i>Mi Perfil
+        </a>
+        <a th:href="@{/logout}" class="text-white hover:bg-green-600 block px-3 py-2 rounded-md text-base font-medium">
+            <i class="bi bi-box-arrow-right mr-1"></i>Cerrar Sesión
+        </a>
+    </div>
+
+    <script>
+        // Funcionalidad para menú desplegable de usuario y menú móvil
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle menú usuario
+            const userMenuButton = document.getElementById('userMenuButton');
+            const userMenu = document.getElementById('userMenu');
+            
+            if (userMenuButton) {
+                userMenuButton.addEventListener('click', function() {
+                    userMenu.classList.toggle('hidden');
+                });
+            }
+            
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', function(event) {
+                if (userMenuButton && !userMenuButton.contains(event.target) && 
+                    userMenu && !userMenu.contains(event.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
+            
+            // Toggle menú móvil
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
+</header>

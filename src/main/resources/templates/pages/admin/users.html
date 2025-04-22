@@ -1,55 +1,111 @@
-<!-- Página de Administración de Usuarios -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      layout:decorate="~{layouts/layout}">
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='admin', footerType='full', currentPage='Usuarios', metaDescription='Gestión de usuarios'">
+
 <head>
-    <title>Administración de Usuarios</title>
-    <meta name="description" content="Gestión de usuarios y roles del sistema de reciclaje">
+    <title>Gestión de Usuarios - Administración</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .user-card:hover { transform: translateY(-2px); transition: all 0.2s; }
+        </style>
+    </th:block>
 </head>
+
 <body>
-<section layout:fragment="content" class="container mx-auto px-4 py-6">
-    <!-- Breadcrumb -->
-    <nav class="flex mb-4" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-3">
-            <li class="inline-flex items-center">
-                <a href="/admin/dashboard" class="text-gray-700 hover:text-green-600 inline-flex items-center">
-                    <i class="bi bi-house-door-fill mr-2"></i>
-                    Inicio
-                </a>
-            </li>
-            <li aria-current="page">
-                <div class="flex items-center">
-                    <i class="bi bi-chevron-right text-gray-400 mx-1"></i>
-                    <span class="text-gray-500">Administración de Usuarios</span>
+    <section layout:fragment="content">
+        <div class="container px-4 py-5 mx-auto">
+            <!-- Encabezado -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-5">
+                <h1 class="text-2xl font-bold text-gray-800">Gestión de Usuarios</h1>
+                <div class="flex space-x-2 mt-3 md:mt-0">
+                    <a th:href="@{/admin/newuser}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        Crear Usuario
+                    </a>
+                    <button type="button" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" 
+                            data-bs-toggle="modal" data-bs-target="#createRoleModal">
+                        Crear Rol
+                    </button>
                 </div>
-            </li>
-        </ol>
-    </nav>
-
-    <h1 class="text-2xl font-bold mb-6 flex items-center text-gray-800">
-        <i class="bi bi-people text-green-600 mr-2"></i>
-        Administración de Usuarios
-    </h1>
-
-    <!-- Sección para crear nuevo rol -->
-    <div class="bg-white p-4 rounded-lg shadow mb-6">
-        <h2 class="text-lg font-semibold mb-3 text-gray-700">Crear Nuevo Rol</h2>
-        <form th:action="@{/admin/crear-rol}" method="post" class="flex flex-wrap items-end">
-            <div class="mr-4 mb-2">
-                <label for="roleName" class="block text-sm font-medium text-gray-700 mb-2">Nombre del Rol</label>
-                <input type="text" id="roleName" name="roleName" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
-            <input type="hidden" name="returnUrl" th:value="${#httpServletRequest.requestURI}">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Crear Rol
-            </button>
-        </form>
-    </div>
-
-    <!-- Tabla de usuarios -->
-    <div th:replace="~{organisms/admin-users-table}"></div>
-</section>
+            
+            <!-- Mensajes de alerta -->
+            <div th:if="${error}" class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+                <p th:text="${error}">Error</p>
+            </div>
+            <div th:if="${success}" class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded">
+                <p th:text="${success}">Éxito</p>
+            </div>
+            
+            <!-- Lista de usuarios -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-5">
+                <h2 class="text-lg font-bold mb-3">Usuarios del Sistema</h2>
+                <div th:if="${users == null || users.isEmpty()}" class="text-center py-6">
+                    <p class="text-gray-500">No hay usuarios registrados</p>
+                </div>
+                <div th:if="${users != null && !users.isEmpty()}" class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2">Usuario</th>
+                                <th class="text-left py-2">Email</th>
+                                <th class="text-left py-2">Rol</th>
+                                <th class="text-left py-2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user : ${users}" class="border-b hover:bg-gray-50">
+                                <td class="py-2">
+                                    <div class="flex items-center">
+                                        <span class="font-medium" th:text="${user.name}">Usuario</span>
+                                    </div>
+                                </td>
+                                <td class="py-2" th:text="${user.email}">email@ejemplo.com</td>
+                                <td class="py-2">
+                                    <span th:each="role : ${user.roles}" th:if="${role.name == 'ROLE_ADMIN'}" class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 mr-1">Admin</span>
+                                    <span th:each="role : ${user.roles}" th:if="${role.name == 'ROLE_USER'}" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 mr-1">Usuario</span>
+                                    <span th:each="role : ${user.roles}" th:if="${role.name == 'ROLE_ORGANIZATION'}" class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800 mr-1">Organización</span>
+                                </td>
+                                <td class="py-2">
+                                    <a th:href="@{'/admin/editar/' + ${user.id}}" class="text-blue-600 hover:underline mr-2">Editar</a>
+                                    <a th:href="@{'/admin/eliminar/' + ${user.id}}" 
+                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')"
+                                       class="text-red-600 hover:underline">Eliminar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            
+        </div>
+        
+        <!-- Modal para crear rol -->
+        <div class="modal fade" id="createRoleModal" tabindex="-1" aria-labelledby="createRoleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createRoleModalLabel">Crear Nuevo Rol</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/admin/crear-rol}" method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="roleName" class="form-label">Nombre del Rol</label>
+                                <input type="text" class="form-control" id="roleName" name="roleName" required>
+                                <input type="hidden" name="returnUrl" th:value="@{/admin/users}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Crear Rol</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 </html>

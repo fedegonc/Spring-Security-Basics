@@ -22,6 +22,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -142,9 +144,9 @@ public class AuthServiceImpl implements AuthService {
             case "[ROLE_USER]":
                 return new ModelAndView("redirect:/user/welcome");
             case "[ROLE_ADMIN]":
-                return new ModelAndView("redirect:/admin/dashboard");
+                return new ModelAndView("redirect:/admin/inicio");
             case "[ROLE_ORGANIZATION]":
-                return new ModelAndView("redirect:/org/dashboard");
+                return new ModelAndView("redirect:/org/inicio");
             default:
                 return new ModelAndView("redirect:/error");
         }
@@ -157,6 +159,7 @@ public class AuthServiceImpl implements AuthService {
         // Capturar código de estado y mensaje de error
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         String errorMessage = (String) request.getAttribute("javax.servlet.error.message");
+        Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
         
         // Para el estado HTTP desconocido
         if (statusCode == null) {
@@ -180,9 +183,21 @@ public class AuthServiceImpl implements AuthService {
             }
         }
 
-        // Añadir los datos a la vista
+        // Añadir los datos básicos a la vista
         mv.addObject("status", statusCode);
         mv.addObject("error", errorMessage);
+        
+        // Añadir información detallada de la excepción si existe
+        if (exception != null) {
+            mv.addObject("exception", exception.getClass().getName());
+            mv.addObject("message", exception.getMessage());
+            
+            // En entorno de desarrollo, podemos incluir la traza completa
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            exception.printStackTrace(pw);
+            mv.addObject("trace", sw.toString());
+        }
 
         return mv;
     }

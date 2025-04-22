@@ -112,15 +112,10 @@ public class DashboardServiceImpl implements DashboardService {
     public Map<String, Object> getDashboardMetrics() {
         Map<String, Object> metrics = new HashMap<>();
         
-        // Obtener datos para las gráficas
-        List<User> users = userRepository.findAll();
-        List<Solicitude> solicitudes = solicitudeRepository.findAll();
-        List<Report> reportes = reportRepository.findAll();
-        
-        // Contar totales
-        int totalUsers = users.size();
-        int totalSolicitudes = solicitudes.size();
-        int totalReportes = reportes.size();
+        // Obtener datos una sola vez para evitar múltiples consultas
+        int totalUsers = getTotalUsuarios();
+        int totalSolicitudes = getTotalSolicitudes();
+        int totalReportes = getTotalReportes();
         
         // Agregar métricas al mapa
         metrics.put("totalUsers", totalUsers);
@@ -130,6 +125,53 @@ public class DashboardServiceImpl implements DashboardService {
         metrics.put("solicitudesPorDia", getSolicitudesPorDia());
         metrics.put("reportesPorEstado", getReportesPorEstado());
         
+        // Añadir estadísticas de usuarios por rol
+        metrics.putAll(getUserStatistics());
+        
         return metrics;
+    }
+    
+    @Override
+    @jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.REQUIRED)
+    public Map<String, Long> getUserCountByRole() {
+        Map<String, Long> userCountByRole = new HashMap<>();
+        
+        // Inicializar contadores para roles comunes
+        userCountByRole.put("ROLE_ADMIN", 0L);
+        userCountByRole.put("ROLE_USER", 0L);
+        userCountByRole.put("ROLE_ORGANIZATION", 0L);
+        
+        // Obtener usuarios con sus roles precargados en una sola consulta
+        List<User> users = userRepository.findAll();
+        
+        // Contar usuarios por rol
+        for (User user : users) {
+            // Forzar la inicialización de la colección de roles para evitar consultas adicionales
+            user.getRoles().forEach(role -> {
+                String roleName = role.getName();
+                userCountByRole.put(roleName, userCountByRole.getOrDefault(roleName, 0L) + 1);
+            });
+        }
+        
+        return userCountByRole;
+    }
+    
+    @Override
+    @jakarta.transaction.Transactional(jakarta.transaction.Transactional.TxType.REQUIRED)
+    public Map<String, Object> getUserStatistics() {
+        Map<String, Object> userStats = new HashMap<>();
+        
+        // Obtener estadísticas de roles en una sola consulta
+        Map<String, Long> roleStats = getUserCountByRole();
+        
+        // Añadir estadísticas de roles específicos
+        userStats.put("totalAdmins", roleStats.getOrDefault("ROLE_ADMIN", 0L));
+        userStats.put("totalOrgs", roleStats.getOrDefault("ROLE_ORGANIZATION", 0L));
+        userStats.put("totalRegularUsers", roleStats.getOrDefault("ROLE_USER", 0L));
+        
+        // Añadir el mapa completo de roles
+        userStats.put("usersByRole", roleStats);
+        
+        return userStats;
     }
 }

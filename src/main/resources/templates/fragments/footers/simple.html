@@ -1,0 +1,23 @@
+<!-- Footer simple -->
+<footer th:fragment="footer" class="bg-gray-100 py-6">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+            <div class="mb-4 md:mb-0">
+                <p class="text-gray-600"> <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2025</span> 
+                    <span th:text="#{footer.copyright ?: 'Sistema de Comunicación para Reciclaje'}">Sistema de Comunicación para Reciclaje</span>
+                </p>
+            </div>
+            <div class="flex space-x-4">
+                <!-- Botones de encuesta y reporte de problemas -->
+                <a href="https://forms.gle/YourGoogleFormLink" target="_blank" class="text-gray-600 hover:text-green-700 flex items-center">
+                    <i class="bi bi-clipboard-check mr-1"></i>
+                    <span>Encuesta de usabilidad</span>
+                </a>
+                <a href="/reportes/nuevo" class="text-gray-600 hover:text-green-700 flex items-center">
+                    <i class="bi bi-exclamation-triangle mr-1"></i>
+                    <span>Reportar problema</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>

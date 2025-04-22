@@ -1,244 +1,130 @@
-<!-- Admin Reports usando layout base y organismos -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout}">
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='admin', footerType='full', currentPage='Reportes', metaDescription='Gestión de reportes'">
+
 <head>
-    <title>Reportes y Estadísticas</title>
-    <meta name="description" content="Reportes y estadísticas del sistema de reciclaje">
+    <title>Gestión de Reportes - Administración</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .report-card:hover { transform: translateY(-2px); transition: all 0.2s; }
+        </style>
+    </th:block>
 </head>
+
 <body>
-<section layout:fragment="content" class="container mx-auto px-4 py-6">
-    <!-- Breadcrumb -->
-    <nav class="flex mb-4" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-3">
-            <li class="inline-flex items-center">
-                <a href="/admin/dashboard" class="text-gray-700 hover:text-green-600 inline-flex items-center">
-                    <i class="bi bi-house-door-fill mr-2"></i>
-                    Inicio
-                </a>
-            </li>
-            <li aria-current="page">
-                <div class="flex items-center">
-                    <i class="bi bi-chevron-right text-gray-400 mx-1"></i>
-                    <span class="text-gray-500">Reportes y Estadísticas</span>
-                </div>
-            </li>
-        </ol>
-    </nav>
-    
-    <h1 class="text-2xl font-bold mb-6 flex items-center text-gray-800">
-        <i class="bi bi-graph-up text-purple-600 mr-2"></i>
-        Reportes y Estadísticas
-    </h1>
-    
-    <!-- Filtros de fecha -->
-    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
-        <div class="flex flex-col md:flex-row md:items-end gap-4">
-            <div class="flex-1">
-                <label for="dateStart" class="block text-sm font-medium text-gray-700 mb-1">Fecha inicio</label>
-                <input type="date" id="dateStart" class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-            </div>
-            <div class="flex-1">
-                <label for="dateEnd" class="block text-sm font-medium text-gray-700 mb-1">Fecha fin</label>
-                <input type="date" id="dateEnd" class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-            </div>
-            <div class="w-full md:w-1/4">
-                <label for="reportType" class="block text-sm font-medium text-gray-700 mb-1">Tipo de reporte</label>
-                <select id="reportType" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                    <option value="all">Todos</option>
-                    <option value="users">Usuarios</option>
-                    <option value="requests">Solicitudes</option>
-                    <option value="organizations">Organizaciones</option>
-                </select>
-            </div>
-            <div class="flex gap-2">
-                <button type="button" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-sm transition">
-                    <i class="bi bi-filter mr-1"></i> Filtrar
-                </button>
-                <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-sm transition">
-                    <i class="bi bi-download mr-1"></i> Exportar
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Métricas principales -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-lg shadow-md p-5">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-sm font-medium text-gray-600">Solicitudes Activas</p>
-                    <p class="text-2xl font-bold text-gray-800" th:text="${activeSolicitudes}">24</p>
-                </div>
-                <div class="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
-                    <i class="bi bi-hourglass-split text-xl"></i>
+    <section layout:fragment="content">
+        <div class="container px-4 py-5 mx-auto">
+            <!-- Encabezado -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-5">
+                <h1 class="text-2xl font-bold text-gray-800">Gestión de Reportes</h1>
+                <div class="mt-3 md:mt-0">
+                    <a th:href="@{/admin/reports/create-test}" 
+                       class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <i class="bi bi-plus-circle mr-2"></i> Crear Reporte de Prueba
+                    </a>
                 </div>
             </div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow-md p-5">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-sm font-medium text-gray-600">Solicitudes Completadas</p>
-                    <p class="text-2xl font-bold text-gray-800" th:text="${completedSolicitudes}">152</p>
-                </div>
-                <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                    <i class="bi bi-check-circle text-xl"></i>
-                </div>
+            
+            <!-- Mensajes de alerta -->
+            <div th:if="${error}" class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+                <p th:text="${error}">Error</p>
             </div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow-md p-5">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-sm font-medium text-gray-600">Nuevos Usuarios</p>
-                    <p class="text-2xl font-bold text-gray-800" th:text="${newUsers}">8</p>
-                </div>
-                <div class="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                    <i class="bi bi-person-plus text-xl"></i>
-                </div>
+            <div th:if="${success}" class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded">
+                <p th:text="${success}">Éxito</p>
             </div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow-md p-5">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-sm font-medium text-gray-600">Tasa de Éxito</p>
-                    <p class="text-2xl font-bold text-gray-800" th:text="${successRate} + '%'">92%</p>
-                </div>
-                <div class="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
-                    <i class="bi bi-award text-xl"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Gráficos -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <!-- Gráfico de solicitudes -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="p-4 border-b bg-gray-50">
-                <h2 class="text-lg font-semibold text-gray-800">Solicitudes por Estado</h2>
-            </div>
-            <div class="p-4">
-                <div class="h-64 bg-gray-100 rounded flex items-center justify-center">
-                    <!-- Aquí iría el componente de gráfico -->
-                    <div class="text-center text-gray-500">
-                        <i class="bi bi-pie-chart text-4xl mb-2"></i>
-                        <p>Gráfico de estados de solicitudes</p>
+            
+            <!-- Lista de reportes -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-5">
+                <h2 class="text-lg font-bold mb-3">Reportes del Sistema</h2>
+                <div class="mb-4 flex flex-col md:flex-row md:items-center md:justify-between">
+                    <p class="text-sm text-gray-600 mb-2 md:mb-0">
+                        <i class="bi bi-info-circle mr-1"></i> Gestione los reportes de errores enviados por los usuarios.
+                    </p>
+                    <div class="flex space-x-2">
+                        <select id="statusFilter" class="text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <option value="all">Todos los estados</option>
+                            <option value="PENDING">Pendientes</option>
+                            <option value="IN_PROGRESS">En Proceso</option>
+                            <option value="RESOLVED">Resueltos</option>
+                            <option value="CLOSED">Cerrados</option>
+                        </select>
                     </div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Gráfico de materiales -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="p-4 border-b bg-gray-50">
-                <h2 class="text-lg font-semibold text-gray-800">Materiales Procesados</h2>
-            </div>
-            <div class="p-4">
-                <div class="h-64 bg-gray-100 rounded flex items-center justify-center">
-                    <!-- Aquí iría el componente de gráfico -->
-                    <div class="text-center text-gray-500">
-                        <i class="bi bi-bar-chart text-4xl mb-2"></i>
-                        <p>Gráfico de materiales procesados</p>
-                    </div>
+                <div th:if="${reports == null || reports.isEmpty()}" class="text-center py-6">
+                    <p class="text-gray-500">No hay reportes registrados</p>
+                </div>
+                <div th:if="${reports != null && !reports.isEmpty()}" class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2">ID</th>
+                                <th class="text-left py-2">Título</th>
+                                <th class="text-left py-2">Descripción</th>
+                                <th class="text-left py-2">Estado</th>
+                                <th class="text-left py-2">Fecha</th>
+                                <th class="text-left py-2">Usuario</th>
+                                <th class="text-left py-2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="report : ${reports}" class="border-b hover:bg-gray-50">
+                                <td class="py-2" th:text="${report.id}">1</td>
+                                <td class="py-2" th:text="${report.title}">Título del reporte</td>
+                                <td class="py-2" th:text="${report.description}">Descripción del reporte</td>
+                                <td class="py-2">
+                                    <span th:if="${report.status != null && report.status.name() == 'PENDING'}" 
+                                          class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pendiente</span>
+                                    <span th:if="${report.status != null && report.status.name() == 'IN_PROGRESS'}" 
+                                          class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">En Proceso</span>
+                                    <span th:if="${report.status != null && report.status.name() == 'RESOLVED'}" 
+                                          class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Resuelto</span>
+                                    <span th:if="${report.status != null && report.status.name() == 'CLOSED'}" 
+                                          class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Cerrado</span>
+                                </td>
+                                <td class="py-2" th:text="${#temporals.format(report.createdAt, 'dd/MM/yyyy')}">01/01/2025</td>
+                                <td class="py-2" th:text="${report.user != null ? report.user.name : 'N/A'}">Usuario</td>
+                                <td class="py-2">
+                                    <a th:href="@{'/admin/reports/ver/' + ${report.id}}" class="text-blue-600 hover:underline mr-2">Ver</a>
+                                    <a th:href="@{'/admin/reports/editar/' + ${report.id}}" class="text-green-600 hover:underline mr-2">Editar</a>
+                                    <a th:href="@{'/admin/reports/eliminar/' + ${report.id}}" 
+                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este reporte?')"
+                                       class="text-red-600 hover:underline">Eliminar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Más gráficos -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <!-- Gráfico de tendencia -->
-        <div class="col-span-1 lg:col-span-2 bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="p-4 border-b bg-gray-50">
-                <h2 class="text-lg font-semibold text-gray-800">Tendencia de Solicitudes</h2>
-            </div>
-            <div class="p-4">
-                <div class="h-64 bg-gray-100 rounded flex items-center justify-center">
-                    <!-- Aquí iría el componente de gráfico -->
-                    <div class="text-center text-gray-500">
-                        <i class="bi bi-graph-up text-4xl mb-2"></i>
-                        <p>Gráfico de tendencia temporal</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Organizaciones más activas -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="p-4 border-b bg-gray-50">
-                <h2 class="text-lg font-semibold text-gray-800">Organizaciones Más Activas</h2>
-            </div>
-            <div class="p-4">
-                <ul class="divide-y divide-gray-200">
-                    <li class="py-3 flex justify-between items-center">
-                        <div class="flex items-center">
-                            <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
-                                <i class="bi bi-building"></i>
-                            </div>
-                            <span class="text-gray-800">Cooperativa Renacer</span>
-                        </div>
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">45 solicitudes</span>
-                    </li>
-                    <li class="py-3 flex justify-between items-center">
-                        <div class="flex items-center">
-                            <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center text-green-600 mr-3">
-                                <i class="bi bi-building"></i>
-                            </div>
-                            <span class="text-gray-800">Asociación Catadores</span>
-                        </div>
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">38 solicitudes</span>
-                    </li>
-                    <li class="py-3 flex justify-between items-center">
-                        <div class="flex items-center">
-                            <div class="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mr-3">
-                                <i class="bi bi-building"></i>
-                            </div>
-                            <span class="text-gray-800">Ecoreciclaje SA</span>
-                        </div>
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">27 solicitudes</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Herramientas de exportación -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
-        <div class="p-4 border-b bg-gray-50">
-            <h2 class="text-lg font-semibold text-gray-800">Exportar Datos</h2>
-        </div>
-        <div class="p-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-                    <i class="bi bi-file-earmark-excel text-green-600 text-3xl mb-2"></i>
-                    <h3 class="text-sm font-semibold mb-2">Excel</h3>
-                    <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm shadow-sm transition w-full">
-                        Exportar a Excel
-                    </button>
-                </div>
+        <!-- Script para filtrar reportes por estado -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const statusFilter = document.getElementById('statusFilter');
                 
-                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-                    <i class="bi bi-file-earmark-pdf text-red-600 text-3xl mb-2"></i>
-                    <h3 class="text-sm font-semibold mb-2">PDF</h3>
-                    <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm shadow-sm transition w-full">
-                        Exportar a PDF
-                    </button>
-                </div>
-                
-                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-                    <i class="bi bi-file-earmark-text text-blue-600 text-3xl mb-2"></i>
-                    <h3 class="text-sm font-semibold mb-2">CSV</h3>
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm shadow-sm transition w-full">
-                        Exportar a CSV
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+                statusFilter.addEventListener('change', function() {
+                    const selectedStatus = this.value;
+                    const rows = document.querySelectorAll('tbody tr');
+                    
+                    rows.forEach(row => {
+                        if (selectedStatus === 'all') {
+                            row.style.display = '';
+                        } else {
+                            const statusCell = row.querySelector('td:nth-child(4)');
+                            const statusText = statusCell.textContent.trim();
+                            const hasStatus = 
+                                (selectedStatus === 'PENDING' && statusText === 'Pendiente') ||
+                                (selectedStatus === 'IN_PROGRESS' && statusText === 'En Proceso') ||
+                                (selectedStatus === 'RESOLVED' && statusText === 'Resuelto') ||
+                                (selectedStatus === 'CLOSED' && statusText === 'Cerrado');
+                            
+                            row.style.display = hasStatus ? '' : 'none';
+                        }
+                    });
+                });
+            });
+        </script>
+    </section>
 </body>
 </html>

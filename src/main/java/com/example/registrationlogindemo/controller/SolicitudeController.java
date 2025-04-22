@@ -22,20 +22,43 @@ public class SolicitudeController {
     @Autowired
     private SolicitudeService solicitudeService;
 
-    @GetMapping("/newsolicitude")
+    @GetMapping("/nueva-solicitud")
     public ModelAndView newSolicitude(@AuthenticationPrincipal UserDetails userDetails) {
         // Delegamos la preparación del formulario al servicio
-        return solicitudeService.prepareNewSolicitudeForm(userDetails);
+        ModelAndView modelAndView = solicitudeService.prepareNewSolicitudeForm(userDetails);
+        // La vista ya está configurada correctamente en el servicio
+        return modelAndView;
     }
 
+    /**
+     * Endpoint alternativo para nueva solicitud (usando nombre en inglés)
+     */
+    @GetMapping("/newsolicitude")
+    public ModelAndView newSolicitudeAlt(@AuthenticationPrincipal UserDetails userDetails) {
+        // Reutilizamos el método existente para mantener la consistencia
+        return newSolicitude(userDetails);
+    }
+
+    /**
+     * Endpoint alternativo POST para nueva solicitud (usando nombre en inglés)
+     */
     @PostMapping("/newsolicitude")
+    public String newSolicitudePostAlt(@Valid @ModelAttribute("solicitud") Solicitude solicitud,
+                                    BindingResult result, RedirectAttributes msg,
+                                    @RequestParam(value = "file", required = false) MultipartFile imagen,
+                                    @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+        // Reutilizamos el método existente para mantener la consistencia
+        return newSolicitudePost(solicitud, result, msg, imagen, userDetails);
+    }
+
+    @PostMapping("/nueva-solicitud")
     public String newSolicitudePost(@Valid @ModelAttribute("solicitud") Solicitude solicitud,
                                     BindingResult result, RedirectAttributes msg,
-                                    @RequestParam("file") MultipartFile imagen,
+                                    @RequestParam(value = "file", required = false) MultipartFile imagen,
                                     @AuthenticationPrincipal UserDetails userDetails) throws IOException {
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Error al iniciar solicitud. Por favor, llenar todos los campos");
-            return "redirect:/user/newsolicitude";
+            return "redirect:/user/nueva-solicitud";
         }
 
         // Delegamos la creación de la solicitud al servicio
@@ -53,7 +76,7 @@ public class SolicitudeController {
     public String editSolicitude(@PathVariable("id") int id,
                                  @ModelAttribute("solicitude") @Valid Solicitude solicitude,
                                  BindingResult result, RedirectAttributes msg,
-                                 @RequestParam("file") MultipartFile imagen,
+                                 @RequestParam(value = "file", required = false) MultipartFile imagen,
                                  @AuthenticationPrincipal UserDetails userDetails) throws IOException {
         if (result.hasErrors()) {
             msg.addFlashAttribute("error", "Error al editar. Por favor, complete todos los campos correctamente.");

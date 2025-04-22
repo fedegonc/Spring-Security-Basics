@@ -69,6 +69,12 @@ public class Solicitude {
     private String telefono;
 
     @Column(nullable = false)
+    private String direccion;
+
+    @Column(nullable = false)
+    private String titulo = "Nueva solicitud de reciclaje"; // Valor por defecto
+
+    @Column(nullable = false)
     private String destino;
 
     @Column

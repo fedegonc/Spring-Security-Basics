@@ -49,4 +49,16 @@ public interface DashboardService {
      * @return Mapa con los diferentes tipos de métricas y sus valores correspondientes
      */
     Map<String, Object> getDashboardMetrics();
+    
+    /**
+     * Obtiene el conteo de usuarios por rol
+     * @return Mapa con el nombre del rol como clave y el número de usuarios con ese rol como valor
+     */
+    Map<String, Long> getUserCountByRole();
+    
+    /**
+     * Obtiene estadísticas detalladas de usuarios incluyendo conteo por rol
+     * @return Mapa con estadísticas de usuarios (total, por rol, etc.)
+     */
+    Map<String, Object> getUserStatistics();
 }

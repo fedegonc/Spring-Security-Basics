@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - EcoSolicitud">EcoSolicitud</title>
+    
+    <!-- Meta description que puede ser sobrescrita por páginas hijas -->
+    <meta name="description" th:content="${metaDescription} ?: 'Sistema de Comunicación para Reciclaje'">
+    
+    <!-- Preconexiones para mejora de rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+    <!-- Hojas de estilo base -->
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap CSS para modales y componentes interactivos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Flowbite - Biblioteca de componentes para Tailwind -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet">
+    
+    <!-- CSS base -->
+    <style>
+        :root {
+            --color-primary: #2f855a;
+            --color-primary-dark: #276749;
+            --color-secondary: #3182ce;
+            --color-danger: #e53e3e;
+            --color-success: #38a169;
+            --color-warning: #d69e2e;
+            --color-info: #4299e1;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .slot {
+            border: 2px dashed #ccc;
+            padding: 8px;
+            margin: 4px 0;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--color-primary);
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+    </style>
+    
+    <!-- SLOT: Estilos específicos de cada página -->
+    <th:block layout:fragment="styles"></th:block>
+</head>
+
+<body class="flex flex-col min-h-screen bg-gray-50">
+    <!-- Enlace para saltar al contenido principal - accesibilidad -->
+    <a href="#main-content" class="skip-link">
+        <span th:text="#{accessibility.skipToContent ?: 'Saltar al contenido principal'}">Saltar al contenido principal</span>
+    </a>
+    
+    <!-- 
+        SLOT: Header
+        El header puede ser reemplazado completamente por la página o puede usar un header predefinido
+        usando: th:with="headerType='admin'" en la página hija
+    -->
+    <th:block layout:fragment="header">
+        <header th:replace="${headerType != null} ? ~{|fragments/headers/${headerType}|} : _" class="slot">
+            <div class="p-4 text-center">
+                <h2>HEADER GENÉRICO</h2>
+                <p class="text-sm text-gray-500">Este header se muestra cuando no se especifica un tipo</p>
+            </div>
+        </header>
+    </th:block>
+    
+    <main id="main-content" class="flex-grow">
+        <!-- 
+            SLOT: Alertas
+            Sistema de mensajes flash y alertas
+        -->
+        <th:block layout:fragment="alerts">
+            <div th:if="${successMessage != null or errorMessage != null or warningMessage != null or infoMessage != null}"
+                 class="container mx-auto px-4 pt-4">
+                
+                <!-- Mensaje de éxito -->
+                <div th:if="${successMessage != null}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+                    <p th:text="${successMessage}">Operación exitosa</p>
+                </div>
+                
+                <!-- Mensaje de error -->
+                <div th:if="${errorMessage != null}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+                    <p th:text="${errorMessage}">Ha ocurrido un error</p>
+                </div>
+                
+                <!-- Mensaje de advertencia -->
+                <div th:if="${warningMessage != null}" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
+                    <p th:text="${warningMessage}">Advertencia</p>
+                </div>
+                
+                <!-- Mensaje informativo -->
+                <div th:if="${infoMessage != null}" class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4" role="alert">
+                    <p th:text="${infoMessage}">Información</p>
+                </div>
+            </div>
+        </th:block>
+
+        
+        <!-- 
+            SLOT: Contenido principal
+            Aquí va el contenido específico de cada página
+        -->
+        <section layout:fragment="content" class="container mx-auto p-4">
+            <div class="p-8 text-center">
+                <h3 class="text-xl font-bold mb-4">CONTENIDO POR DEFECTO</h3>
+                <p class="text-gray-500">Este contenido se muestra cuando una página no define su propio contenido</p>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 
+        SLOT: Footer
+        Footer simple y único para toda la aplicación
+    -->
+    <footer th:replace="~{fragments/footers/simple :: footer}" class="slot">
+    </footer>
+
+    <!-- Scripts comunes -->
+    <!-- Bootstrap JS para modales y componentes interactivos -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Flowbite JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
+    
+    <!-- SLOT: Scripts específicos de cada página -->
+    <th:block layout:fragment="scripts"></th:block>
+</body>
+</html>

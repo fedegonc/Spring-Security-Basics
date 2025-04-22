@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='org', footerType='full', currentPage='Inicio', metaDescription='Panel de organización'">
+
+<head>
+    <title>Inicio - Organización</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .stats-card:hover { transform: translateY(-2px); transition: all 0.2s; }
+            .action-card:hover { background-color: #f3f4f6; }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="container px-4 py-5 mx-auto">
+            <!-- Encabezado -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-5">
+                <h1 class="text-2xl font-bold text-gray-800">Panel de Organización</h1>
+                <p class="text-sm text-gray-500" th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">01/01/2025</p>
+            </div>
+            
+            <!-- Mensajes de alerta -->
+            <div th:if="${error}" class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+                <p th:text="${error}">Error</p>
+            </div>
+            <div th:if="${success}" class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded">
+                <p th:text="${success}">Éxito</p>
+            </div>
+            
+            <!-- Tarjetas de estadísticas -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+                <!-- Total Solicitudes -->
+                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-blue-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Solicitudes</p>
+                            <p class="text-2xl font-bold text-gray-800" th:text="${totalSolicitudes}">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                            <span class="text-lg">📝</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solicitudes Pendientes -->
+                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-yellow-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Pendientes</p>
+                            <p class="text-2xl font-bold text-gray-800" th:text="${pendientes}">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
+                            <span class="text-lg">⏳</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solicitudes Aprobadas -->
+                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-green-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Aprobadas</p>
+                            <p class="text-2xl font-bold text-gray-800" th:text="${aprobadas}">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                            <span class="text-lg">✅</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solicitudes Rechazadas -->
+                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-red-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Rechazadas</p>
+                            <p class="text-2xl font-bold text-gray-800" th:text="${rechazadas}">0</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                            <span class="text-lg">❌</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Acciones rápidas y solicitudes recientes -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <!-- Panel de acciones -->
+                <div class="bg-white rounded-lg shadow-sm p-4 col-span-1">
+                    <h2 class="text-lg font-bold mb-3">Acciones Rápidas</h2>
+                    <div class="space-y-2">
+                        <a th:href="@{/org/solicitudes}" class="flex items-center p-3 rounded-lg action-card border border-gray-100">
+                            <span class="text-blue-600 mr-3">📝</span>
+                            <span>Ver Solicitudes</span>
+                        </a>
+                        <a th:href="@{/org/solicitudes/crear}" class="flex items-center p-3 rounded-lg action-card border border-gray-100">
+                            <span class="text-green-600 mr-3">➕</span>
+                            <span>Crear Solicitud</span>
+                        </a>
+                        <a th:href="@{/user/profile}" class="flex items-center p-3 rounded-lg action-card border border-gray-100">
+                            <span class="text-purple-600 mr-3">👤</span>
+                            <span>Mi Perfil</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Solicitudes recientes -->
+                <div class="bg-white rounded-lg shadow-sm p-4 col-span-2">
+                    <h2 class="text-lg font-bold mb-3">Solicitudes Recientes</h2>
+                    <div th:if="${solicitudes == null || solicitudes.isEmpty()}" class="text-center py-6">
+                        <p class="text-gray-500">No hay solicitudes registradas</p>
+                    </div>
+                    <div th:if="${solicitudes != null && !solicitudes.isEmpty()}" class="overflow-x-auto">
+                        <table class="min-w-full text-sm">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left py-2">Título</th>
+                                    <th class="text-left py-2">Categoría</th>
+                                    <th class="text-left py-2">Estado</th>
+                                    <th class="text-left py-2">Fecha</th>
+                                    <th class="text-left py-2">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="solicitud, iterStat : ${solicitudes}" class="border-b hover:bg-gray-50" th:if="${iterStat.index < 5}">
+                                    <td class="py-2">
+                                        <div class="flex items-center">
+                                            <span class="font-medium" th:text="${solicitud.titulo}">Título de la solicitud</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-2" th:text="${solicitud.categoria}">Categoría</td>
+                                    <td class="py-2">
+                                        <span th:if="${solicitud.estado == 'EN_ESPERA'}" class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pendiente</span>
+                                        <span th:if="${solicitud.estado == 'ACEPTADA'}" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Aprobada</span>
+                                        <span th:if="${solicitud.estado == 'RECHAZADA'}" class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Rechazada</span>
+                                    </td>
+                                    <td class="py-2" th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}">01/01/2025</td>
+                                    <td class="py-2">
+                                        <a th:href="@{'/org/solicitudes/editar/' + ${solicitud.id}}" class="text-blue-600 hover:underline mr-2">Editar</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-3 text-right">
+                            <a th:href="@{/org/solicitudes}" class="text-sm text-blue-600">Ver todas →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

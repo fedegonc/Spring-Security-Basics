@@ -11,7 +11,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -27,52 +26,40 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/admin")
 public class AdministradorController extends BaseController {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private SolicitudeService solicitudeService;
-
-    @Autowired
-    private ValidationAndNotificationService validationAndNotificationService;
-
-    @Autowired
-    private RoleManagementService roleManagementService;
-
-    @Autowired
-    private FileStorageService fileStorageService;
+    private static final String ERROR_VALIDACION = "Por favor, corrija los errores en el formulario";
     
-    @Autowired
-    private DashboardService dashboardService;
-    
-    @Autowired
-    private ReportService reportService;
+    @Autowired private UserRepository userRepository;
+    @Autowired private RoleRepository roleRepository;
+    @Autowired private UserService userService;
+    @Autowired private SolicitudeService solicitudeService;
+    @Autowired private ValidationAndNotificationService validationService;
+    @Autowired private RoleManagementService roleManagementService;
+    @Autowired private FileStorageService fileStorageService;
+    @Autowired private DashboardService dashboardService;
+    @Autowired private ReportService reportService;
 
-    private User getAuthenticatedUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (auth != null) ? userRepository.findByUsername(auth.getName()) : null;
-    }
-
-    @GetMapping("/dashboard")
+    @GetMapping("/inicio")
     public ModelAndView getDashboard() {
-        ModelAndView mv = new ModelAndView("user/welcome");
-        
-        // Obtener métricas del dashboard usando el servicio
-        Map<String, Object> metrics = dashboardService.getDashboardMetrics();
-        
-        // Agregar todas las métricas a la vista
-        mv.addAllObjects(metrics);
-        
-        // Agregar los breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Dashboard"));
-        
+        ModelAndView mv = new ModelAndView("pages/admin/inicio");
+        try {
+            // Obtener todas las métricas del dashboard desde el servicio
+            Map<String, Object> metrics = dashboardService.getDashboardMetrics();
+            mv.addAllObjects(metrics);
+            
+            // Obtener usuarios y estadísticas
+            List<User> users = userService.findAll();
+            mv.addObject("users", users);
+            
+            // Obtener estadísticas detalladas de usuarios
+            Map<String, Object> userStats = dashboardService.getUserStatistics();
+            mv.addAllObjects(userStats);
+            
+            // Estadísticas de solicitudes
+            int totalSolicitudes = dashboardService.getTotalSolicitudes();
+            mv.addObject("totalSolicitudes", totalSolicitudes);
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
+        }
         return mv;
     }
 
@@ -84,431 +71,446 @@ public class AdministradorController extends BaseController {
             @RequestParam(value = "currentProfileImageUrl", required = false, defaultValue = "descargas.jpeg") String currentImg,
             RedirectAttributes msg,
             jakarta.servlet.http.HttpServletRequest request) {
-
-        // Si es una solicitud GET, mostrar el perfil
-        if (request.getMethod().equalsIgnoreCase("GET")) {
-            return viewProfile();
-        }
-
-        // Si es una solicitud POST, actualizar el perfil
-        return updateProfile(user, result, file, currentImg, msg);
+        return request.getMethod().equalsIgnoreCase("GET") ? viewProfile() : updateProfile(user, result, file, currentImg, msg);
     }
 
-    /**
-     * Método privado para mostrar el perfil del usuario.
-     */
     private ModelAndView viewProfile() {
         ModelAndView mv = new ModelAndView("user/profile");
-
         try {
-            // Obtener el usuario actual
-            User user = getAuthenticatedUser();
-
-            if (user != null) {
-                // Si el usuario no tiene imagen de perfil, usar una por defecto
-                if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
-                    user.setProfileImage("descargas.jpeg");
-                }
-
-                mv.addObject("user", user);
-
-                // Establecer el nombre de la página actual para los breadcrumbs en el header
-                mv.addObject("currentPage", "Perfil");
-            } else {
-                return new ModelAndView("redirect:/login");
+            Optional<User> userOpt = userService.getAuthenticatedUser();
+            if (userOpt.isEmpty()) return new ModelAndView("redirect:/login");
+            
+            User user = userOpt.get();
+            if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
+                user.setProfileImage("descargas.jpeg");
             }
+            mv.addObject("user", user);
+            mv.addObject("currentPage", "Perfil");
         } catch (Exception e) {
             mv.addObject("error", "Error al cargar el perfil: " + e.getMessage());
         }
+        return mv;
+    }
 
+    private ModelAndView updateProfile(User user, BindingResult result, MultipartFile file, String currentImg, RedirectAttributes msg) {
+        if (result.hasErrors()) {
+            validationService.addErrorMessage(msg, ERROR_VALIDACION);
+            return new ModelAndView("redirect:/admin/profile");
+        }
+
+        try {
+            Optional<User> currentUserOpt = userService.getAuthenticatedUser();
+            if (currentUserOpt.isEmpty()) {
+                validationService.addErrorMessage(msg, "Usuario no encontrado");
+                return new ModelAndView("redirect:/login");
+            }
+
+            User currentUser = currentUserOpt.get();
+            currentUser.setName(user.getName());
+            currentUser.setEmail(user.getEmail());
+
+            if (file != null && !file.isEmpty()) {
+                try {
+                    String fileName = fileStorageService.handleImageUpload(file, currentImg);
+                    currentUser.setProfileImage(fileName);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error al procesar la imagen: " + e.getMessage(), e);
+                }
+            }
+
+            userService.save(currentUser);
+            validationService.addSuccessMessage(msg, "Perfil actualizado con éxito");
+        } catch (Exception e) {
+            validationService.addErrorMessage(msg, "Error al actualizar el perfil: " + e.getMessage());
+        }
+        return new ModelAndView("redirect:/admin/profile");
+    }
+
+    @GetMapping("/users/edit/{id}")
+    public ModelAndView adminEditUser(@PathVariable("id") long id, jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("admin/edituser");
+        try {
+            Optional<User> userOpt = userRepository.findById(id);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                mv.addObject("user", user);
+                
+                List<Role> roles = roleRepository.findAll();
+                mv.addObject("roles", roles);
+                
+                for (Role role : roles) {
+                    boolean hasRole = user.getRoles().stream()
+                        .anyMatch(r -> r.getId().equals(role.getId()));
+                    mv.addObject("hasRole_" + role.getId(), hasRole);
+                }
+                mv.addObject("currentPage", "Editar Usuario");
+            } else {
+                mv.addObject("error", "Usuario no encontrado");
+                return new ModelAndView("redirect:/admin/users");
+            }
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar el usuario: " + e.getMessage());
+        }
+        return mv;
+    }
+
+    @GetMapping("/editar/{id}")
+    public ModelAndView editarUsuario(@PathVariable("id") long id, jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("pages/admin/edituser");
+        try {
+            // Usar findById con eager loading para evitar N+1 queries
+            Optional<User> userOpt = userService.findByIdWithRoles(id);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                mv.addObject("user", user);
+                
+                List<Role> roles = roleRepository.findAll();
+                mv.addObject("roles", roles);
+                
+                // Preparar los roles seleccionados para la vista
+                for (Role role : roles) {
+                    boolean hasRole = user.getRoles().stream()
+                        .anyMatch(r -> r.getId().equals(role.getId()));
+                    mv.addObject("hasRole_" + role.getId(), hasRole);
+                }
+                mv.addObject("currentPage", "Editar Usuario");
+            } else {
+                mv.addObject("error", "Usuario no encontrado");
+                return new ModelAndView("redirect:/admin/users");
+            }
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar el usuario: " + e.getMessage());
+            return new ModelAndView("redirect:/admin/users");
+        }
+        return mv;
+    }
+
+    @PostMapping("/users/update/{id}")
+    public String adminUpdateUser(@ModelAttribute("user") @Valid User user, BindingResult result,
+                                @PathVariable("id") long id, @RequestParam(value = "roleIds", required = false) List<Long> roleIds,
+                                @RequestParam("fileImage") MultipartFile fileImage, RedirectAttributes msg) {
+        if (result.hasErrors()) {
+            validationService.addErrorMessage(msg, ERROR_VALIDACION);
+            return "redirect:/admin/editar/" + id;
+        }
+        
+        try {
+            // Actualizar el usuario con los nuevos datos
+            String roleValue = roleIds != null ? String.join(",", roleIds.stream().map(String::valueOf).toList()) : "";
+            boolean success = userService.updateUserByAdmin(id, user, fileImage, user.getProfileImage(), roleValue, msg);
+            
+            if (!success) {
+                return "redirect:/admin/editar/" + id;
+            }
+            
+            validationService.addSuccessMessage(msg, "Usuario actualizado exitosamente");
+        } catch (Exception e) {
+            validationService.addErrorMessage(msg, "Error al actualizar el usuario: " + e.getMessage());
+            return "redirect:/admin/editar/" + id;
+        }
+        
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/reports")
+    public ModelAndView adminReports(jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("pages/admin/reports");
+        try {
+            List<Report> reports = reportService.findAll();
+            mv.addObject("reports", reports);
+            mv.addObject("currentPage", "Reportes");
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
+        }
         return mv;
     }
 
     /**
-     * Método privado para actualizar el perfil del usuario.
+     * Crea un reporte de prueba para facilitar las pruebas del sistema
+     * @return Redirección a la página de reportes
      */
-    private ModelAndView updateProfile(@Valid User user, BindingResult result,
-                                       MultipartFile file, String currentImg,
-                                       RedirectAttributes msg) {
-        if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "Por favor, corrija los errores en el formulario");
-            return new ModelAndView("redirect:/user/profile");
-        }
-
+    @GetMapping("/reports/create-test")
+    public String createTestReport(RedirectAttributes redirectAttributes) {
         try {
-            // Obtener el usuario actual
-            User currentUser = getAuthenticatedUser();
-
-            if (currentUser != null) {
-                // Actualizar solo los campos permitidos
-                currentUser.setName(user.getName());
-                currentUser.setEmail(user.getEmail());
-
-                // Manejar la subida de imagen
-                if (file != null && !file.isEmpty()) {
-                    try {
-                        String fileName = handleImageUpload(file, currentImg);
-                        currentUser.setProfileImage(fileName);
-                    } catch (IOException e) {
-                        msg.addFlashAttribute("error", "Error al subir la imagen: " + e.getMessage());
-                        return new ModelAndView("redirect:/user/profile");
-                    }
+            // Obtener un usuario aleatorio con rol USER para asignar el reporte
+            List<User> users = userService.findByRoleName("ROLE_USER");
+            if (users.isEmpty()) {
+                // Si no hay usuarios con rol USER, usar el usuario administrador actual
+                Optional<User> adminUser = userService.getAuthenticatedUser();
+                if (adminUser.isPresent()) {
+                    users.add(adminUser.get());
+                } else {
+                    validationService.addErrorMessage(redirectAttributes, "No se pudo crear el reporte de prueba: No hay usuarios disponibles");
+                    return "redirect:/admin/reports";
                 }
-
-                // Guardar los cambios
-                userRepository.save(currentUser);
-
-                msg.addFlashAttribute("success", "Perfil actualizado con éxito");
-            } else {
-                msg.addFlashAttribute("error", "Usuario no encontrado");
             }
+            
+            // Seleccionar un usuario aleatorio de la lista
+            User randomUser = users.get((int) (Math.random() * users.size()));
+            
+            // Crear un reporte de prueba con datos aleatorios
+            Report testReport = new Report();
+            testReport.setTitle("Reporte de prueba #" + System.currentTimeMillis() % 1000);
+            testReport.setProblema("Error de prueba generado automáticamente");
+            
+            // Generar una descripción más detallada para el reporte de prueba
+            String[] tiposErrores = {
+                "Error al cargar la página", 
+                "Problema con el formulario", 
+                "Error en la validación de datos", 
+                "Fallo en la carga de imágenes", 
+                "Error de conexión"
+            };
+            
+            String tipoError = tiposErrores[(int) (Math.random() * tiposErrores.length)];
+            String descripcion = "Este es un reporte de prueba creado automáticamente para fines de testing.\n" +
+                    "Tipo de error: " + tipoError + "\n" +
+                    "Creado el " + java.time.LocalDateTime.now() + "\n" +
+                    "Asignado a: " + randomUser.getName() + "\n" +
+                    "Este reporte puede ser utilizado para probar las funcionalidades de gestión de reportes.";
+            
+            testReport.setDescripcion(descripcion);
+            testReport.setUser(randomUser);
+            testReport.setStatus(Report.ReportStatus.PENDING);
+            testReport.setCreatedAt(java.time.LocalDateTime.now());
+            
+            // Guardar el reporte
+            reportService.save(testReport);
+            
+            validationService.addSuccessMessage(redirectAttributes, 
+                    "Reporte de prueba creado exitosamente y asignado a " + randomUser.getName());
         } catch (Exception e) {
-            msg.addFlashAttribute("error", "Error al actualizar el perfil: " + e.getMessage());
+            validationService.addErrorMessage(redirectAttributes, 
+                    "Error al crear el reporte de prueba: " + e.getMessage());
         }
-
-        return new ModelAndView("redirect:/user/profile");
-    }
-
-
-    @GetMapping("/edit/{id}")
-    public ModelAndView editUser(@PathVariable("id") long id) {
-        ModelAndView mv = new ModelAndView("admin/edit");
-        
-        // Obtener usuario por ID
-        Optional<User> userOpt = userService.findUserById(id);
-        if (!userOpt.isPresent()) {
-            mv.setViewName("redirect:/admin/profile");
-            return mv;
-        }
-        
-        User user = userOpt.get();
-        mv.addObject("user", user);
-        
-        // Agregar breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Editar Usuario"));
-        
-        return mv;
-    }
-
-    @PostMapping("/edit/{id}")
-    public String editUser(@ModelAttribute("user") @Valid User user,
-                         BindingResult result,
-                         @PathVariable("id") long id,
-                         @RequestParam("fileImage") MultipartFile fileImage,
-                         @RequestParam("currentProfileImageUrl") String currentProfileImageUrl,
-                         RedirectAttributes msg) throws IOException {
-        
-        if (result.hasErrors()) {
-            return "admin/edit";
-        }
-        
-        // Usar el servicio para actualizar el usuario
-        userService.updateUserByAdmin(id, user, fileImage, currentProfileImageUrl, null, msg);
-        
-        return "redirect:/admin/profile";
-    }
-
-    @GetMapping("/reports")
-    public ModelAndView adminReports() {
-        ModelAndView mv = new ModelAndView("admin/reports");
-        
-        // Obtener todos los reportes usando el servicio
-        List<Report> reportes = reportService.findAll();
-        mv.addObject("reportes", reportes);
-        
-        // Agregar breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Reportes"));
-        
-        return mv;
-    }
-
-    @GetMapping("/report/{id}")
-    public ModelAndView adminEditReport(@PathVariable("id") long id) {
-        ModelAndView mv = new ModelAndView("admin/editReport");
-        
-        // Obtener reporte por ID
-        Optional<Report> reportOpt = reportService.findById(id);
-        if (!reportOpt.isPresent()) {
-            mv.setViewName("redirect:/admin/reports");
-            return mv;
-        }
-        
-        Report report = reportOpt.get();
-        mv.addObject("report", report);
-        
-        // Agregar usuario asociado si existe
-        if (report.getUser() != null) {
-            mv.addObject("userName", report.getUser().getName());
-        }
-        
-        // Agregar breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Reportes", "Editar"));
-        
-        return mv;
-    }
-
-    @PostMapping("/report/{id}")
-    public String updateReport(@ModelAttribute("image") Report report, RedirectAttributes redirectAttributes) {
-        // Usar el servicio para actualizar el reporte
-        reportService.updateReportByAdmin(report, redirectAttributes);
         
         return "redirect:/admin/reports";
     }
 
-    @GetMapping("/solicitudes")
-    public ModelAndView adminSolicitudes() {
-        ModelAndView mv = new ModelAndView("admin/solicitudes");
-        
-        // Obtener todas las solicitudes usando el método findAll() del servicio consolidado
-        List<Solicitude> solicitudes = solicitudeService.findAll();
-        mv.addObject("solicitudes", solicitudes);
-        
-        // Agregar breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Solicitudes"));
-        
+    @GetMapping("/reports/edit/{id}")
+    public ModelAndView adminEditReport(@PathVariable("id") long id, jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("admin/editreport");
+        try {
+            Optional<Report> reportOpt = reportService.findById(id);
+            if (reportOpt.isPresent()) {
+                Report report = reportOpt.get();
+                mv.addObject("report", report);
+                
+                List<User> users = userService.findAll();
+                mv.addObject("users", users);
+                
+                User assignedUser = report.getUser();
+                if (assignedUser != null) {
+                    mv.addObject("assignedUserId", assignedUser.getId());
+                }
+                mv.addObject("currentPage", "Editar Reporte");
+            } else {
+                mv.addObject("error", "Reporte no encontrado");
+                return new ModelAndView("redirect:/admin/reports");
+            }
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar el reporte: " + e.getMessage());
+        }
         return mv;
     }
 
-    // Método para mostrar el formulario de edición de solicitud
-    @GetMapping("/solicitudes/edit/{id}")
-    public ModelAndView adminEditSolicitude(@PathVariable("id") int id) {
-        ModelAndView mv = new ModelAndView("admin/solicitude_edit");
-        
-        // Obtener solicitud por ID usando el método findById() del servicio consolidado
+    @PostMapping("/reports/update")
+    public String updateReport(@ModelAttribute("report") Report report, RedirectAttributes redirectAttributes) {
         try {
-            Solicitude solicitude = solicitudeService.findById(id);
-            mv.addObject("solicitude", solicitude);
-            
-            // Agregar breadcrumbs
-            mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Solicitudes", "Editar"));
-            
-            return mv;
+            reportService.updateReportByAdmin(report, redirectAttributes);
         } catch (Exception e) {
-            mv.setViewName("redirect:/admin/solicitudes");
-            return mv;
+            validationService.addErrorMessage(redirectAttributes, "Error al actualizar el reporte: " + e.getMessage());
         }
+        return "redirect:/admin/reports";
     }
 
-    // Método para procesar la edición de una solicitud
-    @PostMapping("/solicitudes/edit/{id}")
+    @GetMapping("/solicitudes")
+    public ModelAndView adminSolicitudes(jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("pages/admin/solicitudes");
+        try {
+            List<Solicitude> solicitudes = solicitudeService.findAll();
+            mv.addObject("solicitudes", solicitudes);
+            mv.addObject("currentPage", "Solicitudes");
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
+        }
+        return mv;
+    }
+
+    @GetMapping("/solicitudes/edit/{id}")
+    public ModelAndView adminEditSolicitude(@PathVariable("id") int id, jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("admin/editsolicitude");
+        try {
+            Solicitude solicitude = solicitudeService.findById(id);
+            if (solicitude != null) {
+                mv.addObject("solicitude", solicitude);
+                mv.addObject("currentPage", "Editar Solicitud");
+            } else {
+                mv.addObject("error", "Solicitud no encontrada");
+                return new ModelAndView("redirect:/admin/solicitudes");
+            }
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar la solicitud: " + e.getMessage());
+        }
+        return mv;
+    }
+
+    @PostMapping("/solicitudes/edit")
     public String editSolicitudeBanco(@ModelAttribute("solicitude") @Valid Solicitude solicitude,
                                     BindingResult result, RedirectAttributes msg,
-                                    @RequestParam("file") MultipartFile imagem) throws IOException {
-        
+                                    @RequestParam("file") MultipartFile imagen) {
         if (result.hasErrors()) {
-            return "admin/solicitude_edit";
+            validationService.addErrorMessage(msg, ERROR_VALIDACION);
+            return "redirect:/admin/solicitudes/edit/" + solicitude.getId();
         }
         
-        // Usar el servicio consolidado para actualizar la solicitud
-        solicitudeService.updateSolicitudeByAdmin(solicitude, imagem, msg);
-        
+        try {
+            solicitudeService.updateSolicitudeByAdmin(solicitude, imagen, msg);
+        } catch (IOException e) {
+            validationService.addErrorMessage(msg, "Error al procesar la imagen: " + e.getMessage());
+            return "redirect:/admin/solicitudes/edit/" + solicitude.getId();
+        }
         return "redirect:/admin/solicitudes";
     }
 
-    // Método para eliminar una solicitud
     @GetMapping("/solicitudes/delete/{id}")
-    public String adminExcluirSolicitud(@PathVariable("id") int id) {
-        // Usar el servicio consolidado para eliminar la solicitud
-        solicitudeService.deleteSolicitudeByAdmin(id);
-        
+    public String adminExcluirSolicitud(@PathVariable("id") int id, RedirectAttributes msg) {
+        try {
+            boolean success = solicitudeService.deleteSolicitudeByAdmin(id);
+            if (success) {
+                validationService.addSuccessMessage(msg, "Solicitud eliminada correctamente");
+            } else {
+                validationService.addErrorMessage(msg, "No se pudo eliminar la solicitud");
+            }
+        } catch (Exception e) {
+            validationService.addErrorMessage(msg, "Error al eliminar la solicitud: " + e.getMessage());
+        }
         return "redirect:/admin/solicitudes";
     }
 
     @GetMapping("/users")
-    public ModelAndView rootUsers() {
-        ModelAndView mv = new ModelAndView("admin/users");
-        
-        // Obtener todos los usuarios
-        List<User> users = userService.findAll();
-        mv.addObject("users", users);
-        
-        // Obtener todos los roles
-        List<Role> roles = roleManagementService.getAllRoles();
-        mv.addObject("roles", roles);
-        
-        // Agregar breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Usuarios"));
-        
+    public ModelAndView rootUsers(jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("pages/admin/users");
+        try {
+            List<User> users = userService.findAll();
+            mv.addObject("users", users);
+            
+            List<Role> roles = roleRepository.findAll();
+            mv.addObject("roles", roles);
+            mv.addObject("currentPage", "Usuarios");
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
+        }
         return mv;
-    }
-
-    // Método para editar un usuario
-    @GetMapping("/users/edit/{id}")
-    public ModelAndView adminEditUser(@PathVariable("id") long id) {
-        ModelAndView mv = new ModelAndView("admin/user_edit");
-        
-        // Obtener usuario por ID
-        Optional<User> userOpt = userService.findUserById(id);
-        if (!userOpt.isPresent()) {
-            mv.setViewName("redirect:/admin/users");
-            return mv;
-        }
-        
-        User user = userOpt.get();
-        mv.addObject("user", user);
-        
-        // Obtener todos los roles disponibles
-        List<Role> roles = roleManagementService.getAllRoles();
-        mv.addObject("roles", roles);
-        
-        // Agregar breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Usuarios", "Editar"));
-        
-        return mv;
-    }
-
-    // Método para procesar la edición de un usuario
-    @PostMapping("/users/edit/{id}")
-    public String adminEditUserBanco(@PathVariable("id") long id,
-                                   @ModelAttribute("user") @Valid User user,
-                                   BindingResult result,
-                                   @RequestParam("currentProfileImageUrl") String currentProfileImageUrl,
-                                   @RequestParam("fileImage") MultipartFile fileImage,
-                                   @RequestParam(value = "roles", required = false) String roleValue,
-                                   RedirectAttributes msg) throws IOException {
-        
-        if (result.hasErrors()) {
-            return "admin/user_edit";
-        }
-        
-        // Usar el servicio para actualizar el usuario
-        userService.updateUserByAdmin(id, user, fileImage, currentProfileImageUrl, roleValue, msg);
-        
-        return "redirect:/admin/users";
-    }
-
-    // Método para eliminar una solicitud
-    @GetMapping("/users/delete/{id}")
-    public String adminExcluirUser(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {
-        // Obtener el usuario actual
-        User currentUser = getCurrentUser();
-        
-        // Verificar que no se esté intentando eliminar al propio usuario
-        if (currentUser.getId() == id) {
-            validationAndNotificationService.addErrorMessage(redirectAttributes, "No puedes eliminar tu propio usuario");
-            return "redirect:/admin/users";
-        }
-        
-        // Usar el servicio para eliminar el usuario
-        userService.deleteUserByAdmin(id, redirectAttributes);
-        
-        return "redirect:/admin/users";
-    }
-
-    @GetMapping("/newuser")
-    public ModelAndView mostrarFormularioCrearUsuario() {
-        ModelAndView mv = new ModelAndView("admin/newuser");
-        
-        // Crear un nuevo usuario para el formulario
-        mv.addObject("user", new User());
-        
-        // Obtener todos los roles disponibles
-        List<Role> roles = roleManagementService.getAllRoles();
-        mv.addObject("roles", roles);
-        
-        // Agregar breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Usuarios", "Nuevo"));
-        
-        return mv;
-    }
-
-    @PostMapping("/newuser")
-    public String crearUsuario(@ModelAttribute("user") @Valid User user,
-                              BindingResult result,
-                              @RequestParam("password") String password,
-                              @RequestParam("confirmPassword") String confirmPassword,
-                              @RequestParam("fileImage") MultipartFile fileImage,
-                              @RequestParam(value = "roles", required = false) String roleValue,
-                              RedirectAttributes msg) throws IOException {
-        
-        if (result.hasErrors()) {
-            return "admin/newuser";
-        }
-        
-        // Usar el servicio para crear el usuario administrador
-        userService.createUserByAdmin(user, password, confirmPassword, fileImage, roleValue, msg);
-        
-        return "redirect:/admin/users";
     }
 
     @GetMapping("/newsolicitude")
-    public ModelAndView mostrarFormularioCrearSolicitud() {
-        ModelAndView mv = new ModelAndView("admin/newsolicitude");
+    public ModelAndView mostrarFormularioCrearSolicitud(jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("pages/admin/newsolicitude");
         mv.addObject("solicitude", new Solicitude());
-        
-        // Agregar breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Solicitudes", "Nueva"));
-        
+        mv.addObject("currentPage", "Nueva Solicitud");
         return mv;
     }
 
     @PostMapping("/newsolicitude")
     public String crearSolicitudePrueba(@ModelAttribute("solicitude") @Valid Solicitude solicitude,
-                                       BindingResult result,
-                                       @RequestParam("file") MultipartFile imagem,
-                                       RedirectAttributes msg) throws IOException {
-        
+                                       BindingResult result, @RequestParam("file") MultipartFile imagen,
+                                       RedirectAttributes msg) {
         if (result.hasErrors()) {
+            validationService.addErrorMessage(msg, ERROR_VALIDACION);
             return "admin/newsolicitude";
         }
         
-        // Para crear una solicitud nueva como admin, usamos updateSolicitudeByAdmin que funciona tanto para crear como actualizar
-        solicitudeService.updateSolicitudeByAdmin(solicitude, imagem, msg);
-        
+        try {
+            solicitudeService.updateSolicitudeByAdmin(solicitude, imagen, msg);
+        } catch (IOException e) {
+            validationService.addErrorMessage(msg, "Error al procesar la imagen: " + e.getMessage());
+            return "admin/newsolicitude";
+        }
         return "redirect:/admin/solicitudes";
     }
 
     @GetMapping("/newreport")
-    public ModelAndView mostrarFormularioCrearReporte() {
-        ModelAndView mv = new ModelAndView("admin/newreport");
-        
-        // Obtener usuarios con rol "ROLE_USER" para asignar el reporte
+    public ModelAndView mostrarFormularioCrearReporte(jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("pages/admin/newreport");
         List<User> usuarios = reportService.getUsersForReportAssignment();
         mv.addObject("usuarios", usuarios);
         mv.addObject("reporte", new Report());
-        
-        // Agregar breadcrumbs
-        mv.addObject("breadcrumbItems", super.createBreadcrumbs("/admin", "Reportes", "Nuevo"));
-        
+        mv.addObject("currentPage", "Nuevo Reporte");
         return mv;
     }
 
     @PostMapping("/newreport")
     public String crearReportePrueba(@ModelAttribute("reporte") Report reporte,
-                                    @RequestParam("userId") Long userId,
-                                    RedirectAttributes redirectAttributes) {
-        
-        // Usar el servicio para crear el reporte
-        reportService.createReportByAdmin(reporte, userId, redirectAttributes);
-        
+                                    @RequestParam("userId") Long userId, RedirectAttributes msg) {
+        try {
+            reportService.createReportByAdmin(reporte, userId, msg);
+        } catch (Exception e) {
+            validationService.addErrorMessage(msg, "Error al crear el reporte: " + e.getMessage());
+            return "redirect:/admin/newreport";
+        }
         return "redirect:/admin/reports";
+    }
+
+    @GetMapping("/newuser")
+    public ModelAndView mostrarFormularioCrearUsuario(jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("pages/admin/newuser");
+        mv.addObject("user", new User());
+        mv.addObject("roles", roleRepository.findAll());
+        mv.addObject("currentPage", "Nuevo Usuario");
+        return mv;
+    }
+    
+    @PostMapping("/newuser")
+    public String crearUsuario(@ModelAttribute("user") @Valid User user,
+                              BindingResult result,
+                              @RequestParam("password") String password,
+                              @RequestParam("confirmPassword") String confirmPassword,
+                              @RequestParam(value = "roleIds", required = false) List<Long> roleIds,
+                              @RequestParam("fileImage") MultipartFile fileImage,
+                              RedirectAttributes msg) {
+        if (result.hasErrors()) {
+            validationService.addErrorMessage(msg, ERROR_VALIDACION);
+            return "redirect:/admin/newuser";
+        }
+        
+        try {
+            // Convertir los IDs de roles a una cadena separada por comas
+            String roleValue = roleIds != null ? String.join(",", roleIds.stream().map(String::valueOf).toList()) : "";
+            
+            // Crear el usuario
+            boolean success = userService.createUserByAdmin(user, password, confirmPassword, fileImage, roleValue, msg);
+            
+            if (!success) {
+                return "redirect:/admin/newuser";
+            }
+            
+            validationService.addSuccessMessage(msg, "Usuario creado exitosamente");
+        } catch (Exception e) {
+            validationService.addErrorMessage(msg, "Error al crear el usuario: " + e.getMessage());
+            return "redirect:/admin/newuser";
+        }
+        
+        return "redirect:/admin/users";
     }
 
     @PostMapping("/crear-rol")
     public String crearRol(@RequestParam("roleName") String roleName, 
                           @RequestParam(value = "returnUrl", required = false) String returnUrl,
-                          RedirectAttributes redirectAttributes) {
-        
-        // Utilizar RoleManagementService para crear el rol
-        roleManagementService.createRole(roleName, redirectAttributes);
-        
-        // Manejar la redirección de forma más general
-        if (returnUrl != null && !returnUrl.isEmpty()) {
-            // Siempre redirige a una URL GET válida
-            // Verificar si la URL comienza con '/' para asegurarnos de que es una URL interna
-            if (returnUrl.startsWith("/")) {
-                // Si contiene verbo HTTP o parámetros, redirigir a la ruta base
-                if (returnUrl.contains("?") || returnUrl.contains("POST") || returnUrl.contains("DELETE")) {
-                    String baseUrl = returnUrl.split("\\?")[0];
-                    return "redirect:" + baseUrl;
-                }
-                
-                // URL segura, redirigir directamente
-                return "redirect:" + returnUrl;
-            }
+                          RedirectAttributes msg) {
+        try {
+            roleManagementService.createRole(roleName, msg);
+        } catch (Exception e) {
+            validationService.addErrorMessage(msg, "Error al crear el rol: " + e.getMessage());
         }
         
-        // Por defecto, redirigir a la lista de usuarios
+        if (returnUrl != null && !returnUrl.isEmpty() && returnUrl.startsWith("/")) {
+            if (!returnUrl.contains("?") && !returnUrl.contains("POST") && !returnUrl.contains("DELETE")) {
+                return "redirect:" + returnUrl;
+            }
+            String baseUrl = returnUrl.split("\\?")[0];
+            return "redirect:" + baseUrl;
+        }
         return "redirect:/admin/users";
     }
 
@@ -517,11 +519,60 @@ public class AdministradorController extends BaseController {
                                 @RequestParam("newPassword") String newPassword,
                                 @RequestParam("confirmPassword") String confirmPassword,
                                 RedirectAttributes attributes) {
-        
         return super.changePassword(currentPassword, newPassword, confirmPassword, attributes, "/admin/profile");
     }
 
-    // Implementación del método abstracto de BaseController
+    @GetMapping("/eliminar/{id}")
+    public String eliminarUsuario(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+        try {
+            // Verificar que el usuario existe
+            Optional<User> userOpt = userService.findUserById(id);
+            if (userOpt.isEmpty()) {
+                validationService.addErrorMessage(redirectAttributes, "Usuario no encontrado");
+                return "redirect:/admin/users";
+            }
+            
+            // Verificar que no se está eliminando al usuario actual
+            Optional<User> currentUserOpt = userService.getAuthenticatedUser();
+            if (currentUserOpt.isPresent() && currentUserOpt.get().getId() == id) {
+                validationService.addErrorMessage(redirectAttributes, "No puedes eliminar tu propio usuario");
+                return "redirect:/admin/users";
+            }
+            
+            // Eliminar el usuario
+            boolean success = userService.deleteUserByAdmin((int) id, redirectAttributes);
+            if (!success) {
+                // El mensaje de error ya fue añadido por el servicio
+                return "redirect:/admin/users";
+            }
+            
+            validationService.addSuccessMessage(redirectAttributes, "Usuario eliminado correctamente");
+        } catch (Exception e) {
+            validationService.addErrorMessage(redirectAttributes, "Error al eliminar el usuario: " + e.getMessage());
+        }
+        
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/estadisticas")
+    public ModelAndView adminEstadisticas(jakarta.servlet.http.HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("pages/admin/estadisticas");
+        try {
+            // Obtener todas las métricas del dashboard desde el servicio
+            Map<String, Object> metrics = dashboardService.getDashboardMetrics();
+            mv.addAllObjects(metrics);
+            
+            // Obtener estadísticas detalladas de usuarios
+            Map<String, Object> userStats = dashboardService.getUserStatistics();
+            mv.addAllObjects(userStats);
+            
+            mv.addObject("currentPage", "Estadísticas");
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
+        }
+        return mv;
+    }
+
     @Override
     protected UserService getUserService() {
         return userService;

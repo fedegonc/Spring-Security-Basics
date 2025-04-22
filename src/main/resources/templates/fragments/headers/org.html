@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- Fragmento de header para organizaciones -->
+<th:block th:fragment="header">
+    <header class="bg-green-800 text-white shadow-lg mb-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16">
+            <!-- Logo y Navegación Desktop -->
+            <div class="flex items-center">
+                <a th:href="@{/}" class="flex items-center">
+                    <img th:src="@{/img/logov4.png}"
+                         alt="EcoSolicitud Logo"
+                         class="h-8 w-auto mr-2 inline align-top" />
+                    <span class="text-white font-bold text-xl">EcoSolicitud</span>
+                </a>
+                <nav class="hidden md:flex md:ml-6 md:space-x-4">
+                    <a th:href="@{/org/inicio}"
+                       class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-300">
+                        <i class="bi bi-grid mr-1"></i>Panel
+                    </a>
+                    <a th:href="@{/org/solicitudes}"
+                       class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-300">
+                        <i class="bi bi-recycle mr-1"></i>Solicitudes
+                    </a>
+                    <a th:href="@{/org/estadisticas}"
+                       class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-300">
+                        <i class="bi bi-graph-up mr-1"></i>Estadísticas
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Menú de Usuario e Idioma (Desktop) -->
+            <div class="flex items-center">
+                <div class="relative ml-3" sec:authorize="isAuthenticated()">
+                    <button id="userMenuButton" type="button"
+                            class="flex items-center text-sm rounded-lg bg-green-700 hover:bg-green-600 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-150"
+                            aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Abrir menú de usuario</span>
+                        <img th:src="@{/img/default-profile.jpg}"
+                             alt="Foto de perfil"
+                             class="h-8 w-8 rounded-full border border-gray-200 object-cover" />
+                        <span sec:authentication="name"
+                              class="text-white ml-2 hidden sm:inline">Organización</span>
+                        <!-- Icono de flecha hacia abajo -->
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="userMenu"
+                         class="hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md bg-white py-2 shadow-xl ring-1 ring-black ring-opacity-5 z-50 transform opacity-0 scale-95 transition-all duration-200">
+                        <div class="px-4 py-3 border-b border-gray-100">
+                            <p class="text-sm text-gray-500">Conectado como</p>
+                            <p class="text-sm font-medium text-gray-900 truncate" sec:authentication="name">Organización</p>
+                        </div>
+                        <a th:href="@{/org/profile}"
+                           class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-700">
+                            <i class="bi bi-building mr-2 text-gray-500"></i>Perfil Organización
+                        </a>
+                        <a th:href="@{/org/reportes}"
+                           class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-700">
+                            <i class="bi bi-file-earmark-text mr-2 text-gray-500"></i>Reportes
+                        </a>
+                        <hr class="my-1 border-gray-100">
+                        <a th:href="@{/logout}"
+                           class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                            <i class="bi bi-box-arrow-right mr-2"></i>Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Selector de idioma -->
+                <div class="flex space-x-2 ml-4">
+                    <a href="?language=es" class="text-white hover:text-gray-300">
+                        <img th:src="@{/img/uruguay.png}" class="h-5 w-5" alt="Español"/>
+                    </a>
+                    <a href="?language=pt" class="text-white hover:text-gray-300">
+                        <img th:src="@{/img/brasil.png}" class="h-5 w-5" alt="Português"/>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Botón Menú Móvil -->
+            <button id="mobileMenuButton" class="md:hidden flex items-center text-white">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Menú Móvil -->
+        <div id="mobileMenu" class="hidden md:hidden bg-green-700 px-2 pt-2 pb-3 space-y-1">
+            <a th:href="@{/org/inicio}"
+               class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-green-600">
+                <i class="bi bi-grid mr-1"></i>Panel
+            </a>
+            <a th:href="@{/org/solicitudes}"
+               class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-green-600">
+                <i class="bi bi-recycle mr-1"></i>Solicitudes
+            </a>
+            <a th:href="@{/org/estadisticas}"
+               class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-green-600">
+                <i class="bi bi-graph-up mr-1"></i>Estadísticas
+            </a>
+            <hr class="my-2 border-gray-600">
+            <a th:href="@{/org/profile}"
+               class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-green-600">
+                <i class="bi bi-building mr-1"></i>Perfil Org.
+            </a>
+            <a th:href="@{/logout}"
+               class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-green-600">
+                <i class="bi bi-box-arrow-right mr-1"></i>Cerrar Sesión
+            </a>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // Función mejorada para toggle con animación
+                const toggleMenu = (btnId, menuId) => {
+                    const btn = document.getElementById(btnId);
+                    const menu = document.getElementById(menuId);
+                    
+                    if (!btn || !menu) return;
+                    
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isHidden = menu.classList.contains('hidden');
+                        
+                        // Si el menú está oculto, primero lo mostramos y luego animamos
+                        if (isHidden) {
+                            menu.classList.remove('hidden', 'opacity-0', 'scale-95');
+                            menu.classList.add('opacity-100', 'scale-100');
+                            btn.setAttribute('aria-expanded', 'true');
+                        } else {
+                            // Si está visible, primero animamos y luego ocultamos
+                            menu.classList.remove('opacity-100', 'scale-100');
+                            menu.classList.add('opacity-0', 'scale-95');
+                            btn.setAttribute('aria-expanded', 'false');
+                            
+                            // Esperamos a que termine la animación antes de ocultar
+                            setTimeout(() => {
+                                menu.classList.add('hidden');
+                            }, 200);
+                        }
+                    });
+                };
+                
+                // Aplicar toggle al menú de usuario y menú móvil
+                toggleMenu('userMenuButton', 'userMenu');
+                toggleMenu('mobileMenuButton', 'mobileMenu');
+                
+                // Cerrar menú al hacer clic fuera
+                document.addEventListener('click', e => {
+                    const userMenu = document.getElementById('userMenu');
+                    const userMenuButton = document.getElementById('userMenuButton');
+                    
+                    if (userMenu && !userMenu.classList.contains('hidden') && 
+                        userMenuButton && !userMenuButton.contains(e.target) && 
+                        !userMenu.contains(e.target)) {
+                        
+                        // Animación de cierre
+                        userMenu.classList.remove('opacity-100', 'scale-100');
+                        userMenu.classList.add('opacity-0', 'scale-95');
+                        userMenuButton.setAttribute('aria-expanded', 'false');
+                        
+                        setTimeout(() => {
+                            userMenu.classList.add('hidden');
+                        }, 200);
+                    }
+                });
+            });
+        </script>
+    </header>
+</th:block>
+</html>

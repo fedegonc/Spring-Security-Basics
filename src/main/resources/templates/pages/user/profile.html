@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='user', footerType='simple', currentPage='Mi Perfil', metaDescription='Gestiona tu perfil de usuario'">
+
+<head>
+    <title>Mi Perfil - Reciclaje</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .profile-image {
+                width: 150px;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 4px solid #2f855a;
+            }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="container px-4 py-5 mx-auto">
+            <!-- Breadcrumbs hardcodeados -->
+            <nav class="flex mb-5" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a th:href="@{/user/inicio}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-green-600">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                            </svg>
+                            Inicio
+                        </a>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Mi Perfil</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- Mensajes de error/éxito -->
+            <div th:if="${error}" class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+                <span class="font-medium">Error!</span> <span th:text="${error}">Mensaje de error</span>
+            </div>
+            <div th:if="${success}" class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+                <span class="font-medium">Éxito!</span> <span th:text="${success}">Mensaje de éxito</span>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Información del perfil -->
+                <div class="md:col-span-1">
+                    <div class="bg-white rounded-lg shadow-sm p-6 flex flex-col items-center">
+                        <div class="mb-4">
+                            <img th:if="${user.profileImage}" th:src="@{'/uploads/profile/' + ${user.profileImage}}" alt="Foto de perfil" class="profile-image">
+                            <img th:unless="${user.profileImage}" th:src="@{/images/default-profile.png}" alt="Foto de perfil por defecto" class="profile-image">
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-1" th:text="${user.name}">Nombre Completo</h2>
+                        <p class="text-gray-600 mb-4" th:text="${user.username}">@username</p>
+                        <div class="w-full mt-2">
+                            <a th:href="@{/user/edit-profile}" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                Editar Perfil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalles del usuario -->
+                <div class="md:col-span-2">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Información de la cuenta</h3>
+                        
+                        <!-- Detalles -->
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Nombre completo</p>
+                                <p class="text-gray-900" th:text="${user.name}">Nombre Completo</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Nombre de usuario</p>
+                                <p class="text-gray-900" th:text="${user.username}">username</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Correo electrónico</p>
+                                <p class="text-gray-900" th:text="${user.email}">email@example.com</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Roles</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span th:each="role : ${user.roles}" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" th:text="${role.name}">
+                                        ROLE_USER
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Actividad reciente</h3>
+                            
+                            <!-- Solicitudes recientes -->
+                            <div th:if="${!#lists.isEmpty(solicitudes)}" class="space-y-4">
+                                <div th:each="solicitud : ${solicitudes}" class="border border-gray-200 rounded-md p-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900" th:text="${solicitud.titulo}">Título de la solicitud</h4>
+                                            <p class="text-sm text-gray-500" th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy HH:mm')}">Fecha</p>
+                                            <p class="text-sm mt-1" th:text="${solicitud.descripcion}">Descripción</p>
+                                        </div>
+                                        <span th:if="${solicitud.estado == 'EN_ESPERA'}" class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">En espera</span>
+                                        <span th:if="${solicitud.estado == 'ACEPTADA'}" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Aceptada</span>
+                                        <span th:if="${solicitud.estado == 'RECHAZADA'}" class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Rechazada</span>
+                                        <span th:if="${solicitud.estado == 'EN_REVISION'}" class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">En revisión</span>
+                                        <span th:if="${solicitud.estado == 'COMPLETADA'}" class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">Completada</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${#lists.isEmpty(solicitudes)}" class="text-center py-8">
+                                <p class="text-gray-500">No has creado ninguna solicitud de reciclaje aún.</p>
+                                <a th:href="@{/user/newsolicitude}" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                    Crear mi primera solicitud
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            // Cualquier script específico para el perfil iría aquí
+        </script>
+    </th:block>
+</body>
+</html>

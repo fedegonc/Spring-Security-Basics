@@ -6,7 +6,7 @@ import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.MessageRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.BreadcrumbService;
+
 import com.example.registrationlogindemo.service.MessageService;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.ValidationAndNotificationService;
@@ -49,10 +49,8 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     
     @Autowired
     private MessageService messageService;
-    
-    @Autowired
-    private BreadcrumbService breadcrumbService;
-    
+
+
     @Autowired
     private ValidationAndNotificationService validationAndNotificationService;
 
@@ -114,7 +112,7 @@ public class SolicitudeServiceImpl implements SolicitudeService {
                 throw new RuntimeException("Usuario no encontrado");
             }
             
-            ModelAndView modelAndView = new ModelAndView("solicitude/newsolicitude");
+            ModelAndView modelAndView = new ModelAndView("pages/user/newsolicitude");
             
             // Establecer el nombre de la página actual para los breadcrumbs en el header
             modelAndView.addObject("currentPage", "Nueva Solicitud");
@@ -132,8 +130,8 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     
     @Override
     public String createSolicitude(Solicitude solicitude, MultipartFile imagen, 
-                                 RedirectAttributes redirectAttributes, 
-                                 UserDetails userDetails) throws IOException {
+                             RedirectAttributes redirectAttributes, 
+                             UserDetails userDetails) throws IOException {
         // Obtener el usuario actual
         User usuario = userRepository.findByUsername(userDetails.getUsername());
         
@@ -154,13 +152,30 @@ public class SolicitudeServiceImpl implements SolicitudeService {
             
             // Guardar la imagen en el sistema de archivos
             saveImageFile(imagen, fileName);
+        } else {
+            // Si no hay imagen, establecer una imagen predeterminada
+            solicitude.setImagen("default-recycling-image.png");
+            
+            // Verificar si la imagen predeterminada ya existe
+            Path defaultImagePath = Paths.get(UPLOAD_DIR + "default-recycling-image.png");
+            if (!Files.exists(defaultImagePath)) {
+                // Crear directorio si no existe
+                Path uploadPath = Paths.get(UPLOAD_DIR);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                
+                // Crear una imagen predeterminada simple (un archivo de texto con extensión .png)
+                // Esto es solo para desarrollo, en producción debería ser una imagen real
+                Files.write(defaultImagePath, "Default image placeholder".getBytes());
+            }
         }
         
         // Guardar la solicitud en la base de datos
         save(solicitude);
         
         redirectAttributes.addFlashAttribute("exito", "Solicitud creada con éxito");
-        return "redirect:/user/welcome";
+        return "redirect:/user/solicitudes";
     }
     
     @Override
@@ -184,20 +199,13 @@ public class SolicitudeServiceImpl implements SolicitudeService {
                 // Agregar organizaciones al modelo
                 List<User> organizaciones = userRepository.findByRoleName("ROLE_ORGANIZATION");
                 mv.addObject("organizaciones", organizaciones);
-                
-                // Configurar breadcrumbs
-                mv.addObject("breadcrumbItems", 
-                    breadcrumbService.createCustomBreadcrumbs(
-                        new String[]{"Dashboard", "/user/welcome"},
-                        new String[]{"Editar Solicitud", "/user/editsolicitude/" + id}
-                    )
-                );
+
                 
                 return mv;
             }
         }
         
-        // Si no se encuentra la solicitud o no tiene permisos, redirigir al dashboard
+        // Si no se encuentra la solicitud o no tiene permisos, redirigir al inicio
         return new ModelAndView("redirect:/user/welcome");
     }
     
@@ -441,6 +449,12 @@ public class SolicitudeServiceImpl implements SolicitudeService {
         }
         
         Path filePath = uploadPath.resolve(fileName);
+        
+        // Si el archivo ya existe, eliminarlo primero
+        if (Files.exists(filePath)) {
+            Files.delete(filePath);
+        }
+        
         Files.copy(image.getInputStream(), filePath);
     }
 }

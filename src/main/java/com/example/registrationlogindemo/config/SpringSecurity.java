@@ -37,31 +37,24 @@ public class SpringSecurity {
 
         http.csrf().disable()
                 // Configuración de las autorizaciones de las solicitudes HTTP
-
-                .authorizeHttpRequests((authorize) ->
-
+                .authorizeHttpRequests(authorize -> 
                         authorize.requestMatchers("/", "/register/**", "/register/save", "/index",
                                         "/favicon.ico","/login/**","/init/**","/static/**",
                                         "/imagem/**", "/static/css/**", "/css/**","/favicon.*",
                                         "/error","/gracias","/article/**","/img/**","/construction"
                                         ,"/sostenibilidad","/scripts/**","/ambiental","/noticias"
                                         ,"/materiales","/legislacion","/alianzas","/base","/error",
-                                        "/resources/**", "/templates/fragments/**","/js/**"
-                                                ).permitAll()
-
-
-
-                                .requestMatchers("/user/**","/index/**","/init/**","/report/**"
-                                                ).hasRole("USER")
-
-                                .requestMatchers("/org/**","/report/**"
-                                                ).hasAnyRole("ORGANIZATION")
-
-                                .requestMatchers("/admin/**","/report/**"
-                                                ).hasRole("ADMIN")
-
-
-
+                                        "/resources/**", "/templates/fragments/**","/js/**","/layoutdemo",
+                                        "/images/**", "/uploads/**", "/guest/**"
+                                        ).permitAll()
+                                // Rutas basadas en roles, siguiendo la estructura de carpetas
+                                .requestMatchers("/user/**").hasRole("USER")
+                                // Páginas y funciones de administración
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                // Páginas y funciones de organizaciones
+                                .requestMatchers("/org/**").hasRole("ORGANIZATION")
+                                // Cualquier otra ruta requiere autenticación
+                                .anyRequest().authenticated()
                 )
                 // Configuración de inicio de sesión
                 .formLogin(
@@ -79,9 +72,7 @@ public class SpringSecurity {
                                 .permitAll()
                 )
                 // Configuración del almacenamiento de solicitudes en caché
-                .requestCache(cache -> cache
-                        .requestCache(requestCache)
-                );
+                .requestCache(cache -> cache.requestCache(requestCache));
 
         return http.build();
     }

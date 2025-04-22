@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -163,10 +164,12 @@ public class UserServiceImpl implements UserService {
         return userId;
     }
 
-    // Método para buscar un usuario por nombre de usuario
+    // Go Horse: buscar usuario por username, lanzando excepción si no existe
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
+        if (user == null) throw new UsernameNotFoundException("Usuario no encontrado");
+        return user;
     }
 
     // ======= Métodos para operaciones de usuarios regulares =======
@@ -412,5 +415,23 @@ public class UserServiceImpl implements UserService {
                 "Error al eliminar el usuario: " + e.getMessage());
             return false;
         }
+    }
+    
+    @Override
+    @Transactional
+    public Optional<User> findByIdWithRoles(Long id) {
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            // Forzar la carga de los roles para evitar consultas N+1
+            user.getRoles().size(); // Esto fuerza la inicialización de la colección
+            return Optional.of(user);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<User> findByRoleName(String roleName) {
+        return userRepository.findByRoleName(roleName);
     }
 }

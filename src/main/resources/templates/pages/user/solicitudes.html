@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='user', footerType='full', currentPage='Mis Solicitudes', metaDescription='Gestión de solicitudes de reciclaje'">
+
+<head>
+    <title>Mis Solicitudes - Reciclaje</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .status-badge {
+                padding: 0.25rem 0.5rem;
+                border-radius: 9999px;
+                font-size: 0.75rem;
+                font-weight: 500;
+            }
+            .status-pending { background-color: #FEF3C7; color: #92400E; }
+            .status-process { background-color: #DBEAFE; color: #1E40AF; }
+            .status-completed { background-color: #D1FAE5; color: #065F46; }
+            .status-rejected { background-color: #FEE2E2; color: #B91C1C; }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="container px-4 py-5 mx-auto">
+            <!-- Breadcrumbs hardcodeados -->
+            <nav class="flex mb-5" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a th:href="@{/user/inicio}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-green-600">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                            </svg>
+                            Inicio
+                        </a>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Mis Solicitudes</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- Encabezado y botón de nueva solicitud -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Mis Solicitudes</h1>
+                <a th:href="@{/user/newsolicitude}" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Nueva Solicitud
+                </a>
+            </div>
+
+            <!-- Tarjetas de estadísticas -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500">
+                    <p class="text-sm font-medium text-gray-600">Solicitudes Activas</p>
+                    <p class="text-2xl font-bold text-gray-800" th:text="${stats.activeSolicitudes}">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
+                    <p class="text-sm font-medium text-gray-600">Solicitudes Completadas</p>
+                    <p class="text-2xl font-bold text-gray-800" th:text="${stats.completedSolicitudes}">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-500">
+                    <p class="text-sm font-medium text-gray-600">Total Solicitudes</p>
+                    <p class="text-2xl font-bold text-gray-800" th:text="${stats.totalSolicitudes}">0</p>
+                </div>
+            </div>
+
+            <!-- Mensaje de error si existe -->
+            <div th:if="${error}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+                <p class="font-bold">Error</p>
+                <p th:text="${error}">Mensaje de error</p>
+            </div>
+
+            <!-- Tabla de solicitudes -->
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div th:if="${solicitudes == null || solicitudes.isEmpty()}" class="text-center py-10">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No tienes solicitudes</h3>
+                    <p class="mt-1 text-sm text-gray-500">Comienza creando una nueva solicitud de reciclaje.</p>
+                    <div class="mt-6">
+                        <a th:href="@{/user/newsolicitude}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Nueva Solicitud
+                        </a>
+                    </div>
+                </div>
+
+                <div th:if="${solicitudes != null && !solicitudes.isEmpty()}" class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr th:each="sol : ${solicitudes}" class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${sol.id}">1</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${sol.categoria}">Papel</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">
+                                    <span th:text="${#strings.abbreviate(sol.descripcion, 50)}">Descripción corta de la solicitud...</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span th:if="${sol.estado == 'EN_ESPERA'}" class="status-badge status-pending">Pendiente</span>
+                                    <span th:if="${sol.estado == 'EN_REVISION'}" class="status-badge status-process">En Proceso</span>
+                                    <span th:if="${sol.estado == 'ACEPTADA'}" class="status-badge status-process">Aceptada</span>
+                                    <span th:if="${sol.estado == 'COMPLETADA'}" class="status-badge status-completed">Completada</span>
+                                    <span th:if="${sol.estado == 'RECHAZADA'}" class="status-badge status-rejected">Rechazada</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(sol.fecha, 'dd/MM/yyyy')}">01/01/2023</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a th:href="@{'/user/solicitudes/' + ${sol.id}}" class="text-blue-600 hover:text-blue-900 mr-3">Ver</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

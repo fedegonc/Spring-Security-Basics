@@ -24,87 +24,110 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.List;
 
+/**
+ * Controlador para gestionar las operaciones de organizaciones
+ */
 @Controller
 @RequestMapping("/org")
 public class OrgController extends BaseController {
 
-
-    @Autowired
-    private OrgService orgService;
-
-    @Autowired
-    UserService userService;
-    @Autowired
-    SolicitudeService solicitudeService;
-    @Autowired UserRepository userRepository;
-    @Autowired
-    SolicitudeRepository solicitudeRepository;
-    @Autowired
-    ReportRepository reportRepository;
-    @Autowired
-    ValidationAndNotificationService validationAndNotificationService;
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
+    private static final String ERROR_CARGAR_PAGINA = "Error al cargar la página: ";
+    private static final String ERROR_ACTUALIZAR_PERFIL = "Error al actualizar el perfil: ";
+    private static final String SUCCESS_PERFIL = "Perfil actualizado con éxito";
+    
+    @Autowired private OrgService orgService;
+    @Autowired private UserService userService;
+    @Autowired private SolicitudeService solicitudeService;
+    @Autowired private UserRepository userRepository;
+    @Autowired private SolicitudeRepository solicitudeRepository;
+    @Autowired private ReportRepository reportRepository;
+    @Autowired private ValidationAndNotificationService validationService;
 
+    /**
+     * Obtiene el usuario autenticado actualmente
+     */
     private User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return (auth != null) ? userRepository.findByUsername(auth.getName()) : null;
     }
 
-    @GetMapping("/dashboard")
+    /**
+     * Página de inicio para organizaciones
+     * Muestra estadísticas y solicitudes relevantes
+     */
+    @GetMapping("/inicio")
     public ModelAndView welcomePage() {
-        ModelAndView mv = new ModelAndView("user/welcome");
+        ModelAndView mv = new ModelAndView("pages/org/inicio");
 
         try {
-            // Obtener el usuario actual
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-
+            User currentUser = getAuthenticatedUser();
+            
+            if (currentUser != null) {
+                List<Solicitude> solicitudes = solicitudeService.getSolicitudesByUser(currentUser);
+                
+                // Agregar solicitudes y estadísticas al modelo
+                mv.addObject("solicitudes", solicitudes);
+                addSolicitudeStatistics(mv, solicitudes);
+            }
         } catch (Exception e) {
-            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
+            mv.addObject("error", ERROR_CARGAR_PAGINA + e.getMessage());
         }
 
         return mv;
     }
     
+    /**
+     * Muestra las solicitudes de la organización actual
+     */
     @GetMapping("/solicitudes")
     public ModelAndView verSolicitudes(@AuthenticationPrincipal UserDetails userDetails) {
-        // Delegamos la obtención de solicitudes al servicio
         return orgService.getSolicitudes(userDetails);
-    }
-    
-    @GetMapping("/editsolicitude/{id}")
-    public ModelAndView editarSolicitud(@PathVariable("id") int id, @AuthenticationPrincipal UserDetails userDetails) {
-        // Delegamos la preparación de la solicitud para edición al servicio
-        return orgService.prepareEditSolicitud(id, userDetails);
-    }
-    
-    @GetMapping("/deletsolicitude/{id}")
-    public String eliminarSolicitud(@PathVariable("id") int id, RedirectAttributes redirectAttributes, 
-                                   @AuthenticationPrincipal UserDetails userDetails) {
-        // Delegamos la eliminación de la solicitud al servicio
-        return orgService.deleteSolicitud(id, redirectAttributes, userDetails);
-    }
-    
-    @PostMapping("/editsolicitude/{id}")
-    public String procesarEditarSolicitud(@ModelAttribute("solicitude") @Validated Solicitude solicitude,
-                                      BindingResult result, RedirectAttributes msg,
-                                      @RequestParam("file") MultipartFile imagen,
-                                      @AuthenticationPrincipal UserDetails userDetails) throws IOException {
-        // Verificar errores de validación
-        if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "Por favor, corrija los errores en el formulario.");
-            return "redirect:/org/editsolicitude/" + solicitude.getId();
-        }
-        
-        // Delegamos la actualización de la solicitud al servicio
-        return orgService.updateSolicitud(solicitude, imagen, msg, userDetails);
     }
 
     /**
-     * Maneja las operaciones relacionadas con el perfil de usuario.
-     * GET: Muestra el perfil del usuario.
-     * POST: Actualiza la información del perfil.
+     * Muestra el formulario para editar una solicitud
+     */
+    @GetMapping("/solicitudes/editar/{id}")
+    public ModelAndView editarSolicitud(@PathVariable("id") int id, @AuthenticationPrincipal UserDetails userDetails) {
+        return orgService.prepareEditSolicitud(id, userDetails);
+    }
+
+    /**
+     * Elimina una solicitud
+     */
+    @GetMapping("/solicitudes/eliminar/{id}")
+    public String eliminarSolicitud(@PathVariable("id") int id, RedirectAttributes redirectAttributes, 
+                                   @AuthenticationPrincipal UserDetails userDetails) {
+        return orgService.deleteSolicitud(id, redirectAttributes, userDetails);
+    }
+
+    /**
+     * Procesa la edición de una solicitud
+     */
+    @PostMapping("/solicitudes/editar")
+    public String procesarEditarSolicitud(@ModelAttribute("solicitude") @Validated Solicitude solicitude,
+                                      BindingResult result, RedirectAttributes msg,
+                                      @RequestParam("file") MultipartFile imagen,
+                                      @AuthenticationPrincipal UserDetails userDetails) {
+        
+        if (result.hasErrors()) {
+            validationService.addErrorMessage(msg, "Por favor corrija los errores en el formulario");
+            return "redirect:/org/solicitudes/editar/" + solicitude.getId();
+        }
+        
+        try {
+            return orgService.updateSolicitud(solicitude, imagen, msg, userDetails);
+        } catch (IOException e) {
+            validationService.addErrorMessage(msg, "Error al procesar la imagen: " + e.getMessage());
+            return "redirect:/org/solicitudes/editar/" + solicitude.getId();
+        }
+    }
+
+    /**
+     * Maneja las operaciones de perfil (GET: mostrar, POST: actualizar)
      */
     @RequestMapping(value = "/profile", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView handleProfile(
@@ -115,38 +138,32 @@ public class OrgController extends BaseController {
             RedirectAttributes msg,
             jakarta.servlet.http.HttpServletRequest request) {
 
-        // Si es una solicitud GET, mostrar el perfil
-        if (request.getMethod().equalsIgnoreCase("GET")) {
-            return viewProfile();
-        }
-
-        // Si es una solicitud POST, actualizar el perfil
-        return updateProfile(user, result, file, currentImg, msg);
+        return request.getMethod().equalsIgnoreCase("GET") 
+               ? viewProfile() 
+               : updateProfile(user, result, file, currentImg, msg);
     }
 
     /**
-     * Método privado para mostrar el perfil del usuario.
+     * Muestra el perfil del usuario
      */
     private ModelAndView viewProfile() {
         ModelAndView mv = new ModelAndView("user/profile");
 
         try {
-            // Obtener el usuario actual
             User user = getAuthenticatedUser();
 
-            if (user != null) {
-                // Si el usuario no tiene imagen de perfil, usar una por defecto
-                if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
-                    user.setProfileImage("descargas.jpeg");
-                }
-
-                mv.addObject("user", user);
-
-                // Establecer el nombre de la página actual para los breadcrumbs en el header
-                mv.addObject("currentPage", "Perfil");
-            } else {
+            if (user == null) {
                 return new ModelAndView("redirect:/login");
             }
+            
+            // Asegurar que siempre haya una imagen de perfil
+            if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
+                user.setProfileImage("descargas.jpeg");
+            }
+
+            mv.addObject("user", user);
+            mv.addObject("currentPage", "Perfil");
+            
         } catch (Exception e) {
             mv.addObject("error", "Error al cargar el perfil: " + e.getMessage());
         }
@@ -155,48 +172,73 @@ public class OrgController extends BaseController {
     }
 
     /**
-     * Método privado para actualizar el perfil del usuario.
+     * Actualiza el perfil del usuario
      */
-    private ModelAndView updateProfile(@Valid User user, BindingResult result,
-                                       MultipartFile file, String currentImg,
-                                       RedirectAttributes msg) {
+    private ModelAndView updateProfile(
+            @Valid User user, 
+            BindingResult result,
+            MultipartFile file, 
+            String currentImg,
+            RedirectAttributes msg) {
+            
         if (result.hasErrors()) {
-            msg.addFlashAttribute("error", "Por favor, corrija los errores en el formulario");
+            validationService.addErrorMessage(msg, "Por favor, corrija los errores en el formulario");
             return new ModelAndView("redirect:/user/profile");
         }
 
         try {
-            // Obtener el usuario actual
             User currentUser = getAuthenticatedUser();
 
-            if (currentUser != null) {
-                // Actualizar solo los campos permitidos
-                currentUser.setName(user.getName());
-                currentUser.setEmail(user.getEmail());
-
-                // Manejar la subida de imagen
-                if (file != null && !file.isEmpty()) {
-                    try {
-                        String fileName = handleImageUpload(file, currentImg);
-                        currentUser.setProfileImage(fileName);
-                    } catch (IOException e) {
-                        msg.addFlashAttribute("error", "Error al subir la imagen: " + e.getMessage());
-                        return new ModelAndView("redirect:/user/profile");
-                    }
-                }
-
-                // Guardar los cambios
-                userRepository.save(currentUser);
-
-                msg.addFlashAttribute("success", "Perfil actualizado con éxito");
-            } else {
-                msg.addFlashAttribute("error", "Usuario no encontrado");
+            if (currentUser == null) {
+                validationService.addErrorMessage(msg, "Usuario no encontrado");
+                return new ModelAndView("redirect:/login");
             }
+
+            // Actualizar datos básicos
+            currentUser.setName(user.getName());
+            currentUser.setEmail(user.getEmail());
+
+            // Procesar imagen si se proporcionó una nueva
+            processProfileImage(file, currentImg, currentUser);
+
+            // Guardar cambios
+            userRepository.save(currentUser);
+            validationService.addSuccessMessage(msg, SUCCESS_PERFIL);
+            
         } catch (Exception e) {
-            msg.addFlashAttribute("error", "Error al actualizar el perfil: " + e.getMessage());
+            validationService.addErrorMessage(msg, ERROR_ACTUALIZAR_PERFIL + e.getMessage());
         }
 
         return new ModelAndView("redirect:/user/profile");
+    }
+    
+    /**
+     * Procesa la imagen de perfil
+     */
+    private void processProfileImage(MultipartFile file, String currentImg, User user) {
+        if (file != null && !file.isEmpty()) {
+            try {
+                String fileName = handleImageUpload(file, currentImg);
+                user.setProfileImage(fileName);
+            } catch (IOException e) {
+                // La excepción se propaga hacia arriba para ser manejada por el método llamador
+                throw new RuntimeException("Error al procesar la imagen: " + e.getMessage(), e);
+            }
+        }
+    }
+    
+    /**
+     * Agrega estadísticas de solicitudes al modelo
+     */
+    private void addSolicitudeStatistics(ModelAndView mv, List<Solicitude> solicitudes) {
+        long pendientes = solicitudes.stream().filter(s -> "EN_ESPERA".equals(s.getEstado())).count();
+        long aprobadas = solicitudes.stream().filter(s -> "ACEPTADA".equals(s.getEstado())).count();
+        long rechazadas = solicitudes.stream().filter(s -> "RECHAZADA".equals(s.getEstado())).count();
+        
+        mv.addObject("totalSolicitudes", solicitudes.size());
+        mv.addObject("pendientes", pendientes);
+        mv.addObject("aprobadas", aprobadas);
+        mv.addObject("rechazadas", rechazadas);
     }
 
     @Override

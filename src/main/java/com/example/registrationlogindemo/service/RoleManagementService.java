@@ -74,4 +74,11 @@ public interface RoleManagementService {
      * @return Nombre de rol normalizado
      */
     String normalizeRoleName(String roleName);
+    
+    /**
+     * Convierte una lista de IDs de roles a una cadena separada por comas
+     * @param roleIds Lista de IDs de roles
+     * @return Cadena con los IDs separados por comas, o null si la lista está vacía
+     */
+    String convertRoleIdsToString(List<Long> roleIds);
 }

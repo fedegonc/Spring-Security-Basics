@@ -5,7 +5,6 @@ import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.ReportRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
-import com.example.registrationlogindemo.service.BreadcrumbService;
 import com.example.registrationlogindemo.service.OrgService;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
@@ -51,15 +50,14 @@ public class OrgServiceImpl implements OrgService {
     @Autowired
     private UserService userService;
     
-    @Autowired
-    private BreadcrumbService breadcrumbService;
+
     
     @Autowired
     private ValidationAndNotificationService validationAndNotificationService;
 
     @Override
     public ModelAndView getDashboardData(UserDetails userDetails) {
-        ModelAndView mv = new ModelAndView("org/dashboard");
+        ModelAndView mv = new ModelAndView("org/inicio");
 
         try {
             // Obtener el usuario de la base de datos usando los detalles proporcionados
@@ -75,11 +73,7 @@ public class OrgServiceImpl implements OrgService {
             mv.addObject("username", username);
             
             // Agregar datos para el breadcrumb usando el servicio
-            mv.addObject("breadcrumbItems", 
-                breadcrumbService.createCustomBreadcrumbs(
-                    new String[]{"Dashboard", "/org/dashboard"}
-                )
-            );
+
         } catch (Exception e) {
             mv.addObject("error", "Ha ocurrido un error: " + e.getMessage());
         }
@@ -89,7 +83,7 @@ public class OrgServiceImpl implements OrgService {
 
     @Override
     public ModelAndView getSolicitudes(UserDetails userDetails) {
-        ModelAndView mv = new ModelAndView("org/solicitudes");
+        ModelAndView mv = new ModelAndView("pages/org/solicitudes");
         
         try {
             // Usar el username de los detalles proporcionados
@@ -102,14 +96,10 @@ public class OrgServiceImpl implements OrgService {
             
             // Indicar que estamos en el rol de organización para ajustar los enlaces en la plantilla
             mv.addObject("isOrganizacion", true);
+            mv.addObject("currentPage", "Solicitudes");
             
             // Configurar breadcrumbs
-            mv.addObject("breadcrumbItems", 
-                breadcrumbService.createCustomBreadcrumbs(
-                    new String[]{"Dashboard", "/org/dashboard"},
-                    new String[]{"Solicitudes", "/org/solicitudes"}
-                )
-            );
+
             
         } catch (Exception e) {
             mv.addObject("error", "Error al cargar solicitudes: " + e.getMessage());
@@ -120,7 +110,7 @@ public class OrgServiceImpl implements OrgService {
 
     @Override
     public ModelAndView prepareEditSolicitud(int id, UserDetails userDetails) {
-        ModelAndView mv = new ModelAndView("admin/editsolicitude");
+        ModelAndView mv = new ModelAndView("pages/org/editsolicitude");
         
         Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
         if (solicitudeOpt.isPresent()) {
@@ -128,15 +118,8 @@ public class OrgServiceImpl implements OrgService {
             
             // Indicar que estamos en el rol de organización
             mv.addObject("isOrganizacion", true);
+            mv.addObject("currentPage", "Editar Solicitud");
             
-            // Configurar breadcrumbs
-            mv.addObject("breadcrumbItems", 
-                breadcrumbService.createCustomBreadcrumbs(
-                    new String[]{"Dashboard", "/org/dashboard"},
-                    new String[]{"Solicitudes", "/org/solicitudes"},
-                    new String[]{"Editar", "/org/editsolicitude/" + id}
-                )
-            );
         } else {
             mv.setViewName("redirect:/org/solicitudes");
             mv.addObject("error", "Solicitud no encontrada");
@@ -210,14 +193,7 @@ public class OrgServiceImpl implements OrgService {
             }
             
             mv.addObject("user", user);
-            
-            // Configurar breadcrumbs usando el servicio
-            mv.addObject("breadcrumbItems", 
-                breadcrumbService.createCustomBreadcrumbs(
-                    new String[]{"Dashboard", "/org/dashboard"},
-                    new String[]{"Perfil", "/org/profile"}
-                )
-            );
+
             
             return mv;
         }

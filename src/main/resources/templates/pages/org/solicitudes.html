@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType='org', footerType='full', currentPage='Solicitudes', metaDescription='Gestión de solicitudes de la organización'">
+
+<head>
+    <title>Solicitudes - Organización</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .solicitud-card:hover { transform: translateY(-2px); transition: all 0.2s; }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="container px-4 py-5 mx-auto">
+            <!-- Encabezado -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-5">
+                <h1 class="text-2xl font-bold text-gray-800">Gestión de Solicitudes</h1>
+                <div class="flex space-x-2 mt-3 md:mt-0">
+                    <a th:href="@{/org/solicitudes/crear}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        Crear Solicitud
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Mensajes de alerta -->
+            <div th:if="${error}" class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+                <p th:text="${error}">Error</p>
+            </div>
+            <div th:if="${success}" class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded">
+                <p th:text="${success}">Éxito</p>
+            </div>
+            
+            <!-- Lista de solicitudes -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-5">
+                <h2 class="text-lg font-bold mb-3">Mis Solicitudes</h2>
+                <div th:if="${solicitudes == null || solicitudes.isEmpty()}" class="text-center py-6">
+                    <p class="text-gray-500">No hay solicitudes registradas</p>
+                </div>
+                <div th:if="${solicitudes != null && !solicitudes.isEmpty()}" class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2">Título</th>
+                                <th class="text-left py-2">Categoría</th>
+                                <th class="text-left py-2">Estado</th>
+                                <th class="text-left py-2">Fecha</th>
+                                <th class="text-left py-2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="solicitud : ${solicitudes}" class="border-b hover:bg-gray-50">
+                                <td class="py-2">
+                                    <div class="flex items-center">
+                                        <span class="font-medium" th:text="${solicitud.titulo}">Título de la solicitud</span>
+                                    </div>
+                                </td>
+                                <td class="py-2" th:text="${solicitud.categoria}">Categoría</td>
+                                <td class="py-2">
+                                    <span th:if="${solicitud.estado == 'EN_ESPERA'}" class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pendiente</span>
+                                    <span th:if="${solicitud.estado == 'ACEPTADA'}" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Aprobada</span>
+                                    <span th:if="${solicitud.estado == 'RECHAZADA'}" class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Rechazada</span>
+                                </td>
+                                <td class="py-2" th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}">01/01/2025</td>
+                                <td class="py-2">
+                                    <a th:href="@{'/org/solicitudes/editar/' + ${solicitud.id}}" class="text-blue-600 hover:underline mr-2">Editar</a>
+                                    <a th:href="@{'/org/solicitudes/eliminar/' + ${solicitud.id}}" 
+                                       onclick="return confirm('¿Estás seguro de que deseas eliminar esta solicitud?')"
+                                       class="text-red-600 hover:underline">Eliminar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
