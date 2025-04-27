@@ -32,7 +32,7 @@ public interface UserNotificationService {
      * @return La notificación creada
      */
     Notification createEntityNotification(User user, String title, String message, 
-                                         String type, String entityType, Integer entityId);
+                                         String type, String entityType, Long entityId);
     
     /**
      * Obtiene todas las notificaciones de un usuario
@@ -68,14 +68,14 @@ public interface UserNotificationService {
      * @param newStatus Nuevo estado
      * @return true si se envió la notificación correctamente
      */
-    boolean notifySolicitudeStatusChange(Integer solicitudeId, String newStatus);
+    boolean notifySolicitudeStatusChange(Long solicitudeId, String newStatus);
     
     /**
      * Notifica a la organización sobre una nueva solicitud
      * @param solicitudeId ID de la solicitud
      * @return true si se envió la notificación correctamente
      */
-    boolean notifyNewSolicitudeToOrganization(Integer solicitudeId);
+    boolean notifyNewSolicitudeToOrganization(Long solicitudeId);
     
     /**
      * Notifica sobre un nuevo mensaje en una conversación

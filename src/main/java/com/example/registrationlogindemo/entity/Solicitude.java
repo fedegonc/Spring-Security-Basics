@@ -19,7 +19,7 @@ import java.util.Objects;
 public class Solicitude {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
 
     @Column(nullable = false)

@@ -43,7 +43,7 @@ public class Notification {
     private String type;  // PLATFORM
     
     @Column(nullable = true)
-    private Integer relatedEntityId;  // ID de la solicitud relacionada
+    private Long relatedEntityId;  // ID de la solicitud relacionada
     
     @Column(nullable = true)
     private String relatedEntityType;  // Tipo de entidad relacionada (ej: "SOLICITUDE")

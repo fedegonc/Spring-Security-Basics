@@ -1,14 +1,14 @@
 package com.example.registrationlogindemo.service.impl;
 
-import com.example.registrationlogindemo.entity.Message;
+import com.example.registrationlogindemo.entity.Mensaje;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
-import com.example.registrationlogindemo.repository.MessageRepository;
+import com.example.registrationlogindemo.repository.MensajeRepository;
 import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 
-import com.example.registrationlogindemo.service.MessageService;
+import com.example.registrationlogindemo.service.MensajeService;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserNotificationService;
 import com.example.registrationlogindemo.service.ValidationAndNotificationService;
@@ -52,10 +52,10 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     private RoleRepository roleRepository;
     
     @Autowired
-    private MessageRepository messageRepository;
+    private MensajeRepository mensajeRepository;
     
     @Autowired
-    private MessageService messageService;
+    private MensajeService mensajeService;
 
     @Autowired
     private ValidationAndNotificationService validationAndNotificationService;
@@ -71,7 +71,7 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     }
 
     @Override
-    public Solicitude findById(int id) {
+    public Solicitude findById(Long id) {
         return solicitudeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Solicitud no encontrada con ID: " + id));
     }
@@ -215,7 +215,7 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     }
     
     @Override
-    public ModelAndView prepareEditSolicitudeForm(int id, UserDetails userDetails) {
+    public ModelAndView prepareEditSolicitudeForm(Long id, UserDetails userDetails) {
         logger.info("Preparando formulario para editar solicitud con ID: {}", id);
         ModelAndView modelAndView = new ModelAndView("pages/user/editsolicitude");
         
@@ -256,10 +256,10 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     
     @Override
     @Transactional
-    public String updateSolicitude(int id, Solicitude solicitude, 
-                                 MultipartFile imagen, 
-                                 RedirectAttributes redirectAttributes,
-                                 UserDetails userDetails) {
+    public String updateSolicitude(Long id, Solicitude solicitude, 
+                             MultipartFile imagen, 
+                             RedirectAttributes redirectAttributes,
+                             UserDetails userDetails) {
         logger.info("Iniciando actualización de solicitud con ID: {}", id);
         try {
             // Obtener la solicitud existente
@@ -319,7 +319,7 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     
     @Override
     @Transactional
-    public String sendMessage(int id, String messageContent, 
+    public String sendMessage(Long id, String messageContent, 
                             UserDetails userDetails, 
                             RedirectAttributes redirectAttributes) {
         logger.info("Enviando mensaje para solicitud con ID: {}", id);
@@ -334,20 +334,20 @@ public class SolicitudeServiceImpl implements SolicitudeService {
             }
             
             // Crear y guardar el mensaje
-            Message message = new Message();
-            message.setSolicitud(solicitude);
+            Mensaje message = new Mensaje();
+            message.setSolicitude(solicitude);
             message.setUser(currentUser);
             message.setContenido(messageContent);
-            message.setFechaEnvio(LocalDateTime.now());
+            message.setFecha(LocalDateTime.now());
             
-            Message savedMessage = messageRepository.save(message);
+            Mensaje savedMessage = mensajeRepository.save(message);
             
             // Notificar al destinatario sobre el nuevo mensaje
             if (!currentUser.equals(solicitude.getUser())) {
                 // Si el remitente no es el propietario, notificar al propietario
                 userNotificationService.notifyNewMessage(
                     savedMessage.getId(), 
-                    solicitude.getId().longValue(), 
+                    solicitude.getId(),
                     currentUser.getId(), 
                     solicitude.getUser().getId()
                 );
@@ -361,7 +361,7 @@ public class SolicitudeServiceImpl implements SolicitudeService {
                 for (User admin : adminsAndOrgs) {
                     userNotificationService.notifyNewMessage(
                         savedMessage.getId(), 
-                        solicitude.getId().longValue(), 
+                        solicitude.getId(),
                         currentUser.getId(), 
                         admin.getId()
                     );
@@ -383,12 +383,11 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     }
     
     @Override
-    @Transactional
-    public String deleteSolicitude(long id, UserDetails userDetails) {
+    public String deleteSolicitude(Long id, UserDetails userDetails) {
         logger.info("Eliminando solicitud con ID: {}", id);
         try {
             // Obtener la solicitud
-            Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById((int)id);
+            Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
             if (!solicitudeOpt.isPresent()) {
                 logger.warn("Solicitud no encontrada con ID: {}", id);
                 return "redirect:/user/solicitudes?error=Solicitud+no+encontrada";
@@ -410,7 +409,7 @@ public class SolicitudeServiceImpl implements SolicitudeService {
             }
             
             // Eliminar la solicitud
-            solicitudeRepository.deleteById((int)id);
+            solicitudeRepository.deleteById(id);
             
             logger.info("Solicitud eliminada correctamente");
             return "redirect:/user/solicitudes?success=Solicitud+eliminada+correctamente";
@@ -478,7 +477,7 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     
     @Override
     @Transactional
-    public boolean cambiarEstadoSolicitude(int id, String estado, UserDetails userDetails) {
+    public boolean cambiarEstadoSolicitude(Long id, String estado, UserDetails userDetails) {
         logger.info("Cambiando estado de solicitud con ID: {} a estado: {}", id, estado);
         try {
             // Obtener la solicitud
@@ -524,7 +523,7 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     }
     
     @Override
-    public boolean deleteSolicitudeByAdmin(int id) {
+    public boolean deleteSolicitudeByAdmin(Long id) {
         try {
             solicitudeRepository.deleteById(id);
             return true;

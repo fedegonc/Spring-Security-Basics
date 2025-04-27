@@ -1,6 +1,6 @@
 package com.example.registrationlogindemo.service;
 
-import com.example.registrationlogindemo.entity.Message;
+import com.example.registrationlogindemo.entity.Mensaje;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +32,7 @@ public interface SolicitudeService {
      * @param id ID de la solicitud
      * @return Solicitud encontrada
      */
-    Solicitude findById(int id);
+    Solicitude findById(Long id);
     
     /**
      * Guarda una solicitud en la base de datos
@@ -94,7 +94,7 @@ public interface SolicitudeService {
      * @param userDetails Detalles del usuario actual
      * @return ModelAndView con la vista y datos necesarios
      */
-    ModelAndView prepareEditSolicitudeForm(int id, UserDetails userDetails);
+    ModelAndView prepareEditSolicitudeForm(Long id, UserDetails userDetails);
     
     /**
      * Procesa la actualización de una solicitud existente por un usuario
@@ -105,7 +105,7 @@ public interface SolicitudeService {
      * @param userDetails Detalles del usuario actual
      * @return String con la URL de redirección
      */
-    String updateSolicitude(int id, Solicitude solicitude, 
+    String updateSolicitude(Long id, Solicitude solicitude, 
                           MultipartFile imagen, 
                           RedirectAttributes redirectAttributes,
                           UserDetails userDetails) throws IOException;
@@ -118,7 +118,7 @@ public interface SolicitudeService {
      * @param redirectAttributes Atributos para mensajes de redirección
      * @return String con la URL de redirección
      */
-    String sendMessage(int id, String messageContent, 
+    String sendMessage(Long id, String messageContent, 
                      UserDetails userDetails, 
                      RedirectAttributes redirectAttributes);
     
@@ -128,7 +128,7 @@ public interface SolicitudeService {
      * @param userDetails Detalles del usuario actual
      * @return String con la URL de redirección
      */
-    String deleteSolicitude(long id, UserDetails userDetails);
+    String deleteSolicitude(Long id, UserDetails userDetails);
     
     // ======= Métodos para operaciones administrativas =======
     
@@ -149,14 +149,14 @@ public interface SolicitudeService {
      * @param userDetails Detalles del usuario que realiza el cambio
      * @return true si la operación fue exitosa
      */
-    boolean cambiarEstadoSolicitude(int id, String estado, UserDetails userDetails);
+    boolean cambiarEstadoSolicitude(Long id, String estado, UserDetails userDetails);
     
     /**
      * Elimina una solicitud por ID (para administradores)
      * @param id ID de la solicitud a eliminar
      * @return true si se eliminó correctamente
      */
-    boolean deleteSolicitudeByAdmin(int id);
+    boolean deleteSolicitudeByAdmin(Long id);
     
     /**
      * Cuenta la cantidad de solicitudes por cada estado

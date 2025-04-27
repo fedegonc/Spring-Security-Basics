@@ -65,7 +65,7 @@ public interface OrgService {
      * @param userDetails Detalles del usuario actual
      * @return ModelAndView con la solicitud preparada para editar
      */
-    ModelAndView prepareEditSolicitud(int id, UserDetails userDetails);
+    ModelAndView prepareEditSolicitud(Long id, UserDetails userDetails);
     
     /**
      * Elimina una solicitud
@@ -74,7 +74,7 @@ public interface OrgService {
      * @param userDetails Detalles del usuario actual
      * @return String con la URL de redirección
      */
-    String deleteSolicitud(int id, RedirectAttributes redirectAttributes, UserDetails userDetails);
+    String deleteSolicitud(Long id, RedirectAttributes redirectAttributes, UserDetails userDetails);
     
     /**
      * Procesa la edición de una solicitud

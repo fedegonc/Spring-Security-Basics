@@ -12,7 +12,7 @@ import java.util.List;
  * Repositorio para operaciones con la entidad Mensaje
  */
 @Repository
-public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
+public interface MensajeRepository extends JpaRepository<Mensaje, Long> {
     
     /**
      * Busca todos los mensajes de una solicitud ordenados por fecha ascendente (más antiguos primero)
@@ -35,4 +35,11 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
      * @return Lista de mensajes que coinciden con los criterios
      */
     List<Mensaje> findBySolicitudeAndUser(Solicitude solicitude, User user);
+    
+    /**
+     * Busca todos los mensajes de una solicitud (método de compatibilidad)
+     * @param solicitude Solicitud a la que pertenecen los mensajes
+     * @return Lista de mensajes de la solicitud
+     */
+    List<Mensaje> findBySolicitude(Solicitude solicitude);
 }

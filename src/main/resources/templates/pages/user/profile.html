@@ -39,16 +39,11 @@
                 <div class="md:col-span-1">
                     <div class="bg-white rounded-lg shadow-sm p-6 flex flex-col items-center">
                         <div class="mb-4">
-                            <img th:if="${user.profileImage}" th:src="@{'/uploads/profile/' + ${user.profileImage}}" alt="Foto de perfil" class="profile-image">
-                            <img th:unless="${user.profileImage}" th:src="@{/images/default-profile.png}" alt="Foto de perfil por defecto" class="profile-image">
+                            <img th:if="${user.profileImage}" th:src="@{'/img/' + ${user.profileImage}}" alt="Foto de perfil" class="profile-image">
+                            <img th:unless="${user.profileImage}" th:src="@{/img/default-profile.jpg}" alt="Foto de perfil por defecto" class="profile-image">
                         </div>
                         <h2 class="text-2xl font-bold text-gray-800 mb-1" th:text="${user.name}">Nombre Completo</h2>
                         <p class="text-gray-600 mb-4" th:text="${user.username}">@username</p>
-                        <div class="w-full mt-2">
-                            <a th:href="@{/user/edit-profile}" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                Editar Perfil
-                            </a>
-                        </div>
                     </div>
                 </div>
 

@@ -376,7 +376,7 @@ public class AdministradorController extends BaseController {
     }
 
     @GetMapping("/solicitudes/edit/{id}")
-    public ModelAndView adminEditSolicitude(@PathVariable("id") int id, jakarta.servlet.http.HttpServletRequest request) {
+    public ModelAndView adminEditSolicitude(@PathVariable("id") Long id, jakarta.servlet.http.HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("admin/editsolicitude");
         try {
             Solicitude solicitude = solicitudeService.findById(id);
@@ -384,10 +384,11 @@ public class AdministradorController extends BaseController {
                 mv.addObject("solicitude", solicitude);
                 mv.addObject("currentPage", "Editar Solicitud");
             } else {
+                mv.setViewName("redirect:/admin/solicitudes");
                 mv.addObject("error", "Solicitud no encontrada");
-                return new ModelAndView("redirect:/admin/solicitudes");
             }
         } catch (Exception e) {
+            mv.setViewName("redirect:/admin/solicitudes");
             mv.addObject("error", "Error al cargar la solicitud: " + e.getMessage());
         }
         return mv;
@@ -411,17 +412,17 @@ public class AdministradorController extends BaseController {
         return "redirect:/admin/solicitudes";
     }
 
-    @GetMapping("/solicitudes/delete/{id}")
-    public String adminExcluirSolicitud(@PathVariable("id") int id, RedirectAttributes msg) {
+    @GetMapping("/solicitudes/excluir/{id}")
+    public String adminExcluirSolicitud(@PathVariable("id") Long id, RedirectAttributes msg) {
         try {
             boolean success = solicitudeService.deleteSolicitudeByAdmin(id);
             if (success) {
-                validationService.addSuccessMessage(msg, "Solicitud eliminada correctamente");
+                msg.addFlashAttribute("success", "Solicitud eliminada correctamente");
             } else {
-                validationService.addErrorMessage(msg, "No se pudo eliminar la solicitud");
+                msg.addFlashAttribute("error", "No se pudo eliminar la solicitud");
             }
         } catch (Exception e) {
-            validationService.addErrorMessage(msg, "Error al eliminar la solicitud: " + e.getMessage());
+            msg.addFlashAttribute("error", "Error al eliminar solicitud: " + e.getMessage());
         }
         return "redirect:/admin/solicitudes";
     }

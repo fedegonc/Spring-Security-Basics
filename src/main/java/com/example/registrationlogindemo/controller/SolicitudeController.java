@@ -66,14 +66,14 @@ public class SolicitudeController {
     }
 
     @GetMapping("/editsolicitude/{id}")
-    public ModelAndView showEditSolicitudeForm(@PathVariable("id") int id,
+    public ModelAndView showEditSolicitudeForm(@PathVariable("id") Long id,
                                                @AuthenticationPrincipal UserDetails userDetails) {
         // Delegamos la preparación del formulario de edición al servicio
         return solicitudeService.prepareEditSolicitudeForm(id, userDetails);
     }
 
     @PostMapping("/editsolicitude/{id}")
-    public String editSolicitude(@PathVariable("id") int id,
+    public String editSolicitude(@PathVariable("id") Long id,
                                  @ModelAttribute("solicitude") @Valid Solicitude solicitude,
                                  BindingResult result, RedirectAttributes msg,
                                  @RequestParam(value = "file", required = false) MultipartFile imagen,
@@ -88,7 +88,7 @@ public class SolicitudeController {
     }
 
     @PostMapping("/solicitude/{id}/messages")
-    public String sendMessage(@PathVariable("id") int id,
+    public String sendMessage(@PathVariable("id") Long id,
                               @RequestParam("messageInput") String messageContent,
                               @AuthenticationPrincipal UserDetails userDetails,
                               RedirectAttributes redirectAttributes) {
@@ -97,7 +97,7 @@ public class SolicitudeController {
     }
 
     @GetMapping("/deletesolicitude/{id}")
-    public String deleteSolicitude(@PathVariable("id") long id,
+    public String deleteSolicitude(@PathVariable("id") Long id,
                                    @AuthenticationPrincipal UserDetails userDetails) {
         // Delegamos la eliminación de la solicitud al servicio
         return solicitudeService.deleteSolicitude(id, userDetails);

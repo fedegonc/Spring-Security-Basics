@@ -91,7 +91,7 @@ public class OrgController extends BaseController {
      * Muestra el formulario para editar una solicitud
      */
     @GetMapping("/solicitudes/editar/{id}")
-    public ModelAndView editarSolicitud(@PathVariable("id") int id, @AuthenticationPrincipal UserDetails userDetails) {
+    public ModelAndView editarSolicitud(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails) {
         return orgService.prepareEditSolicitud(id, userDetails);
     }
 
@@ -99,7 +99,7 @@ public class OrgController extends BaseController {
      * Elimina una solicitud
      */
     @GetMapping("/solicitudes/eliminar/{id}")
-    public String eliminarSolicitud(@PathVariable("id") int id, RedirectAttributes redirectAttributes, 
+    public String eliminarSolicitud(@PathVariable("id") Long id, RedirectAttributes redirectAttributes, 
                                    @AuthenticationPrincipal UserDetails userDetails) {
         return orgService.deleteSolicitud(id, redirectAttributes, userDetails);
     }

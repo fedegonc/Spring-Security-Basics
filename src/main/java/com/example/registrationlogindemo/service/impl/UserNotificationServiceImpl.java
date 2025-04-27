@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class UserNotificationServiceImpl implements UserNotificationService {
@@ -58,7 +59,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     }
 
     @Override
-    public Notification createEntityNotification(User user, String title, String message, String type, String entityType, Integer entityId) {
+    public Notification createEntityNotification(User user, String title, String message, String type, String entityType, Long entityId) {
         try {
             // Crear la notificación en la base de datos
             Notification notification = new Notification();
@@ -141,15 +142,15 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     }
 
     @Override
-    public boolean notifySolicitudeStatusChange(Integer solicitudeId, String newStatus) {
+    public boolean notifySolicitudeStatusChange(Long solicitudeId, String newStatus) {
         try {
             Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(solicitudeId);
-
+            
             if (solicitudeOpt.isPresent()) {
                 Solicitude solicitude = solicitudeOpt.get();
                 User user = solicitude.getUser();
-
-                String title = "Actualización de solicitud";
+                
+                String title = "Cambio de estado en solicitud";
                 String message = String.format("Tu solicitud '%s' ha cambiado de estado a: %s",
                         solicitude.getTitulo(), newStatus);
 
@@ -169,34 +170,34 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     }
 
     @Override
-    public boolean notifyNewSolicitudeToOrganization(Integer solicitudeId) {
+    public boolean notifyNewSolicitudeToOrganization(Long solicitudeId) {
         try {
             Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(solicitudeId);
-
+            
             if (solicitudeOpt.isPresent()) {
                 Solicitude solicitude = solicitudeOpt.get();
-
+                
                 // Buscar usuarios con rol ORGANIZATION
-                List<User> organizationUsers = userRepository.findAll().stream()
+                List<User> organizationUsers = new ArrayList<>();
+                userRepository.findAll().stream()
                         .filter(user -> user.getRoles().stream()
                                 .anyMatch(role -> role.getName().equals("ROLE_ORGANIZATION")))
-                        .collect(Collectors.toList());
-
+                        .forEach(organizationUsers::add);
+                
                 if (organizationUsers.isEmpty()) {
                     logger.warn("No hay usuarios con rol ORGANIZATION para notificar");
                     return false;
                 }
-
-                String title = "Nueva solicitud de reciclaje";
-                String message = String.format("Se ha creado una nueva solicitud: '%s' por el usuario %s",
-                        solicitude.getTitulo(),
-                        solicitude.getUser().getUsername());
-
+                
+                String title = "Nueva solicitud recibida";
+                String message = String.format("Se ha recibido una nueva solicitud: '%s' de %s",
+                        solicitude.getTitulo(), solicitude.getUser().getUsername());
+                
                 // Notificar a todos los usuarios de organizaciones
                 for (User orgUser : organizationUsers) {
                     createEntityNotification(orgUser, title, message, "PLATFORM", "SOLICITUDE", solicitudeId);
                 }
-
+                
                 return true;
             }
             return false;
@@ -226,7 +227,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
                 String message = String.format("Has recibido un nuevo mensaje de %s",
                         sender.getUsername());
 
-                createEntityNotification(recipient, title, message, "PLATFORM", "MESSAGE", messageId.intValue());
+                createEntityNotification(recipient, title, message, "PLATFORM", "MESSAGE", messageId);
                 return true;
             }
             return false;
@@ -245,10 +246,11 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     public boolean notifySuspiciousActivity(Long userId, String activityType, String details) {
         try {
             // Buscar usuarios con rol ADMIN
-            List<User> adminUsers = userRepository.findAll().stream()
+            List<User> adminUsers = new ArrayList<>();
+            userRepository.findAll().stream()
                     .filter(user -> user.getRoles().stream()
                             .anyMatch(role -> role.getName().equals("ROLE_ADMIN")))
-                    .collect(Collectors.toList());
+                    .forEach(adminUsers::add);
 
             if (adminUsers.isEmpty()) {
                 logger.warn("No hay usuarios con rol ADMIN para notificar");
@@ -285,10 +287,11 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     public boolean notifySystemEvent(String eventType, String component, String details) {
         try {
             // Buscar usuarios con rol ADMIN
-            List<User> adminUsers = userRepository.findAll().stream()
+            List<User> adminUsers = new ArrayList<>();
+            userRepository.findAll().stream()
                     .filter(user -> user.getRoles().stream()
                             .anyMatch(role -> role.getName().equals("ROLE_ADMIN")))
-                    .collect(Collectors.toList());
+                    .forEach(adminUsers::add);
 
             if (adminUsers.isEmpty()) {
                 logger.warn("No hay usuarios con rol ADMIN para notificar");

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * Entidad que representa un mensaje en el chat de una solicitud
  */
 @Entity
-@Table(name = "mensaje")
+@Table(name = "mensajes")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,12 +21,12 @@ public class Mensaje {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false, length = 1000, name = "contenido", columnDefinition = "TEXT")
     private String contenido;
     
-    @Column(nullable = false)
+    @Column(nullable = false, name = "fecha_envio")
     private LocalDateTime fecha;
     
     @ManyToOne(fetch = FetchType.EAGER)
@@ -34,12 +34,29 @@ public class Mensaje {
     private User user;
     
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "solicitude_id", nullable = false)
+    @JoinColumn(name = "solicitud_id", nullable = false)
     private Solicitude solicitude;
     
     // Método para establecer la fecha automáticamente al crear un nuevo mensaje
     @PrePersist
     protected void onCreate() {
         fecha = LocalDateTime.now();
+    }
+    
+    // Métodos de conveniencia para compatibilidad con código existente
+    public Solicitude getSolicitud() {
+        return this.solicitude;
+    }
+    
+    public void setSolicitud(Solicitude solicitud) {
+        this.solicitude = solicitud;
+    }
+    
+    public LocalDateTime getFechaEnvio() {
+        return this.fecha;
+    }
+    
+    public void setFechaEnvio(LocalDateTime fechaEnvio) {
+        this.fecha = fechaEnvio;
     }
 }

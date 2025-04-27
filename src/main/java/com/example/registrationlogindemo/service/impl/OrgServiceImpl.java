@@ -109,33 +109,40 @@ public class OrgServiceImpl implements OrgService {
     }
 
     @Override
-    public ModelAndView prepareEditSolicitud(int id, UserDetails userDetails) {
-        ModelAndView mv = new ModelAndView("pages/org/editsolicitude");
+    public ModelAndView prepareEditSolicitud(Long id, UserDetails userDetails) {
+        ModelAndView mv = new ModelAndView("pages/org/editar-solicitud");
         
-        Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
-        if (solicitudeOpt.isPresent()) {
-            mv.addObject("solicitude", solicitudeOpt.get());
+        try {
+            // Obtener la solicitud por ID
+            Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
             
-            // Indicar que estamos en el rol de organización
-            mv.addObject("isOrganizacion", true);
-            mv.addObject("currentPage", "Editar Solicitud");
-            
-        } else {
-            mv.setViewName("redirect:/org/solicitudes");
-            mv.addObject("error", "Solicitud no encontrada");
+            if (solicitudeOpt.isPresent()) {
+                Solicitude solicitude = solicitudeOpt.get();
+                mv.addObject("solicitude", solicitude);
+                
+                // Usar el username de los detalles proporcionados
+                String username = userDetails.getUsername();
+                mv.addObject("username", username);
+                
+                // Configurar breadcrumbs
+                
+            } else {
+                mv.setViewName("redirect:/org/solicitudes");
+            }
+        } catch (Exception e) {
+            mv.addObject("error", "Error al cargar la solicitud: " + e.getMessage());
         }
         
         return mv;
     }
 
     @Override
-    public String deleteSolicitud(int id, RedirectAttributes redirectAttributes, UserDetails userDetails) {
-        Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
-        if (solicitudeOpt.isPresent()) {
+    public String deleteSolicitud(Long id, RedirectAttributes redirectAttributes, UserDetails userDetails) {
+        try {
             solicitudeRepository.deleteById(id);
             validationAndNotificationService.addSuccessMessage(redirectAttributes, "Solicitud eliminada correctamente");
-        } else {
-            validationAndNotificationService.addErrorMessage(redirectAttributes, "No se pudo encontrar la solicitud");
+        } catch (Exception e) {
+            validationAndNotificationService.addErrorMessage(redirectAttributes, "Error al eliminar la solicitud: " + e.getMessage());
         }
         
         return "redirect:/org/solicitudes";

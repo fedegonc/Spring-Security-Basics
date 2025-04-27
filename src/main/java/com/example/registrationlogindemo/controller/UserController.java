@@ -3,6 +3,7 @@ package com.example.registrationlogindemo.controller;
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.*;
 import com.example.registrationlogindemo.repository.*;
+import com.example.registrationlogindemo.service.MensajeService;
 import com.example.registrationlogindemo.service.SolicitudeService;
 import com.example.registrationlogindemo.service.UserService;
 import com.example.registrationlogindemo.service.ValidationAndNotificationService;
@@ -49,6 +50,7 @@ public class UserController extends BaseController {
     @Autowired private MensajeRepository mensajeRepository;
     @Autowired private ValidationAndNotificationService validationService;
     @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private MensajeService mensajeService;
     
     private static final String UPLOAD_DIR = "src/main/resources/static/img/";
     private static final String ERROR_AUTH = "Debes iniciar sesión para acceder a esta página";
@@ -122,7 +124,7 @@ public class UserController extends BaseController {
                 model.addAttribute("solicitudes", Collections.emptyList());
             }
             
-            return "pages/perfil";
+            return "pages/user/profile";
         } catch (Exception e) {
             model.addAttribute("error", "Error al cargar el perfil: " + e.getMessage());
             return "pages/error";
@@ -311,7 +313,7 @@ public class UserController extends BaseController {
      * Ver detalle de una solicitud específica
      */
     @GetMapping("/solicitudes/{id}")
-    public String viewSolicitudeDetail(@PathVariable("id") Integer id, Model model) {
+    public String viewSolicitudeDetail(@PathVariable("id") Long id, Model model) {
         try {
             User user = getAuthenticatedUser();
             if (user == null) {
@@ -373,7 +375,7 @@ public class UserController extends BaseController {
      * Método para enviar un mensaje en una solicitud
      */
     @PostMapping("/solicitudes/{id}/mensaje")
-    public String enviarMensaje(@PathVariable("id") Integer id, @RequestParam("contenido") String contenido, 
+    public String enviarMensaje(@PathVariable("id") Long id, @RequestParam("contenido") String contenido, 
                                RedirectAttributes redirectAttributes) {
         try {
             User user = getAuthenticatedUser();
@@ -424,7 +426,7 @@ public class UserController extends BaseController {
      */
     @PostMapping("/updatesolicitude/{id}")
     public String updateSolicitude(
-            @PathVariable("id") int id, 
+            @PathVariable("id") Long id, 
             @RequestParam String categoria,
             @RequestParam String barrio, 
             @RequestParam String calle,

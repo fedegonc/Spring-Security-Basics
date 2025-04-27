@@ -11,9 +11,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 // Interfaz de repositorio para la entidad Solicitude que extiende JpaRepository
-public interface SolicitudeRepository extends JpaRepository<Solicitude, Integer> {
+public interface SolicitudeRepository extends JpaRepository<Solicitude, Long> {
     // Método para buscar todas las solicitudes por su ID
-    void findAllById(int id);
+    void findAllById(Long id);
     // Método para encontrar solicitudes por usuario
     List<Solicitude> findByUser(User user);
     // Método para buscar solicitudes por categoría que coincida con el texto proporcionado
