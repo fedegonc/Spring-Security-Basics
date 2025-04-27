@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/base}">
+
+<head>
+    <title layout:title-pattern="$CONTENT_TITLE">Layout 33/66</title>
+    
+    <!-- Estilos específicos para este layout -->
+    <th:block layout:fragment="styles">
+        <style>
+            .split-layout {
+                display: flex;
+                min-height: calc(100vh - 64px); /* Altura total menos header */
+            }
+            
+            .split-layout-left {
+                width: 33%;
+                background-color: #f0fdf4;
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2322c55e' fill-opacity='0.09'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+                padding: 2rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .split-layout-right {
+                width: 67%;
+                padding: 2rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .split-card {
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+                transition: all 0.3s ease;
+                background-color: white;
+                border-radius: 0.5rem;
+                padding: 1.5rem;
+                width: 100%;
+                max-width: 500px;
+            }
+            
+            .split-card:hover {
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            }
+            
+            /* Responsive para móviles */
+            @media (max-width: 768px) {
+                .split-layout {
+                    flex-direction: column;
+                }
+                
+                .split-layout-left, .split-layout-right {
+                    width: 100%;
+                    padding: 1.5rem;
+                }
+                
+                .split-layout-left {
+                    min-height: 200px;
+                }
+            }
+        </style>
+        
+        <!-- Estilos específicos de la página que utiliza este layout -->
+        <th:block layout:fragment="page-styles"></th:block>
+    </th:block>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="split-layout">
+            <!-- Sección izquierda (33%) -->
+            <div class="split-layout-left">
+                <div layout:fragment="left-content" class="text-center">
+                    <!-- Contenido por defecto para la sección izquierda -->
+                    <img class="mx-auto h-20 w-auto mb-4" th:src="@{/img/logov4.png}" alt="Logo EcoSolicitud">
+                    <h1 class="text-3xl font-bold text-green-700 mb-2">EcoSolicitud</h1>
+                    <p class="text-lg text-green-600">Sistema de Comunicación para Reciclaje</p>
+                </div>
+            </div>
+            
+            <!-- Sección derecha (67%) -->
+            <div class="split-layout-right">
+                <div layout:fragment="right-content" class="split-card">
+                    <!-- Contenido por defecto para la sección derecha -->
+                    <div class="text-center">
+                        <h2 class="text-2xl font-bold mb-4">Contenido por defecto</h2>
+                        <p class="text-gray-500">Este contenido se muestra cuando una página no define su propio contenido</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Scripts específicos de la página que utiliza este layout -->
+    <th:block layout:fragment="scripts">
+        <th:block layout:fragment="page-scripts"></th:block>
+    </th:block>
+</body>
+</html>
