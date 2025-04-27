@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Fragmento para mostrar actividad reciente de forma compacta y desplegable -->
+    <div th:fragment="compact(solicitudes)" class="bg-white rounded-lg shadow-sm p-4">
+        <div class="flex justify-between items-center cursor-pointer" onclick="toggleActivity()">
+            <h3 class="text-lg font-bold text-gray-800">Actividad reciente</h3>
+            <svg id="activityArrow" class="w-5 h-5 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </div>
+        
+        <!-- Contenido desplegable -->
+        <div id="activityContent" class="hidden mt-4 space-y-3">
+            <div th:if="${!#lists.isEmpty(solicitudes)}" class="space-y-3">
+                <div th:each="solicitud : ${solicitudes}" class="border border-gray-200 rounded-md p-3">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-medium text-gray-900 text-sm" th:text="${solicitud.titulo}">Título de la solicitud</h4>
+                            <p class="text-xs text-gray-500" th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy HH:mm')}">Fecha</p>
+                            <p class="text-xs mt-1 text-gray-700" th:text="${solicitud.descripcion}">Descripción</p>
+                        </div>
+                        <span th:if="${solicitud.estado == 'EN_ESPERA'}" class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">En espera</span>
+                        <span th:if="${solicitud.estado == 'ACEPTADA'}" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Aceptada</span>
+                        <span th:if="${solicitud.estado == 'RECHAZADA'}" class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Rechazada</span>
+                        <span th:if="${solicitud.estado == 'EN_REVISION'}" class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">En revisión</span>
+                        <span th:if="${solicitud.estado == 'COMPLETADA'}" class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">Completada</span>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${#lists.isEmpty(solicitudes)}" class="text-center py-4">
+                <p class="text-gray-500 text-sm">No has creado ninguna solicitud de reciclaje aún.</p>
+                <a th:href="@{/user/newsolicitude}" class="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Crear mi primera solicitud
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para la funcionalidad de desplegable -->
+    <script th:fragment="script">
+        function toggleActivity() {
+            const content = document.getElementById('activityContent');
+            const arrow = document.getElementById('activityArrow');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                arrow.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        }
+    </script>
+</body>
+</html>
