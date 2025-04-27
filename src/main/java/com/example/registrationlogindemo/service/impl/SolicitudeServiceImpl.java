@@ -4,12 +4,16 @@ import com.example.registrationlogindemo.entity.Message;
 import com.example.registrationlogindemo.entity.Solicitude;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.repository.MessageRepository;
+import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.repository.SolicitudeRepository;
 import com.example.registrationlogindemo.repository.UserRepository;
 
 import com.example.registrationlogindemo.service.MessageService;
 import com.example.registrationlogindemo.service.SolicitudeService;
+import com.example.registrationlogindemo.service.UserNotificationService;
 import com.example.registrationlogindemo.service.ValidationAndNotificationService;
+import com.example.registrationlogindemo.util.FileUtils;
+import com.example.registrationlogindemo.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,7 +41,6 @@ import java.util.Optional;
 public class SolicitudeServiceImpl implements SolicitudeService {
 
     private static final Logger logger = LoggerFactory.getLogger(SolicitudeServiceImpl.class);
-    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
 
     @Autowired
     private SolicitudeRepository solicitudeRepository;
@@ -45,14 +49,19 @@ public class SolicitudeServiceImpl implements SolicitudeService {
     private UserRepository userRepository;
     
     @Autowired
+    private RoleRepository roleRepository;
+    
+    @Autowired
     private MessageRepository messageRepository;
     
     @Autowired
     private MessageService messageService;
 
-
     @Autowired
     private ValidationAndNotificationService validationAndNotificationService;
+
+    @Autowired
+    private UserNotificationService userNotificationService;
 
     // ======= Métodos básicos de acceso a datos =======
     
@@ -101,288 +110,413 @@ public class SolicitudeServiceImpl implements SolicitudeService {
         }
     }
     
-    // ======= Métodos para operaciones de usuario =======
+    // ======= Métodos para formularios y vistas =======
     
     @Override
     public ModelAndView prepareNewSolicitudeForm(UserDetails userDetails) {
+        logger.info("Preparando formulario para nueva solicitud");
+        ModelAndView modelAndView = new ModelAndView("pages/user/newsolicitude");
+        
         try {
             // Obtener el usuario actual
-            User user = userRepository.findByUsername(userDetails.getUsername());
-            if (user == null) {
+            User currentUser = userRepository.findByUsername(userDetails.getUsername());
+            if (currentUser == null) {
                 throw new RuntimeException("Usuario no encontrado");
             }
             
-            ModelAndView modelAndView = new ModelAndView("pages/user/newsolicitude");
+            // Preparar modelo para la vista
+            Solicitude solicitude = new Solicitude();
+            solicitude.setUser(currentUser);
             
-            // Establecer el nombre de la página actual para los breadcrumbs en el header
-            modelAndView.addObject("currentPage", "Nueva Solicitud");
+            modelAndView.addObject("solicitude", solicitude);
+            modelAndView.addObject("pageTitle", "Nueva Solicitud");
             
-            // Agregar información necesaria para el formulario
-            modelAndView.addObject("user", user);
-            modelAndView.addObject("solicitud", new Solicitude());
+            // Obtener organizaciones para el selector de destino
+            List<User> organizations = userRepository.findByRoleName("ROLE_ORGANIZATION");
+            modelAndView.addObject("organizations", organizations);
             
-            return modelAndView;
+            logger.info("Formulario preparado correctamente");
         } catch (Exception e) {
-            logger.error("Error al preparar formulario de nueva solicitud: {}", e.getMessage(), e);
-            throw new RuntimeException("Error al preparar formulario de nueva solicitud", e);
+            logger.error("Error al preparar formulario: {}", e.getMessage(), e);
+            modelAndView.setViewName("redirect:/error");
         }
+        
+        return modelAndView;
     }
     
     @Override
+    @Transactional
     public String createSolicitude(Solicitude solicitude, MultipartFile imagen, 
                              RedirectAttributes redirectAttributes, 
-                             UserDetails userDetails) throws IOException {
-        // Obtener el usuario actual
-        User usuario = userRepository.findByUsername(userDetails.getUsername());
-        
-        // Establecer la fecha actual
-        solicitude.setFecha(LocalDateTime.now());
-        
-        // Asociar la solicitud con el usuario actual
-        solicitude.setUser(usuario);
-        
-        // Establecer estado inicial
-        solicitude.setEstado("EN_ESPERA");
-        solicitude.setActivo(true);
-        
-        // Procesar la imagen si existe
-        if (imagen != null && !imagen.isEmpty()) {
-            String fileName = StringUtils.cleanPath(imagen.getOriginalFilename());
-            solicitude.setImagen(fileName);
-            
-            // Guardar la imagen en el sistema de archivos
-            saveImageFile(imagen, fileName);
-        } else {
-            // Si no hay imagen, establecer una imagen predeterminada
-            solicitude.setImagen("default-recycling-image.png");
-            
-            // Verificar si la imagen predeterminada ya existe
-            Path defaultImagePath = Paths.get(UPLOAD_DIR + "default-recycling-image.png");
-            if (!Files.exists(defaultImagePath)) {
-                // Crear directorio si no existe
-                Path uploadPath = Paths.get(UPLOAD_DIR);
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-                
-                // Crear una imagen predeterminada simple (un archivo de texto con extensión .png)
-                // Esto es solo para desarrollo, en producción debería ser una imagen real
-                Files.write(defaultImagePath, "Default image placeholder".getBytes());
+                             UserDetails userDetails) {
+        logger.info("Iniciando creación de solicitud");
+        try {
+            // Obtener el usuario actual
+            User currentUser = userRepository.findByUsername(userDetails.getUsername());
+            if (currentUser == null) {
+                throw new RuntimeException("Usuario no encontrado");
             }
+            
+            // Asignar el usuario a la solicitud
+            solicitude.setUser(currentUser);
+            
+            // Establecer fecha de creación
+            solicitude.setFecha(LocalDateTime.now());
+            
+            // Procesar el destino si es una organización
+            String destino = solicitude.getDestino();
+            if (destino != null && destino.startsWith("ORG_")) {
+                try {
+                    // Extraer el ID de la organización
+                    String orgIdStr = destino.substring(4); // Quitar "ORG_"
+                    int orgId = Integer.parseInt(orgIdStr);
+                    
+                    // Buscar la organización por ID - convertir int a Long
+                    User organizacion = userRepository.findById((long) orgId).orElse(null);
+                    if (organizacion != null) {
+                        // Establecer el nombre de la organización como destino
+                        solicitude.setDestino("ORGANIZACION: " + organizacion.getName());
+                    }
+                } catch (Exception e) {
+                    logger.error("Error al procesar destino de organización: {}", e.getMessage());
+                    // Mantener el valor original si hay error
+                }
+            }
+            
+            // Procesar la imagen si existe
+            if (imagen != null && !imagen.isEmpty()) {
+                try {
+                    String fileName = FileUtils.saveImage(imagen);
+                    solicitude.setImagen(fileName);
+                } catch (IOException e) {
+                    logger.error("Error al guardar imagen: {}", e.getMessage());
+                    // Continuar sin imagen si hay error
+                }
+            }
+            
+            // Guardar la solicitud en la base de datos
+            solicitude = solicitudeRepository.save(solicitude);
+            
+            // Notificar a las organizaciones sobre la nueva solicitud
+            userNotificationService.notifyNewSolicitudeToOrganization(solicitude.getId());
+            
+            // Agregar mensaje de éxito
+            validationAndNotificationService.addSuccessMessage(redirectAttributes, 
+                    "Solicitud creada correctamente");
+            
+            logger.info("Solicitud creada correctamente con ID: {}", solicitude.getId());
+            return "redirect:/user/solicitudes";
+        } catch (Exception e) {
+            logger.error("Error al crear solicitud: {}", e.getMessage(), e);
+            validationAndNotificationService.addErrorMessage(redirectAttributes, 
+                    "Error al crear solicitud: " + e.getMessage());
+            return "redirect:/user/solicitudes/new";
         }
-        
-        // Guardar la solicitud en la base de datos
-        save(solicitude);
-        
-        redirectAttributes.addFlashAttribute("exito", "Solicitud creada con éxito");
-        return "redirect:/user/solicitudes";
     }
     
     @Override
     public ModelAndView prepareEditSolicitudeForm(int id, UserDetails userDetails) {
-        ModelAndView mv = new ModelAndView("solicitude/editsolicitude");
+        logger.info("Preparando formulario para editar solicitud con ID: {}", id);
+        ModelAndView modelAndView = new ModelAndView("pages/user/editsolicitude");
         
-        // Buscar la solicitud por ID
-        Solicitude solicitude = findById(id);
-        
-        if (solicitude != null) {
-            // Verificar que la solicitud pertenece al usuario actual
-            User usuario = userRepository.findByUsername(userDetails.getUsername());
+        try {
+            // Obtener la solicitud
+            Solicitude solicitude = findById(id);
             
-            if (hasPermissionToEdit(solicitude, usuario)) {
-                mv.addObject("solicitude", solicitude);
-                
-                // Obtener los mensajes asociados a esta solicitud
-                List<Message> messages = messageService.findMessagesBySolicitude(solicitude);
-                mv.addObject("messages", messages);
-                
-                // Agregar organizaciones al modelo
-                List<User> organizaciones = userRepository.findByRoleName("ROLE_ORGANIZATION");
-                mv.addObject("organizaciones", organizaciones);
-
-                
-                return mv;
+            // Obtener el usuario actual
+            User currentUser = userRepository.findByUsername(userDetails.getUsername());
+            if (currentUser == null) {
+                throw new RuntimeException("Usuario no encontrado");
             }
+            
+            // Verificar permisos
+            if (!PermissionUtils.hasPermissionToEdit(solicitude, currentUser)) {
+                throw new AccessDeniedException("No tienes permiso para editar esta solicitud");
+            }
+            
+            // Preparar modelo para la vista
+            modelAndView.addObject("solicitude", solicitude);
+            modelAndView.addObject("pageTitle", "Editar Solicitud");
+            
+            // Obtener organizaciones para el selector de destino
+            List<User> organizations = userRepository.findByRoleName("ROLE_ORGANIZATION");
+            modelAndView.addObject("organizations", organizations);
+            
+            logger.info("Formulario de edición preparado correctamente");
+        } catch (AccessDeniedException e) {
+            logger.warn("Acceso denegado: {}", e.getMessage());
+            modelAndView.setViewName("redirect:/access-denied");
+        } catch (Exception e) {
+            logger.error("Error al preparar formulario de edición: {}", e.getMessage(), e);
+            modelAndView.setViewName("redirect:/error");
         }
         
-        // Si no se encuentra la solicitud o no tiene permisos, redirigir al inicio
-        return new ModelAndView("redirect:/user/welcome");
+        return modelAndView;
     }
     
     @Override
+    @Transactional
     public String updateSolicitude(int id, Solicitude solicitude, 
                                  MultipartFile imagen, 
                                  RedirectAttributes redirectAttributes,
-                                 UserDetails userDetails) throws IOException {
-        // Buscar la solicitud existente
-        Optional<Solicitude> existingSolicitudeOpt = solicitudeRepository.findById(id);
-        
-        if (existingSolicitudeOpt.isPresent()) {
-            Solicitude existingSolicitude = existingSolicitudeOpt.get();
+                                 UserDetails userDetails) {
+        logger.info("Iniciando actualización de solicitud con ID: {}", id);
+        try {
+            // Obtener la solicitud existente
+            Solicitude existingSolicitude = findById(id);
             
-            // Verificar que el usuario tiene permisos
-            User usuario = userRepository.findByUsername(userDetails.getUsername());
-            if (!hasPermissionToEdit(existingSolicitude, usuario)) {
-                redirectAttributes.addFlashAttribute("error", "No tienes permisos para editar esta solicitud");
-                return "redirect:/user/welcome";
+            // Obtener el usuario actual
+            User currentUser = userRepository.findByUsername(userDetails.getUsername());
+            if (currentUser == null) {
+                throw new RuntimeException("Usuario no encontrado");
             }
             
-            // Actualizar los campos que el usuario puede modificar
-            existingSolicitude.setCategoria(solicitude.getCategoria());
+            // Verificar permisos
+            if (!PermissionUtils.hasPermissionToEdit(existingSolicitude, currentUser)) {
+                throw new AccessDeniedException("No tienes permiso para editar esta solicitud");
+            }
+            
+            // Actualizar campos
+            existingSolicitude.setTitulo(solicitude.getTitulo());
             existingSolicitude.setDescripcion(solicitude.getDescripcion());
-            existingSolicitude.setDiasDisponibles(solicitude.getDiasDisponibles());
-            existingSolicitude.setHoraRecoleccion(solicitude.getHoraRecoleccion());
-            existingSolicitude.setCalle(solicitude.getCalle());
-            existingSolicitude.setBarrio(solicitude.getBarrio());
-            existingSolicitude.setNumeroDeCasa(solicitude.getNumeroDeCasa());
-            existingSolicitude.setTelefono(solicitude.getTelefono());
+            existingSolicitude.setCategoria(solicitude.getCategoria());
+            existingSolicitude.setDestino(solicitude.getDestino());
             existingSolicitude.setPeso(solicitude.getPeso());
             existingSolicitude.setTamanio(solicitude.getTamanio());
             
-            // Procesar la imagen si se ha subido una nueva
+            // Procesar la imagen si existe
             if (imagen != null && !imagen.isEmpty()) {
-                String fileName = StringUtils.cleanPath(imagen.getOriginalFilename());
-                existingSolicitude.setImagen(fileName);
-                
-                // Guardar la imagen en el sistema de archivos
-                saveImageFile(imagen, fileName);
+                try {
+                    String fileName = FileUtils.saveImage(imagen);
+                    existingSolicitude.setImagen(fileName);
+                } catch (IOException e) {
+                    logger.error("Error al guardar imagen: {}", e.getMessage());
+                    // Continuar sin actualizar la imagen si hay error
+                }
             }
             
-            // Guardar los cambios
+            // Guardar la solicitud actualizada
             solicitudeRepository.save(existingSolicitude);
-            redirectAttributes.addFlashAttribute("exito", "Solicitud editada con éxito");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "No se encontró la solicitud a editar");
+            
+            // Agregar mensaje de éxito
+            validationAndNotificationService.addSuccessMessage(redirectAttributes, 
+                    "Solicitud actualizada correctamente");
+            
+            logger.info("Solicitud actualizada correctamente");
+            return "redirect:/user/solicitudes";
+        } catch (AccessDeniedException e) {
+            logger.warn("Acceso denegado: {}", e.getMessage());
+            validationAndNotificationService.addErrorMessage(redirectAttributes, 
+                    "No tienes permiso para editar esta solicitud");
+            return "redirect:/access-denied";
+        } catch (Exception e) {
+            logger.error("Error al actualizar solicitud: {}", e.getMessage(), e);
+            validationAndNotificationService.addErrorMessage(redirectAttributes, 
+                    "Error al actualizar solicitud: " + e.getMessage());
+            return "redirect:/user/solicitudes/edit/" + id;
         }
-        
-        return "redirect:/user/welcome";
     }
     
     @Override
+    @Transactional
     public String sendMessage(int id, String messageContent, 
                             UserDetails userDetails, 
                             RedirectAttributes redirectAttributes) {
-        // Buscar la solicitud por ID
-        Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
-        if (solicitudeOpt.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "No se encontró la solicitud");
-            return "redirect:/user/editsolicitude/" + id;
-        }
-        
-        Solicitude solicitude = solicitudeOpt.get();
-        
-        // Buscar al usuario actual
-        User user = userRepository.findByUsername(userDetails.getUsername());
-        if (user == null) {
-            redirectAttributes.addFlashAttribute("error", "No se pudo encontrar el usuario actual");
-            return "redirect:/user/editsolicitude/" + id;
-        }
-        
-        // Crear y guardar el nuevo mensaje
-        Message newMessage = new Message();
-        newMessage.setSolicitud(solicitude);
-        newMessage.setUser(user);
-        newMessage.setContenido(messageContent);
-        newMessage.setFechaEnvio(LocalDateTime.now());
-        
-        messageRepository.save(newMessage);
-        redirectAttributes.addFlashAttribute("exito", "Mensaje enviado con éxito");
-        
-        // Redirigir de vuelta a la página de edición de la solicitud
-        return "redirect:/user/editsolicitude/" + id;
-    }
-    
-    @Override
-    public String deleteSolicitude(long id, UserDetails userDetails) {
-        // Verificar que el usuario actual es el propietario de la solicitud
-        Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById((int)id);
-        
-        if (solicitudeOpt.isPresent()) {
-            Solicitude solicitude = solicitudeOpt.get();
-            User usuario = userRepository.findByUsername(userDetails.getUsername());
-            
-            if (hasPermissionToDelete(solicitude, usuario)) {
-                solicitudeRepository.deleteById((int)id);
-                return "redirect:/user/welcome";
-            }
-        }
-        
-        return "redirect:/user/welcome";
-    }
-    
-    // ======= Métodos para operaciones administrativas =======
-    
-    @Override
-    public boolean updateSolicitudeByAdmin(Solicitude solicitude, MultipartFile imagen, 
-                                      RedirectAttributes redirectAttributes) throws IOException {
+        logger.info("Enviando mensaje para solicitud con ID: {}", id);
         try {
-            // Verificar que la solicitud existe
-            Optional<Solicitude> existingSolicitudeOpt = solicitudeRepository.findById(solicitude.getId());
+            // Obtener la solicitud
+            Solicitude solicitude = findById(id);
             
-            if (existingSolicitudeOpt.isPresent()) {
-                Solicitude existingSolicitude = existingSolicitudeOpt.get();
-                
-                // Actualizar campos
-                existingSolicitude.setCategoria(solicitude.getCategoria());
-                existingSolicitude.setDescripcion(solicitude.getDescripcion());
-                existingSolicitude.setDiasDisponibles(solicitude.getDiasDisponibles());
-                existingSolicitude.setHoraRecoleccion(solicitude.getHoraRecoleccion());
-                existingSolicitude.setEstado(solicitude.getEstado());
-                existingSolicitude.setActivo(solicitude.isActivo());
-                existingSolicitude.setCalle(solicitude.getCalle());
-                existingSolicitude.setBarrio(solicitude.getBarrio());
-                existingSolicitude.setNumeroDeCasa(solicitude.getNumeroDeCasa());
-                existingSolicitude.setReferenciaLocal(solicitude.getReferenciaLocal());
-                existingSolicitude.setTelefono(solicitude.getTelefono());
-                existingSolicitude.setDestino(solicitude.getDestino());
-                existingSolicitude.setPeso(solicitude.getPeso());
-                existingSolicitude.setTamanio(solicitude.getTamanio());
-                
-                // Procesar la imagen si se ha subido una nueva
-                if (imagen != null && !imagen.isEmpty()) {
-                    String fileName = StringUtils.cleanPath(imagen.getOriginalFilename());
-                    existingSolicitude.setImagen(fileName);
-                    
-                    // Guardar la imagen en el sistema de archivos
-                    saveImageFile(imagen, fileName);
-                }
-                
-                // Guardar los cambios
-                solicitudeRepository.save(existingSolicitude);
-                redirectAttributes.addFlashAttribute("exito", "Solicitud actualizada con éxito");
-                return true;
+            // Obtener el usuario actual
+            User currentUser = userRepository.findByUsername(userDetails.getUsername());
+            if (currentUser == null) {
+                throw new RuntimeException("Usuario no encontrado");
+            }
+            
+            // Crear y guardar el mensaje
+            Message message = new Message();
+            message.setSolicitud(solicitude);
+            message.setUser(currentUser);
+            message.setContenido(messageContent);
+            message.setFechaEnvio(LocalDateTime.now());
+            
+            Message savedMessage = messageRepository.save(message);
+            
+            // Notificar al destinatario sobre el nuevo mensaje
+            if (!currentUser.equals(solicitude.getUser())) {
+                // Si el remitente no es el propietario, notificar al propietario
+                userNotificationService.notifyNewMessage(
+                    savedMessage.getId(), 
+                    solicitude.getId().longValue(), 
+                    currentUser.getId(), 
+                    solicitude.getUser().getId()
+                );
             } else {
-                redirectAttributes.addFlashAttribute("error", "No se encontró la solicitud");
+                // Si el remitente es el propietario, notificar a los administradores/organizaciones
+                List<User> adminsAndOrgs = userRepository.findAll().stream()
+                    .filter(user -> user.getRoles().stream()
+                        .anyMatch(role -> role.getName().equals("ROLE_ADMIN") || role.getName().equals("ROLE_ORGANIZATION")))
+                    .toList();
+                
+                for (User admin : adminsAndOrgs) {
+                    userNotificationService.notifyNewMessage(
+                        savedMessage.getId(), 
+                        solicitude.getId().longValue(), 
+                        currentUser.getId(), 
+                        admin.getId()
+                    );
+                }
+            }
+            
+            // Agregar mensaje de éxito
+            validationAndNotificationService.addSuccessMessage(redirectAttributes, 
+                    "Mensaje enviado correctamente");
+            
+            logger.info("Mensaje enviado correctamente");
+            return "redirect:/user/solicitudes/" + id;
+        } catch (Exception e) {
+            logger.error("Error al enviar mensaje: {}", e.getMessage(), e);
+            validationAndNotificationService.addErrorMessage(redirectAttributes, 
+                    "Error al enviar mensaje: " + e.getMessage());
+            return "redirect:/user/solicitudes/" + id;
+        }
+    }
+    
+    @Override
+    @Transactional
+    public String deleteSolicitude(long id, UserDetails userDetails) {
+        logger.info("Eliminando solicitud con ID: {}", id);
+        try {
+            // Obtener la solicitud
+            Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById((int)id);
+            if (!solicitudeOpt.isPresent()) {
+                logger.warn("Solicitud no encontrada con ID: {}", id);
+                return "redirect:/user/solicitudes?error=Solicitud+no+encontrada";
+            }
+            
+            Solicitude solicitude = solicitudeOpt.get();
+            
+            // Obtener el usuario actual
+            User currentUser = userRepository.findByUsername(userDetails.getUsername());
+            if (currentUser == null) {
+                throw new RuntimeException("Usuario no encontrado");
+            }
+            
+            // Verificar permisos
+            if (!PermissionUtils.hasPermissionToDelete(solicitude, currentUser)) {
+                logger.warn("Usuario {} no tiene permiso para eliminar solicitud {}", 
+                           currentUser.getUsername(), id);
+                return "redirect:/access-denied";
+            }
+            
+            // Eliminar la solicitud
+            solicitudeRepository.deleteById((int)id);
+            
+            logger.info("Solicitud eliminada correctamente");
+            return "redirect:/user/solicitudes?success=Solicitud+eliminada+correctamente";
+        } catch (Exception e) {
+            logger.error("Error al eliminar solicitud: {}", e.getMessage(), e);
+            return "redirect:/user/solicitudes?error=" + e.getMessage();
+        }
+    }
+    
+    // ======= Métodos para administradores =======
+    
+    @Override
+    @Transactional
+    public boolean updateSolicitudeByAdmin(Solicitude solicitude, MultipartFile imagen, 
+                                      RedirectAttributes redirectAttributes) {
+        logger.info("Actualizando solicitud por administrador, ID: {}", solicitude.getId());
+        try {
+            // Obtener la solicitud existente
+            Optional<Solicitude> existingSolicitudeOpt = solicitudeRepository.findById(solicitude.getId());
+            if (!existingSolicitudeOpt.isPresent()) {
+                logger.warn("Solicitud no encontrada con ID: {}", solicitude.getId());
+                validationAndNotificationService.addErrorMessage(redirectAttributes, 
+                        "Solicitud no encontrada");
                 return false;
             }
+            
+            Solicitude existingSolicitude = existingSolicitudeOpt.get();
+            
+            // Actualizar campos
+            existingSolicitude.setTitulo(solicitude.getTitulo());
+            existingSolicitude.setDescripcion(solicitude.getDescripcion());
+            existingSolicitude.setCategoria(solicitude.getCategoria());
+            existingSolicitude.setDestino(solicitude.getDestino());
+            existingSolicitude.setPeso(solicitude.getPeso());
+            existingSolicitude.setTamanio(solicitude.getTamanio());
+            existingSolicitude.setEstado(solicitude.getEstado());
+            
+            // Procesar la imagen si existe
+            if (imagen != null && !imagen.isEmpty()) {
+                try {
+                    String fileName = FileUtils.saveImage(imagen);
+                    existingSolicitude.setImagen(fileName);
+                } catch (IOException e) {
+                    logger.error("Error al guardar imagen: {}", e.getMessage());
+                    // Continuar sin actualizar la imagen si hay error
+                }
+            }
+            
+            // Guardar la solicitud actualizada
+            solicitudeRepository.save(existingSolicitude);
+            
+            // Agregar mensaje de éxito
+            validationAndNotificationService.addSuccessMessage(redirectAttributes, 
+                    "Solicitud actualizada correctamente");
+            
+            logger.info("Solicitud actualizada correctamente por administrador");
+            return true;
         } catch (Exception e) {
-            logger.error("Error al actualizar la solicitud: {}", e.getMessage(), e);
-            redirectAttributes.addFlashAttribute("error", "Error al actualizar la solicitud: " + e.getMessage());
+            logger.error("Error al actualizar solicitud por administrador: {}", e.getMessage(), e);
+            validationAndNotificationService.addErrorMessage(redirectAttributes, 
+                    "Error al actualizar solicitud: " + e.getMessage());
             return false;
         }
     }
     
     @Override
+    @Transactional
     public boolean cambiarEstadoSolicitude(int id, String estado, UserDetails userDetails) {
+        logger.info("Cambiando estado de solicitud con ID: {} a estado: {}", id, estado);
         try {
-            // Verificar que la solicitud existe
+            // Obtener la solicitud
             Optional<Solicitude> solicitudeOpt = solicitudeRepository.findById(id);
-            
-            if (solicitudeOpt.isPresent()) {
-                Solicitude solicitude = solicitudeOpt.get();
-                
-                // Verificar que el usuario tiene permisos para cambiar el estado
-                User usuario = userRepository.findByUsername(userDetails.getUsername());
-                if (!hasRolePermission(usuario)) {
-                    throw new AccessDeniedException("No tienes permisos para cambiar el estado de esta solicitud");
-                }
-                
-                // Cambiar el estado
-                solicitude.setEstado(estado);
-                solicitudeRepository.save(solicitude);
-                return true;
+            if (!solicitudeOpt.isPresent()) {
+                logger.warn("Solicitud no encontrada con ID: {}", id);
+                return false;
             }
-            return false;
+            
+            Solicitude solicitude = solicitudeOpt.get();
+            String estadoAnterior = solicitude.getEstado();
+            
+            // Actualizar el estado
+            solicitude.setEstado(estado);
+            solicitudeRepository.save(solicitude);
+            
+            // Notificar al propietario del cambio de estado
+            User propietario = solicitude.getUser();
+            if (propietario != null) {
+                // Crear mensaje de notificación
+                String titulo = "Actualización de Solicitud";
+                String mensaje = String.format("Tu solicitud '%s' ha cambiado de estado de %s a %s", 
+                                              solicitude.getTitulo(), estadoAnterior, estado);
+                
+                userNotificationService.createEntityNotification(
+                    propietario, 
+                    titulo, 
+                    mensaje, 
+                    "PLATFORM", 
+                    "SOLICITUDE", 
+                    id
+                );
+                
+                logger.info("Notificación enviada al usuario {} por cambio de estado en solicitud {}", 
+                           propietario.getUsername(), id);
+            }
+            
+            return true;
         } catch (Exception e) {
             logger.error("Error al cambiar estado de solicitud: {}", e.getMessage(), e);
             return false;
@@ -400,61 +534,25 @@ public class SolicitudeServiceImpl implements SolicitudeService {
         }
     }
     
-    // ======= Métodos privados auxiliares =======
-    
-    /**
-     * Verifica si un usuario tiene permisos para editar una solicitud
-     */
-    private boolean hasPermissionToEdit(Solicitude solicitude, User usuario) {
-        // El propietario de la solicitud puede editarla
-        if (solicitude.getUser().getId() == usuario.getId()) {
-            return true;
+    @Override
+    public Map<String, Integer> countSolicitudesByStatus() {
+        Map<String, Integer> solicitudesByStatus = new HashMap<>();
+        
+        // Obtener todas las solicitudes
+        List<Solicitude> solicitudes = solicitudeRepository.findAll();
+        
+        // Inicializar contadores para cada estado posible
+        solicitudesByStatus.put("EN_ESPERA", 0);
+        solicitudesByStatus.put("EN_PROCESO", 0);
+        solicitudesByStatus.put("COMPLETADA", 0);
+        solicitudesByStatus.put("CANCELADA", 0);
+        
+        // Contar solicitudes por cada estado
+        for (Solicitude solicitude : solicitudes) {
+            String estado = solicitude.getEstado();
+            solicitudesByStatus.put(estado, solicitudesByStatus.getOrDefault(estado, 0) + 1);
         }
         
-        // Administradores y organizaciones también pueden editar
-        return hasRolePermission(usuario);
-    }
-    
-    /**
-     * Verifica si un usuario tiene permisos para eliminar una solicitud
-     */
-    private boolean hasPermissionToDelete(Solicitude solicitude, User usuario) {
-        // El propietario de la solicitud puede eliminarla
-        if (solicitude.getUser().getId() == usuario.getId()) {
-            return true;
-        }
-        
-        // Administradores también pueden eliminar
-        return hasRolePermission(usuario);
-    }
-    
-    /**
-     * Verifica si un usuario tiene roles administrativos
-     */
-    private boolean hasRolePermission(User usuario) {
-        // Verificar si el usuario tiene roles administrativos 
-        // usando directamente los roles del usuario en lugar de una consulta adicional
-        return usuario.getRoles().stream()
-                .anyMatch(role -> role.getName().equals("ROLE_ADMIN") || 
-                                 role.getName().equals("ROLE_ORGANIZATION"));
-    }
-    
-    /**
-     * Guarda un archivo de imagen en el sistema de archivos
-     */
-    private void saveImageFile(MultipartFile image, String fileName) throws IOException {
-        Path uploadPath = Paths.get(UPLOAD_DIR);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-        
-        Path filePath = uploadPath.resolve(fileName);
-        
-        // Si el archivo ya existe, eliminarlo primero
-        if (Files.exists(filePath)) {
-            Files.delete(filePath);
-        }
-        
-        Files.copy(image.getInputStream(), filePath);
+        return solicitudesByStatus;
     }
 }

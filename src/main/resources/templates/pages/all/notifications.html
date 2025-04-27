@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}"
+      th:with="headerType=${#authorization.expression('hasRole(''USER'')')} ? 'user' : 
+               (${#authorization.expression('hasRole(''ADMIN'')')} ? 'admin' : 
+               (${#authorization.expression('hasRole(''ORGANIZATION'')')} ? 'org' : null)),
+               metaDescription='Notificaciones del sistema', 
+               currentPage='Notificaciones'">
+
+<head>
+    <title th:text="#{notifications.title}">Notificaciones</title>
+    <!-- Fuente Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <th:block layout:fragment="styles">
+        <style>
+            body {
+                font-family: 'Nunito', sans-serif;
+                background-color: #f8f9fa;
+                background-image: url('/img/background.jpg');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+            .glass-card {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+                border-radius: 10px;
+                padding: 20px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+            }
+            .notification-item {
+                transition: all 0.3s ease;
+                margin-bottom: 15px;
+                padding: 15px;
+                border-radius: 8px;
+            }
+            .notification-unread {
+                background-color: rgba(13, 110, 253, 0.1);
+                border-left: 4px solid #0d6efd;
+            }
+            .notification-read {
+                background-color: rgba(255, 255, 255, 0.5);
+                border-left: 4px solid #adb5bd;
+            }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <section layout:fragment="content" class="container my-5">
+        <!-- Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="glass-card mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a th:href="@{/index}" class="text-decoration-none"><i class="bi bi-house-door"></i> Inicio</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Notificaciones</li>
+            </ol>
+        </nav>
+
+        <!-- Contenido principal -->
+        <div class="glass-card">
+            <h1 class="text-center mb-4">
+                <i class="bi bi-bell me-2"></i>
+                <span th:text="#{notifications.title}">Mis Notificaciones</span>
+            </h1>
+            
+            <!-- Sin notificaciones -->
+            <div th:if="${#lists.isEmpty(notifications)}" class="text-center py-5">
+                <i class="bi bi-bell-slash text-muted" style="font-size: 4rem;"></i>
+                <p class="mt-3 text-muted" th:text="#{notifications.empty}">No tienes notificaciones en este momento.</p>
+                
+                <!-- Botón para generar notificación de prueba -->
+                <button id="generateTestNotification" class="btn btn-primary mt-3">
+                    <i class="bi bi-bell-fill me-2"></i>
+                    Generar notificación de prueba
+                </button>
+                
+                <!-- Alerta de éxito (oculta por defecto) -->
+                <div id="successAlertTest" class="alert alert-success mt-3 d-none" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Notificación de prueba creada con éxito. <span id="reloadCountdown">Recargando en 3...</span>
+                </div>
+                
+                <!-- Alerta de error (oculta por defecto) -->
+                <div id="errorAlertTest" class="alert alert-danger mt-3 d-none" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Error al crear la notificación de prueba.
+                </div>
+            </div>
+            
+            <!-- Lista de notificaciones -->
+            <div th:unless="${#lists.isEmpty(notifications)}">
+                <div th:each="notification : ${notifications}" 
+                     th:id="'notification-' + ${notification.id}"
+                     th:class="${notification.read ? 'notification-item notification-read' : 'notification-item notification-unread'}"
+                     th:data-id="${notification.id}">
+                    <div class="row">
+                        <div class="col-auto">
+                            <i th:class="${notification.read ? 'bi bi-envelope-open text-muted' : 'bi bi-envelope-fill text-primary'}" 
+                               style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex justify-content-between">
+                                <h5 th:class="${notification.read ? 'text-muted' : 'text-primary'}" 
+                                   th:text="${notification.title}">Título de la notificación</h5>
+                                <small class="text-muted" 
+                                       th:text="${#temporals.format(notification.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2023</small>
+                            </div>
+                            <p class="mb-3" th:text="${notification.message}">Contenido de la notificación</p>
+                            
+                            <!-- Botones de acción -->
+                            <div class="d-flex justify-content-end">
+                                <button th:if="${!notification.read}" 
+                                        th:onclick="'markAsRead(' + ${notification.id} + ')'"
+                                        class="btn btn-sm btn-primary me-2">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    <span th:text="#{notifications.markAsRead}">Marcar como leída</span>
+                                </button>
+                                
+                                <!-- Enlace a la entidad relacionada si existe -->
+                                <a th:if="${notification.relatedEntityType == 'SOLICITUDE'}" 
+                                   th:href="@{'/solicitudes/' + ${notification.relatedEntityId}}"
+                                   class="btn btn-sm btn-success">
+                                    <i class="bi bi-eye me-1"></i>
+                                    <span th:text="#{notifications.viewRequest}">Ver solicitud</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Formulario para crear notificaciones de prueba -->
+        <div class="glass-card mt-4" sec:authorize="hasAnyRole('ADMIN')">
+            <h3 class="text-center mb-3">
+                <i class="bi bi-tools me-2"></i>
+                <span th:text="#{notifications.createTest}">Crear notificación de prueba</span>
+            </h3>
+            
+            <form id="testNotificationForm" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="testTitle" class="form-label" th:text="#{notifications.testTitle}">Título de la notificación</label>
+                    <input type="text" class="form-control" id="testTitle" name="testTitle" required>
+                    <div class="invalid-feedback">Por favor, ingrese un título para la notificación.</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="testMessage" class="form-label" th:text="#{notifications.testMessage}">Mensaje de la notificación</label>
+                    <textarea class="form-control" id="testMessage" name="testMessage" rows="3" required></textarea>
+                    <div class="invalid-feedback">Por favor, ingrese un mensaje para la notificación.</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="testRecipient" class="form-label" th:text="#{notifications.testRecipient}">Destinatario</label>
+                    <select class="form-select" id="testRecipient" name="testRecipient" required>
+                        <option value="" th:text="#{notifications.selectRecipient}">Seleccionar destinatario</option>
+                        <option value="ADMIN">Administrador</option>
+                        <option value="ORGANIZATION">Organización</option>
+                    </select>
+                    <div class="invalid-feedback">Por favor, seleccione un destinatario.</div>
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary" th:text="#{notifications.send}">Enviar</button>
+                </div>
+            </form>
+            
+            <!-- Alerta para mostrar resultado -->
+            <div class="alert alert-success mt-3 d-none" id="successAlert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="#{notifications.testSuccess}">Notificación de prueba creada con éxito</span>
+            </div>
+            
+            <div class="alert alert-danger mt-3 d-none" id="errorAlert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="#{notifications.testError}">Error al crear la notificación de prueba</span>
+            </div>
+        </div>
+    </section>
+
+    <th:block layout:fragment="scripts">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function markAsRead(id) {
+                fetch(`/notificaciones/${id}/marcar-leida`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]')?.getAttribute('content') || ''
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Actualizar la apariencia de la notificación
+                        const notification = document.getElementById(`notification-${id}`);
+                        notification.classList.remove('notification-unread');
+                        notification.classList.add('notification-read');
+                        
+                        // Cambiar el icono
+                        const icon = notification.querySelector('i');
+                        icon.classList.remove('bi-envelope-fill', 'text-primary');
+                        icon.classList.add('bi-envelope-open', 'text-muted');
+                        
+                        // Cambiar el título
+                        const title = notification.querySelector('h5');
+                        title.classList.remove('text-primary');
+                        title.classList.add('text-muted');
+                        
+                        // Ocultar el botón de marcar como leída
+                        const button = notification.querySelector('button');
+                        if (button) button.style.display = 'none';
+                        
+                        // Actualizar contador en el header si existe
+                        const notificationCounter = document.getElementById('notification-counter');
+                        if (notificationCounter && data.unreadCount > 0) {
+                            notificationCounter.textContent = data.unreadCount;
+                        } else if (notificationCounter) {
+                            notificationCounter.classList.add('hidden');
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+            
+            // Manejo del formulario de notificaciones de prueba
+            document.addEventListener('DOMContentLoaded', function() {
+                const testForm = document.getElementById('testNotificationForm');
+                if (!testForm) return;
+                
+                const successAlert = document.getElementById('successAlert');
+                const errorAlert = document.getElementById('errorAlert');
+                
+                // Validación del formulario
+                testForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    
+                    if (!testForm.checkValidity()) {
+                        event.stopPropagation();
+                        testForm.classList.add('was-validated');
+                        return;
+                    }
+                    
+                    // Ocultar alertas previas
+                    successAlert.classList.add('d-none');
+                    errorAlert.classList.add('d-none');
+                    
+                    // Obtener datos del formulario
+                    const title = document.getElementById('testTitle').value;
+                    const message = document.getElementById('testMessage').value;
+                    const recipientRole = document.getElementById('testRecipient').value;
+                    
+                    // Enviar petición para crear notificación de prueba
+                    fetch('/notificaciones/crear-prueba', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]')?.getAttribute('content') || ''
+                        },
+                        body: JSON.stringify({
+                            title: title,
+                            message: message,
+                            recipientRole: recipientRole
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la respuesta del servidor');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Mostrar alerta de éxito
+                            successAlert.classList.remove('d-none');
+                            // Limpiar formulario
+                            testForm.reset();
+                            testForm.classList.remove('was-validated');
+                            
+                            // Ocultar alerta después de 3 segundos
+                            setTimeout(() => {
+                                successAlert.classList.add('d-none');
+                            }, 3000);
+                        } else {
+                            throw new Error(data.message || 'Error al crear la notificación');
+                        }
+                    })
+                    .catch(error => {
+                        // Mostrar alerta de error
+                        errorAlert.classList.remove('d-none');
+                        console.error('Error:', error);
+                        
+                        // Ocultar alerta después de 3 segundos
+                        setTimeout(() => {
+                            errorAlert.classList.add('d-none');
+                        }, 3000);
+                    });
+                });
+            });
+            
+            // Script para el botón de generar notificación de prueba
+            document.addEventListener('DOMContentLoaded', function() {
+                const testButton = document.getElementById('generateTestNotification');
+                if (!testButton) return;
+                
+                const successAlert = document.getElementById('successAlertTest');
+                const errorAlert = document.getElementById('errorAlertTest');
+                
+                testButton.addEventListener('click', function() {
+                    // Ocultar alertas previas
+                    successAlert.classList.add('d-none');
+                    errorAlert.classList.add('d-none');
+                    
+                    // Deshabilitar botón mientras se procesa
+                    testButton.disabled = true;
+                    testButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Generando...';
+                    
+                    // Enviar petición para crear notificación de prueba
+                    fetch('/notificaciones/crear-prueba-personal', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]')?.getAttribute('content') || ''
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la respuesta del servidor');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Mostrar alerta de éxito
+                            successAlert.classList.remove('d-none');
+                            
+                            // Iniciar cuenta regresiva para recargar
+                            let countdown = 3;
+                            const countdownElement = document.getElementById('reloadCountdown');
+                            
+                            const countdownInterval = setInterval(() => {
+                                countdown--;
+                                if (countdown <= 0) {
+                                    clearInterval(countdownInterval);
+                                    window.location.reload();
+                                } else {
+                                    countdownElement.textContent = `Recargando en ${countdown}...`;
+                                }
+                            }, 1000);
+                            
+                            // Habilitar botón después de 2 segundos
+                            setTimeout(() => {
+                                testButton.disabled = false;
+                                testButton.innerHTML = '<i class="bi bi-bell-fill me-2"></i>Generar notificación de prueba';
+                            }, 2000);
+                        } else {
+                            throw new Error(data.message || 'Error al crear la notificación');
+                        }
+                    })
+                    .catch(error => {
+                        // Mostrar alerta de error
+                        errorAlert.classList.remove('d-none');
+                        errorAlert.textContent = error.message || 'Error al crear la notificación de prueba';
+                        
+                        // Habilitar botón
+                        testButton.disabled = false;
+                        testButton.innerHTML = '<i class="bi bi-bell-fill me-2"></i>Generar notificación de prueba';
+                        
+                        console.error('Error:', error);
+                    });
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html>

@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -161,4 +162,10 @@ public interface UserService {
      * @return Lista de usuarios que tienen el rol especificado
      */
     List<User> findByRoleName(String roleName);
+    
+    /**
+     * Cuenta la cantidad de usuarios por cada rol
+     * @return Mapa con el nombre del rol como clave y la cantidad de usuarios como valor
+     */
+    Map<String, Integer> countUsersByRole();
 }

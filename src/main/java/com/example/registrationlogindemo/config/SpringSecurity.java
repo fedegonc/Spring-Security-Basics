@@ -47,6 +47,10 @@ public class SpringSecurity {
                                         "/resources/**", "/templates/fragments/**","/js/**","/layoutdemo",
                                         "/images/**", "/uploads/**", "/guest/**"
                                         ).permitAll()
+                                // Rutas para reportes (accesibles para usuarios autenticados)
+                                .requestMatchers("/reportes/**").authenticated()
+                                // Rutas para notificaciones
+                                .requestMatchers("/notificaciones/**").authenticated()
                                 // Rutas basadas en roles, siguiendo la estructura de carpetas
                                 .requestMatchers("/user/**").hasRole("USER")
                                 // Páginas y funciones de administración

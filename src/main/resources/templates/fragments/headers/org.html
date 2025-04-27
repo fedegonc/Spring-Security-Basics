@@ -26,6 +26,17 @@
                        class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-300">
                         <i class="bi bi-graph-up mr-1"></i>Estadísticas
                     </a>
+                    <!-- Enlace a notificaciones -->
+                    <a th:href="@{/notificaciones}"
+                       class="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-gray-300 relative">
+                        <i class="bi bi-bell mr-1"></i>Notificaciones
+                        <!-- Contador de notificaciones -->
+                        <span th:if="${unreadCount != null && unreadCount > 0}"
+                              th:id="notification-counter"
+                              th:text="${unreadCount}"
+                              class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        </span>
+                    </a>
                 </nav>
             </div>
 
@@ -55,6 +66,15 @@
                         <a th:href="@{/org/profile}"
                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-700">
                             <i class="bi bi-building mr-2 text-gray-500"></i>Perfil Organización
+                        </a>
+                        <!-- Enlace a notificaciones en el menú desplegable -->
+                        <a th:href="@{/notificaciones}"
+                           class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-700">
+                            <i class="bi bi-bell mr-2 text-gray-500"></i>Notificaciones
+                            <span th:if="${unreadCount != null && unreadCount > 0}"
+                                  class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                                  th:text="${unreadCount}">
+                            </span>
                         </a>
                         <a th:href="@{/org/reportes}"
                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-700">
@@ -101,6 +121,17 @@
             <a th:href="@{/org/estadisticas}"
                class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-green-600">
                 <i class="bi bi-graph-up mr-1"></i>Estadísticas
+            </a>
+            <!-- Enlace a notificaciones en el menú móvil -->
+            <a th:href="@{/notificaciones}"
+               class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-green-600 flex justify-between items-center">
+                <div>
+                    <i class="bi bi-bell mr-1"></i>Notificaciones
+                </div>
+                <span th:if="${unreadCount != null && unreadCount > 0}"
+                      class="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                      th:text="${unreadCount}">
+                </span>
             </a>
             <hr class="my-2 border-gray-600">
             <a th:href="@{/org/profile}"
@@ -168,6 +199,27 @@
                         }, 200);
                     }
                 });
+                
+                // Verificar notificaciones no leídas periódicamente
+                const checkUnreadNotifications = () => {
+                    fetch('/notificaciones/no-leidas/contador')
+                        .then(response => response.json())
+                        .then(data => {
+                            const counters = document.querySelectorAll('#notification-counter');
+                            counters.forEach(counter => {
+                                if (data.unreadCount > 0) {
+                                    counter.textContent = data.unreadCount;
+                                    counter.classList.remove('hidden');
+                                } else {
+                                    counter.classList.add('hidden');
+                                }
+                            });
+                        })
+                        .catch(error => console.error('Error al verificar notificaciones:', error));
+                };
+                
+                // Verificar cada 60 segundos
+                setInterval(checkUnreadNotifications, 60000);
             });
         </script>
     </header>

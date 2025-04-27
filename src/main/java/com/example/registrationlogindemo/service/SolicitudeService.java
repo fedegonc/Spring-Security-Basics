@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -156,4 +157,10 @@ public interface SolicitudeService {
      * @return true si se eliminó correctamente
      */
     boolean deleteSolicitudeByAdmin(int id);
+    
+    /**
+     * Cuenta la cantidad de solicitudes por cada estado
+     * @return Mapa con el nombre del estado como clave y la cantidad de solicitudes como valor
+     */
+    Map<String, Integer> countSolicitudesByStatus();
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Fragmento de breadcrumb con estilo glass-card -->
+<nav th:fragment="breadcrumb(currentPage, parentPageName, parentPageUrl)" aria-label="breadcrumb" class="glass-card mb-4">
+    <ol class="breadcrumb mb-0">
+        <!-- Inicio siempre es el primer elemento -->
+        <li class="breadcrumb-item">
+            <a th:href="@{/user/inicio}" class="text-decoration-none">
+                <i class="bi bi-house-door"></i> Inicio
+            </a>
+        </li>
+        
+        <!-- Página padre (opcional) -->
+        <li th:if="${parentPageName != null and parentPageUrl != null}" class="breadcrumb-item">
+            <a th:href="@{${parentPageUrl}}" class="text-decoration-none" th:text="${parentPageName}">Página Padre</a>
+        </li>
+        
+        <!-- Página actual -->
+        <li class="breadcrumb-item active" aria-current="page" th:text="${currentPage}">Página Actual</li>
+    </ol>
+</nav>
+
+<!-- Fragmento simplificado para casos donde solo se necesita la página actual -->
+<nav th:fragment="simple(currentPage)" aria-label="breadcrumb" class="glass-card mb-4">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a th:href="@{/user/inicio}" class="text-decoration-none">
+                <i class="bi bi-house-door"></i> Inicio
+            </a>
+        </li>
+        
+        <!-- Página actual -->
+        <li class="breadcrumb-item active" aria-current="page" th:text="${currentPage}">Página Actual</li>
+    </ol>
+</nav>
+</html>

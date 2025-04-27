@@ -50,17 +50,55 @@ public class AdministradorController extends BaseController {
             List<User> users = userService.findAll();
             mv.addObject("users", users);
             
-            // Obtener estadísticas detalladas de usuarios
-            Map<String, Object> userStats = dashboardService.getUserStatistics();
-            mv.addAllObjects(userStats);
+            // Obtener solicitudes recientes
+            List<Solicitude> solicitudes = solicitudeService.findAll();
+            mv.addObject("solicitudes", solicitudes);
+            
+            // Estadísticas de usuarios por rol
+            Map<String, Integer> usersByRole = userService.countUsersByRole();
+            int totalUsers = users.size();
+            if (totalUsers > 0) {
+                int adminCount = usersByRole.getOrDefault("ROLE_ADMIN", 0);
+                int orgCount = usersByRole.getOrDefault("ROLE_ORGANIZATION", 0);
+                int userCount = usersByRole.getOrDefault("ROLE_USER", 0);
+                
+                mv.addObject("adminPercentage", calculatePercentage(adminCount, totalUsers));
+                mv.addObject("orgPercentage", calculatePercentage(orgCount, totalUsers));
+                mv.addObject("userPercentage", calculatePercentage(userCount, totalUsers));
+            }
+            
+            // Estadísticas de solicitudes por estado
+            Map<String, Integer> solicitudesByStatus = solicitudeService.countSolicitudesByStatus();
+            int totalSolicitudes = solicitudes.size();
+            if (totalSolicitudes > 0) {
+                int pendientes = solicitudesByStatus.getOrDefault("PENDIENTE", 0);
+                int enProceso = solicitudesByStatus.getOrDefault("EN_PROCESO", 0);
+                int completadas = solicitudesByStatus.getOrDefault("COMPLETADA", 0);
+                
+                mv.addObject("pendientePercentage", calculatePercentage(pendientes, totalSolicitudes));
+                mv.addObject("enProcesoPercentage", calculatePercentage(enProceso, totalSolicitudes));
+                mv.addObject("completadaPercentage", calculatePercentage(completadas, totalSolicitudes));
+            }
             
             // Estadísticas de solicitudes
-            int totalSolicitudes = dashboardService.getTotalSolicitudes();
             mv.addObject("totalSolicitudes", totalSolicitudes);
+            
+            // Información del sistema
+            mv.addObject("systemVersion", "1.0.0");
+            mv.addObject("systemStatus", "Activo");
+            mv.addObject("memoryUsage", 45); // Porcentaje de uso de memoria (simulado)
+            mv.addObject("memoryTotal", "1GB");
+            mv.addObject("memoryUsed", "450MB");
+            
         } catch (Exception e) {
             mv.addObject("error", "Error al cargar la página: " + e.getMessage());
         }
         return mv;
+    }
+    
+    // Método auxiliar para calcular porcentajes
+    private int calculatePercentage(int value, int total) {
+        return total > 0 ? (int) Math.round((double) value / total * 100) : 0;
     }
 
     @RequestMapping(value = "/profile", method = {RequestMethod.GET, RequestMethod.POST})

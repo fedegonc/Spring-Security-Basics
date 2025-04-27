@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/base}"
-      th:with="headerType='user', metaDescription='Reportar un problema - EcoSolicitud'">
+      th:with="metaDescription='Reportar un problema - EcoSolicitud'">
 
 <head>
     <title>Reportar Problema</title>
@@ -54,16 +54,22 @@
     <!-- Contenido principal -->
     <section layout:fragment="content">
         <div class="container mx-auto px-4 py-6">
-            <!-- Breadcrumb hardcodeado -->
-            <nav class="text-sm mb-4">
-                <ol class="list-none p-0 inline-flex">
-                    <li class="flex items-center">
-                        <a th:href="@{/user/inicio}" class="text-blue-500 hover:text-blue-700">Inicio</a>
-                        <svg class="w-3 h-3 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
+            <!-- Breadcrumbs con estilo glass-card -->
+            <nav aria-label="breadcrumb" class="glass-card mb-4">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">
+                        <!-- Enlaces dinámicos según el rol -->
+                        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/inicio}" class="text-decoration-none">
+                            <i class="bi bi-house-door"></i> Inicio
+                        </a>
+                        <a sec:authorize="hasRole('ORGANIZATION')" th:href="@{/org/inicio}" class="text-decoration-none">
+                            <i class="bi bi-house-door"></i> Inicio
+                        </a>
+                        <a sec:authorize="hasRole('USER')" th:href="@{/user/inicio}" class="text-decoration-none">
+                            <i class="bi bi-house-door"></i> Inicio
+                        </a>
                     </li>
-                    <li class="text-gray-500">Reportar Problema</li>
+                    <li class="breadcrumb-item active" aria-current="page">Reportar Problema</li>
                 </ol>
             </nav>
             
@@ -78,7 +84,7 @@
                 </p>
                 
                 <div class="form-container">
-                    <form th:action="@{/user/report}" method="post" class="space-y-4">
+                    <form th:action="@{/reportes/enviar}" method="post" class="space-y-4">
                         <div class="form-group">
                             <label for="problema" class="form-label">Tipo de Problema</label>
                             <select id="problema" name="problema" class="form-control" required>
@@ -99,7 +105,14 @@
                         </div>
                         
                         <div class="flex justify-end space-x-3 mt-6">
-                            <a th:href="@{/user/inicio}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            <!-- Botones de cancelar dinámicos según el rol -->
+                            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/inicio}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                Cancelar
+                            </a>
+                            <a sec:authorize="hasRole('ORGANIZATION')" th:href="@{/org/inicio}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                Cancelar
+                            </a>
+                            <a sec:authorize="hasRole('USER')" th:href="@{/user/inicio}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
                                 Cancelar
                             </a>
                             <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">

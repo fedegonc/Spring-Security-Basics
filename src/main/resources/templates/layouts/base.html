@@ -28,6 +28,12 @@
     <!-- Flowbite - Biblioteca de componentes para Tailwind -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet">
     
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Estilos para breadcrumbs tipo glass-card -->
+    <link th:href="@{/css/breadcrumb.css}" rel="stylesheet">
+    
     <!-- CSS base -->
     <style>
         :root {
@@ -93,13 +99,20 @@
         El header puede ser reemplazado completamente por la página o puede usar un header predefinido
         usando: th:with="headerType='admin'" en la página hija
     -->
+    <!-- base.html: header dinámico por rol -->
     <th:block layout:fragment="header">
-        <header th:replace="${headerType != null} ? ~{|fragments/headers/${headerType}|} : _" class="slot">
-            <div class="p-4 text-center">
-                <h2>HEADER GENÉRICO</h2>
-                <p class="text-sm text-gray-500">Este header se muestra cuando no se especifica un tipo</p>
-            </div>
-        </header>
+        <!-- Invitado -->
+        <th:block th:replace="~{fragments/headers/guest :: header}"
+                  sec:authorize="!isAuthenticated()"/>
+        <!-- Usuario normal -->
+        <th:block th:replace="~{fragments/headers/user :: header}"
+                  sec:authorize="hasRole('ROLE_USER')"/>
+        <!-- Organización -->
+        <th:block th:replace="~{fragments/headers/org :: header}"
+                  sec:authorize="hasRole('ROLE_ORG')"/>
+        <!-- Administrador -->
+        <th:block th:replace="~{fragments/headers/admin :: header}"
+                  sec:authorize="hasRole('ROLE_ADMIN')"/>
     </th:block>
     
     <main id="main-content" class="flex-grow">

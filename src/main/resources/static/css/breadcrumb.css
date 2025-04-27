@@ -1,0 +1,30 @@
+/* Estilos para el breadcrumb tipo glass-card */
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Ajustes específicos para el breadcrumb */
+.glass-card.mb-4 {
+    padding: 12px 20px;
+}
+
+/* Estilos para los enlaces del breadcrumb */
+.breadcrumb-item a {
+    color: #0d6efd;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #0a58ca;
+    text-decoration: none;
+}
+
+/* Estilo para el ítem activo */
+.breadcrumb-item.active {
+    color: #6c757d;
+}

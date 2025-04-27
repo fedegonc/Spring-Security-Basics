@@ -43,7 +43,7 @@ public class SolicitudeController {
      * Endpoint alternativo POST para nueva solicitud (usando nombre en inglés)
      */
     @PostMapping("/newsolicitude")
-    public String newSolicitudePostAlt(@Valid @ModelAttribute("solicitud") Solicitude solicitud,
+    public String newSolicitudePostAlt(@Valid @ModelAttribute("solicitude") Solicitude solicitud,
                                     BindingResult result, RedirectAttributes msg,
                                     @RequestParam(value = "file", required = false) MultipartFile imagen,
                                     @AuthenticationPrincipal UserDetails userDetails) throws IOException {
@@ -52,7 +52,7 @@ public class SolicitudeController {
     }
 
     @PostMapping("/nueva-solicitud")
-    public String newSolicitudePost(@Valid @ModelAttribute("solicitud") Solicitude solicitud,
+    public String newSolicitudePost(@Valid @ModelAttribute("solicitude") Solicitude solicitud,
                                     BindingResult result, RedirectAttributes msg,
                                     @RequestParam(value = "file", required = false) MultipartFile imagen,
                                     @AuthenticationPrincipal UserDetails userDetails) throws IOException {
