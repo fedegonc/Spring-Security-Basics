@@ -64,7 +64,7 @@ public class AuthController implements ErrorController {
         }
         
         model.addAttribute("user", new UserDto());
-        return "pages/register";
+        return "pages/guest/register";
     }
 
     /**
@@ -84,7 +84,7 @@ public class AuthController implements ErrorController {
         
         if (!registrationSuccessful) {
             model.addAttribute("user", userDto);
-            return "pages/register";
+            return "pages/guest/register";
         }
         
         return "redirect:/login?registered";

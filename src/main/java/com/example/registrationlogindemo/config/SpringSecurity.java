@@ -45,7 +45,7 @@ public class SpringSecurity {
                                         ,"/sostenibilidad","/scripts/**","/ambiental","/noticias"
                                         ,"/materiales","/legislacion","/alianzas","/base","/error",
                                         "/resources/**", "/templates/fragments/**","/js/**","/layoutdemo",
-                                        "/images/**", "/uploads/**", "/guest/**"
+                                        "/images/**", "/uploads/**", "/guest/**", "/oauth2/**"
                                         ).permitAll()
                                 // Rutas para reportes (accesibles para usuarios autenticados)
                                 .requestMatchers("/reportes/**").authenticated()
@@ -75,6 +75,13 @@ public class SpringSecurity {
                                 .logoutSuccessUrl("/index")
                                 .permitAll()
                 )
+                // Comentamos temporalmente la configuración de OAuth2
+                /*
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/oauth2/init")
+                )
+                */
                 // Configuración del almacenamiento de solicitudes en caché
                 .requestCache(cache -> cache.requestCache(requestCache));
 

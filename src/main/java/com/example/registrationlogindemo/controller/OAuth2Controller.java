@@ -28,7 +28,7 @@ public class OAuth2Controller {
     @Autowired
     private RoleRepository roleRepository;
     
-    @GetMapping("/init")
+    @GetMapping("/oauth2/init")
     public String handleInitPage(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         

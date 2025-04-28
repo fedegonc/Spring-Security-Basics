@@ -137,7 +137,10 @@ public class UserController extends BaseController {
      */
     @PostMapping("/profile")
     public String updateUserProfile(
-            @ModelAttribute User userForm,
+            @RequestParam("name") String name,
+            @RequestParam("email") String email,
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
             @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
             RedirectAttributes redirectAttributes) {
         
@@ -148,24 +151,33 @@ public class UserController extends BaseController {
                 return "redirect:/login";
             }
             
-            // Actualizar solo los campos permitidos
-            currentUser.setName(userForm.getName());
-            currentUser.setUsername(userForm.getUsername());
-            currentUser.setEmail(userForm.getEmail());
+            // Actualizar datos básicos
+            currentUser.setName(name);
+            currentUser.setEmail(email);
             
-            // Procesar la imagen de perfil si se ha subido una nueva
+            // Actualizar contraseña si se proporcionó
+            if (password != null && !password.isEmpty()) {
+                if (!password.equals(confirmPassword)) {
+                    redirectAttributes.addFlashAttribute("error", "Las contraseñas no coinciden");
+                    return "redirect:/user/profile";
+                }
+                currentUser.setPassword(passwordEncoder.encode(password));
+            }
+            
+            // Procesar imagen de perfil si se subió una
             if (profileImage != null && !profileImage.isEmpty()) {
                 processProfileImage(currentUser, profileImage, redirectAttributes);
             }
             
-            // Guardar los cambios
+            // Guardar cambios
             userRepository.save(currentUser);
+            
             redirectAttributes.addFlashAttribute("success", "Perfil actualizado correctamente");
+            return "redirect:/user/profile";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al actualizar el perfil: " + e.getMessage());
+            return "redirect:/user/profile";
         }
-        
-        return "redirect:/user/profile";
     }
     
     /**
