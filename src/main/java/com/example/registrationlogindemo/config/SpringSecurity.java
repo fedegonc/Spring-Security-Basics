@@ -65,7 +65,7 @@ public class SpringSecurity {
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/init")
+                                .defaultSuccessUrl("/user/inicio", true)
                                 .permitAll()
                 )
                 // Configuración de cierre de sesión
@@ -75,13 +75,6 @@ public class SpringSecurity {
                                 .logoutSuccessUrl("/index")
                                 .permitAll()
                 )
-                // Comentamos temporalmente la configuración de OAuth2
-                /*
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/oauth2/init")
-                )
-                */
                 // Configuración del almacenamiento de solicitudes en caché
                 .requestCache(cache -> cache.requestCache(requestCache));
 

@@ -112,7 +112,14 @@ public class UserServiceImpl implements UserService {
         roles.add(role);
         user.setRoles(roles);
         
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            // Log the error for debugging
+            System.err.println("Error al guardar usuario: " + e.getMessage());
+            e.printStackTrace();
+            throw e; // Re-throw to be handled by the controller
+        }
     }
 
     // Método para buscar un usuario por correo electrónico
@@ -169,9 +176,7 @@ public class UserServiceImpl implements UserService {
     // Go Horse: buscar usuario por username, lanzando excepción si no existe
     @Override
     public User findByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user == null) throw new UsernameNotFoundException("Usuario no encontrado");
-        return user;
+        return userRepository.findByUsername(username);
     }
 
     // ======= Métodos para operaciones de usuarios regulares =======

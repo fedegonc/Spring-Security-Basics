@@ -48,9 +48,12 @@ public class AuthController implements ErrorController {
      */
     @GetMapping("/login")
     public String login() {
+        // Error First: verificar primero si el usuario está autenticado
         if (isUserAuthenticated()) {
             return "redirect:/inicio";
         }
+        
+        // Flujo principal: mostrar la página de login
         return "pages/guest/login";
     }
 
@@ -74,20 +77,29 @@ public class AuthController implements ErrorController {
     public String registration(
             @Valid @ModelAttribute("user") UserDto userDto,
             BindingResult result,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
         
+        // Guard Clause 1: Verificar si el usuario ya está autenticado
         if (isUserAuthenticated()) {
             return "redirect:/user/inicio";
         }
         
-        boolean registrationSuccessful = authService.registerUser(userDto, result);
+        // Guard Clause 2: Validar que la contraseña no esté vacía
+        if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
+            result.rejectValue("password", "error.user", "La contraseña no puede estar vacía");
+        }
         
+        // Guard Clause 3: Verificar si el registro no fue exitoso
+        boolean registrationSuccessful = authService.registerUser(userDto, result);
         if (!registrationSuccessful) {
             model.addAttribute("user", userDto);
             return "pages/guest/register";
         }
         
-        return "redirect:/login?registered";
+        // Flujo principal: registro exitoso
+        redirectAttributes.addFlashAttribute("success", "Registro exitoso. Por favor, inicia sesión con tus credenciales.");
+        return "redirect:/login";
     }
 
     /**
@@ -100,21 +112,30 @@ public class AuthController implements ErrorController {
             HttpServletRequest request, 
             HttpServletResponse response) {
         
+        // Guard Clause 1: Verificar si el usuario no está autenticado
         if (!authService.isAuthenticated()) {
             validationService.addErrorMessage(msg, ERROR_AUTH);
             return new ModelAndView("redirect:/login");
         }
         
+        // Guard Clause 2: Verificar rol ADMIN
         if (authService.hasRole("ADMIN")) {
             return new ModelAndView("redirect:/admin/inicio");
-        } else if (authService.hasRole("ORGANIZATION")) {
-            return new ModelAndView("redirect:/org/inicio");
-        } else if (authService.hasRole("USER")) {
-            return new ModelAndView("redirect:/user/inicio");
-        } else {
-            validationService.addErrorMessage(msg, ERROR_PERMISSION);
-            return new ModelAndView("redirect:/error");
         }
+        
+        // Guard Clause 3: Verificar rol ORGANIZATION
+        if (authService.hasRole("ORGANIZATION")) {
+            return new ModelAndView("redirect:/org/inicio");
+        }
+        
+        // Guard Clause 4: Verificar rol USER
+        if (authService.hasRole("USER")) {
+            return new ModelAndView("redirect:/user/inicio");
+        }
+        
+        // Flujo de error: el usuario no tiene un rol reconocido
+        validationService.addErrorMessage(msg, ERROR_PERMISSION);
+        return new ModelAndView("redirect:/error");
     }
     
     /**

@@ -40,7 +40,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.getDefault());
+        slr.setDefaultLocale(new Locale("pt", "BR"));
         slr.setLocaleAttributeName("current.locale");
         slr.setTimeZoneAttributeName("current.timezone");
         return slr;

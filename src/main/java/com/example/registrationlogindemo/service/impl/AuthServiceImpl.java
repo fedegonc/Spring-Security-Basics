@@ -56,14 +56,26 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
         
-        // Verificar credenciales únicas
-        if (!validateUniqueCredentials(userDto.getEmail(), userDto.getUsername(), result)) {
+        try {
+            // Verificar credenciales únicas
+            if (!validateUniqueCredentials(userDto.getEmail(), userDto.getUsername(), result)) {
+                return false;
+            }
+            
+            // Todo está bien, guardar el usuario
+            userService.saveUser(userDto);
+            return true;
+        } catch (Exception e) {
+            // Log the error for debugging
+            System.err.println("Error en el registro de usuario: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Añadir error genérico si no hay errores específicos
+            if (!result.hasErrors()) {
+                result.reject("error.user", "Error al procesar el registro. Por favor, intente nuevamente.");
+            }
             return false;
         }
-        
-        // Todo está bien, guardar el usuario
-        userService.saveUser(userDto);
-        return true;
     }
     
     @Override
