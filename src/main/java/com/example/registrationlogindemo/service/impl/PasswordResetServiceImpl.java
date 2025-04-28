@@ -35,8 +35,8 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     @Override
     public String generateResetCode(String email) {
         // Verificar si el usuario existe
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isEmpty()) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
             return null; // No revelar si el email existe o no por seguridad
         }
         
@@ -92,12 +92,10 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         }
         
         // Buscar el usuario
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isEmpty()) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
             return false;
         }
-        
-        User user = userOpt.get();
         
         // Actualizar la contraseña
         user.setPassword(passwordEncoder.encode(newPassword));
