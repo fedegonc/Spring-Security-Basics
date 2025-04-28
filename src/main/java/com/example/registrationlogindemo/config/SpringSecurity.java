@@ -65,7 +65,7 @@ public class SpringSecurity {
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/user/inicio", true)
+                                .defaultSuccessUrl("/init", false)
                                 .permitAll()
                 )
                 // Configuración de cierre de sesión

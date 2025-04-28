@@ -113,7 +113,7 @@ public class AdministradorController extends BaseController {
     }
 
     private ModelAndView viewProfile() {
-        ModelAndView mv = new ModelAndView("user/profile");
+        ModelAndView mv = new ModelAndView("pages/user/profile");
         try {
             Optional<User> userOpt = userService.getAuthenticatedUser();
             if (userOpt.isEmpty()) return new ModelAndView("redirect:/login");

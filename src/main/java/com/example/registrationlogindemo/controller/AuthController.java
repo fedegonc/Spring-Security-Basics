@@ -3,6 +3,7 @@ package com.example.registrationlogindemo.controller;
 import com.example.registrationlogindemo.dto.UserDto;
 import com.example.registrationlogindemo.entity.User;
 import com.example.registrationlogindemo.service.AuthService;
+import com.example.registrationlogindemo.service.PasswordResetService;
 import com.example.registrationlogindemo.service.UserService;
 import com.example.registrationlogindemo.service.ValidationAndNotificationService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +32,7 @@ public class AuthController implements ErrorController {
     @Autowired private UserService userService;
     @Autowired private AuthService authService;
     @Autowired private ValidationAndNotificationService validationService;
+    @Autowired private PasswordResetService passwordResetService;
     
     private static final String ERROR_AUTH = "Debe iniciar sesión para acceder a esta página.";
     private static final String ERROR_PERMISSION = "No tiene permisos suficientes.";
@@ -146,5 +148,149 @@ public class AuthController implements ErrorController {
         return authentication != null && 
                authentication.isAuthenticated() && 
                !(authentication instanceof AnonymousAuthenticationToken);
+    }
+    
+    /**
+     * Muestra el formulario para solicitar recuperación de contraseña
+     */
+    @GetMapping("/forgot-password")
+    public String showForgotPasswordForm() {
+        // Guard Clause: Si el usuario ya está autenticado, redirigir al inicio
+        if (isUserAuthenticated()) {
+            return "redirect:/inicio";
+        }
+        
+        return "pages/guest/forgot-password";
+    }
+    
+    /**
+     * Procesa la solicitud de recuperación de contraseña
+     */
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(
+            @RequestParam("email") String email,
+            RedirectAttributes redirectAttributes) {
+        
+        // Guard Clause: Si el usuario ya está autenticado, redirigir al inicio
+        if (isUserAuthenticated()) {
+            return "redirect:/inicio";
+        }
+        
+        // Generar código de recuperación
+        String code = passwordResetService.generateResetCode(email);
+        
+        // Siempre mostrar el mismo mensaje por seguridad, incluso si el email no existe
+        redirectAttributes.addFlashAttribute("success", 
+            "Si el email existe en nuestro sistema, recibirás un código de recuperación.");
+        
+        return "redirect:/verify-code?email=" + email;
+    }
+    
+    /**
+     * Muestra el formulario para verificar el código de recuperación
+     */
+    @GetMapping("/verify-code")
+    public String showVerifyCodeForm(
+            @RequestParam("email") String email,
+            Model model) {
+        
+        // Guard Clause: Si el usuario ya está autenticado, redirigir al inicio
+        if (isUserAuthenticated()) {
+            return "redirect:/inicio";
+        }
+        
+        model.addAttribute("email", email);
+        return "pages/guest/verify-code";
+    }
+    
+    /**
+     * Procesa la verificación del código de recuperación
+     */
+    @PostMapping("/verify-code")
+    public String processVerifyCode(
+            @RequestParam("email") String email,
+            @RequestParam("code") String code,
+            RedirectAttributes redirectAttributes) {
+        
+        // Guard Clause: Si el usuario ya está autenticado, redirigir al inicio
+        if (isUserAuthenticated()) {
+            return "redirect:/inicio";
+        }
+        
+        // Validar el código
+        boolean isValid = passwordResetService.validateResetCode(email, code);
+        
+        if (!isValid) {
+            redirectAttributes.addFlashAttribute("error", 
+                "El código es inválido o ha expirado. Por favor, solicita un nuevo código.");
+            return "redirect:/forgot-password";
+        }
+        
+        return "redirect:/reset-password?email=" + email + "&code=" + code;
+    }
+    
+    /**
+     * Muestra el formulario para restablecer la contraseña
+     */
+    @GetMapping("/reset-password")
+    public String showResetPasswordForm(
+            @RequestParam("email") String email,
+            @RequestParam("code") String code,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        
+        // Guard Clause: Si el usuario ya está autenticado, redirigir al inicio
+        if (isUserAuthenticated()) {
+            return "redirect:/inicio";
+        }
+        
+        // Validar el código nuevamente
+        boolean isValid = passwordResetService.validateResetCode(email, code);
+        
+        if (!isValid) {
+            redirectAttributes.addFlashAttribute("error", 
+                "El código es inválido o ha expirado. Por favor, solicita un nuevo código.");
+            return "redirect:/forgot-password";
+        }
+        
+        model.addAttribute("email", email);
+        model.addAttribute("code", code);
+        return "pages/guest/reset-password";
+    }
+    
+    /**
+     * Procesa el restablecimiento de contraseña
+     */
+    @PostMapping("/reset-password")
+    public String processResetPassword(
+            @RequestParam("email") String email,
+            @RequestParam("code") String code,
+            @RequestParam("password") String password,
+            @RequestParam("confirmPassword") String confirmPassword,
+            RedirectAttributes redirectAttributes) {
+        
+        // Guard Clause: Si el usuario ya está autenticado, redirigir al inicio
+        if (isUserAuthenticated()) {
+            return "redirect:/inicio";
+        }
+        
+        // Validar que las contraseñas coincidan
+        if (!password.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("error", "Las contraseñas no coinciden.");
+            return "redirect:/reset-password?email=" + email + "&code=" + code;
+        }
+        
+        // Restablecer la contraseña
+        boolean success = passwordResetService.resetPassword(email, code, password);
+        
+        if (!success) {
+            redirectAttributes.addFlashAttribute("error", 
+                "No se pudo restablecer la contraseña. Por favor, solicita un nuevo código.");
+            return "redirect:/forgot-password";
+        }
+        
+        redirectAttributes.addFlashAttribute("success", 
+            "Tu contraseña ha sido restablecida exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.");
+        return "redirect:/login";
     }
 }
