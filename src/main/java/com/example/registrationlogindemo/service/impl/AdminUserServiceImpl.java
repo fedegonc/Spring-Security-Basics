@@ -2,6 +2,7 @@ package com.example.registrationlogindemo.service.impl;
 
 import com.example.registrationlogindemo.entity.Role;
 import com.example.registrationlogindemo.entity.User;
+import com.example.registrationlogindemo.repository.RoleRepository;
 import com.example.registrationlogindemo.service.AdminUserService;
 import com.example.registrationlogindemo.service.FileStorageService;
 import com.example.registrationlogindemo.service.RoleManagementService;
@@ -38,6 +39,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Autowired
     private ValidationAndNotificationService validationService;
     
+    @Autowired
+    private RoleRepository roleRepository;
+    
     private static final String ERROR_VALIDACION = "Por favor, corrija los errores en el formulario";
 
     /**
@@ -71,8 +75,29 @@ public class AdminUserServiceImpl implements AdminUserService {
             
             List<Role> allRoles = userService.listRoles();
             
+            // Verificar si existe el rol ORGANIZATION
+            boolean hasOrgRole = false;
+            for (Role role : allRoles) {
+                System.out.println("Rol disponible: " + role.getName() + " (ID: " + role.getId() + ")");
+                if ("ROLE_ORGANIZATION".equals(role.getName())) {
+                    hasOrgRole = true;
+                }
+            }
+            
+            // Si no existe el rol ORGANIZATION, crearlo
+            if (!hasOrgRole) {
+                System.out.println("Creando rol ROLE_ORGANIZATION que no existía");
+                Role orgRole = new Role();
+                orgRole.setName("ROLE_ORGANIZATION");
+                roleRepository.save(orgRole);
+                
+                // Recargar la lista de roles
+                allRoles = userService.listRoles();
+            }
+            
             mv.addObject("user", user);
             mv.addObject("allRoles", allRoles);
+            mv.addObject("roles", allRoles); // Para mantener compatibilidad con plantillas existentes
             mv.addObject("currentPage", "Editar Usuario");
             
         } catch (Exception e) {

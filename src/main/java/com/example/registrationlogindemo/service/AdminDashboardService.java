@@ -59,6 +59,12 @@ public class AdminDashboardService {
     @Autowired
     private AdminUserService adminUserService;
     
+    @Autowired
+    private AdminReportService adminReportService;
+    
+    @Autowired
+    private AdminSolicitudeService adminSolicitudeService;
+    
     private static final String ERROR_VALIDACION = "Por favor, corrija los errores en el formulario";
     
     /**
@@ -156,106 +162,42 @@ public class AdminDashboardService {
      * Prepara el ModelAndView para la vista de reportes
      */
     public ModelAndView prepareReportsView(String viewName) {
-        ModelAndView mv = new ModelAndView(viewName);
-        try {
-            List<Report> reports = reportService.findAll();
-            mv.addObject("reports", reports);
-            mv.addObject("currentPage", "Reportes");
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar reportes: " + e.getMessage());
-        }
-        return mv;
+        return adminReportService.prepareReportsView(viewName);
     }
     
     /**
      * Prepara el ModelAndView para la vista de edición de reporte
      */
     public ModelAndView prepareReportEditView(long reportId, String viewName) {
-        ModelAndView mv = new ModelAndView(viewName);
-        try {
-            Optional<Report> reportOpt = reportService.findById(reportId);
-            if (reportOpt.isEmpty()) {
-                mv.setViewName("redirect:/admin/reports");
-                return mv;
-            }
-            
-            Report report = reportOpt.get();
-            List<User> users = userService.findAll();
-            
-            mv.addObject("report", report);
-            mv.addObject("users", users);
-            mv.addObject("currentPage", "Editar Reporte");
-            
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar el reporte: " + e.getMessage());
-        }
-        return mv;
+        return adminReportService.prepareReportEditView(reportId, viewName);
     }
     
     /**
      * Prepara el ModelAndView para la vista de solicitudes
      */
     public ModelAndView prepareSolicitudesView(String viewName) {
-        ModelAndView mv = new ModelAndView(viewName);
-        try {
-            List<Solicitude> solicitudes = solicitudeService.findAll();
-            mv.addObject("solicitudes", solicitudes);
-            mv.addObject("currentPage", "Solicitudes");
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar solicitudes: " + e.getMessage());
-        }
-        return mv;
+        return adminSolicitudeService.prepareSolicitudesView(viewName);
     }
     
     /**
      * Prepara el ModelAndView para la vista de edición de solicitud
      */
     public ModelAndView prepareSolicitudeEditView(Long solicitudeId, String viewName) {
-        ModelAndView mv = new ModelAndView(viewName);
-        try {
-            Solicitude solicitude = solicitudeService.findById(solicitudeId);
-            if (solicitude == null) {
-                mv.setViewName("redirect:/admin/solicitudes");
-                return mv;
-            }
-            
-            mv.addObject("solicitude", solicitude);
-            mv.addObject("currentPage", "Editar Solicitud");
-            
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar la solicitud: " + e.getMessage());
-        }
-        return mv;
+        return adminSolicitudeService.prepareSolicitudeEditView(solicitudeId, viewName);
     }
     
     /**
      * Prepara el ModelAndView para la vista de creación de solicitud
      */
     public ModelAndView prepareNewSolicitudeView(String viewName) {
-        ModelAndView mv = new ModelAndView(viewName);
-        try {
-            mv.addObject("solicitude", new Solicitude());
-            mv.addObject("currentPage", "Nueva Solicitud");
-        } catch (Exception e) {
-            mv.addObject("error", "Error al preparar el formulario: " + e.getMessage());
-        }
-        return mv;
+        return adminSolicitudeService.prepareNewSolicitudeView(viewName);
     }
     
     /**
      * Prepara el ModelAndView para la vista de creación de reporte
      */
     public ModelAndView prepareNewReportView(String viewName) {
-        ModelAndView mv = new ModelAndView(viewName);
-        try {
-            List<User> users = userService.findAll();
-            mv.addObject("reporte", new Report());
-            mv.addObject("users", users);
-            mv.addObject("currentPage", "Nuevo Reporte");
-        } catch (Exception e) {
-            mv.addObject("error", "Error al preparar el formulario: " + e.getMessage());
-        }
-        return mv;
+        return adminReportService.prepareNewReportView(viewName);
     }
     
     /**
@@ -300,74 +242,21 @@ public class AdminDashboardService {
      * Crea un reporte de prueba
      */
     public String createTestReport(RedirectAttributes redirectAttributes) {
-        try {
-            // Obtener un usuario aleatorio para asignar el reporte
-            List<User> users = userService.findAll();
-            if (users.isEmpty()) {
-                validationService.addErrorMessage(redirectAttributes, 
-                        "No hay usuarios disponibles para asignar el reporte");
-                return "redirect:/admin/reports";
-            }
-            
-            // Seleccionar un usuario aleatorio
-            User randomUser = users.get((int) (Math.random() * users.size()));
-            
-            // Crear el reporte de prueba
-            Report testReport = new Report();
-            testReport.setTitle("Reporte de prueba");
-            testReport.setProblema("Problema de prueba");
-            
-            String descripcion = "Este es un reporte de prueba generado automáticamente.\n\n" +
-                    "Fecha: " + java.time.LocalDateTime.now() + "\n" +
-                    "Asignado a: " + randomUser.getName() + "\n" +
-                    "Este reporte puede ser utilizado para probar las funcionalidades de gestión de reportes.";
-            
-            testReport.setDescripcion(descripcion);
-            testReport.setUser(randomUser);
-            testReport.setStatus(Report.ReportStatus.PENDING);
-            testReport.setCreatedAt(java.time.LocalDateTime.now());
-            
-            // Guardar el reporte
-            reportService.save(testReport);
-            
-            validationService.addSuccessMessage(redirectAttributes, 
-                    "Reporte de prueba creado exitosamente y asignado a " + randomUser.getName());
-        } catch (Exception e) {
-            validationService.addErrorMessage(redirectAttributes, 
-                    "Error al crear el reporte de prueba: " + e.getMessage());
-        }
-        
-        return "redirect:/admin/reports";
+        return adminReportService.createTestReport(redirectAttributes);
     }
     
     /**
      * Crea un nuevo reporte
      */
     public String createReport(Report reporte, Long userId, RedirectAttributes msg) {
-        try {
-            reportService.createReportByAdmin(reporte, userId, msg);
-            validationService.addSuccessMessage(msg, "Reporte creado exitosamente");
-        } catch (Exception e) {
-            validationService.addErrorMessage(msg, "Error al crear el reporte: " + e.getMessage());
-            return "redirect:/admin/newreport";
-        }
-        return "redirect:/admin/reports";
+        return adminReportService.createReport(reporte, userId, msg);
     }
     
     /**
      * Actualiza un reporte existente
      */
     public String updateReport(Report report, RedirectAttributes redirectAttributes) {
-        try {
-            boolean success = reportService.updateReportByAdmin(report, redirectAttributes);
-            if (success) {
-                validationService.addSuccessMessage(redirectAttributes, "Reporte actualizado exitosamente");
-            }
-        } catch (Exception e) {
-            validationService.addErrorMessage(redirectAttributes, 
-                    "Error al actualizar el reporte: " + e.getMessage());
-        }
-        return "redirect:/admin/reports";
+        return adminReportService.updateReport(report, redirectAttributes);
     }
     
     /**
@@ -375,19 +264,7 @@ public class AdminDashboardService {
      */
     public String updateSolicitude(Solicitude solicitude, BindingResult result, 
                                   MultipartFile imagen, RedirectAttributes msg) {
-        if (result.hasErrors()) {
-            validationService.addErrorMessage(msg, ERROR_VALIDACION);
-            return "redirect:/admin/solicitudes/edit/" + solicitude.getId();
-        }
-        
-        try {
-            solicitudeService.updateSolicitudeByAdmin(solicitude, imagen, msg);
-            validationService.addSuccessMessage(msg, "Solicitud actualizada exitosamente");
-        } catch (IOException e) {
-            validationService.addErrorMessage(msg, "Error al procesar la imagen: " + e.getMessage());
-            return "redirect:/admin/solicitudes/edit/" + solicitude.getId();
-        }
-        return "redirect:/admin/solicitudes";
+        return adminSolicitudeService.updateSolicitude(solicitude, result, imagen, msg);
     }
     
     /**
@@ -395,36 +272,14 @@ public class AdminDashboardService {
      */
     public String createSolicitude(Solicitude solicitude, BindingResult result, 
                                   MultipartFile imagen, RedirectAttributes msg) {
-        if (result.hasErrors()) {
-            validationService.addErrorMessage(msg, ERROR_VALIDACION);
-            return "redirect:/admin/newsolicitude";
-        }
-        
-        try {
-            solicitudeService.updateSolicitudeByAdmin(solicitude, imagen, msg);
-            validationService.addSuccessMessage(msg, "Solicitud creada exitosamente");
-        } catch (IOException e) {
-            validationService.addErrorMessage(msg, "Error al procesar la imagen: " + e.getMessage());
-            return "redirect:/admin/newsolicitude";
-        }
-        return "redirect:/admin/solicitudes";
+        return adminSolicitudeService.createSolicitude(solicitude, result, imagen, msg);
     }
     
     /**
      * Elimina una solicitud por su ID
      */
     public String deleteSolicitude(Long id, RedirectAttributes msg) {
-        try {
-            boolean success = solicitudeService.deleteSolicitudeByAdmin(id);
-            if (success) {
-                validationService.addSuccessMessage(msg, "Solicitud eliminada correctamente");
-            } else {
-                validationService.addErrorMessage(msg, "No se pudo eliminar la solicitud");
-            }
-        } catch (Exception e) {
-            validationService.addErrorMessage(msg, "Error al eliminar solicitud: " + e.getMessage());
-        }
-        return "redirect:/admin/solicitudes";
+        return adminSolicitudeService.deleteSolicitude(id, msg);
     }
     
     /**

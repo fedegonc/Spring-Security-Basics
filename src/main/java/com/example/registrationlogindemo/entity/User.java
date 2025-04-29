@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -61,4 +62,29 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={ CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Solicitude> solicitudes = new ArrayList<>();
+    
+    // Fecha de creación del usuario
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    
+    // Última fecha de actividad del usuario
+    @Column(name = "last_active_at")
+    private LocalDateTime lastActiveAt;
+    
+    // Indica si el usuario está habilitado
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled = true;
+    
+    // Método que se ejecuta antes de persistir la entidad
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        lastActiveAt = LocalDateTime.now();
+    }
+    
+    // Método que se ejecuta antes de actualizar la entidad
+    @PreUpdate
+    protected void onUpdate() {
+        lastActiveAt = LocalDateTime.now();
+    }
 }

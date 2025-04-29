@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 // Interfaz de repositorio para la entidad Solicitude que extiende JpaRepository
@@ -37,4 +38,8 @@ public interface SolicitudeRepository extends JpaRepository<Solicitude, Long> {
     
     // Método para encontrar solicitudes por usuario ordenadas por fecha descendente
     List<Solicitude> findByUserOrderByFechaDesc(User user);
+    
+    // Método para contar solicitudes creadas en un rango de fechas
+    @Query("SELECT COUNT(s) FROM Solicitude s WHERE s.fecha BETWEEN :startDate AND :endDate")
+    int countByFechaBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }

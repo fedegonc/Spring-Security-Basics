@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,5 +42,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Método para buscar usuarios por nombre de rol
     @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName")
     List<User> findByRoleName(@Param("roleName") String roleName);
+
+    // Método para contar usuarios creados en un rango de fechas
+    @Query("SELECT COUNT(u) FROM User u WHERE u.createdAt BETWEEN :startDate AND :endDate")
+    int countByCreatedAtBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    
+    // Método para contar usuarios activos después de una fecha
+    @Query("SELECT COUNT(u) FROM User u WHERE u.lastActiveAt > :date")
+    int countByLastActiveAtAfter(@Param("date") LocalDateTime date);
+    
+    // Método para contar usuarios activos
+    @Query("SELECT COUNT(u) FROM User u WHERE u.enabled = true")
+    int countActiveUsers();
 
 }

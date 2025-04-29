@@ -6,88 +6,218 @@
 
 <head>
     <title>Editar Usuario - Administración</title>
-    <th:block layout:fragment="styles">
-        <style>
-            .role-checkbox:checked + label {
-                background-color: #3b82f6;
-                color: white;
-            }
-        </style>
-    </th:block>
 </head>
 
 <body>
     <section layout:fragment="content">
-        <div class="container px-4 py-5 mx-auto">
-            <!-- Encabezado -->
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-5">
-                <h1 class="text-2xl font-bold text-gray-800">Editar Usuario</h1>
-                <div class="flex space-x-2 mt-3 md:mt-0">
-                    <a th:href="@{/admin/users}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
-                        Volver a Usuarios
-                    </a>
-                </div>
-            </div>
+        <div class="container py-4">
+            <!-- Encabezado con breadcrumb -->
+            <nav class="mb-4" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Inicio</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/admin/users}">Usuarios</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Editar Usuario</li>
+                </ol>
+            </nav>
+            
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">Editar Usuario</h1>
             
             <!-- Mensajes de alerta -->
-            <div th:if="${error}" class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+            <div th:if="${error}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded" role="alert">
                 <p th:text="${error}">Error</p>
             </div>
-            <div th:if="${success}" class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded">
+            <div th:if="${success}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded" role="alert">
                 <p th:text="${success}">Éxito</p>
             </div>
             
             <!-- Formulario de edición -->
-            <div class="bg-white rounded-lg shadow-sm p-6 mb-5">
-                <form th:action="@{'/admin/users/update/' + ${user.id}}" method="post" enctype="multipart/form-data" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="mb-3">
-                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-                            <input type="text" id="name" name="name" th:value="${user.name}" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+            <div class="bg-white rounded-lg shadow-sm p-6 max-w-4xl mx-auto">
+                <form th:action="@{'/admin/users/update/' + ${user.id}}" method="post" enctype="multipart/form-data">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Columna izquierda: Imagen y acciones -->
+                        <div class="text-center">
+                            <!-- Imagen de perfil -->
+                            <div class="mb-4">
+                                <img th:if="${user.profileImage != null && !user.profileImage.isEmpty()}" 
+                                     th:src="@{'/images/' + ${user.profileImage}}" 
+                                     alt="Imagen de perfil" 
+                                     class="w-32 h-32 object-cover rounded-full mx-auto border border-gray-200">
+                                <img th:unless="${user.profileImage != null && !user.profileImage.isEmpty()}" 
+                                     src="/img/default-user.png" 
+                                     alt="Imagen de perfil" 
+                                     class="w-32 h-32 object-cover rounded-full mx-auto border border-gray-200">
+                            </div>
+                            
+                            <!-- Selector de archivo -->
+                            <div class="mb-4">
+                                <label class="bg-gray-800 text-white px-4 py-2 rounded text-sm cursor-pointer hover:bg-gray-700 inline-block">
+                                    Seleccionar archivo
+                                    <input type="file" id="fileImage" name="fileImage" accept="image/*" class="hidden">
+                                </label>
+                                <p id="fileName" class="text-sm text-gray-500 mt-2">Ningún arch...seleccionado</p>
+                            </div>
+                            
+                            <!-- Botones de acción -->
+                            <div class="space-y-2 mt-6">
+                                <button type="button" class="w-full border border-red-500 text-red-500 px-4 py-2 rounded text-sm hover:bg-red-500 hover:text-white flex items-center justify-center" data-bs-toggle="modal" data-bs-target="#resetPasswordModal">
+                                    <span class="mr-2">🔑</span> Resetear contraseña
+                                </button>
+                                <button type="button" class="w-full border border-yellow-500 text-yellow-500 px-4 py-2 rounded text-sm hover:bg-yellow-500 hover:text-white flex items-center justify-center" data-bs-toggle="modal" data-bs-target="#lockAccountModal">
+                                    <span class="mr-2">🔒</span> Bloquear cuenta
+                                </button>
+                            </div>
                         </div>
                         
-                        <div class="mb-3">
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input type="email" id="email" name="email" th:value="${user.email}" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Roles</label>
-                        <div class="flex flex-wrap gap-2">
-                            <div th:each="role : ${roles}" class="flex items-center">
-                                <input type="checkbox" th:id="${'role_' + role.id}" name="roleIds" th:value="${role.id}" 
-                                       th:checked="${user.roles.contains(role)}" class="hidden role-checkbox">
-                                <label th:for="${'role_' + role.id}" 
-                                       class="px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition-colors"
-                                       th:text="${#strings.replace(role.name, 'ROLE_', '')}">
-                                    Rol
-                                </label>
+                        <!-- Columna derecha: Formulario de datos -->
+                        <div class="md:col-span-2 space-y-6">
+                            <!-- Nombre -->
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                                <input type="text" id="name" name="name" th:value="${user.name}" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                                       required>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" id="email" name="email" th:value="${user.email}" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                                       required>
+                            </div>
+                            
+                            <!-- Estado de la cuenta -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Estado de la cuenta</label>
+                                <div class="flex space-x-4">
+                                    <div class="flex items-center">
+                                        <input class="mr-2" type="radio" name="accountStatus" id="statusActive" value="active" checked>
+                                        <label class="text-sm" for="statusActive">Activa</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input class="mr-2" type="radio" name="accountStatus" id="statusInactive" value="inactive">
+                                        <label class="text-sm" for="statusInactive">Inactiva</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input class="mr-2" type="radio" name="accountStatus" id="statusLocked" value="locked">
+                                        <label class="text-sm" for="statusLocked">Bloqueada</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Roles de usuario -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Roles de Usuario</label>
+                                <p class="text-xs text-gray-500 mb-3">Selecciona un rol para este usuario.</p>
+                                
+                                <div>
+                                    <!-- Selector de rol único -->
+                                    <select id="roleSelect" name="roleIds" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">-- Seleccionar rol --</option>
+                                        <option th:each="role : ${allRoles}" 
+                                                th:value="${role.id}" 
+                                                th:text="${role.name.replace('ROLE_', '')}"
+                                                th:selected="${user.roles != null && !user.roles.isEmpty() && user.roles[0].id == role.id}">
+                                            ROL
+                                        </option>
+                                    </select>
+                                    
+                                    <!-- Visualización del rol seleccionado -->
+                                    <div id="selectedRole" class="mt-3">
+                                        <!-- Rol Admin -->
+                                        <div th:if="${user.roles != null && !user.roles.isEmpty() && user.roles[0].name == 'ROLE_ADMIN'}" 
+                                             class="flex items-center p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                            <span class="text-xl mr-3">👑</span>
+                                            <div>
+                                                <div class="font-medium">Administrador</div>
+                                                <div class="text-xs text-gray-500">Control total del sistema</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Rol Organization -->
+                                        <div th:if="${user.roles != null && !user.roles.isEmpty() && user.roles[0].name == 'ROLE_ORGANIZATION'}" 
+                                             class="flex items-center p-3 bg-purple-50 border border-purple-200 rounded-md">
+                                            <span class="text-xl mr-3">🏢</span>
+                                            <div>
+                                                <div class="font-medium">ORGANIZATION</div>
+                                                <div class="text-xs text-gray-500">Gestión de solicitudes</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Rol User -->
+                                        <div th:if="${user.roles != null && !user.roles.isEmpty() && user.roles[0].name == 'ROLE_USER'}" 
+                                             class="flex items-center p-3 bg-green-50 border border-green-200 rounded-md">
+                                            <span class="text-xl mr-3">👤</span>
+                                            <div>
+                                                <div class="font-medium">Usuario</div>
+                                                <div class="text-xs text-gray-500">Acceso básico</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón de actualizar -->
+                            <div class="flex justify-end mt-6">
+                                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                    Actualizar usuario
+                                </button>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label for="fileImage" class="block text-sm font-medium text-gray-700 mb-1">Imagen de perfil</label>
-                        <input type="file" id="fileImage" name="fileImage" accept="image/*" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <div th:if="${user.profileImage != null && !user.profileImage.isEmpty()}" class="mt-2">
-                            <p class="text-sm text-gray-500">Imagen actual:</p>
-                            <img th:src="@{'/images/' + ${user.profileImage}}" alt="Imagen de perfil" class="mt-1 h-20 w-20 object-cover rounded-full">
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-end space-x-3 mt-6">
-                        <a th:href="@{/admin/users}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
-                            Cancelar
-                        </a>
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            Guardar Cambios
-                        </button>
-                    </div>
                 </form>
+            </div>
+        </div>
+        
+        <!-- Modal para resetear contraseña -->
+        <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="resetPasswordModalLabel">Resetear Contraseña</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro que deseas resetear la contraseña de este usuario?</p>
+                        <p>Se generará una contraseña temporal y se enviará al correo del usuario.</p>
+                        <form id="resetPasswordForm" th:action="@{'/admin/users/reset-password/' + ${user.id}}" method="post">
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">Nueva contraseña (opcional)</label>
+                                <input type="text" class="form-control" id="newPassword" name="newPassword" placeholder="Dejar en blanco para generar automáticamente">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" onclick="document.getElementById('resetPasswordForm').submit()">Resetear Contraseña</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal para bloquear cuenta -->
+        <div class="modal fade" id="lockAccountModal" tabindex="-1" aria-labelledby="lockAccountModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="lockAccountModalLabel">Bloquear Cuenta</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro que deseas bloquear la cuenta de este usuario?</p>
+                        <p>El usuario no podrá iniciar sesión hasta que la cuenta sea desbloqueada.</p>
+                        <form id="lockAccountForm" th:action="@{'/admin/users/lock/' + ${user.id}}" method="post">
+                            <div class="mb-3">
+                                <label for="lockReason" class="form-label">Razón del bloqueo</label>
+                                <textarea class="form-control" id="lockReason" name="lockReason" rows="3"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-warning" onclick="document.getElementById('lockAccountForm').submit()">Bloquear Cuenta</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -95,23 +225,67 @@
     <th:block layout:fragment="scripts">
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const checkboxes = document.querySelectorAll('.role-checkbox');
-                checkboxes.forEach(checkbox => {
-                    const label = document.querySelector(`label[for="${checkbox.id}"]`);
-                    if (checkbox.checked) {
-                        label.classList.add('bg-blue-600', 'text-white');
-                        label.classList.remove('border-gray-300', 'hover:bg-gray-100');
+                // Mostrar nombre del archivo seleccionado
+                const fileInput = document.getElementById('fileImage');
+                const fileName = document.getElementById('fileName');
+                
+                fileInput.addEventListener('change', function() {
+                    if (this.files && this.files[0]) {
+                        fileName.textContent = this.files[0].name;
+                        
+                        // Previsualización de imagen
+                        const reader = new FileReader();
+                        const profileImage = document.querySelector('img[alt="Imagen de perfil"]');
+                        
+                        reader.onload = function(e) {
+                            profileImage.src = e.target.result;
+                        };
+                        
+                        reader.readAsDataURL(this.files[0]);
+                    } else {
+                        fileName.textContent = "Ningún arch...seleccionado";
                     }
+                });
+                
+                // Manejar cambio de rol
+                const roleSelect = document.getElementById('roleSelect');
+                const selectedRole = document.getElementById('selectedRole');
+                
+                roleSelect.addEventListener('change', function() {
+                    // Limpiar roles existentes
+                    selectedRole.innerHTML = '';
                     
-                    checkbox.addEventListener('change', function() {
-                        if (this.checked) {
-                            label.classList.add('bg-blue-600', 'text-white');
-                            label.classList.remove('border-gray-300', 'hover:bg-gray-100');
-                        } else {
-                            label.classList.remove('bg-blue-600', 'text-white');
-                            label.classList.add('border-gray-300', 'hover:bg-gray-100');
+                    if (this.value) {
+                        const selectedOption = this.options[this.selectedIndex];
+                        const roleName = selectedOption.text;
+                        
+                        // Crear elemento para el nuevo rol
+                        let roleIcon = '👤'; // Icono por defecto
+                        let roleDesc = 'Acceso básico';
+                        let bgClass = 'bg-green-50 border-green-200';
+                        
+                        if (roleName === 'ADMIN') {
+                            roleIcon = '👑';
+                            roleDesc = 'Control total del sistema';
+                            bgClass = 'bg-blue-50 border-blue-200';
+                        } else if (roleName === 'ORGANIZATION') {
+                            roleIcon = '🏢';
+                            roleDesc = 'Gestión de solicitudes';
+                            bgClass = 'bg-purple-50 border-purple-200';
                         }
-                    });
+                        
+                        const roleItem = document.createElement('div');
+                        roleItem.className = `flex items-center p-3 ${bgClass} rounded-md`;
+                        roleItem.innerHTML = `
+                            <span class="text-xl mr-3">${roleIcon}</span>
+                            <div>
+                                <div class="font-medium">${roleName}</div>
+                                <div class="text-xs text-gray-500">${roleDesc}</div>
+                            </div>
+                        `;
+                        
+                        selectedRole.appendChild(roleItem);
+                    }
                 });
             });
         </script>
