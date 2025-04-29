@@ -20,6 +20,11 @@ import java.util.Optional;
 /**
  * Servicio para gestionar las funcionalidades del panel de administración
  * Encapsula operaciones repetitivas del AdministradorController
+ * 
+ * NOTA: Este servicio está siendo refactorizado para dividir sus responsabilidades
+ * en servicios más pequeños y específicos. Utiliza los nuevos servicios:
+ * - DashboardMetricService: Cálculo de métricas para el dashboard
+ * - AdminUserService: Gestión de usuarios desde el panel de administración
  */
 @Service
 public class AdminDashboardService {
@@ -48,6 +53,12 @@ public class AdminDashboardService {
     @Autowired
     private RoleManagementService roleManagementService;
     
+    @Autowired
+    private DashboardMetricService dashboardMetricService;
+    
+    @Autowired
+    private AdminUserService adminUserService;
+    
     private static final String ERROR_VALIDACION = "Por favor, corrija los errores en el formulario";
     
     /**
@@ -68,6 +79,22 @@ public class AdminDashboardService {
             List<Solicitude> solicitudes = solicitudeService.findAll();
             mv.addObject("solicitudes", solicitudes);
             
+            // Métricas de actividad diaria usando el nuevo servicio
+            int usuariosNuevosHoy = dashboardMetricService.contarUsuariosRegistradosHoy(users);
+            mv.addObject("usuariosNuevosHoy", usuariosNuevosHoy);
+            
+            // Métricas de conexiones (logins)
+            int conexionesHoy = dashboardMetricService.obtenerConexionesHoy();
+            mv.addObject("conexionesHoy", conexionesHoy);
+            
+            // Usuarios activos en la última semana
+            int usuariosActivosSemana = dashboardMetricService.contarUsuariosActivosUltimaSemana(users);
+            mv.addObject("usuariosActivosSemana", usuariosActivosSemana);
+            
+            // Solicitudes creadas hoy
+            int solicitudesHoy = dashboardMetricService.contarSolicitudesHoy(solicitudes);
+            mv.addObject("solicitudesHoy", solicitudesHoy);
+            
             // Estadísticas de usuarios por rol
             Map<String, Integer> usersByRole = userService.countUsersByRole();
             int totalUsers = users.size();
@@ -76,28 +103,31 @@ public class AdminDashboardService {
                 int orgCount = usersByRole.getOrDefault("ROLE_ORGANIZATION", 0);
                 int userCount = usersByRole.getOrDefault("ROLE_USER", 0);
                 
-                mv.addObject("adminPercentage", calculatePercentage(adminCount, totalUsers));
-                mv.addObject("orgPercentage", calculatePercentage(orgCount, totalUsers));
-                mv.addObject("userPercentage", calculatePercentage(userCount, totalUsers));
+                mv.addObject("adminPercentage", dashboardMetricService.calculatePercentage(adminCount, totalUsers));
+                mv.addObject("orgPercentage", dashboardMetricService.calculatePercentage(orgCount, totalUsers));
+                mv.addObject("userPercentage", dashboardMetricService.calculatePercentage(userCount, totalUsers));
             }
             
             // Estadísticas de solicitudes por estado
             Map<String, Integer> solicitudesByStatus = solicitudeService.countSolicitudesByStatus();
             int totalSolicitudes = solicitudes.size();
             if (totalSolicitudes > 0) {
-                int pendientes = solicitudesByStatus.getOrDefault("PENDIENTE", 0);
-                int enProceso = solicitudesByStatus.getOrDefault("EN_PROCESO", 0);
+                int pendientes = solicitudesByStatus.getOrDefault("EN_ESPERA", 0);
+                int aceptadas = solicitudesByStatus.getOrDefault("ACEPTADA", 0);
                 int completadas = solicitudesByStatus.getOrDefault("COMPLETADA", 0);
                 
-                mv.addObject("pendientePercentage", calculatePercentage(pendientes, totalSolicitudes));
-                mv.addObject("enProcesoPercentage", calculatePercentage(enProceso, totalSolicitudes));
-                mv.addObject("completadaPercentage", calculatePercentage(completadas, totalSolicitudes));
+                mv.addObject("pendientesPercentage", dashboardMetricService.calculatePercentage(pendientes, totalSolicitudes));
+                mv.addObject("aceptadasPercentage", dashboardMetricService.calculatePercentage(aceptadas, totalSolicitudes));
+                mv.addObject("completadasPercentage", dashboardMetricService.calculatePercentage(completadas, totalSolicitudes));
             }
             
-            mv.addObject("currentPage", "Dashboard");
+            mv.addObject("currentPage", "Inicio");
         } catch (Exception e) {
-            mv.addObject("error", "Error al cargar el dashboard: " + e.getMessage());
+            // Log error
+            System.err.println("Error al preparar dashboard: " + e.getMessage());
+            e.printStackTrace();
         }
+        
         return mv;
     }
     
@@ -122,62 +152,6 @@ public class AdminDashboardService {
         return mv;
     }
     
-    // Método auxiliar para calcular porcentajes
-    private int calculatePercentage(int value, int total) {
-        return total > 0 ? (int) Math.round((double) value / total * 100) : 0;
-    }
-    
-    /**
-     * Prepara el ModelAndView para la vista de usuarios
-     */
-    public ModelAndView prepareUsersView(String viewName, String currentPage) {
-        ModelAndView mv = new ModelAndView(viewName);
-        try {
-            List<User> users = userService.findAll();
-            mv.addObject("users", users);
-            
-            List<Role> roles = roleRepository.findAll();
-            mv.addObject("roles", roles);
-            mv.addObject("currentPage", currentPage);
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
-        }
-        return mv;
-    }
-    
-    /**
-     * Prepara el ModelAndView para la vista de edición de usuario
-     */
-    public ModelAndView prepareUserEditView(long userId, String viewName) {
-        ModelAndView mv = new ModelAndView(viewName);
-        try {
-            // Usar findById con eager loading para evitar N+1 queries
-            Optional<User> userOpt = userService.findByIdWithRoles(userId);
-            if (userOpt.isPresent()) {
-                User user = userOpt.get();
-                mv.addObject("user", user);
-                
-                List<Role> roles = roleRepository.findAll();
-                mv.addObject("roles", roles);
-                
-                // Preparar los roles seleccionados para la vista
-                for (Role role : roles) {
-                    boolean hasRole = user.getRoles().stream()
-                        .anyMatch(r -> r.getId().equals(role.getId()));
-                    mv.addObject("hasRole_" + role.getId(), hasRole);
-                }
-                mv.addObject("currentPage", "Editar Usuario");
-            } else {
-                mv.addObject("error", "Usuario no encontrado");
-                return new ModelAndView("redirect:/admin/users");
-            }
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar el usuario: " + e.getMessage());
-            return new ModelAndView("redirect:/admin/users");
-        }
-        return mv;
-    }
-    
     /**
      * Prepara el ModelAndView para la vista de reportes
      */
@@ -188,7 +162,7 @@ public class AdminDashboardService {
             mv.addObject("reports", reports);
             mv.addObject("currentPage", "Reportes");
         } catch (Exception e) {
-            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
+            mv.addObject("error", "Error al cargar reportes: " + e.getMessage());
         }
         return mv;
     }
@@ -200,22 +174,18 @@ public class AdminDashboardService {
         ModelAndView mv = new ModelAndView(viewName);
         try {
             Optional<Report> reportOpt = reportService.findById(reportId);
-            if (reportOpt.isPresent()) {
-                Report report = reportOpt.get();
-                mv.addObject("report", report);
-                
-                List<User> users = userService.findAll();
-                mv.addObject("users", users);
-                
-                User assignedUser = report.getUser();
-                if (assignedUser != null) {
-                    mv.addObject("assignedUserId", assignedUser.getId());
-                }
-                mv.addObject("currentPage", "Editar Reporte");
-            } else {
-                mv.addObject("error", "Reporte no encontrado");
-                return new ModelAndView("redirect:/admin/reports");
+            if (reportOpt.isEmpty()) {
+                mv.setViewName("redirect:/admin/reports");
+                return mv;
             }
+            
+            Report report = reportOpt.get();
+            List<User> users = userService.findAll();
+            
+            mv.addObject("report", report);
+            mv.addObject("users", users);
+            mv.addObject("currentPage", "Editar Reporte");
+            
         } catch (Exception e) {
             mv.addObject("error", "Error al cargar el reporte: " + e.getMessage());
         }
@@ -232,7 +202,7 @@ public class AdminDashboardService {
             mv.addObject("solicitudes", solicitudes);
             mv.addObject("currentPage", "Solicitudes");
         } catch (Exception e) {
-            mv.addObject("error", "Error al cargar la página: " + e.getMessage());
+            mv.addObject("error", "Error al cargar solicitudes: " + e.getMessage());
         }
         return mv;
     }
@@ -244,61 +214,17 @@ public class AdminDashboardService {
         ModelAndView mv = new ModelAndView(viewName);
         try {
             Solicitude solicitude = solicitudeService.findById(solicitudeId);
-            if (solicitude != null) {
-                mv.addObject("solicitude", solicitude);
-                mv.addObject("currentPage", "Editar Solicitud");
-            } else {
+            if (solicitude == null) {
                 mv.setViewName("redirect:/admin/solicitudes");
-                mv.addObject("error", "Solicitud no encontrada");
+                return mv;
             }
+            
+            mv.addObject("solicitude", solicitude);
+            mv.addObject("currentPage", "Editar Solicitud");
+            
         } catch (Exception e) {
-            mv.setViewName("redirect:/admin/solicitudes");
             mv.addObject("error", "Error al cargar la solicitud: " + e.getMessage());
         }
-        return mv;
-    }
-    
-    /**
-     * Prepara el ModelAndView para la vista de perfil
-     */
-    public ModelAndView prepareProfileView(String viewName) {
-        ModelAndView mv = new ModelAndView(viewName);
-        try {
-            Optional<User> userOpt = userService.getAuthenticatedUser();
-            if (userOpt.isEmpty()) return new ModelAndView("redirect:/login");
-            
-            User user = userOpt.get();
-            if (user.getProfileImage() == null || user.getProfileImage().isEmpty()) {
-                user.setProfileImage("descargas.jpeg");
-            }
-            mv.addObject("user", user);
-            mv.addObject("currentPage", "Perfil");
-        } catch (Exception e) {
-            mv.addObject("error", "Error al cargar el perfil: " + e.getMessage());
-        }
-        return mv;
-    }
-    
-    /**
-     * Prepara el ModelAndView para la vista de creación de usuario
-     */
-    public ModelAndView prepareNewUserView(String viewName) {
-        ModelAndView mv = new ModelAndView(viewName);
-        mv.addObject("user", new User());
-        mv.addObject("roles", roleRepository.findAll());
-        mv.addObject("currentPage", "Nuevo Usuario");
-        return mv;
-    }
-    
-    /**
-     * Prepara el ModelAndView para la vista de creación de reporte
-     */
-    public ModelAndView prepareNewReportView(String viewName) {
-        ModelAndView mv = new ModelAndView(viewName);
-        List<User> usuarios = reportService.getUsersForReportAssignment();
-        mv.addObject("usuarios", usuarios);
-        mv.addObject("reporte", new Report());
-        mv.addObject("currentPage", "Nuevo Reporte");
         return mv;
     }
     
@@ -307,241 +233,92 @@ public class AdminDashboardService {
      */
     public ModelAndView prepareNewSolicitudeView(String viewName) {
         ModelAndView mv = new ModelAndView(viewName);
-        mv.addObject("solicitude", new Solicitude());
-        mv.addObject("currentPage", "Nueva Solicitud");
+        try {
+            mv.addObject("solicitude", new Solicitude());
+            mv.addObject("currentPage", "Nueva Solicitud");
+        } catch (Exception e) {
+            mv.addObject("error", "Error al preparar el formulario: " + e.getMessage());
+        }
+        return mv;
+    }
+    
+    /**
+     * Prepara el ModelAndView para la vista de creación de reporte
+     */
+    public ModelAndView prepareNewReportView(String viewName) {
+        ModelAndView mv = new ModelAndView(viewName);
+        try {
+            List<User> users = userService.findAll();
+            mv.addObject("reporte", new Report());
+            mv.addObject("users", users);
+            mv.addObject("currentPage", "Nuevo Reporte");
+        } catch (Exception e) {
+            mv.addObject("error", "Error al preparar el formulario: " + e.getMessage());
+        }
         return mv;
     }
     
     /**
      * Actualiza el perfil de un usuario
-     * @return ModelAndView con la redirección apropiada
      */
     public ModelAndView updateUserProfile(User user, BindingResult result, MultipartFile file, 
                                          String currentImg, RedirectAttributes msg, String redirectUrl) {
-        if (result.hasErrors()) {
-            validationService.addErrorMessage(msg, ERROR_VALIDACION);
-            return new ModelAndView("redirect:" + redirectUrl);
-        }
-
-        try {
-            Optional<User> currentUserOpt = userService.getAuthenticatedUser();
-            if (currentUserOpt.isEmpty()) {
-                validationService.addErrorMessage(msg, "Usuario no encontrado");
-                return new ModelAndView("redirect:/login");
-            }
-
-            User currentUser = currentUserOpt.get();
-            currentUser.setName(user.getName());
-            currentUser.setEmail(user.getEmail());
-
-            if (file != null && !file.isEmpty()) {
-                try {
-                    String fileName = fileStorageService.handleImageUpload(file, currentImg);
-                    currentUser.setProfileImage(fileName);
-                } catch (IOException e) {
-                    throw new RuntimeException("Error al procesar la imagen: " + e.getMessage(), e);
-                }
-            }
-
-            userService.save(currentUser);
-            validationService.addSuccessMessage(msg, "Perfil actualizado con éxito");
-        } catch (Exception e) {
-            validationService.addErrorMessage(msg, "Error al actualizar el perfil: " + e.getMessage());
-        }
-        return new ModelAndView("redirect:" + redirectUrl);
-    }
-    
-    /**
-     * Elimina un usuario por su ID
-     * @return String con la URL de redirección
-     */
-    public String deleteUser(long id, RedirectAttributes redirectAttributes) {
-        try {
-            // Verificar que el usuario existe
-            Optional<User> userOpt = userService.findUserById(id);
-            if (userOpt.isEmpty()) {
-                validationService.addErrorMessage(redirectAttributes, "Usuario no encontrado");
-                return "redirect:/admin/users";
-            }
-            
-            // Verificar que no se está eliminando al usuario actual
-            Optional<User> currentUserOpt = userService.getAuthenticatedUser();
-            if (currentUserOpt.isPresent() && currentUserOpt.get().getId() == id) {
-                validationService.addErrorMessage(redirectAttributes, "No puedes eliminar tu propio usuario");
-                return "redirect:/admin/users";
-            }
-            
-            // Eliminar el usuario
-            boolean success = userService.deleteUserByAdmin((int) id, redirectAttributes);
-            if (!success) {
-                // El mensaje de error ya fue añadido por el servicio
-                return "redirect:/admin/users";
-            }
-            
-            validationService.addSuccessMessage(redirectAttributes, "Usuario eliminado correctamente");
-        } catch (Exception e) {
-            validationService.addErrorMessage(redirectAttributes, "Error al eliminar el usuario: " + e.getMessage());
-        }
-        
-        return "redirect:/admin/users";
+        return adminUserService.updateUserProfile(user, result, file, currentImg, msg, redirectUrl);
     }
     
     /**
      * Actualiza un usuario existente
-     * @return String con la URL de redirección
      */
     public String updateUser(User user, BindingResult result, long id, List<Long> roleIds, 
-                            MultipartFile fileImage, RedirectAttributes msg) {
-        if (result.hasErrors()) {
-            validationService.addErrorMessage(msg, ERROR_VALIDACION);
-            return "redirect:/admin/editar/" + id;
-        }
-        
-        try {
-            // Actualizar el usuario con los nuevos datos
-            String roleValue = roleIds != null ? String.join(",", roleIds.stream().map(String::valueOf).toList()) : "";
-            boolean success = userService.updateUserByAdmin(id, user, fileImage, user.getProfileImage(), roleValue, msg);
-            
-            if (!success) {
-                return "redirect:/admin/editar/" + id;
-            }
-            
-            validationService.addSuccessMessage(msg, "Usuario actualizado exitosamente");
-        } catch (Exception e) {
-            validationService.addErrorMessage(msg, "Error al actualizar el usuario: " + e.getMessage());
-            return "redirect:/admin/editar/" + id;
-        }
-        
-        return "redirect:/admin/users";
+                           MultipartFile fileImage, RedirectAttributes msg) {
+        return adminUserService.updateUser(user, result, id, roleIds, fileImage, msg);
     }
     
     /**
      * Crea un nuevo usuario
-     * @return String con la URL de redirección
      */
-    public String createUser(User user, BindingResult result, String password, String confirmPassword,
-                            List<Long> roleIds, MultipartFile fileImage, RedirectAttributes msg) {
-        if (result.hasErrors()) {
-            validationService.addErrorMessage(msg, ERROR_VALIDACION);
-            return "redirect:/admin/newuser";
-        }
-        
-        if (!password.equals(confirmPassword)) {
-            validationService.addErrorMessage(msg, "Las contraseñas no coinciden");
-            return "redirect:/admin/newuser";
-        }
-        
-        try {
-            // Verificar si el email ya existe
-            User existingUser = userService.findByEmail(user.getEmail());
-            if (existingUser != null) {
-                validationService.addErrorMessage(msg, "Ya existe un usuario con ese email");
-                return "redirect:/admin/newuser";
-            }
-            
-            // Procesar la imagen si se proporciona
-            if (fileImage != null && !fileImage.isEmpty()) {
-                String fileName = fileStorageService.handleImageUpload(fileImage, null);
-                user.setProfileImage(fileName);
-            } else {
-                user.setProfileImage("descargas.jpeg");
-            }
-            
-            // Establecer la contraseña
-            user.setPassword(password);
-            
-            // Crear el usuario con los roles seleccionados
-            String roleValue = roleIds != null ? String.join(",", roleIds.stream().map(String::valueOf).toList()) : "";
-            boolean success = userService.createUserByAdmin(user, password, confirmPassword, fileImage, roleValue, msg);
-            
-            if (!success) {
-                return "redirect:/admin/newuser";
-            }
-            
-            validationService.addSuccessMessage(msg, "Usuario creado exitosamente");
-        } catch (Exception e) {
-            validationService.addErrorMessage(msg, "Error al crear el usuario: " + e.getMessage());
-            return "redirect:/admin/newuser";
-        }
-        
-        return "redirect:/admin/users";
+    public String createUser(User user, BindingResult result, String password, String confirmPassword, 
+                           List<Long> roleIds, MultipartFile fileImage, RedirectAttributes msg) {
+        return adminUserService.createUser(user, result, password, confirmPassword, roleIds, fileImage, msg);
     }
     
     /**
      * Crea un nuevo rol
-     * @return String con la URL de redirección
      */
     public String createRole(String roleName, String returnUrl, RedirectAttributes msg) {
-        try {
-            roleManagementService.createRole(roleName, msg);
-        } catch (Exception e) {
-            validationService.addErrorMessage(msg, "Error al crear el rol: " + e.getMessage());
-        }
-        
-        if (returnUrl != null && !returnUrl.isEmpty() && returnUrl.startsWith("/")) {
-            if (!returnUrl.contains("?") && !returnUrl.contains("POST") && !returnUrl.contains("DELETE")) {
-                return "redirect:" + returnUrl;
-            }
-            String baseUrl = returnUrl.split("\\?")[0];
-            return "redirect:" + baseUrl;
-        }
-        return "redirect:/admin/users";
+        return adminUserService.createRole(roleName, returnUrl, msg);
     }
     
     /**
-     * Actualiza un reporte existente
-     * @return String con la URL de redirección
+     * Elimina un usuario por su ID
      */
-    public String updateReport(Report report, RedirectAttributes redirectAttributes) {
-        try {
-            reportService.updateReportByAdmin(report, redirectAttributes);
-            validationService.addSuccessMessage(redirectAttributes, "Reporte actualizado exitosamente");
-        } catch (Exception e) {
-            validationService.addErrorMessage(redirectAttributes, "Error al actualizar el reporte: " + e.getMessage());
-        }
-        return "redirect:/admin/reports";
+    public String deleteUser(long id, RedirectAttributes redirectAttributes) {
+        return adminUserService.deleteUser(id, redirectAttributes);
     }
     
     /**
      * Crea un reporte de prueba
-     * @return String con la URL de redirección
      */
     public String createTestReport(RedirectAttributes redirectAttributes) {
         try {
-            // Obtener un usuario aleatorio con rol USER para asignar el reporte
-            List<User> users = userService.findByRoleName("ROLE_USER");
+            // Obtener un usuario aleatorio para asignar el reporte
+            List<User> users = userService.findAll();
             if (users.isEmpty()) {
-                // Si no hay usuarios con rol USER, usar el usuario administrador actual
-                Optional<User> adminUser = userService.getAuthenticatedUser();
-                if (adminUser.isPresent()) {
-                    users.add(adminUser.get());
-                } else {
-                    validationService.addErrorMessage(redirectAttributes, "No se pudo crear el reporte de prueba: No hay usuarios disponibles");
-                    return "redirect:/admin/reports";
-                }
+                validationService.addErrorMessage(redirectAttributes, 
+                        "No hay usuarios disponibles para asignar el reporte");
+                return "redirect:/admin/reports";
             }
             
-            // Seleccionar un usuario aleatorio de la lista
+            // Seleccionar un usuario aleatorio
             User randomUser = users.get((int) (Math.random() * users.size()));
             
-            // Crear un reporte de prueba con datos aleatorios
+            // Crear el reporte de prueba
             Report testReport = new Report();
-            testReport.setTitle("Reporte de prueba #" + System.currentTimeMillis() % 1000);
-            testReport.setProblema("Error de prueba generado automáticamente");
+            testReport.setTitle("Reporte de prueba");
+            testReport.setProblema("Problema de prueba");
             
-            // Generar una descripción más detallada para el reporte de prueba
-            String[] tiposErrores = {
-                "Error al cargar la página", 
-                "Problema con el formulario", 
-                "Error en la validación de datos", 
-                "Fallo en la carga de imágenes", 
-                "Error de conexión"
-            };
-            
-            String tipoError = tiposErrores[(int) (Math.random() * tiposErrores.length)];
-            String descripcion = "Este es un reporte de prueba creado automáticamente para fines de testing.\n" +
-                    "Tipo de error: " + tipoError + "\n" +
-                    "Creado el " + java.time.LocalDateTime.now() + "\n" +
+            String descripcion = "Este es un reporte de prueba generado automáticamente.\n\n" +
+                    "Fecha: " + java.time.LocalDateTime.now() + "\n" +
                     "Asignado a: " + randomUser.getName() + "\n" +
                     "Este reporte puede ser utilizado para probar las funcionalidades de gestión de reportes.";
             
@@ -565,7 +342,6 @@ public class AdminDashboardService {
     
     /**
      * Crea un nuevo reporte
-     * @return String con la URL de redirección
      */
     public String createReport(Report reporte, Long userId, RedirectAttributes msg) {
         try {
@@ -579,8 +355,23 @@ public class AdminDashboardService {
     }
     
     /**
+     * Actualiza un reporte existente
+     */
+    public String updateReport(Report report, RedirectAttributes redirectAttributes) {
+        try {
+            boolean success = reportService.updateReportByAdmin(report, redirectAttributes);
+            if (success) {
+                validationService.addSuccessMessage(redirectAttributes, "Reporte actualizado exitosamente");
+            }
+        } catch (Exception e) {
+            validationService.addErrorMessage(redirectAttributes, 
+                    "Error al actualizar el reporte: " + e.getMessage());
+        }
+        return "redirect:/admin/reports";
+    }
+    
+    /**
      * Actualiza una solicitud existente
-     * @return String con la URL de redirección
      */
     public String updateSolicitude(Solicitude solicitude, BindingResult result, 
                                   MultipartFile imagen, RedirectAttributes msg) {
@@ -601,7 +392,6 @@ public class AdminDashboardService {
     
     /**
      * Crea una nueva solicitud
-     * @return String con la URL de redirección
      */
     public String createSolicitude(Solicitude solicitude, BindingResult result, 
                                   MultipartFile imagen, RedirectAttributes msg) {
@@ -622,7 +412,6 @@ public class AdminDashboardService {
     
     /**
      * Elimina una solicitud por su ID
-     * @return String con la URL de redirección
      */
     public String deleteSolicitude(Long id, RedirectAttributes msg) {
         try {
@@ -636,5 +425,33 @@ public class AdminDashboardService {
             validationService.addErrorMessage(msg, "Error al eliminar solicitud: " + e.getMessage());
         }
         return "redirect:/admin/solicitudes";
+    }
+    
+    /**
+     * Prepara la vista de usuarios
+     */
+    public ModelAndView prepareUsersView(String viewName, String currentPage) {
+        return adminUserService.prepareUsersView(viewName, currentPage);
+    }
+    
+    /**
+     * Prepara la vista de edición de usuario
+     */
+    public ModelAndView prepareUserEditView(long userId, String viewName) {
+        return adminUserService.prepareUserEditView(userId, viewName);
+    }
+    
+    /**
+     * Prepara la vista de perfil
+     */
+    public ModelAndView prepareProfileView(String viewName) {
+        return adminUserService.prepareProfileView(viewName);
+    }
+    
+    /**
+     * Prepara la vista de creación de usuario
+     */
+    public ModelAndView prepareNewUserView(String viewName) {
+        return adminUserService.prepareNewUserView(viewName);
     }
 }

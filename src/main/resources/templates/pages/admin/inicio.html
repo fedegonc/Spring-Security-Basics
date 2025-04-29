@@ -8,19 +8,10 @@
     <title>Inicio - Administración</title>
     <th:block layout:fragment="styles">
         <style>
-            .stats-card:hover { transform: translateY(-2px); }
-            .action-card:hover { background-color: #f3f4f6; }
-            .system-info-card { border-left: 4px solid #6366f1; }
-            .progress-bar {
-                height: 8px;
-                border-radius: 4px;
-                background-color: #e5e7eb;
-                overflow: hidden;
-            }
-            .progress-bar-fill {
-                height: 100%;
-                border-radius: 4px;
-            }
+            .stats-card { transition: all 0.2s ease; border-radius: 0.5rem; }
+            .stats-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .action-card { transition: all 0.2s ease; }
+            .action-card:hover { background-color: #f8f9fa; }
         </style>
     </th:block>
 </head>
@@ -28,296 +19,237 @@
 <body>
     <section layout:fragment="content">
         <div class="container px-4 py-5 mx-auto">
-            <!-- Encabezado -->
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-5">
-                <h1 class="text-2xl font-bold text-gray-800">Panel de Administración</h1>
-                <p class="text-sm text-gray-500" th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">01/01/2023</p>
+            <!-- Encabezado simple -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Panel de Administración</h1>
+                <p class="text-muted mb-0" th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">01/01/2023</p>
             </div>
             
-            <!-- Información del sistema -->
-            <div class="bg-white rounded-lg shadow-sm p-4 mb-5 system-info-card">
-                <h2 class="text-lg font-bold mb-3">Información del Sistema</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Versión</p>
-                        <p class="text-lg font-semibold">1.0.0</p>
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Último reinicio</p>
-                        <p class="text-lg font-semibold" th:text="${#temporals.format(#temporals.createNow().minusDays(2), 'dd/MM/yyyy HH:mm')}">20/04/2025 08:30</p>
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Estado</p>
-                        <p class="text-lg font-semibold text-green-600">Activo</p>
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Uso de memoria</p>
-                        <div class="mt-1 mb-1 progress-bar">
-                            <div class="progress-bar-fill bg-blue-500" style="width: 45%"></div>
-                        </div>
-                        <p class="text-sm">450MB / 1GB (45%)</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Tarjetas de estadísticas -->
-            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
+            <!-- Tarjetas de estadísticas principales - Simplificadas -->
+            <div class="row g-4 mb-4">
                 <!-- Total Usuarios -->
-                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-blue-500">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">Usuarios</p>
-                            <p class="text-2xl font-bold text-gray-800" th:text="${totalUsuarios}">0</p>
-                            <p class="text-xs text-gray-500 mt-1">
-                                <span class="text-green-500">+5%</span> desde el mes pasado
-                            </p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                            <span class="text-lg">👥</span>
+                <div class="col-md-3">
+                    <div class="stats-card bg-white p-4 h-100 border-start border-primary border-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-1">Usuarios</h6>
+                                <h3 class="mb-0" th:text="${totalUsuarios}">0</h3>
+                            </div>
+                            <div class="fs-1 text-primary">👥</div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Total Solicitudes -->
-                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-green-500">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">Solicitudes</p>
-                            <p class="text-2xl font-bold text-gray-800" th:text="${totalSolicitudes}">0</p>
-                            <p class="text-xs text-gray-500 mt-1">
-                                <span class="text-green-500">+12%</span> desde el mes pasado
-                            </p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                            <span class="text-lg">📝</span>
+                <div class="col-md-3">
+                    <div class="stats-card bg-white p-4 h-100 border-start border-success border-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-1">Solicitudes</h6>
+                                <h3 class="mb-0" th:text="${totalSolicitudes}">0</h3>
+                            </div>
+                            <div class="fs-1 text-success">📝</div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Total Reportes -->
-                <div class="bg-white p-4 rounded-lg shadow-sm stats-card border-l-4 border-purple-500">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">Reportes</p>
-                            <p class="text-2xl font-bold text-gray-800" th:text="${totalReportes}">0</p>
-                            <p class="text-xs text-gray-500 mt-1">
-                                <span class="text-red-500">-3%</span> desde el mes pasado
-                            </p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                            <span class="text-lg">📊</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Estadísticas detalladas -->
-            <div class="bg-white rounded-lg shadow-sm p-4 mb-5">
-                <h2 class="text-lg font-bold mb-3">Estadísticas del Sistema</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Distribución de usuarios por rol -->
-                    <div>
-                        <h3 class="text-md font-semibold mb-2">Distribución de Usuarios por Rol</h3>
-                        <div class="flex items-center mb-2">
-                            <div class="w-24">Administradores:</div>
-                            <div class="flex-grow mx-2">
-                                <div class="progress-bar">
-                                    <div class="progress-bar-fill bg-blue-500" style="width: 10%"></div>
-                                </div>
+                <div class="col-md-3">
+                    <div class="stats-card bg-white p-4 h-100 border-start border-info border-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-1">Reportes</h6>
+                                <h3 class="mb-0" th:text="${totalReportes}">0</h3>
                             </div>
-                            <div class="w-8 text-right">10%</div>
+                            <div class="fs-1 text-info">📊</div>
                         </div>
-                        <div class="flex items-center mb-2">
-                            <div class="w-24">Organizaciones:</div>
-                            <div class="flex-grow mx-2">
-                                <div class="progress-bar">
-                                    <div class="progress-bar-fill bg-purple-500" style="width: 30%"></div>
-                                </div>
-                            </div>
-                            <div class="w-8 text-right">30%</div>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-24">Usuarios:</div>
-                            <div class="flex-grow mx-2">
-                                <div class="progress-bar">
-                                    <div class="progress-bar-fill bg-green-500" style="width: 60%"></div>
-                                </div>
-                            </div>
-                            <div class="w-8 text-right">60%</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Estado de solicitudes -->
-                    <div>
-                        <h3 class="text-md font-semibold mb-2">Estado de Solicitudes</h3>
-                        <div class="flex items-center mb-2">
-                            <div class="w-24">Pendientes:</div>
-                            <div class="flex-grow mx-2">
-                                <div class="progress-bar">
-                                    <div class="progress-bar-fill bg-yellow-500" style="width: 25%"></div>
-                                </div>
-                            </div>
-                            <div class="w-8 text-right">25%</div>
-                        </div>
-                        <div class="flex items-center mb-2">
-                            <div class="w-24">En proceso:</div>
-                            <div class="flex-grow mx-2">
-                                <div class="progress-bar">
-                                    <div class="progress-bar-fill bg-blue-500" style="width: 35%"></div>
-                                </div>
-                            </div>
-                            <div class="w-8 text-right">35%</div>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-24">Completadas:</div>
-                            <div class="flex-grow mx-2">
-                                <div class="progress-bar">
-                                    <div class="progress-bar-fill bg-green-500" style="width: 40%"></div>
-                                </div>
-                            </div>
-                            <div class="w-8 text-right">40%</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Acciones rápidas y usuarios recientes -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
-                <!-- Panel de acciones -->
-                <div class="bg-white rounded-lg shadow-sm p-4 col-span-1">
-                    <h2 class="text-lg font-bold mb-3">Acciones Rápidas</h2>
-                    <div class="space-y-2">
-                        <a href="/usuarios" class="flex items-center p-3 rounded-lg action-card border border-gray-100">
-                            <span class="text-blue-600 mr-3">👥</span>
-                            <span>Gestionar Usuarios</span>
-                        </a>
-                        <a href="/solicitudes/admin" class="flex items-center p-3 rounded-lg action-card border border-gray-100">
-                            <span class="text-green-600 mr-3">📝</span>
-                            <span>Gestionar Solicitudes</span>
-                        </a>
-                        <a href="/reportes" class="flex items-center p-3 rounded-lg action-card border border-gray-100">
-                            <span class="text-purple-600 mr-3">📊</span>
-                            <span>Gestionar Reportes</span>
-                        </a>
                     </div>
                 </div>
                 
-                <!-- Usuarios recientes -->
-                <div class="bg-white rounded-lg shadow-sm p-4 col-span-2">
-                    <h2 class="text-lg font-bold mb-3">Usuarios Recientes</h2>
-                    <div th:if="${users == null || users.isEmpty()}" class="text-center py-6">
-                        <p class="text-gray-500">No hay usuarios registrados</p>
-                    </div>
-                    <div th:if="${users != null && !users.isEmpty()}" class="overflow-x-auto">
-                        <table class="min-w-full text-sm">
-                            <thead>
-                                <tr class="border-b">
-                                    <th class="text-left py-2">Usuario</th>
-                                    <th class="text-left py-2">Email</th>
-                                    <th class="text-left py-2">Rol</th>
-                                    <th class="text-left py-2">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="user, iterStat : ${users}" class="border-b hover:bg-gray-50" th:if="${iterStat.index < 5}">
-                                    <td class="py-2">
-                                        <div class="flex items-center">
-                                            <span class="font-medium" th:text="${user.name}">Usuario</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-2" th:text="${user.email}">email@ejemplo.com</td>
-                                    <td class="py-2">
-                                        <span th:each="role : ${user.roles}" th:if="${role.name == 'ROLE_ADMIN'}" class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Admin</span>
-                                        <span th:each="role : ${user.roles}" th:if="${role.name == 'ROLE_USER'}" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Usuario</span>
-                                        <span th:each="role : ${user.roles}" th:if="${role.name == 'ROLE_ORGANIZATION'}" class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">Organización</span>
-                                    </td>
-                                    <td class="py-2">
-                                        <a th:href="@{'/usuarios/editar/' + ${user.id}}" class="text-blue-600">Editar</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="mt-3 text-right">
-                            <a href="/usuarios" class="text-sm text-blue-600">Ver todos →</a>
+                <!-- Usuarios Activos -->
+                <div class="col-md-3">
+                    <div class="stats-card bg-white p-4 h-100 border-start border-warning border-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="text-muted mb-1">Usuarios Activos</h6>
+                                <h3 class="mb-0" th:text="${usuariosActivosSemana}">0</h3>
+                                <small class="text-muted">última semana</small>
+                            </div>
+                            <div class="fs-1 text-warning">🔥</div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Solicitudes recientes -->
-            <div class="bg-white rounded-lg shadow-sm p-4 mb-5">
-                <h2 class="text-lg font-bold mb-3">Solicitudes Recientes</h2>
-                <div th:if="${solicitudes == null || solicitudes.isEmpty()}" class="text-center py-6">
-                    <p class="text-gray-500">No hay solicitudes registradas</p>
+            <!-- Métricas de actividad diaria -->
+            <div class="row g-4 mb-4">
+                <!-- Usuarios Nuevos Hoy -->
+                <div class="col-md-4">
+                    <div class="stats-card bg-white p-4 h-100">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-light p-3 me-3">
+                                <i class="bi bi-person-plus fs-4 text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-1">Usuarios Nuevos Hoy</h6>
+                                <h3 class="mb-0" th:text="${usuariosNuevosHoy}">0</h3>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div th:if="${solicitudes != null && !solicitudes.isEmpty()}" class="overflow-x-auto">
-                    <table class="min-w-full text-sm">
-                        <thead>
-                            <tr class="border-b">
-                                <th class="text-left py-2">ID</th>
-                                <th class="text-left py-2">Usuario</th>
-                                <th class="text-left py-2">Categoría</th>
-                                <th class="text-left py-2">Estado</th>
-                                <th class="text-left py-2">Fecha</th>
-                                <th class="text-left py-2">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="solicitud, iterStat : ${solicitudes}" class="border-b hover:bg-gray-50" th:if="${iterStat.index < 5}">
-                                <td class="py-2" th:text="${solicitud.id}">1</td>
-                                <td class="py-2" th:text="${solicitud.user.name}">Usuario</td>
-                                <td class="py-2" th:text="${solicitud.categoria}">Plástico</td>
-                                <td class="py-2">
-                                    <span th:if="${solicitud.estado.name() == 'PENDIENTE'}" class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pendiente</span>
-                                    <span th:if="${solicitud.estado.name() == 'EN_PROCESO'}" class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">En proceso</span>
-                                    <span th:if="${solicitud.estado.name() == 'COMPLETADA'}" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Completada</span>
-                                    <span th:if="${solicitud.estado.name() == 'CANCELADA'}" class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Cancelada</span>
-                                </td>
-                                <td class="py-2" th:text="${#temporals.format(solicitud.fechaCreacion, 'dd/MM/yyyy')}">01/01/2023</td>
-                                <td class="py-2">
-                                    <a th:href="@{'/solicitudes/ver/' + ${solicitud.id}}" class="text-blue-600">Ver</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="mt-3 text-right">
-                        <a href="/solicitudes/admin" class="text-sm text-blue-600">Ver todas →</a>
+                
+                <!-- Conexiones Hoy -->
+                <div class="col-md-4">
+                    <div class="stats-card bg-white p-4 h-100">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-light p-3 me-3">
+                                <i class="bi bi-box-arrow-in-right fs-4 text-success"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-1">Conexiones Hoy</h6>
+                                <h3 class="mb-0" th:text="${conexionesHoy}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solicitudes Hoy -->
+                <div class="col-md-4">
+                    <div class="stats-card bg-white p-4 h-100">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-light p-3 me-3">
+                                <i class="bi bi-file-earmark-plus fs-4 text-info"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-1">Solicitudes Hoy</h6>
+                                <h3 class="mb-0" th:text="${solicitudesHoy}">0</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Actividad reciente del sistema -->
-            <div class="bg-white rounded-lg shadow-sm p-4">
-                <h2 class="text-lg font-bold mb-3">Actividad del Sistema</h2>
-                <ul class="space-y-3">
-                    <li class="flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3 flex-shrink-0">
-                            <span class="text-sm">🔄</span>
+            <!-- Contenido principal - Dos columnas -->
+            <div class="row g-4">
+                <!-- Acciones rápidas - Columna izquierda -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Acciones Rápidas</h5>
                         </div>
-                        <div>
-                            <p class="text-sm font-medium">Actualización del sistema completada</p>
-                            <p class="text-xs text-gray-500" th:text="${#temporals.format(#temporals.createNow().minusDays(1), 'dd/MM/yyyy HH:mm')}">21/04/2025 14:30</p>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush">
+                                <a th:href="@{/admin/users}" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-4 action-card">
+                                    <span class="text-primary me-3">👥</span>
+                                    <span>Gestionar Usuarios</span>
+                                </a>
+                                <a th:href="@{/admin/solicitudes}" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-4 action-card">
+                                    <span class="text-success me-3">📝</span>
+                                    <span>Gestionar Solicitudes</span>
+                                </a>
+                                <a th:href="@{/admin/reports}" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-4 action-card">
+                                    <span class="text-info me-3">📊</span>
+                                    <span>Gestionar Reportes</span>
+                                </a>
+                                <a th:href="@{/admin/newuser}" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-4 action-card">
+                                    <span class="text-warning me-3">➕</span>
+                                    <span>Crear Usuario</span>
+                                </a>
+                                <a th:href="@{/admin/newsolicitude}" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-4 action-card">
+                                    <span class="text-danger me-3">➕</span>
+                                    <span>Crear Solicitud</span>
+                                </a>
+                            </div>
                         </div>
-                    </li>
-                    <li class="flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-3 flex-shrink-0">
-                            <span class="text-sm">✅</span>
+                    </div>
+                </div>
+                
+                <!-- Actividad reciente - Columna derecha -->
+                <div class="col-lg-8">
+                    <!-- Solicitudes recientes -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Solicitudes Recientes</h5>
+                            <a th:href="@{/admin/solicitudes}" class="btn btn-sm btn-outline-primary">Ver todas</a>
                         </div>
-                        <div>
-                            <p class="text-sm font-medium">Copia de seguridad automática realizada</p>
-                            <p class="text-xs text-gray-500" th:text="${#temporals.format(#temporals.createNow().minusDays(1), 'dd/MM/yyyy HH:mm')}">21/04/2025 02:00</p>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Usuario</th>
+                                            <th scope="col">Categoría</th>
+                                            <th scope="col">Estado</th>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="solicitud : ${solicitudes}" th:if="${solicitudStat.index < 5}">
+                                            <td th:text="${solicitud.id}">1</td>
+                                            <td th:text="${solicitud.user != null ? solicitud.user.name : 'N/A'}">Usuario</td>
+                                            <td th:text="${solicitud.categoria}">Categoría</td>
+                                            <td>
+                                                <span class="badge" 
+                                                      th:classappend="${solicitud.estado == T(com.example.registrationlogindemo.entity.Solicitude.Estado).PENDIENTE ? 'bg-warning' : 
+                                                                      (solicitud.estado == T(com.example.registrationlogindemo.entity.Solicitude.Estado).EN_PROCESO ? 'bg-primary' : 
+                                                                      (solicitud.estado == T(com.example.registrationlogindemo.entity.Solicitude.Estado).COMPLETADA ? 'bg-success' : 'bg-secondary'))}"
+                                                      th:text="${solicitud.estado}">Estado</span>
+                                            </td>
+                                            <td th:text="${#temporals.format(solicitud.fecha, 'dd/MM/yyyy')}">01/01/2023</td>
+                                            <td>
+                                                <a th:href="@{'/admin/solicitudes/edit/' + ${solicitud.id}}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                                            </td>
+                                        </tr>
+                                        <tr th:if="${solicitudes == null || solicitudes.empty}">
+                                            <td colspan="6" class="text-center py-3">No hay solicitudes recientes</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </li>
-                    <li class="flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mr-3 flex-shrink-0">
-                            <span class="text-sm">⚠️</span>
+                    </div>
+                    
+                    <!-- Usuarios recientes -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Usuarios Recientes</h5>
+                            <a th:href="@{/admin/users}" class="btn btn-sm btn-outline-primary">Ver todos</a>
                         </div>
-                        <div>
-                            <p class="text-sm font-medium">Uso de almacenamiento al 75%</p>
-                            <p class="text-xs text-gray-500" th:text="${#temporals.format(#temporals.createNow().minusDays(2), 'dd/MM/yyyy HH:mm')}">20/04/2025 10:15</p>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Rol</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="user : ${users}" th:if="${userStat.index < 5}">
+                                            <td th:text="${user.id}">1</td>
+                                            <td th:text="${user.name}">Nombre</td>
+                                            <td th:text="${user.email}">email@example.com</td>
+                                            <td>
+                                                <span class="badge bg-secondary" th:each="role : ${user.roles}" th:text="${#strings.replace(role.name, 'ROLE_', '')}">ROL</span>
+                                            </td>
+                                            <td>
+                                                <a th:href="@{'/admin/editar/' + ${user.id}}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                                            </td>
+                                        </tr>
+                                        <tr th:if="${users == null || users.empty}">
+                                            <td colspan="5" class="text-center py-3">No hay usuarios recientes</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
