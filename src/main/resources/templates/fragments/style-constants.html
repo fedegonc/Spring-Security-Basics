@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="constants">
+        <script th:inline="javascript">
+            // Definir constantes de estilo que se pueden usar en toda la aplicación
+            window.appStyles = {
+                // Colores para roles
+                roleColors: {
+                    'ROLE_ADMIN': {bg: 'bg-red-100', border: 'border-red-500', text: 'text-red-700', icon: '👑'},
+                    'ROLE_ORGANIZATION': {bg: 'bg-green-100', border: 'border-green-500', text: 'text-green-700', icon: '🏢'},
+                    'ROLE_USER': {bg: 'bg-blue-100', border: 'border-blue-500', text: 'text-blue-700', icon: '👤'}
+                },
+                // Clases para botones
+                buttons: {
+                    primary: 'bg-blue-600 text-white hover:bg-blue-700',
+                    secondary: 'bg-gray-500 text-white hover:bg-gray-600',
+                    danger: 'bg-red-600 text-white hover:bg-red-700',
+                    success: 'bg-green-600 text-white hover:bg-green-700',
+                    green: 'bg-green-600 hover:bg-green-700 text-white',
+                    outline: 'border border-green-600 text-green-600 hover:bg-green-50',
+                    white: 'bg-white hover:bg-gray-100 text-green-700'
+                },
+                // Clases para tarjetas
+                cards: {
+                    default: 'bg-white p-5 rounded-lg shadow-sm',
+                    admin: 'bg-red-50 border border-red-200',
+                    organization: 'bg-green-50 border border-green-200',
+                    user: 'bg-blue-50 border border-blue-200'
+                },
+                // Clases para secciones
+                sections: {
+                    hero: 'bg-green-50 py-10 md:py-16',
+                    content: 'container mx-auto px-4 py-10',
+                    alternateLight: 'bg-gray-50 py-10',
+                    alternateDark: 'bg-gray-100 py-10',
+                    cta: 'bg-green-600 py-8'
+                }
+            };
+        </script>
+    </th:block>
+</body>
+</html>

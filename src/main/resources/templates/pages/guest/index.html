@@ -25,13 +25,24 @@
                             Conectamos a la comunidad con los centros de reciclaje para facilitar la gestión de materiales reciclables
                         </p>
                         
-                        <!-- Botones de acción principales -->
+                        <!-- Botones de acción principales usando fragmentos -->
                         <div class="flex flex-col sm:flex-row gap-3">
-                            <a href="/register" class="bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg px-4 py-2 text-center text-base inline-flex justify-center items-center">
-                                <i class="bi bi-person-plus mr-2"></i>Crear cuenta
+                            <!-- Usando el fragmento button-icon para el botón de crear cuenta -->
+                            <a th:replace="~{fragments/ui-components :: button-icon(
+                                text='Crear cuenta', 
+                                color='bg-green-600 hover:bg-green-700 text-white', 
+                                url='/register', 
+                                icon='person-plus', 
+                                extraClasses='')}">
                             </a>
-                            <a href="/login" class="border border-green-600 text-green-600 hover:bg-green-50 font-medium rounded-lg px-4 py-2 text-center text-base inline-flex justify-center items-center">
-                                <i class="bi bi-box-arrow-in-right mr-2"></i>Iniciar sesión
+                            
+                            <!-- Usando el fragmento button-icon para el botón de iniciar sesión -->
+                            <a th:replace="~{fragments/ui-components :: button-icon(
+                                text='Iniciar sesión', 
+                                color='border border-green-600 text-green-600 hover:bg-green-50', 
+                                url='/login', 
+                                icon='box-arrow-in-right', 
+                                extraClasses='')}">
                             </a>
                         </div>
                     </div>
@@ -46,34 +57,44 @@
 
         <!-- Cómo funciona - Simplificado -->
         <div class="container mx-auto px-4 py-10">
-            <h2 class="text-xl font-bold text-center text-gray-800 mb-6">¿Cómo funciona?</h2>
+            <!-- Usando el fragmento section-title para el título de sección -->
+            <div th:replace="~{fragments/ui-components :: section-title(
+                title='¿Cómo funciona?',
+                extraClasses='')}">
+            </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Paso 1 -->
-                <div class="bg-white p-5 rounded-lg shadow-sm text-center">
-                    <div class="bg-green-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i class="bi bi-person-badge text-green-600 text-2xl"></i>
+                <!-- Paso 1 - Usando el fragmento icon-card -->
+                <div th:replace="~{fragments/ui-components :: icon-card(
+                    title='Regístrate',
+                    icon='person-badge',
+                    iconColor='green',
+                    extraClasses='')}">
+                    <div th:fragment="card-content">
+                        <p class="text-gray-600 text-sm">Crea tu cuenta en segundos para acceder a todas las funcionalidades.</p>
                     </div>
-                    <h3 class="text-lg font-bold mb-2">Regístrate</h3>
-                    <p class="text-gray-600 text-sm">Crea tu cuenta en segundos para acceder a todas las funcionalidades.</p>
                 </div>
                 
-                <!-- Paso 2 -->
-                <div class="bg-white p-5 rounded-lg shadow-sm text-center">
-                    <div class="bg-green-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i class="bi bi-clipboard-check text-green-600 text-2xl"></i>
+                <!-- Paso 2 - Usando el fragmento icon-card -->
+                <div th:replace="~{fragments/ui-components :: icon-card(
+                    title='Crea solicitudes',
+                    icon='clipboard-check',
+                    iconColor='green',
+                    extraClasses='')}">
+                    <div th:fragment="card-content">
+                        <p class="text-gray-600 text-sm">Indica qué materiales tienes y programa la recolección o entrega.</p>
                     </div>
-                    <h3 class="text-lg font-bold mb-2">Crea solicitudes</h3>
-                    <p class="text-gray-600 text-sm">Indica qué materiales tienes y programa la recolección o entrega.</p>
                 </div>
                 
-                <!-- Paso 3 -->
-                <div class="bg-white p-5 rounded-lg shadow-sm text-center">
-                    <div class="bg-green-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i class="bi bi-recycle text-green-600 text-2xl"></i>
+                <!-- Paso 3 - Usando el fragmento icon-card -->
+                <div th:replace="~{fragments/ui-components :: icon-card(
+                    title='Recicla',
+                    icon='recycle',
+                    iconColor='green',
+                    extraClasses='')}">
+                    <div th:fragment="card-content">
+                        <p class="text-gray-600 text-sm">Sigue el estado de tus solicitudes y contribuye al medio ambiente.</p>
                     </div>
-                    <h3 class="text-lg font-bold mb-2">Recicla</h3>
-                    <p class="text-gray-600 text-sm">Sigue el estado de tus solicitudes y contribuye al medio ambiente.</p>
                 </div>
             </div>
         </div>
@@ -81,47 +102,39 @@
         <!-- Beneficios - Nueva sección sutil -->
         <div class="bg-gray-50 py-10">
             <div class="container mx-auto px-4">
-                <h2 class="text-xl font-bold text-center text-gray-800 mb-6">Beneficios</h2>
+                <!-- Usando el fragmento section-title para el título de sección -->
+                <div th:replace="~{fragments/ui-components :: section-title(
+                    title='Beneficios',
+                    extraClasses='')}">
+                </div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="flex items-start">
-                        <div class="text-green-600 mr-3">
-                            <i class="bi bi-check-circle text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-base font-semibold mb-1">Fácil de usar</h3>
-                            <p class="text-gray-600 text-sm">Interfaz intuitiva que facilita la creación y seguimiento de solicitudes.</p>
-                        </div>
+                    <!-- Beneficio 1 - Usando el fragmento benefit-item -->
+                    <div th:replace="~{fragments/ui-components :: benefit-item(
+                        title='Fácil de usar',
+                        description='Interfaz intuitiva que facilita la creación y seguimiento de solicitudes.',
+                        icon='check-circle')}">
                     </div>
                     
-                    <div class="flex items-start">
-                        <div class="text-green-600 mr-3">
-                            <i class="bi bi-check-circle text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-base font-semibold mb-1">Impacto ambiental</h3>
-                            <p class="text-gray-600 text-sm">Contribuye a la reducción de residuos y la conservación del medio ambiente.</p>
-                        </div>
+                    <!-- Beneficio 2 - Usando el fragmento benefit-item -->
+                    <div th:replace="~{fragments/ui-components :: benefit-item(
+                        title='Impacto ambiental',
+                        description='Contribuye a la reducción de residuos y la conservación del medio ambiente.',
+                        icon='check-circle')}">
                     </div>
                     
-                    <div class="flex items-start">
-                        <div class="text-green-600 mr-3">
-                            <i class="bi bi-check-circle text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-base font-semibold mb-1">Comunidad activa</h3>
-                            <p class="text-gray-600 text-sm">Forma parte de una red de personas comprometidas con el reciclaje.</p>
-                        </div>
+                    <!-- Beneficio 3 - Usando el fragmento benefit-item -->
+                    <div th:replace="~{fragments/ui-components :: benefit-item(
+                        title='Comunidad activa',
+                        description='Forma parte de una red de personas comprometidas con el reciclaje.',
+                        icon='check-circle')}">
                     </div>
                     
-                    <div class="flex items-start">
-                        <div class="text-green-600 mr-3">
-                            <i class="bi bi-check-circle text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-base font-semibold mb-1">Seguimiento en tiempo real</h3>
-                            <p class="text-gray-600 text-sm">Conoce el estado de tus solicitudes en cada momento del proceso.</p>
-                        </div>
+                    <!-- Beneficio 4 - Usando el fragmento benefit-item -->
+                    <div th:replace="~{fragments/ui-components :: benefit-item(
+                        title='Seguimiento en tiempo real',
+                        description='Conoce el estado de tus solicitudes en cada momento del proceso.',
+                        icon='check-circle')}">
                     </div>
                 </div>
             </div>
@@ -131,6 +144,8 @@
         <div class="bg-green-600 py-8">
             <div class="container mx-auto px-4 text-center">
                 <h2 class="text-xl font-bold text-white mb-4">Comienza a reciclar hoy mismo</h2>
+                
+                <!-- Usando el fragmento button para el botón de CTA -->
                 <a href="/register" class="bg-white hover:bg-gray-100 text-green-700 font-medium rounded-lg px-5 py-2 text-base inline-flex items-center">
                     Unirme ahora
                     <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">

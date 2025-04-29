@@ -84,6 +84,9 @@
         }
     </style>
     
+    <!-- Constantes de estilo para toda la aplicación -->
+    <th:block th:replace="~{fragments/style-constants :: constants}"></th:block>
+    
     <!-- SLOT: Estilos específicos de cada página -->
     <th:block layout:fragment="styles"></th:block>
 </head>
